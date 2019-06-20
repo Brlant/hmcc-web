@@ -1,4 +1,4 @@
-$activeColor: #409EFF;
+$activeColor: #7142FF;
 //$activeColor: #20a0ff;
 $activeHoverColor: #4dbeff;
 $activeColorFont: #fff;
@@ -16,7 +16,7 @@ $order_color_10: #996699;
 $order_color_11: #FF6666;
 $dialog-left-bg: #eef2f3;
 
-$primary-color: #3399ff;
+$primary-color: $activeColor;
 $info-color: #2db7f5;
 $success-color: #00cc66;
 $warning-color: #ff9900;

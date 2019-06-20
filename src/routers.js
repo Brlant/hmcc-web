@@ -9,10 +9,99 @@ export const routes = [
     component: () => import('./components/layout/index.vue'),
     children: [
       {
-        path: '/dashboard',
-        component: () => import('./components/dashboard/index.vue'),
-        meta: {moduleId: 'dashboard', title: '首页', icon: 'dashboard', perm: 'ccs-index-scan'},
-        children: []
+        path: '/dev',
+        component: () => import('./components/common/parent-route'),
+        meta: {moduleId: 'dev', title: '设备管理', icon: 'dashboard', perm: 'ccs-index-scan'},
+        children: [
+          {
+            path: '/dev/probe',
+            component: () => import('./components/dev/probe/index.vue'),
+            meta: {
+              moduleId: 'dev', title: '探头管理', perm: 'ccs-wired-dev-scan',
+              type: 1, perms: ['ccs-wired-dev-add', 'ccs-wired-dev-edit']
+            }
+          },
+          {
+            path: '/dev/cool',
+            component: () => import('./components/temp/common/index.vue'),
+            meta: {
+              moduleId: 'dev', title: '冷链设备管理', perm: 'ccs-wired-dev-scan',
+              type: 1, perms: ['ccs-wired-dev-add', 'ccs-wired-dev-edit']
+            }
+          },
+          {
+            path: '/dev/gateway',
+            component: () => import('./components/temp/common/index.vue'),
+            meta: {
+              moduleId: 'dev', title: '网关管理', perm: 'ccs-wired-dev-scan',
+              type: 1, perms: ['ccs-wired-dev-add', 'ccs-wired-dev-edit']
+            }
+          }
+        ]
+      },
+      {
+        path: '/dev',
+        component: () => import('./components/common/parent-route'),
+        meta: {moduleId: 'temp', title: '设备资产', icon: 'temp', perm: 'ccs-dev-center'},
+        children: [
+          {
+            path: '/temp/all',
+            component: () => import('./components/temp/common/index.vue'),
+            meta: {
+              moduleId: 'temp', title: '所有设备', perm: 'ccs-wired-watch-all-dev',
+              type: 0, perms: ['show', 'ccs-wired-edit-all-dev']
+            }
+          },
+          {
+            path: '/temp/wire',
+            component: () => import('./components/temp/common/index.vue'),
+            meta: {
+              moduleId: 'temp', title: '有线温度计', perm: 'ccs-wired-dev-scan',
+              type: 1, perms: ['ccs-wired-dev-add', 'ccs-wired-dev-edit']
+            }
+          },
+          {
+            path: '/temp/wifi',
+            component: () => import('./components/temp/common/index.vue'),
+            meta: {
+              moduleId: 'temp',
+              title: '无线温度计',
+              perm: 'ccs-wifi-dev-scan',
+              type: 2,
+              perms: ['ccs-wifi-dev-add', 'ccs-wifi-dev-edit']
+            }
+          },
+          {
+            path: '/temp/freezer',
+            component: () => import('./components/temp/common/index.vue'),
+            meta: {
+              moduleId: 'temp',
+              title: '冷柜温度计',
+              perm: 'ccs-cool-dev-scan',
+              type: 3,
+              perms: ['ccs-cool-dev-add', 'ccs-cool-dev-edit']
+            }
+          },
+          {
+            path: '/temp/vehicle',
+            component: () => import('./components/temp/common/index.vue'),
+            meta: {
+              moduleId: 'temp',
+              title: '车载温度计',
+              perm: 'ccs-car-dev-scan',
+              type: 4,
+              perms: ['ccs-car-dev-add', 'ccs-car-dev-edit']
+            }
+          },
+          {
+            path: '/temp/hygrometer',
+            component: () => import('./components/temp/common/index.vue'),
+            meta: {
+              moduleId: 'temp', title: '湿度计', perm: 'ccs-humidity-dev-scan', type: 5,
+              perms: ['ccs-humidity-dev-add', 'ccs-humidity-dev-edit']
+            }
+          }
+        ]
       },
       {
         path: '/monitoring',

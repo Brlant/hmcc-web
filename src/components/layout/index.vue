@@ -42,19 +42,26 @@
     }
   }
 
+  .main-body__el-scrollbar {
+    .el-scrollbar__wrap {
+      overflow-x: hidden;
+    }
+    .app-content-view {
+      padding: 0 10px;
+    }
+  }
+
 </style>
 <template>
-  <div class="app-body full-width">
+  <div class="app-body full-width" :style="'padding-left:'+bodyLeft">
     <app-header/>
-    <el-scrollbar tag="div" class="body_scroll" :class="{dashboard: $route.path === '/dashboard'}">
-      <div class="main-body container">
+    <div class="main-body">
+      <el-scrollbar :style="{height: '100%'}" class="main-body__el-scrollbar">
         <transition name="scale" mode="out-in" appear>
-          <div class="app-content-view">
-            <router-view></router-view>
-          </div>
+          <router-view class="app-content-view"></router-view>
         </transition>
-      </div>
-    </el-scrollbar>
+      </el-scrollbar>
+    </div>
     <attachmentDialog/>
     <print-dialog/>
     <rule-notify ref="ruleNotify"/>
@@ -62,7 +69,7 @@
 </template>
 
 <script>
-  import AppHeader from './app.header.vue';
+  import AppHeader from './app.header-new.vue';
   import AppFooter from './app.footer.vue';
   import attachmentDialog from '../common/attachment/attachment.dialog.vue';
   import printDialog from '../common/print.loading.vue';
@@ -89,6 +96,11 @@
     methods: {
       setBodyHeight: function () {
         this.$store.commit('setBodyHeight', window.innerHeight - 200 + 'px');
+      }
+    },
+    computed: {
+      bodyLeft: function () {
+        return this.$store.state.bodySize['left'];
       }
     },
     mounted: function () {

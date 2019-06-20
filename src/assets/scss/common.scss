@@ -7,48 +7,14 @@
   overflow: hidden;
   position: relative;
   box-sizing: border-box;
-  padding-top: 62px;
-}
+  padding-top: 50px;
 
-//
-//.main-body {
-//  height: calc(100vh - 62px);
-//  overflow: hidden;
-//  min-height: 300px;
-//}
 
-.body_scroll {
-  height: calc(100% - 62px);
-
-  &.dashboard {
-    height: 100%;
-  }
-
-  .el-scrollbar__wrap {
-    overflow-x: auto;
-    overflow-y: scroll;
+  .main-body {
+    height: 100%
   }
 }
 
-//.app-content-view {
-//  margin-left: 15px;
-//  margin-right: 15px;
-//}
-//
-//.full-width .container {
-//  width: auto;
-//}
-//
-//.full-width .container.d-table {
-//  width: calc(100% - 30px);
-//}
-//
-//.main-header, .sub-menu {
-//  .container {
-//    margin-left: 15px;
-//    margin-right: 15px;
-//  }
-//}
 
 .sub-menu {
   background: #eee;

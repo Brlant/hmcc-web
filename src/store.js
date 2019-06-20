@@ -13,6 +13,7 @@ const state = {
   roleList: {},
   attachmentDialog: {attachmentId: 0, open: false, attachmentList: []},
   dev: {},
+  bodySize: {left: '200px'},
   setBodyHeight: 0,
   print: {
     isPrinting: false,
