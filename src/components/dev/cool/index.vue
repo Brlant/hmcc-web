@@ -11,12 +11,13 @@
     <status-list :activeStatus="activeStatus" :checkStatus="checkStatus" :statusList="statusType" v-show="!!type"/>
     <div class="order-list" style="margin-top: 20px">
       <el-row class="order-list-header">
-        <el-col :span="3">名称</el-col>
-        <el-col :span="4">编号</el-col>
-        <el-col :span="5">所属单位</el-col>
+        <el-col :span="3">编号</el-col>
+        <el-col :span="4">所属单位</el-col>
+        <el-col :span="3">类型</el-col>
+        <el-col :span="3">品牌</el-col>
         <el-col :span="3">型号</el-col>
+        <el-col :span="3">启用时间</el-col>
         <el-col :span="2">状态</el-col>
-        <el-col :span="4">校准期</el-col>
         <el-col :span="3">操作</el-col>
       </el-row>
       <el-row v-if="loadingData">
@@ -37,13 +38,15 @@
              v-for="item in dataList">
           <el-row>
             <el-col :span="3" class="R">{{item.devName}}</el-col>
-            <el-col :span="4" class="R">{{item.devCode}}</el-col>
-            <el-col :span="5" class="R">{{item.orgName}}</el-col>
+            <el-col :span="4" class="R">{{item.orgName}}</el-col>
+            <el-col :span="3" class="R">{{item.devCode}}</el-col>
             <el-col :span="3" class="R">{{item.devNo}}</el-col>
+            <el-col :span="3" class="R">{{item.devNo}}</el-col>
+
+            <el-col :span="3">{{item.createTime | date}}</el-col>
             <el-col :span="2">
               {{formatStatus(item.devStatus, statusType)}}
             </el-col>
-            <el-col :span="4">{{item.createTime | date}}</el-col>
             <el-col :span="3" class="opera-btn">
               <des-btn @click="edit(item)" icon="edit" v-has="perms[1]">编辑</des-btn>
               <des-btn @click="edit(item)" icon="forbidden" v-show="item.devStatus === '1'" v-has="perms[1]">停用</des-btn>
@@ -65,7 +68,7 @@
     </div>
 
     <page-right :css="defaultPageRight" :show="showIndex !== -1" @right-close="resetRightBox">
-      <component :formItem="form" :index="showIndex" :statusType="statusType" :is="currentPart" @change="change" @right-close="resetRightBox"/>
+      <component :formItem="form" :statusType="statusType"  :index="showIndex" :is="currentPart" @change="change" @right-close="resetRightBox"/>
     </page-right>
 
   </div>

@@ -23,7 +23,7 @@ export const routes = [
           },
           {
             path: '/dev/cool',
-            component: () => import('./components/temp/common/index.vue'),
+            component: () => import('./components/dev/cool/index.vue'),
             meta: {
               moduleId: 'dev', title: '冷链设备管理', perm: 'ccs-wired-dev-scan',
               type: 1, perms: ['ccs-wired-dev-add', 'ccs-wired-dev-edit']
