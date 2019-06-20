@@ -7,6 +7,7 @@
 
   .main-card-box {
     width: 550px;
+    z-index: 1;
   }
 
   .logo-part {
@@ -51,7 +52,7 @@
 <template>
   <div>
     <el-card class="box-card main-card-box">
-      <div class="logo-part clearfix"><img src="../../assets/img/logo_pic.png">疾控中心冷链监控管理系统</div>
+      <div class="logo-part clearfix">冷链监控管理系统</div>
 
 
       <div style="padding:0 20px">
@@ -132,6 +133,7 @@
         </div>
       </div>
     </el-card>
+    <div class="login-bg"></div>
   </div>
 </template>
 

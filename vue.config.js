@@ -30,7 +30,7 @@ module.exports = {
       filename: 'index.html',
       // 当使用 title 选项时，
       // template 中的 title 标签需要是 <title><%= htmlWebpackPlugin.options.title %></title>
-      title: '疾控中心冷链监控管理系统'
+      title: '冷链监控管理系统'
     },
     mobile: {
       // page 的入口
@@ -41,7 +41,7 @@ module.exports = {
       filename: 'mobile.html',
       // 当使用 title 选项时，
       // template 中的 title 标签需要是 <title><%= htmlWebpackPlugin.options.title %></title>
-      title: '疾控中心冷链监控管理系统'
+      title: '冷链监控管理系统'
     }
   },
   configureWebpack: {

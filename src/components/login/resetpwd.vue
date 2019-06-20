@@ -7,6 +7,7 @@
 
   .main-card-box {
     width: 550px;
+    z-index: 1;
   }
 
   .logo-part {
@@ -45,27 +46,31 @@
   }
 </style>
 <template>
-  <el-card class="box-card main-card-box">
-    <div class="logo-part clearfix"><img src="../../assets/img/logo_pic.png">疾控中心冷链监控管理系统</div>
-    <div style="padding:0 20px">
-      <h3 class="text-center">重置密码</h3>
-      <div class="login-menu">
-        <el-form label-position="top" ref="loginForm" label-width="80px" :model="user" :rules="rules"
-                 @submit.prevent="done" onsubmit="return false">
-          <el-form-item label="新密码" prop="password">
-            <oms-input v-model="user.password" type="password"></oms-input>
-          </el-form-item>
+  <div>
+    <el-card class="box-card main-card-box">
+      <div class="logo-part clearfix">冷链监控管理系统</div>
+      <div style="padding:0 20px">
+        <h3 class="text-center">重置密码</h3>
+        <div class="login-menu">
+          <el-form label-position="top" ref="loginForm" label-width="80px" :model="user" :rules="rules"
+                   @submit.prevent="done" onsubmit="return false">
+            <el-form-item label="新密码" prop="password">
+              <oms-input v-model="user.password" type="password"></oms-input>
+            </el-form-item>
 
-          <el-form-item label-width="80px">
-            <el-button type="warning" @click="done" style="display:block;width:100%;" native-type="submit">
-              {{btnString}}
-            </el-button>
+            <el-form-item label-width="80px">
+              <el-button type="warning" @click="done" style="display:block;width:100%;" native-type="submit">
+                {{btnString}}
+              </el-button>
 
-          </el-form-item>
-        </el-form>
+            </el-form-item>
+          </el-form>
+        </div>
       </div>
-    </div>
-  </el-card>
+    </el-card>
+    <div class="login-bg"></div>
+
+  </div>
 </template>
 
 <script>

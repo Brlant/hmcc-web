@@ -7,6 +7,7 @@
 
   .main-card-box {
     width: 550px;
+    z-index: 1;
   }
 
   .logo-part {
@@ -23,20 +24,11 @@
     color: $activeColor
   }
 
-  #backgroundCanvas {
-    position: absolute;
-    top: 0;
-    left: 0;
-    z-index: -1;
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
-  }
 </style>
 <template>
   <div>
     <el-card class="box-card main-card-box">
-      <div class="logo-part clearfix">疾控中心冷链监控管理系统</div>
+      <div class="logo-part clearfix">冷链监控管理系统</div>
 
       <div style="padding:20px">
         <el-form label-position="top" ref="loginForm" label-width="80px" :model="user" :rules="rules"
@@ -72,8 +64,7 @@
         </el-form>
       </div>
     </el-card>
-    <canvas id="backgroundCanvas"></canvas>
-    <app-footer></app-footer>
+    <div class="login-bg"></div>
   </div>
 
 </template>

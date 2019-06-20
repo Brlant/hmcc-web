@@ -268,7 +268,7 @@
       <div>
         <div class="top-logo">
           <router-link to='/' class="a-link">
-            <span class="logo-span">疾控中心冷链监控管理系统</span>
+            <span class="logo-span">冷链监控管理系统</span>
           </router-link>
         </div>
         <div class="top-right">
@@ -290,13 +290,13 @@
                     <div class="menu-usr-part-phone">{{user.userAccount}}</div>
                   </div>
                 </el-dropdown-item>
-                <el-dropdown-item>
+                <el-dropdown-item @click.stop.native="$router.push('/resetpsw')">
                   <i class="el-icon-t-password"></i>
                   <router-link to="/resetpsw">重置密码</router-link>
                 </el-dropdown-item>
-                <el-dropdown-item>
+                <el-dropdown-item  @click.stop.native="logout">
                   <i class="el-icon-t-shut-down"></i>
-                  <a href="#" @click.stop.pre="logout">退出</a>
+                  <a href="#">退出</a>
                 </el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
@@ -310,7 +310,7 @@
         ref="scrollbar"
         class="main-nav-scrollbar"
         v-show="menu.length > 0">
-        <el-menu :default-active="$route.path" :collapse="isCollapse" :router="true" :unique-opened="false"
+        <el-menu :default-active="currentPath" :collapse="isCollapse" :router="true" :unique-opened="false"
                  :default-openeds="defaultOpenMenus" style="margin-bottom: 27px">
           <template v-for="item in menu">
             <el-submenu :index="item.path" v-if="item.children.length>0">
@@ -380,6 +380,10 @@
       },
       orgName() {
         return this.$store.state.orgName;
+      },
+      currentPath() {
+        if(this.$route.path.includes('/monitoring/store/')) return '/monitoring/store/list';
+        return this.$route.path;
       }
     },
     watch: {

@@ -8,6 +8,7 @@
   .main-card-box {
     width: 550px;
     margin-top: -50px;
+    z-index: 1;
   }
 
   .logo-part {
@@ -25,31 +26,34 @@
   }
 </style>
 <template>
-  <el-card class="box-card main-card-box">
-    <div slot="header" class="logo-part clearfix">重置密码</div>
-    <div style="padding:0 20px">
-      <el-form label-position="top" ref="loginForm" label-width="80px" :model="user" :rules="rules"
-               @submit.prevent="done" onsubmit="return false">
+  <div>
+    <el-card class="box-card main-card-box">
+      <div slot="header" class="logo-part clearfix">重置密码</div>
+      <div style="padding:0 20px">
+        <el-form label-position="top" ref="loginForm" label-width="80px" :model="user" :rules="rules"
+                 @submit.prevent="done" onsubmit="return false">
 
-        <el-form-item label="原密码" style="position:relative" prop="oldPassword">
-          <oms-input v-model="user.oldPassword" type="password"></oms-input>
+          <el-form-item label="原密码" style="position:relative" prop="oldPassword">
+            <oms-input v-model="user.oldPassword" type="password"></oms-input>
 
-        </el-form-item>
-        <el-form-item label="新密码" style="position:relative" prop="password">
-          <oms-input v-model="user.password" type="password"></oms-input>
-        </el-form-item>
-        <el-form-item label="确认密码" style="position:relative" prop="password2">
-          <oms-input v-model="user.password2" type="password"></oms-input>
-        </el-form-item>
-        <el-form-item label-width="80px">
-          <el-button type="primary" @click="done" style="display:block;width:100%;" native-type="submit">
-            {{btnString}}
-          </el-button>
+          </el-form-item>
+          <el-form-item label="新密码" style="position:relative" prop="password">
+            <oms-input v-model="user.password" type="password"></oms-input>
+          </el-form-item>
+          <el-form-item label="确认密码" style="position:relative" prop="password2">
+            <oms-input v-model="user.password2" type="password"></oms-input>
+          </el-form-item>
+          <el-form-item label-width="80px">
+            <el-button type="primary" @click="done" style="display:block;width:100%;" native-type="submit">
+              {{btnString}}
+            </el-button>
 
-        </el-form-item>
-      </el-form>
-    </div>
-  </el-card>
+          </el-form-item>
+        </el-form>
+      </div>
+    </el-card>
+    <div class="login-bg"></div>
+  </div>
 </template>
 
 <script>

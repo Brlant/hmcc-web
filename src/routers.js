@@ -9,6 +9,45 @@ export const routes = [
     component: () => import('./components/layout/index.vue'),
     children: [
       {
+        path: '/monitoring',
+        component: () => import('./components/common/parent-route.vue'),
+        meta: {moduleId: 'monitoring', title: '监控中心', icon: 'xitongjiankong', perm: 'ccs-monitor-center'},
+        children: [
+          {
+            path: '/monitoring/equipment',
+            component: () => import('./components/monitoring/equipment/index.vue'),
+            meta: {moduleId: 'monitoring', title: '本单位设备监控', perm: 'ccs-monitordev-scan', pageType: 1}
+          },
+          {
+            path: '/monitoring/org/hot/spot',
+            component: () => import('./components/monitoring/org/route-view.vue'),
+            meta: {moduleId: 'monitoring', title: '接种单位设备监控', perm: 'ccs-hotmonitor-scan', pageType: 2, subMenuId: 'org'},
+            children: [
+              {
+                path: '',
+                component: () => import('./components/monitoring/org/index.vue'),
+                meta: {moduleId: 'monitoring'}
+              },
+              {
+                path: '/monitoring/org/hot/spot/temp',
+                component: () => import('./components/monitoring/temp-new/index.vue'),
+                meta: {moduleId: 'monitoring', showDev: false}
+              }
+            ]
+          },
+          {
+            path: '/monitoring/store/:id',
+            component: () => import('./components/monitoring/store/index.vue'),
+            meta: {moduleId: 'monitoring', title: '委托仓库监控', perm: 'ccs-warehouse-scan', subMenuId: 'store'}
+          },
+          {
+            path: '/monitoring/temp',
+            component: () => import('./components/monitoring/temp-new/index.vue'),
+            meta: {moduleId: 'monitoring', title: '历史数据查询', perm: 'ccs-devdata-scan', subMenuId: 'temp', showDev: true}
+          }
+        ]
+      },
+      {
         path: '/dev',
         component: () => import('./components/common/parent-route'),
         meta: {moduleId: 'dev', title: '设备管理', icon: 'dashboard', perm: 'ccs-index-scan'},
@@ -62,45 +101,6 @@ export const routes = [
         ]
       },
       {
-        path: '/monitoring',
-        component: () => import('./components/common/parent-route.vue'),
-        meta: {moduleId: 'monitoring', title: '监控中心', icon: 'xitongjiankong', perm: 'ccs-monitor-center'},
-        children: [
-          {
-            path: '/monitoring/equipment',
-            component: () => import('./components/monitoring/equipment/index.vue'),
-            meta: {moduleId: 'monitoring', title: '本单位设备监控', perm: 'ccs-monitordev-scan', pageType: 1}
-          },
-          {
-            path: '/monitoring/org/hot/spot',
-            component: () => import('./components/monitoring/org/route-view.vue'),
-            meta: {moduleId: 'monitoring', title: '接种单位设备监控', perm: 'ccs-hotmonitor-scan', pageType: 2, subMenuId: 'org'},
-            children: [
-              {
-                path: '',
-                component: () => import('./components/monitoring/org/index.vue'),
-                meta: {moduleId: 'monitoring'}
-              },
-              {
-                path: '/monitoring/org/hot/spot/temp',
-                component: () => import('./components/monitoring/temp-new/index.vue'),
-                meta: {moduleId: 'monitoring', showDev: false}
-              }
-            ]
-          },
-          {
-            path: '/monitoring/store/:id',
-            component: () => import('./components/monitoring/store/index.vue'),
-            meta: {moduleId: 'monitoring', title: '委托仓库监控', perm: 'ccs-warehouse-scan', subMenuId: 'store'}
-          },
-          {
-            path: '/monitoring/temp',
-            component: () => import('./components/monitoring/temp-new/index.vue'),
-            meta: {moduleId: 'monitoring', title: '历史数据查询', perm: 'ccs-devdata-scan', subMenuId: 'temp', showDev: true}
-          }
-        ]
-      },
-      {
         path: '/alarm',
         component: () => import('./components/common/parent-route'),
         meta: {moduleId: 'alarm', title: '告警中心', icon: 'alarm', perm: 'ccs-warn-center'},
@@ -120,7 +120,7 @@ export const routes = [
       {
         path: '/dev/check',
         component: () => import('./components/common/parent-route'),
-        meta: {moduleId: 'alarm', title: '告警中心', icon: 'alarm', perm: 'ccs-warn-center'},
+        meta: {moduleId: 'alarm', title: '设备巡检', icon: 'alarm', perm: 'ccs-warn-center'},
         children: [
           {
             path: '/dev/check/plan',
