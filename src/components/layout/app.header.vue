@@ -145,7 +145,7 @@
       position: absolute;
       top: 15px;
       right: 0;
-      bottom: 30px;
+      bottom: 0;
       left: 0;
     }
 
@@ -333,15 +333,15 @@
           </template>
         </el-menu>
       </el-scrollbar>
-      <div class="change-collapse" @click="changeMenuCollapse">
-        <f-a :name="isCollapse?'spread':'collapse'"></f-a>
-      </div>
+      <!--<div class="change-collapse" @click="changeMenuCollapse">-->
+        <!--<f-a :name="isCollapse?'spread':'collapse'"></f-a>-->
+      <!--</div>-->
     </div>
   </div>
 </template>
 
 <script>
-  import {Auth, cerpAction} from '../../resources';
+  import {Auth} from '../../resources';
   import logo_pic from '@/assets/img/logo_pic.png';
   import omsUploadPicture from '@/components/common/upload/upload.user.picture.vue';
 
@@ -380,9 +380,6 @@
       },
       orgName() {
         return this.$store.state.orgName;
-      },
-      weChatInfo() {
-        return this.$store.state.weChatInfo;
       }
     },
     watch: {
@@ -412,9 +409,6 @@
         window.localStorage.setItem('lastUrl', window.location.href);
         Auth.logout().then(() => {
           location.reload();
-          // window.localStorage.setItem('userId', this.$store.state.user.userId);
-          // //          window.localStorage.removeItem('user');
-          // return this.$router.replace('/login');
         });
       },
       checkSubMenu: function (item) {
@@ -428,43 +422,16 @@
       changeSkin: function (skin) {
         this.skin = skin;
         window.localStorage.setItem('skin', JSON.stringify(skin));
-      },
-      unbind() {
-        this.$confirm('是否解除绑定的微信？', '', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          cerpAction.unBindWeChat().then(() => {
-            this.$notify.success({
-              message: '解绑微信成功'
-            });
-            this.$store.commit('initWeChatInfo', {});
-            window.localStorage.removeItem('weChatInfo');
-          }).catch(error => {
-            this.$notify.error({
-              message: error.response && error.response.data && error.response.data.msg || '解绑微信失败'
-            });
-          });
-        });
       }
     },
     mounted: function () {
       this.skin = this.skinList[0];
-      // let skin = window.localStorage.getItem('skin');
       let isCollapse = window.localStorage.getItem('collapse');
       if (isCollapse) {
         isCollapse = parseInt(isCollapse, 10);
       }
       this.isCollapse = !!isCollapse;
       this.$store.commit('changeBodyLeft', this.isCollapse);
-      /*
-       if (skin) {
-       this.skin = JSON.parse(skin);
-       } else {
-       this.skin = this.skinList[0];
-       }
-       */
       let defaultOpenMenus = [];
       this.$route.matched.forEach(item => {
         if (item.path) {

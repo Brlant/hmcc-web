@@ -16,7 +16,7 @@
 </style>
 <template>
   <div class="tn-login">
-    <div class="logo-part">MCC冷链监控</div>
+    <div class="logo-part">疾控中心冷链监控管理系统</div>
     <el-form label-position="top" ref="loginForm" label-width="80px" :model="user" :rules="rules"
              @submit.prevent="done" onsubmit="return false">
       <el-form-item label="系统代码" prop="orgCode" v-if="needCode">
