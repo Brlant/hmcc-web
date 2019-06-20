@@ -1,29 +1,12 @@
-<style lang="scss">
-  .probe-chart {
-
-    .chart-Line {
-      height: 400px;
-      width: 100%;
-      background: #fff;
-    }
-
-    .tabs {
-      padding-top: 20px;
-      text-align: center;
-      background: #fff;
-
-      .el-tabs__nav-wrap {
-        height: 40px;
-      }
-
-      .el-tabs__nav-scroll {
-        display: inline-block;
-      }
-    }
+<style scoped="">
+  .chart-Line {
+    height: 400px;
+    width: 1200px;
+    background: #fff;
   }
 </style>
 <template>
-  <div class="probe-chart">
+  <div>
     <!--<div v-if="!dataList || !dataList.length" class="empty-info">暂无信息</div>-->
     <oms-loading v-if="loadingData" :loading="loadingData"/>
     <div v-else-if="!isHasData" class="empty-info">暂无信息</div>
@@ -31,138 +14,84 @@
     <div v-else>
       <div id="newChartLine" class="chart-Line" :style="{width: chartWidth}"></div>
     </div>
-    <el-tabs class="tabs" v-model="activeIndex" v-if="dataDetail.freezerDevId">
-      <el-tab-pane :label="item.name" :name="index + ''" :key="item.id"
-                   v-for="(item, index) in probeList"></el-tab-pane>
-      <el-table :data="dataList" v-loading="loadingListData" class="header-list" border
-                header-row-class-name="headerClass">
-        <el-table-column prop="value" :label="title" :sortable="true">
-          <template slot-scope="scope">
-            <span>{{scope.row.value}} {{unitTitle}}</span>
-          </template>
-        </el-table-column>
-        <el-table-column prop="insertTime" label="采集时间" :sortable="true">
-          <template slot-scope="scope">
-            <span>{{scope.row.createTime | time}}</span>
-          </template>
-        </el-table-column>
-        <el-table-column prop="createTime" label="数据库存储时间" :sortable="true">
-          <template slot-scope="scope">
-            <span>{{scope.row.insertTime | time}}</span>
-          </template>
-        </el-table-column>
-      </el-table>
-      <div class="text-center" v-show="dataList.length">
-        <el-pagination
-          layout="total, sizes, prev, pager, next, jumper" @size-change="handleSizeChange"
-          @current-change="handleCurrentChange"
-          :total="pager.count" :page-sizes="[10,20,50,100]" :pageSize="pager.pageSize"
-          :current-page="pager.currentPage">
-        </el-pagination>
-      </div>
-    </el-tabs>
   </div>
 </template>
 <script>
-  const unitAry = ['', '°C', '%', '%'];
+  const unitAry = ['', '°C', '%', 'V'];
   const titleAry = ['', '温度', '湿度', '电压'];
-  import moment from 'moment';
+  import {TempDev} from '@/resources';
+  import axios from 'axios';
   import Echarts from 'echarts/lib/echarts';
+  import moment from 'moment';
 
   function formatTime(time) {
     return moment(time).format('YYYY-MM-DD: HH:mm:ss');
   }
 
   export default {
-    props: ['filter', 'isRecord', 'detail', 'chartWidth'],
+    props: ['filters', 'isRecord', 'detail', 'chartWidth'],
     data() {
       return {
         loadingData: false,
-        isHasData: false,
-        probeList: [],
-        activeIndex: '0',
-        pager: {
-          currentPage: 1,
-          count: 0,
-          pageSize: 10
-        },
-        dataList: [],
-        loadingListData: false,
-        oldFilter: {},
-        dataDetail: {}
+        isHasData: false
       };
     },
-    computed: {
-      title() {
-        return titleAry[this.filter.type] || '';
-      },
-      unitTitle() {
-        return unitAry[this.filter.type] || '';
-      }
-    },
     watch: {
-      filter: {
-        handler: function (val) {
-          this.dataDetail = {};
-          this.dataList = [];
-          this.oldFilter = {};
-          if (!val.freezerDevId) {
-            this.isHasData = false;
-            return;
-          }
-          if (this.isSame(val, this.oldFilter)) {
-            this.setChart();
-          } else {
-            if (val.startTime === this.oldFilter.startTime && val.endTime === this.oldFilter.endTime
-              && val.freezerDevId === this.oldFilter.freezerDevId && val.type !== this.oldFilter.type) {
-              this.setChart();
-            } else {
-              this.queryList();
-            }
-            this.oldFilter = JSON.parse(JSON.stringify(val));
-          }
+      filters: {
+        handler: function () {
+          this.queryList();
         },
         deep: true,
         immediate: true
-      },
-      activeIndex() {
-        this.getCurrentList(1);
       }
     },
     methods: {
-      isSame(cur, old) {
-        if (!old && !cur) return true;
-        let cl = Object.keys(cur);
-        let ol = Object.keys(old);
-        if (cl.length !== ol.length) return false;
-        let i = 0;
-        while (i <= cl.length) {
-          if (cur[cl[i]] !== old[ol[i]]) return false;
-          i++;
-        }
-        return true;
-      },
       getLegend(typeList) {
         return {
-          data: typeList.map(m => m.name)
+          data: typeList.map(m => m.devName)
         };
       },
-      getYAxis(m) {
+      getYAxis(typeList) {
         let {setMaxAndMin} = this;
-        let obj = {
-          name: titleAry[m] + `(${unitAry[m]})`,
-          type: 'value'
-        };
-        setMaxAndMin(obj);
-        return obj;
+        return typeList.map((m, index) => {
+          let ot = this.isRecord ? 40 : 50;
+          let obj = {
+            name: titleAry[m] + `(${unitAry[m]})`,
+            offset: index === 2 ? ot : 0,
+            type: 'value'
+          };
+          setMaxAndMin(obj, m);
+          return obj;
+        });
       },
       setMaxAndMin(obj, type) {
+
         obj.min = value => value.min;
         obj.max = value => value.max;
+
+        // if (type === '1') {
+        //   obj.min = value => value.min;
+        //   obj.max = value => value.max;
+        // } else if (type === '2') {
+        //   obj.min = value => value.min;
+        //   obj.max = value => value.max;
+        // } else {
+        //   obj.max = function (value) {
+        //     return value.max !== Infinity
+        //       ? value.max + value.max > 10 ? 10 : 5
+        //       : '';
+        //   };
+        //   obj.min = function (value) {
+        //     let v = value.min - value.min > 10 ? 10 : 5;
+        //     return value.min !== Infinity
+        //       ? v > 0 ? v : 0
+        //       : value.min;
+        //   };
+        // }
       },
       getData(data, i, index) {
         return {
-          name: i.name,
+          name: i.devName,
           type: 'line',
           showSymbol: true,
           symbolSize: 6,
@@ -237,7 +166,7 @@
             collectTime = formatTime(params[0].value[0]);
             insertTime = formatTime(params[0].value[2]);
           }
-          let str = `采集时间: ${collectTime}<br/>数据库存储时间: ${insertTime}<br/>`;
+          let str = `采集时间: ${collectTime}<br/>插入时间: ${insertTime}<br/>`;
           params.forEach(i => {
             str += `${i.marker}${i.seriesName}: ${i.value[1]}<br/>`;
           });
@@ -259,66 +188,66 @@
         };
       },
       queryList() {
-        this.loadingData = true;
-        this.isHasData = false;
-        this.$http.post('/historical-data', this.filter).then(res => {
-          this.loadingData = false;
-          this.isHasData = true;
-          this.dataDetail = res.data;
-          this.setChart();
-          this.getCurrentList(1);
-        }).catch((e) => {
-          this.loadingData = false;
-          this.$notify.error(e.response && e.response.data && e.response.data.msg || '查询失败');
-        });
-      },
-      setChart() {
+        if (!this.filters.length) {
+          this.isHasData = false;
+          return;
+        }
         let {getLegend, getYAxis, getData, getOption, getAlarmLine} = this;
         const option = getOption();
         // 设置图例
+        option.legend = getLegend(this.filters);
         // 设置Y轴
-        option.yAxis = getYAxis(this.filter.type);
+        option.yAxis = getYAxis(this.filters[0].valType);
         option.series = [];
-        option.legend = getLegend(this.dataDetail.devDataList);
-        this.dataDetail.devDataList.forEach(i => {
-          const data = i.dataList.map(m => {
-            m.value = this.filter.type === '1' ? m.temperature : this.filter.type === '2' ? m.humidity : m.voltage;
-            return {
-              name: m.createTime,
-              value: [m.createTime, m.value, m.insertTime]
-            };
-          }) || [];
-          option.series.push(getData(data, i));
+        let httpAry = [];
+        this.filters.forEach((i, index) => {
+          const {startTime, endTime, devId, devCode, valType, startPrice} = i;
+          const params = {startTime, endTime, devId, devCode, valType: valType[0], startPrice};
+          httpAry.push(TempDev.queryTempData(params));
         });
-        this.probeList = this.dataDetail.devDataList;
-        this.$nextTick(() => {
-          let chartDom = document.getElementById('newChartLine');
-          if (!chartDom) return;
-          let chartLine = Echarts.init(chartDom, 'light');
-          if (!chartLine) return;
-          chartLine.setOption(option);
+        this.loadingData = true;
+        this.isHasData = false;
+        axios.all(httpAry)
+          .then(axios.spread((...args) => {
+            this.loadingData = false;
+            this.filters.forEach((i, index) => {
+              const data = args[index].data.ccsDevDataRecordDTOList && args[index].data.ccsDevDataRecordDTOList.map(m => {
+                return {
+                  name: m.createTime,
+                  value: [m.createTime, m.devActval, m.insertTime]
+                };
+              }) || [];
+              data.length && (this.isHasData = true);
+              option.series.push(getData(data, i, index));
+            });
+            this.$nextTick(() => {
+              let chartDom = document.getElementById('newChartLine');
+              if (!chartDom) return;
+              let chartLine = Echarts.init(chartDom, 'light');
+              if (!chartLine) return;
+              let {isRecord, detail} = this;
+              if (isRecord && option.series.length) {
+                // 时间标线， 起始时间，终止时间
+                option.series.forEach(i => {
+                  const data = i.markLine.data;
+                  if (data.length > 1) return;
+                  data.push(getAlarmLine(detail.createTime));
+                  detail.restoreTime && data.push(getAlarmLine(detail.restoreTime));
+                });
+                chartLine.setOption(option);
+              } else {
+                chartLine.setOption(option);
+              }
+            });
+          })).catch(e => {
+          this.loadingData = false;
+          this.isHasData = false;
+          this.$notify.error({
+            title: '查询错误',
+            message: e.response && e.response.data && e.response.data.msg || ''
+          });
         });
-      },
-      handleSizeChange(val) {
-        this.pager.pageSize = val;
-        this.getCurrentList(1);
-      },
-      handleCurrentChange(val) {
-        this.getCurrentList(val);
-      },
-      getCurrentList(pageNo) {
-        this.loadingListData = true;
-        this.pager.currentPage = pageNo;
-        const {pager} = this;
-        let start = (pageNo - 1) * pager.pageSize;
-        let end = pageNo * pager.pageSize;
-        let item = this.probeList[this.activeIndex];
-        pager.count = item.dataList.length;
-        this.dataList = item.dataList.slice(start, end > pager.count ? pager.count : end);
-        setTimeout(() => {
-          this.loadingListData = false;
-        }, 300);
-      },
+      }
     }
   };
 </script>

@@ -9,133 +9,71 @@
     </template>
     <template slot="content">
       <el-form ref="tempForm" :model="form" label-width="100px" :rules="rules">
-        <el-form-item label="名称" prop="name">
-          <oms-input type="text" v-model="form.name" placeholder="请输入名称"></oms-input>
+        <el-form-item label="名称" prop="notifyListName">
+          <oms-input type="text" v-model="form.notifyListName" placeholder="请输入名称"></oms-input>
         </el-form-item>
-
-        <el-form-item label="所属单位" prop="orgId">
-          <org-select :list="orgList"
-                      :remoteMethod="queryAllOrg"
-                      placeholder="请输入名称搜索所属单位" v-model="form.orgId"></org-select>
+        <el-form-item>
+          <des-btn v-has="'show'" icon="plus" @click="addRule('0')">添加系统联系人</des-btn>
+          <des-btn v-has="'show'" icon="plus" @click="addRule('1')">添加外部联系人</des-btn>
         </el-form-item>
-
-        <div v-if="form.orgId">
-          <el-form-item>
-            <span class="border-left-color">一级告警 </span>
-            <des-btn icon="plus" @click="addRule(form.levelOneAlarmObjectList)"> 添加通知人</des-btn>
-          </el-form-item>
-          <div class="part-border-box" v-for="(item, index) in form.levelOneAlarmObjectList" :key="item.id">
-            <des-btn v-has="'show'" class="btn-modify" icon="delete"
-                     @click="deleteRule(item, form.levelOneAlarmObjectList)"/>
-            <div>
-              <el-row>
-                <el-col :span="8">
-                  <el-form-item :prop="`levelOneAlarmObjectList.${index}.alarmNoticeUserId`" label-width="0"
-                                :rules="[{ required: true, message: '请选择通知人', trigger: 'change' }]">
-                    <el-select placeholder="请选择通知人" v-model="item.alarmNoticeUserId" @change="userChange(item)"
-                               filterable clearable remote :remote-method="queryUserList"
-                               @click.native.once="queryUserList('')">
-                      <el-option :label="item.name" :value="item.id" :key="item.id"
-                                 v-for="item in userList"></el-option>
-                    </el-select>
-                  </el-form-item>
-                </el-col>
-                <el-col :span="1"></el-col>
-                <el-col :span="6">
-                  <el-form-item :prop="`levelOneAlarmObjectList.${index}.alarmNoticeType`" label-width="0"
-                                :rules="[{ required: true, message: '请选择通知类型', trigger: 'change' }]">
-                    <el-radio-group v-model="item.alarmNoticeType" size="small" @change="checkChange(item)">
-                      <el-radio-button :label="item.key" :key="item.key" v-for="item in checkList">{{item.label}}
-                      </el-radio-button>
-                    </el-radio-group>
-                  </el-form-item>
-                </el-col>
-                <el-col :span="1"></el-col>
-                <el-col :span="8">
-                  <el-form-item label-width="0">
-                    <oms-input type="text" v-model="item.remark" placeholder="请输入备注"></oms-input>
-                  </el-form-item>
-                </el-col>
-              </el-row>
-            </div>
-          </div>
-          <el-form-item class="mt-10">
-            <span class="border-left-color">二级告警 </span>
-            <des-btn icon="plus" @click="addRule(form.levelTwoAlarmObjectList)"> 添加通知人</des-btn>
-          </el-form-item>
-          <div class="part-border-box" v-for="(item, index) in form.levelTwoAlarmObjectList" :key="item.id">
-            <des-btn v-has="'show'" class="btn-modify" icon="delete"
-                     @click="deleteRule(item, form.levelTwoAlarmObjectList)"/>
-            <div>
-              <el-row>
-                <el-col :span="8">
-                  <el-form-item :prop="`levelTwoAlarmObjectList.${index}.alarmNoticeUserId`" label-width="0"
-                                :rules="[{ required: true, message: '请选择通知人', trigger: 'change' }]">
-                    <el-select placeholder="请选择通知人" v-model="item.alarmNoticeUserId" @change="userChange(item)"
-                               filterable clearable remote :remote-method="queryUserList"
-                               @click.native.once="queryUserList('')">
-                      <el-option :label="item.name" :value="item.id" :key="item.id"
-                                 v-for="item in userList"></el-option>
-                    </el-select>
-                  </el-form-item>
-                </el-col>
-                <el-col :span="1"></el-col>
-                <el-col :span="6">
-                  <el-form-item :prop="`levelTwoAlarmObjectList.${index}.alarmNoticeType`" label-width="0"
-                                :rules="[{ required: true, message: '请选择通知类型', trigger: 'change' }]">
-                    <el-radio-group v-model="item.alarmNoticeType" size="small" @change="checkChange(item)">
-                      <el-radio-button :label="item.key" :key="item.key" v-for="item in checkList">{{item.label}}
-                      </el-radio-button>
-                    </el-radio-group>
-                  </el-form-item>
-                </el-col>
-                <el-col :span="1"></el-col>
-                <el-col :span="8">
-                  <el-form-item label-width="0">
-                    <oms-input type="text" v-model="item.remark" placeholder="请输入备注"></oms-input>
-                  </el-form-item>
-                </el-col>
-              </el-row>
-            </div>
-          </div>
-          <el-form-item class="mt-10">
-            <span class="border-left-color">三级告警 </span>
-            <des-btn icon="plus" @click="addRule(form.levelThreeAlarmObjectList)"> 添加通知人</des-btn>
-          </el-form-item>
-          <div class="part-border-box" v-for="(item, index) in form.levelThreeAlarmObjectList" :key="item.id">
-            <des-btn v-has="'show'" class="btn-modify" icon="delete"
-                     @click="deleteRule(item, form.levelThreeAlarmObjectList)"/>
-            <div>
-              <el-row>
-                <el-col :span="8">
-                  <el-form-item :prop="`levelThreeAlarmObjectList.${index}.alarmNoticeUserId`" label-width="0"
-                                :rules="[{ required: true, message: '请选择通知人', trigger: 'change' }]">
-                    <el-select placeholder="请选择通知人" v-model="item.alarmNoticeUserId" @change="userChange(item)"
-                               filterable clearable remote :remote-method="queryUserList"
-                               @click.native.once="queryUserList('')">
-                      <el-option :label="item.name" :value="item.id" :key="item.id"
-                                 v-for="item in userList"></el-option>
-                    </el-select>
-                  </el-form-item>
-                </el-col>
-                <el-col :span="1"></el-col>
-                <el-col :span="6">
-                  <el-form-item :prop="`levelThreeAlarmObjectList.${index}.alarmNoticeType`" label-width="0"
-                                :rules="[{ required: true, message: '请选择通知类型', trigger: 'change' }]">
-                    <el-radio-group v-model="item.alarmNoticeType" size="small" @change="checkChange(item)">
-                      <el-radio-button :label="item.key" :key="item.key" v-for="item in checkList">{{item.label}}
-                      </el-radio-button>
-                    </el-radio-group>
-                  </el-form-item>
-                </el-col>
-                <el-col :span="1"></el-col>
-                <el-col :span="8">
-                  <el-form-item label-width="0">
-                    <oms-input type="text" v-model="item.remark" placeholder="请输入备注"></oms-input>
-                  </el-form-item>
-                </el-col>
-              </el-row>
-            </div>
+        <div class="part-border-box" v-for="(item, index) in form.details" :key="index">
+          <label class="title">{{item.memberSource === '0' ? '系统联系人' : '外部联系人'}}</label>
+          <des-btn v-has="'show'" class="btn-modify" icon="delete" @click="deleteRule(item)"/>
+          <div>
+            <el-row>
+              <el-col :span="8">
+                <el-form-item :prop="`details.${index}.targetStr`" label-width="0" v-if="item.memberSource === '0'"
+                              :rules="[{ required: true, message: '请选择系统用户', trigger: 'change' }]">
+                  <el-select placeholder="请选择系统用户" v-model="item.targetStr" @change="userChange(item)"
+                             filterable clearable remote :remote-method="queryUserList"
+                             @click.native.once="queryUserList('')">
+                    <el-option :label="item.name" :value="item.id" :key="item.id"
+                               v-for="item in userList"></el-option>
+                  </el-select>
+                </el-form-item>
+                <el-form-item :prop="`details.${index}.notifyType`" label-width="0" v-if="item.memberSource === '1'"
+                              :rules="[{ required: true, message: '请选择通知类型', trigger: 'change' }]">
+                  <!--<el-select placeholder="请选择通知类型" v-model="item.notifyType" @change="checkChange(item)">-->
+                  <!--<el-option :label="item.label" :value="item.key" :key="item.key"-->
+                  <!--v-for="item in checkList"></el-option>-->
+                  <!--</el-select>-->
+                  <el-radio-group v-model="item.notifyType" size="small" @change="checkChange(item)">
+                    <el-radio-button :label="item.key" :key="item.key" v-for="item in checkList">{{item.label}}
+                    </el-radio-button>
+                  </el-radio-group>
+                </el-form-item>
+              </el-col>
+              <el-col :span="1"></el-col>
+              <el-col :span="7">
+                <el-form-item :prop="`details.${index}.notifyType`" label-width="0" v-if="item.memberSource === '0'"
+                              :rules="[{ required: true, message: '请选择通知类型', trigger: 'change' }]">
+                  <!--<el-select placeholder="请选择通知类型" v-model="item.notifyType" @change="checkChange(item)">-->
+                  <!--<el-option :label="item.label" :value="item.key" :key="item.key"-->
+                  <!--v-for="item in checkList"></el-option>-->
+                  <!--</el-select>-->
+                  <el-radio-group v-model="item.notifyType" size="small" @change="checkChange(item)">
+                    <el-radio-button :label="item.key" :key="item.key" v-for="item in checkList">{{item.label}}
+                    </el-radio-button>
+                  </el-radio-group>
+                </el-form-item>
+                <el-form-item :prop="`details.${index}.targetStr`" label-width="0"
+                              v-if="item.memberSource === '1' && item.notifyType !== '3'"
+                              :rules="{validator: promptMsg(item).validator, trigger: 'blur'}">
+                  <oms-input type="text" v-model="item.targetStr"
+                             :placeholder="promptMsg(item).placeholder"></oms-input>
+                </el-form-item>
+                <el-form-item label-width="0" v-if="item.memberSource === '1' && item.notifyType === '3'">
+                  <oms-input type="text" v-model="item.comment" placeholder="请输入备注"></oms-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="1"></el-col>
+              <el-col :span="7">
+                <el-form-item label-width="0"
+                              v-if="item.memberSource !== '1'||item.memberSource === '1' && item.notifyType !== '3'">
+                  <oms-input type="text" v-model="item.comment" placeholder="请输入备注"></oms-input>
+                </el-form-item>
+              </el-col>
+            </el-row>
           </div>
         </div>
       </el-form>
@@ -143,41 +81,37 @@
   </dialog-template>
 </template>
 <script>
-  import {AlarmNotifyGroup, OrgUser, User} from '@/resources';
-  import methodsMixin from '@/mixins/methodsMixin';
+  import {Department, NotifyRule, User} from '@/resources';
 
   export default {
-    mixins: [methodsMixin],
-
     data() {
       return {
         formModel: {
-          name: '',
-          orgId: '',
-          levelOneAlarmObjectList: [],
-          levelTwoAlarmObjectList: [],
-          levelThreeAlarmObjectList: []
+          notifyListName: '',
+          details: []
         },
         ruleModel: {
-          alarmNoticeTarget: '',
-          alarmNoticeType: '',
-          remark: '',
-          alarmNoticeUserId: ''
+          memberSource: '',
+          notifyType: '1',
+          comment: '',
+          targetStr: ''
         },
         form: {},
         doing: false,
         rules: {
-          name: [
+          notifyListName: [
             {required: true, message: '请输入名称', trigger: 'blur'}
-          ],
-          orgId: [
-            {required: true, message: '请选择所属单位', trigger: 'change'}
           ]
         },
         actionType: '添加',
         checkList: [
-          {label: '短信', key: '0', placeholder: '请输入手机号', validator: this.checkPhone},
-          {label: '微信', key: '1'}
+          {label: '短信', key: '1', placeholder: '请输入手机号', validator: this.checkPhone},
+          {label: '邮箱', key: '2', placeholder: '请输入邮箱', validator: this.checkEmail},
+          {label: '微信', key: '3'}
+        ],
+        typeList: [
+          {label: '系统', key: '0'},
+          {label: '手动添加', key: '1'}
         ],
         userList: []
       };
@@ -192,12 +126,9 @@
           this.queryDetail();
           this.actionType = '编辑';
         } else {
-          this.form = JSON.parse(JSON.stringify(this.formModel));
+          // this.form = JSON.parse(JSON.stringify(this.formModel));
           this.actionType = '添加';
         }
-        this.$nextTick(() => {
-          this.$refs['tempForm'].clearValidate();
-        });
       }
     },
     methods: {
@@ -213,60 +144,95 @@
           }
         }
       },
-      addRule(list) {
-        list.splice(0, 0, Object.assign({}, this.ruleModel, {id: Math.random()}));
-      },
-      deleteRule(item, list) {
-        let index = list.indexOf(item);
-        index !== -1 && list.splice(index, 1);
-      },
-      userChange(item) {
-        item.alarmNoticeTarget = '';
-        item.alarmNoticeType = '';
-        item.remark = '';
-        item.alarmNoticeUserName = '';
-        this.userList.forEach(i => {
-          if (i.id === item.alarmNoticeUserId) {
-            item.alarmNoticeUserName = i.name;
-          }
-        });
-      },
-      checkChange(item) {
-        if (!item.alarmNoticeUserId) return;
-        item.alarmNoticeTarget = '';
-        if (item.alarmNoticeType === '0') {
-          this.checkContactWay(item);
+      checkEmail(rule, value, callback) {
+        if (value === '') {
+          callback(new Error('请输入邮箱'));
         } else {
-          // 校验微信模式
-          this.queryWeChart(item);
+          let re = /^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/ig;
+          if (!re.test(value)) {
+            callback(new Error('请输入正确的邮箱'));
+          } else {
+            callback();
+          }
         }
       },
+      addRule(type) {
+        this.form.details.splice(0, 0, Object.assign({}, this.ruleModel, {memberSource: type}));
+      },
+      deleteRule(item) {
+        let index = this.form.details.indexOf(item);
+        index !== -1 && this.form.details.splice(index, 1);
+      },
+      promptMsg(item) {
+        let ary = this.checkList.filter(f => f.key === item.notifyType);
+        return ary.length ? ary[0] : {
+          placeholder: '请输入联系方式',
+          rules: []
+        };
+      },
+      userChange(item) {
+        // 修改联系人时，清空对应的openId
+        item.openId = '';
+        this.checkContactWay(item);
+        // 校验微信模式
+        this.queryWeChart(item);
+      },
+      checkChange(item) {
+        item.openId = '';
+        item.memberSource === '1' && (item.targetStr = '');
+        item.memberSource === '0' && this.checkContactWay(item);
+
+        // 校验微信模式
+        this.queryWeChart(item);
+      },
       checkContactWay(item) {
+        if (item.notifyType === '3') {
+          item.checkPass = false;
+          return;
+        }
         this.userList.forEach(i => {
-          if (i.id === item.alarmNoticeUserId) {
-            item.noPass = false;
-            if (!i.phone) {
-              item.noPass = true;
+          if (i.id === item.targetStr) {
+            item.checkPass = false;
+            if (item.notifyType === '1' && !i.phone) {
               this.$notify.info({
-                message: `联系人"${i.name}"无法取得手机联系方式，请尝试微信`
+                message: `联系人"${i.name}"无法取得手机联系方式，请尝试邮箱`
               });
-            } else {
-              item.alarmNoticeTarget = i.phone;
+              item.checkPass = true;
+            }
+            if (item.notifyType === '2' && !i.email) {
+              this.$notify.info({
+                message: `联系人"${i.name}"无法取得邮箱联系方式，请尝试短信`
+              });
+              item.checkPass = true;
             }
           }
         });
       },
       queryWeChart(item) {
-        this.$http.get(`/ccsWeChat/queryWechatUser/${item.alarmNoticeUserId}`).then(res => {
-          item.alarmNoticeTarget = res.data.openId;
-          item.loading = false;
-        }).catch(e => {
-          this.getQCode(item);
+        // 如果没选择微信, 返回
+        if (item.notifyType !== '3') return;
+        this.userList.forEach(i => {
+          if (i.id === item.targetStr) {
+            item.name = i.name;
+          }
         });
+        if (item.memberSource === '0') {
+          // 系统联系人
+          if (!item.targetStr) return;
+          this.$http.get(`/ccsWeChat/queryWechatUser/${item.targetStr}`).then(res => {
+            item.openId = res.data.openId;
+            item.loading = false;
+          }).catch(e => {
+            this.getQCode(item);
+          });
+        } else {
+          // 外部联系人
+          this.getQCode(item);
+        }
       },
       getQCode(item) {
         let params = {
-          userId: item.alarmNoticeUserId
+          userId: item.targetStr
         };
         this.$emit('openDialog');
         // 获取二维码
@@ -283,21 +249,20 @@
         }, 3000);
       },
       loopQueryInfo(item) {
-        if (item.alarmNoticeTarget || this.index !== 0) return;
+        if (item.openId || this.index !== 0) return;
         let code = this.getQCodeInfo();
-        if (!code || !code.ticket) return;
         this.$http.get(`/ccsWeChat/queryWeChatTicketInfo/${code.ticket}`).then(res => {
           item.loading = false;
           if (res.data.openId === '400') {
             this.$notify.info({
-              message: '该微信账号已绑定通知人，请取消关注后再操作'
+              message: '该微信账号已绑定系统用户，请取消关注后再操作'
             });
             this.$emit('closeDialog');
           } else {
             this.$notify.success({
-              message: item.name ? `通知人"${item.name}"关注成功` : '关注成功'
+              message: item.name ? `联系人"${item.name}"关注成功` : '关注成功'
             });
-            item.alarmNoticeTarget = res.data.openId;
+            item.openId = res.data.openId;
             this.$emit('closeDialog');
           }
         }).catch(() => {
@@ -307,32 +272,22 @@
         });
       },
       queryDetail() {
-        AlarmNotifyGroup.get(this.formItem.id).then(res => {
-
-          let list = [].concat(res.data.levelOneAlarmObjectList,
-            res.data.levelTwoAlarmObjectList, res.data.levelThreeAlarmObjectList);
-          list.forEach(i => {
+        NotifyRule.get(this.formItem.id).then(res => {
+          res.data.details.forEach(i => {
+            i.openId = i.targetStr;
             this.formatContactWay(i);
           });
-          this.orgList = [
-            {
-              id: res.data.orgId,
-              name: res.data.orgName
-            }
-          ];
           this.form = res.data;
-          this.$nextTick(() => {
-            this.$refs['tempForm'].clearValidate();
-          });
         });
       },
       formatContactWay(item) {
-        User.get(item.alarmNoticeUserId).then(res => {
-          let isHas = this.userList.some(s => s.id === item.alarmNoticeUserId);
+        if (item.memberSource === '1') return;
+        User.get(item.targetStr).then(res => {
+          let isHas = this.userList.some(s => s.id === item.targetStr);
           if (!isHas) {
             item.name = res.data.name;
             this.userList.push({
-              id: item.alarmNoticeUserId,
+              id: item.targetStr,
               name: res.data.name,
               phone: res.data.phone,
               email: res.data.email
@@ -341,31 +296,31 @@
         });
       },
       queryUserList(query) {
-        let params = {keyWord: query};
-        OrgUser.queryUsers(this.form.orgId, params).then(res => {
+        Department.getMembers({keyWord: query, status: 1}).then(res => {
           this.userList = res.data.list;
         });
       },
       checkContactWayWhenSave() {
-        let details = [].concat(this.form.levelOneAlarmObjectList,
-          this.form.levelTwoAlarmObjectList, this.form.levelThreeAlarmObjectList);
-        details.forEach(i => {
-          if (i.alarmNoticeType === '1') return;
+        this.form.details.forEach(i => {
           this.checkContactWay(i);
         });
-        return details.some(s => s.noPass);
+        return this.form.details.some(s => s.checkPass);
       },
       checkWeChatWay() {
-        let details = [].concat(this.form.levelOneAlarmObjectList,
-          this.form.levelTwoAlarmObjectList, this.form.levelThreeAlarmObjectList);
-        for (let i = 0; i < details.length; i++) {
-          let item = details[i];
-          if (item.alarmNoticeType === '1' && !item.alarmNoticeTarget) {
-            let title = item.name
-              ? `存在通知人"${item.name}"没有绑定微信` : '存在通知人没有绑定微信';
-            this.$notify.warning({
-              message: title
-            });
+        for (let i = 0; i < this.form.details.length; i++) {
+          let item = this.form.details[i];
+          if (item.notifyType === '3' && !item.openId) {
+            if (item.memberSource === '0') {
+              let title = item.name
+                ? `存在系统联系人"${item.name}"没有绑定微信` : '存在系统联系人没有绑定微信';
+              this.$notify.warning({
+                message: title
+              });
+            } else {
+              this.$notify.warning({
+                message: '存在外部联系人没有绑定微信'
+              });
+            }
             return true;
           }
         }
@@ -374,57 +329,47 @@
       save(formName) {
         this.$refs[formName].validate((valid) => {
           if (valid && this.doing === false) {
-            console.log(JSON.parse(JSON.stringify(this.form)));
+            // if (!this.form.details.length) {
+            //   this.$notify.info({
+            //     message: '请添加联系人'
+            //   });
+            //   return;
+            // }
             if (this.checkContactWayWhenSave()) return;
             // // 微信模式的校验
             if (this.checkWeChatWay()) return;
             // 拼装给后台的数据
             const form = JSON.parse(JSON.stringify(this.form));
-            console.log(form);
-            form.levelOneAlarmObjectList.forEach(i => {
-              i.alarmLevel = '1';
-            });
-            form.levelTwoAlarmObjectList.forEach(i => {
-              i.alarmLevel = '2';
-            });
-            form.levelThreeAlarmObjectList.forEach(i => {
-              i.alarmLevel = '3';
-            });
-
-            this.orgList.forEach(i => {
-              if (i.id === form.orgId) {
-                form.orgName = i.name;
+            form.details.forEach(i => {
+              i.name = undefined;
+              i.loading = undefined;
+              if (i.memberSource === '1' && i.notifyType === '3') {
+                i.targetStr = i.openId;
               }
+              i.openId = undefined;
+              i.time = undefined;
+              i.checkPass = undefined;
             });
-
             if (!this.form.id) {
               this.doing = true;
-              this.$httpRequestOpera(AlarmNotifyGroup.save(form), {
+              this.$httpRequestOpera(NotifyRule.save(form), {
+                successTitle: '添加成功',
                 errorTitle: '添加失败',
                 success: res => {
-                  if (res.code === 200) {
-                    this.$notify.success({message: '添加成功'});
-                    this.doing = false;
-                    this.$emit('change', res.data);
-                  } else {
-                    this.doing = false;
-                  }
+                  this.doing = false;
+                  this.$emit('change', res.data);
                 },
                 error: () => {
                   this.doing = false;
                 }
               });
             } else {
-              this.$httpRequestOpera(AlarmNotifyGroup.update(form), {
+              this.$httpRequestOpera(NotifyRule.update(this.form.id, form), {
+                successTitle: '修改成功',
                 errorTitle: '修改失败',
                 success: res => {
-                  if (res.code === 200) {
-                    this.$notify.success({message: '修改成功'});
-                    this.doing = false;
-                    this.$emit('change', res.data);
-                  } else {
-                    this.doing = false;
-                  }
+                  this.doing = false;
+                  this.$emit('change', res.data);
                 },
                 error: () => {
                   this.doing = false;

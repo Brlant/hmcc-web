@@ -161,18 +161,18 @@ export const Store = resource('/store', http, {
 });
 
 // 部门对象
-export const Department = resource('/department', http, {
+export const Department = resource('oms/department', http, {
   getPage: (params) => {
-    return http.get('/department/page', {params});
+    return http.get('oms/department/page', {params});
   },
   getOnesMember: (id, params) => {
-    return http.get('/department/' + id + '/member', {params});
+    return http.get('oms/department/' + id + '/member', {params});
   },
   getMembers: (params) => {
-    return http.get('/department/members', {params});
+    return http.get('oms/department/members', {params});
   },
   queryStateNum: (params) => {
-    return http.get('/department/member/count', {params});
+    return http.get('/oms/department/member/count', {params});
   }
 });
 
@@ -268,7 +268,7 @@ export const Auth = {
     }
   },
   permission: () => {
-    return http.get('/oms/access/permissions', {params: {objectId: 'ccs-system'}}); // TODO 改成tms-system
+    return http.get('/oms/access/permissions', {params: {objectId: 'ccs-system'}});
   }
 };
 

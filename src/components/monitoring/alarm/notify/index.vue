@@ -4,13 +4,11 @@
 
     <div class="order-list" style="margin-top: 20px">
       <el-row class="order-list-header">
-        <el-col :span="5">冷链标签</el-col>
-        <el-col :span="2">通知类型</el-col>
-        <el-col :span="2">通知方式</el-col>
-        <el-col :span="4">通知对象</el-col>
-        <el-col :span="4">通知时间</el-col>
-        <el-col :span="2">发送状态</el-col>
-        <el-col :span="5">失败原因</el-col>
+        <el-col :span="6">通知时间</el-col>
+        <el-col :span="6">设备名称</el-col>
+        <el-col :span="4">通知类型</el-col>
+        <el-col :span="4">消息类型</el-col>
+        <el-col :span="4">发送状态</el-col>
       </el-row>
       <el-row v-if="loadingData">
         <el-col :span="24">
@@ -24,21 +22,16 @@
           </div>
         </el-col>
       </el-row>
-      <div class="order-list-body flex-list-dom" v-else>
-        <div :class="[{'active':currentItemId===item.id}]" class="order-list-item order-list-item-bg no-pointer"
+      <div class="order-list-body flex-list-dom" v-else="">
+        <div :class="[{'active':currentItemId===item.id}]" @click="showItemDetail(item)"
+             class="order-list-item order-list-item-bg"
              v-for="item in dataList">
           <el-row>
-            <el-col :span="5">{{item.sensorName}}</el-col>
-            <el-col :span="2">{{item.type === '0' ? '告警' : '恢复'}}</el-col>
-            <el-col :span="2">{{item.way === '0' ? '短信' : '微信'}}</el-col>
-            <el-col :span="4" class="R">{{item.noticeUserTarget}}</el-col>
-            <el-col :span="4">{{item.time | time}}</el-col>
-            <el-col :span="2">
-              {{item.status === '1' ? '成功' : item.status === '0' ? '失败' : item.status === '2' ? '发送中': item.status}}
-            </el-col>
-            <el-col :span="5">
-              <span v-show="item.status === '0'">{{item.sendResult}}</span>
-            </el-col>
+            <el-col :span="6">{{item.createTime | time}}</el-col>
+            <el-col :span="6">{{item.devName}}</el-col>
+            <el-col :span="4">{{checkList[Number(item.notifyType) - 1].label}}</el-col>
+            <el-col :span="4">{{item.recordType === '0' ? '告警' : '恢复'}}</el-col>
+            <el-col :span="4">{{item.sendStatus === '1' ? '成功' : '失败'}}</el-col>
           </el-row>
         </div>
       </div>
@@ -71,7 +64,7 @@
     data() {
       return {
         filters: {
-          status: ''
+          status: '0'
         },
         checkList: [
           {label: '短信', key: '1', placeholder: '请输入手机号', validator: this.checkPhone},
@@ -104,7 +97,14 @@
       },
       queryList(pageNo) {
         const http = NotifyRecord.query;
-        this.queryUtil(http, pageNo);
+        const params = this.queryUtil(http, pageNo);
+        // this.queryStatusNum(params);
+      },
+      queryStatusNum(params) {
+        const pm = Object.assign({}, params, {status: null});
+        const http = NotifyRecord.queryStatusNum;
+        const res = {};
+        this.queryStatusNumUtil(http, pm, this.statusType, res);
       },
       resetRightBox() {
         this.showIndex = -1;

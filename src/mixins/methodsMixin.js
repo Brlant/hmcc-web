@@ -1,82 +1,73 @@
-import {AlarmNotifyGroup, ColdChainLabelApi, cool, gateway, orgRelation} from '@/resources';
+import {Address, BaseInfo, TempDev} from '@/resources';
 
+// 得到嵌套参数
+const getProps = (vm, prop) => {
+  let isLot = prop.includes('.');
+  if (!isLot) return vm[prop];
+  return prop.split('.').reduce((pre, next) => {
+    return pre[next];
+  }, vm);
+};
 
 export default {
   data() {
     return {
-      probeList: [],
+      allTempList: [],
       orgList: [],
-      notifyList: [],
-      objectOrgList: [],
-      groupList: [],
-      coolList: [],
-      povList: [],
-      gatewayList: [],
-      subOrgList: [],
-      batchNumberList: [],
-      goodsNameList: [],
+      customerList: [],
+      relationCustomerList: [],
+      relationCustomerWarehouseList: [],
+      tempTypeList: ['有线温度计', '无线温度计', '冷柜温度计', '车载温度计', '湿度计']
     };
   },
   methods: {
-    queryProbeList(query) {
-      let params = typeof query === 'object' ? query : {keyWord: query};
-      return ColdChainLabelApi.query(params).then(res => {
-        this.probeList = res.data.list;
-      });
-    },
-    queryGateway(query) {
-      let params = typeof query === 'object' ? query : {keyWord: query};
-      return gateway.query(params).then(res => {
-        this.gatewayList = res.data.list;
-      });
-    },
-    queryAllOrg: function (query) {// 查询货主
-      let params = {keyWord: query};
-      this.$http.get('/subordinate-org/info/permission/self', {params: params}).then(res => {
-        this.orgList = res.data;
-      });
-    },
-    queryNotifyList(query) {
-      let params = {
-        keyWord: query,
-      };
-      if (typeof query === 'object') {
-        params = query;
+    queryCustomer: function (query) {// 查询客户
+      let params = {};
+      if (typeof query === 'string') {
+        Object.assign(params, {keyWord: query});
+      } else if (typeof query === 'object') {
+        Object.assign(params, query);
       }
-      AlarmNotifyGroup.query(params).then(res => {
-        this.notifyList = res.data.list;
+      BaseInfo.query(params).then(res => {
+        this.customerList = res.data.list;
       });
     },
-    queryCoolList(query) {
-      let params = {
-        keyWord: query,
-      };
-      if (typeof query === 'object') {
-        params = query;
+    queryOrg: function (query) {// 查询货主
+      let params = {type: '0'};
+      if (typeof query === 'string') {
+        Object.assign(params, {keyWord: query});
+      } else if (typeof query === 'object') {
+        Object.assign(params, query);
       }
-      cool.query(params).then(res => {
-        this.coolList = res.data.list;
+      BaseInfo.query(params).then(res => {
+        this.orgList = res.data.list;
       });
     },
-    filterPOV: function (query) {// 过滤POV
-      let params = {
-        keyWord: query
+    queryRelationCustomer: function (props) {// 查询业务关系
+      return query => {
+        let orgId = getProps(this, props);
+        if (!orgId) return;
+        let params = {keyWord: query};
+        BaseInfo.queryOrgByValidReation(orgId, params).then(res => {
+          this.relationCustomerList = res.data;
+        });
       };
-      this.$http.get('/subordinate-org/info/permission/self', {params: params}).then(res => {
-        this.povList = res.data;
+    },
+    queryRelationCustomerWarehouse: function (customerId) {// 查询业务关系
+      if (!customerId) return;
+      Address.queryAddress(customerId, {
+        deleteFlag: false,
+        orgId: customerId
+      }).then(res => {
+        this.relationCustomerWarehouseList = res.data;
       });
     },
-    querySubOrg(query) { // 被监管单位 //授权主体单位 // 上级单位
-      let params = {keyWord: query};
-      return orgRelation.querySubOrg(params).then(res => {
-        this.subOrgList = res.data;
+    queryAllTemp(query) {
+      TempDev.queryALLTempByLike({searchVal: query}).then(res => {
+        res.data.currentList.forEach(i => (i.disabled = false));
+        this.allTempList = res.data.currentList;
+        this.setTempListWhenEdit && this.setTempListWhenEdit();
       });
-    },
-    queryALLObjectOrg(query) { // 被监管单位 //授权主体单位 // 上级单位
-      let params = {keyWord: query};
-      return orgRelation.querySubOrg(params).then(res => {
-        this.objectOrgList = res.data;
-      });
-    },
+    }
   }
 };

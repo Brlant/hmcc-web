@@ -1,4 +1,4 @@
-<style scoped>
+<style scoped="">
   .chart-Line {
     height: 400px;
     width: 1200px;
@@ -17,8 +17,10 @@
   </div>
 </template>
 <script>
-  const unitAry = ['', '°C', '%', '%'];
+  const unitAry = ['', '°C', '%', 'V'];
   const titleAry = ['', '温度', '湿度', '电压'];
+  import {TempDev} from '@/resources';
+  import axios from 'axios';
   import Echarts from 'echarts/lib/echarts';
   import moment from 'moment';
 
@@ -27,7 +29,7 @@
   }
 
   export default {
-    props: ['filter', 'isRecord', 'detail', 'chartWidth'],
+    props: ['filters', 'isRecord', 'detail', 'chartWidth'],
     data() {
       return {
         loadingData: false,
@@ -35,7 +37,7 @@
       };
     },
     watch: {
-      filter: {
+      filters: {
         handler: function () {
           this.queryList();
         },
@@ -52,7 +54,7 @@
       getYAxis(typeList) {
         let {setMaxAndMin} = this;
         return typeList.map((m, index) => {
-          let ot = 40;
+          let ot = this.isRecord ? 40 : 50;
           let obj = {
             name: titleAry[m] + `(${unitAry[m]})`,
             offset: index === 2 ? ot : 0,
@@ -154,9 +156,18 @@
         let _this = this;
         obj.tooltip.formatter = function (params) {
           if (!params.length) return '';
-          let collectTime = moment(params[0].value[0]).format('MM-DD: HH:mm:ss');
-          let insertTime = moment(params[0].value[2]).format('MM-DD: HH:mm:ss');
-          let str = `采集时间: ${collectTime}<br/>数据库存储时间: ${insertTime}<br/>`;
+          let collectTime = '';
+          let insertTime = '';
+          if (_this.isRecord) {
+            // 告警事件
+            collectTime = moment(params[0].value[0]).format('MM-DD: HH:mm:ss');
+            insertTime = moment(params[0].value[2]).format('MM-DD: HH:mm:ss');
+          } else {
+            // 历史数据
+            collectTime = formatTime(params[0].value[0]);
+            insertTime = formatTime(params[0].value[2]);
+          }
+          let str = `采集时间: ${collectTime}<br/>插入时间: ${insertTime}<br/>`;
           params.forEach(i => {
             str += `${i.marker}${i.seriesName}: ${i.value[1]}<br/>`;
           });
@@ -178,27 +189,39 @@
         };
       },
       queryList() {
-        const {id} = this.filter;
+        let filter = {};
+        if (Array.isArray(this.filters)) {
+          if (!this.filters.length) return;
+          filter = this.filters[0];
+        } else {
+          if (!this.filters) return;
+          filter = this.filters;
+        }
+        const {startTime, endTime, devId, devCode, valType, startPrice} = filter;
         let {getLegend, getYAxis, getData, getOption, getAlarmLine} = this;
         const option = getOption();
-        if (!id) return;
-        let typeList = ['1', '2', '3'];
+        if (!devCode) return;
+        const typeList = valType.filter(f => f !== '4');
         // 设置图例
         option.legend = getLegend(typeList);
         // 设置Y轴
         option.yAxis = getYAxis(typeList);
         option.series = [];
+        let httpAry = [];
+        typeList.forEach((i, index) => {
+          const params = {startTime, endTime, devId, devCode, valType: i, startPrice};
+          httpAry.push(TempDev.queryTempData(params));
+        });
         this.loadingData = true;
         this.isHasData = false;
-        this.$http.post('/sensor/data', this.filter).then(res => {
-          this.loadingData = false;
-          if (res.code === 200) {
+        axios.all(httpAry)
+          .then(axios.spread((...args) => {
+            this.loadingData = false;
             typeList.forEach((i, index) => {
-              const data = res.data && res.data.map(m => {
-                m.value = i === '1' ? m.temperature : i === '2' ? m.humidity : m.voltage;
+              const data = args[index].data.ccsDevDataRecordDTOList && args[index].data.ccsDevDataRecordDTOList.map(m => {
                 return {
                   name: m.createTime,
-                  value: [m.createTime, m.value, m.insertTime]
+                  value: [m.createTime, m.devActval, m.insertTime]
                 };
               }) || [];
               data.length && (this.isHasData = true);
@@ -209,17 +232,27 @@
               if (!chartDom) return;
               let chartLine = Echarts.init(chartDom, 'light');
               if (!chartLine) return;
-              let {detail} = this;
-              // 时间标线， 起始时间，终止时间
-              option.series.forEach(i => {
-                const data = i.markLine.data;
-                if (data.length > 1) return;
-                data.push(getAlarmLine(detail.occurrenceTime));
-                detail.recoveryTime && data.push(getAlarmLine(detail.recoveryTime));
-              });
-              chartLine.setOption(option);
+              let {isRecord, detail} = this;
+              if (isRecord && option.series.length) {
+                // 时间标线， 起始时间，终止时间
+                option.series.forEach(i => {
+                  const data = i.markLine.data;
+                  if (data.length > 1) return;
+                  data.push(getAlarmLine(detail.createTime));
+                  detail.restoreTime && data.push(getAlarmLine(detail.restoreTime));
+                });
+                chartLine.setOption(option);
+              } else {
+                chartLine.setOption(option);
+              }
             });
-          }
+          })).catch(e => {
+          this.loadingData = false;
+          this.isHasData = false;
+          this.$notify.error({
+            title: '查询错误',
+            message: e.response && e.response.data && e.response.data.msg || ''
+          });
         });
       }
     }

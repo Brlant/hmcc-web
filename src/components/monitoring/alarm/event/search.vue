@@ -3,7 +3,7 @@
     <template slot="title">告警事件查询</template>
     <template slot="btn">
       <slot name="btn">
-        <el-button @click="exportSearchFile" plain size="small" v-has="permPage.handle">
+        <el-button @click="exportSearchFile" plain size="small">
           <f-a class="icon-small" name="export"></f-a>
           导出Excel
         </el-button>
@@ -12,49 +12,55 @@
     <template slot="content">
       <el-form class="advanced-query-form" onsubmit="return false">
         <el-row>
-          <el-col :span="8">
+          <el-col :span="7">
             <oms-form-row :span="5" label="发生时间">
               <el-date-picker :default-time="['00:00:00', '23:59:59']" class="el-date-picker--mini" placeholder="请选择"
-                              type="datetimerange" v-model="times1" @change="search"/>
+                              type="datetimerange" v-model="times1"/>
             </oms-form-row>
           </el-col>
-          <el-col :span="8">
+          <el-col :span="6">
             <oms-form-row :span="5" label="恢复时间">
               <el-date-picker :default-time="['00:00:00', '23:59:59']" class="el-date-picker--mini" placeholder="请选择"
-                              type="datetimerange" v-model="times2" @change="search"/>
+                              type="datetimerange" v-model="times2"/>
             </oms-form-row>
           </el-col>
-          <el-col :span="8">
-            <oms-form-row :span="4" label="冷链">
-              <el-select :remote-method="queryProbeList" @focus="queryProbeList('')" filterable placeholder="请输入名称搜索冷链" remote
-                         v-model="searchCondition.sensorId" @change="search">
-                <el-option :key="item.id" :label="item.name" :value="item.id"
-                           v-for="item in probeList"></el-option>
+          <el-col :span="5">
+            <oms-form-row :span="4" label="设备">
+              <el-select :remote-method="queryAllTemp" @change="search"
+                         clearable filterable
+                         placeholder="请输入名称搜索设备" popper-class="selects--custom" remote reserve-keyword
+                         v-model="searchCondition.devId">
+                <el-option :key="item.id" :label="item.devName" :value="item.id"
+                           v-for="(item, index) in allTempList">
+                  <dev-option-info :item="item"/>
+                </el-option>
               </el-select>
+              <!--<oms-input placeholder="请输入设备名称" v-model.trim="searchCondition.devName" @keyup.native.enter="search"/>-->
+            </oms-form-row>
+          </el-col>
+          <el-col :span="6">
+            <oms-form-row :span="8" label="状态">
+              <el-radio-group @change="search" size="small" v-model="searchCondition.confirmStatus">
+                <el-radio-button :label="0">未确认</el-radio-button>
+                <el-radio-button :label="1">已确认</el-radio-button>
+                <el-radio-button :label="2">取消</el-radio-button>
+              </el-radio-group>
             </oms-form-row>
           </el-col>
         </el-row>
         <el-row>
-          <el-col :span="8">
-            <oms-form-row :span="5" label="告警类型">
-              <el-select filterable placeholder="请选择告警类型"
-                         v-model="searchCondition.type" @change="search">
-                <el-option :key="index" :label="item" :value="index"
-                           v-for="(item, index) in alarmTypeList"></el-option>
-              </el-select>
-            </oms-form-row>
-          </el-col>
-          <el-col :span="8">
-            <oms-form-row :span="5" label="告警级别">
-              <el-radio-group @change="search" size="small" v-model="searchCondition.level">
-                <el-radio-button label="1">一级</el-radio-button>
-                <el-radio-button label="2">二级</el-radio-button>
-                <el-radio-button label="3">三级</el-radio-button>
+          <el-col :span="7">
+            <oms-form-row :span="5" label="异常类型">
+              <el-radio-group @change="search" size="small" v-model="searchCondition.warnType">
+                <el-radio-button :label="1">温度</el-radio-button>
+                <el-radio-button :label="2">湿度</el-radio-button>
+                <el-radio-button :label="3">电压</el-radio-button>
+                <el-radio-button :label="4">离线时间</el-radio-button>
               </el-radio-group>
             </oms-form-row>
           </el-col>
           <el-col :span="4">
-            <oms-form-row :span="11" label="是否恢复">
+            <oms-form-row :span="8" label="是否恢复">
               <el-radio-group @change="search" size="small" v-model="searchCondition.recoveryStatus">
                 <el-radio-button :label="1">是</el-radio-button>
                 <el-radio-button :label="0">否</el-radio-button>
@@ -62,10 +68,10 @@
             </oms-form-row>
           </el-col>
           <el-col :span="4">
-            <oms-form-row :span="11" label="是否处理">
-              <el-radio-group @change="search" size="small" v-model="searchCondition.handlingStatus">
-                <el-radio-button :label="1">是</el-radio-button>
-                <el-radio-button :label="0">否</el-radio-button>
+            <oms-form-row :span="8" label="告警级别">
+              <el-radio-group @change="search" size="small" v-model="searchCondition.warnLevel">
+                <el-radio-button :label="0">低</el-radio-button>
+                <el-radio-button :label="1">高</el-radio-button>
               </el-radio-group>
             </oms-form-row>
           </el-col>
@@ -80,27 +86,20 @@
   import utils from '@/tools/utils';
 
   export default {
-    props: {
-      alarmTypeList: Array
-    },
     mixins: [methodsMixin],
-    computed: {
-      permPage() {
-        return this.$route.meta.permPage;
-      }
-    },
     data: function () {
       return {
         searchCondition: {
-          type: '',
-          level: '',
-          sensorId: '',
-          startDate: '',
-          endDate: '',
-          recoveryStartDate: '',
-          recoveryEndDate: '',
-          handlingStatus: '',
-          recoveryStatus: ''
+          occurBegin: '',
+          occurEnd: '',
+          restoreBegin: '',
+          restoreEnd: '',
+          devName: '',
+          devId: '',
+          confirmStatus: '',
+          warnType: '',
+          warnLevel: '',
+          recoveryStatus: null
         },
         showSearch: false,
         list: [],
@@ -112,18 +111,12 @@
       exportSearchFile: function () {
         this.$store.commit('initPrint', {
           isPrinting: true,
-          moduleId: this.$route.path,
+          moduleId: '/alarm/record',
           text: '正在导出'
         });
         let params = Object.assign({}, this.searchCondition);
-        http.post('/alarm-event/export', params).then(res => {
-          if (res.code === 200) {
-            utils.download(res.data.path, '告警记录表');
-          }
-          this.$notify.success({
-            message: '导出成功'
-          });
-
+        http.get('/ccsWarnRecord/export', {params}).then(res => {
+          utils.download(res.data.path, '告警记录表');
           this.$store.commit('initPrint', {
             isPrinting: false,
             moduleId: '/alarm/record'
@@ -132,7 +125,7 @@
         }).catch(error => {
           this.$store.commit('initPrint', {
             isPrinting: false,
-            moduleId: this.$route.path
+            moduleId: '/alarm/record'
           });
           this.$notify.error({
             message: error.response.data && error.response.data.msg || '导出失败'
@@ -141,23 +134,23 @@
       },
       search() {
         const parent = this.$parent;
-        this.searchCondition.startDate = parent.formatTimeAry(this.times1, 0);
-        this.searchCondition.endDate = parent.formatTimeAry(this.times1, 1);
-        this.searchCondition.recoveryStartDate = parent.formatTimeAry(this.times2, 0);
-        this.searchCondition.recoveryEndDate = parent.formatTimeAry(this.times2, 1);
+        this.searchCondition.occurBegin = parent.formatTimeAry(this.times1, 0);
+        this.searchCondition.occurEnd = parent.formatTimeAry(this.times1, 1);
+        this.searchCondition.restoreBegin = parent.formatTimeAry(this.times2, 0);
+        this.searchCondition.restoreEnd = parent.formatTimeAry(this.times2, 1);
         this.$emit('search', this.searchCondition);
       },
       reset() {
         this.searchCondition = {
-          type: '',
-          level: '',
-          sensorId: '',
-          startDate: '',
-          endDate: '',
-          recoveryStartDate: '',
-          recoveryEndDate: '',
-          handlingStatus: '',
-          recoveryStatus: ''
+          occurBegin: '',
+          occurEnd: '',
+          restoreBegin: '',
+          restoreEnd: '',
+          devName: '',
+          confirmStatus: '',
+          warnType: '',
+          warnLevel: '',
+          recoveryStatus: null
         };
         this.times1 = [];
         this.times2 = [];

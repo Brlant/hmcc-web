@@ -4,7 +4,6 @@
     padding: 5px 8px;
     border-bottom: 1px solid #f8f8f8;
   }
-
   .content {
     text-align: center;
   }

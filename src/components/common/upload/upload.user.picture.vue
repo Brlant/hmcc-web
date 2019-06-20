@@ -34,8 +34,8 @@
   .avatar-user {
     margin-right: 10px;
     border-radius: 50%;
-    height: 30px;
-    width: 30px;
+    height: 40px;
+    width: 40px;
     border: 1px solid #eee
   }
 </style>

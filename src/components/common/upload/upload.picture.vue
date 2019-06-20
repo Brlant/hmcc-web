@@ -1,21 +1,18 @@
 <template>
   <div>
-    <oms-el-upload
-      class="avatar-uploader"
-      :action="uploadUrl"
-      :show-file-list="false"
-      name="file"
-      :on-success="handleAvatarSuccess"
-      :on-error="error"
-      :on-remove="handleRemove"
+    <el-upload
+      :action="'/api/omsAttachment'"
       :before-upload="beforeAvatarUpload"
       :on-change="changePhoto"
-      :data="uploadData"
-      :formData="formData"
-    >
-      <img v-if="imageUrl" :src="imageUrl" slot="trigger" class="avatar">
-      <i v-else class="el-icon-plus avatar-uploader-icon" slot="trigger"></i>
-    </oms-el-upload>
+      :on-error="error"
+      :on-remove="handleRemove"
+      :on-success="handleAvatarSuccess"
+      :show-file-list="false"
+      class="avatar-uploader"
+      name="upfile">
+      <img :src="imageUrl" class="avatar" v-if="imageUrl">
+      <i class="el-icon-plus avatar-uploader-icon" v-else=""></i>
+    </el-upload>
   </div>
 </template>
 
@@ -49,20 +46,14 @@
 </style>
 
 <script>
-  import {OmsAttachment} from '@/resources';
-  import OmsElUpload from './upload/src/index.vue';
+  import {OmsAttachment} from '../../../resources';
 
   export default {
-    props: ['photoUrl', 'formData'],
+    props: ['photoUrl'],
     name: 'omsPhotoUpload',
-    components: {
-      OmsElUpload
-    },
     data() {
       return {
-        imageUrl: this.photoUrl,
-        uploadData: {},
-        uploadUrl: '/omsAttachment'
+        imageUrl: this.photoUrl
       };
     },
     watch: {
@@ -100,14 +91,19 @@
         });
       },
       beforeAvatarUpload(file) {
-        const isLt10M = file.size / 1024 / 1024 < 10;
-        if (!isLt10M) {
-          this.$notify.error({
-            duration: 2000,
-            message: '上传附件大小不能超过 10MB!'
-          });
-          return false;
+        const isJPG = file.type === 'image/jpeg';
+
+        const isPng = file.type === 'image/png';
+
+        if (!isJPG && !isPng) {
+          this.$message.error('上传图片只能是JPG或者PNG格式!');
         }
+        const isLt10M = file.size / 1024 / 1024 < 10;
+
+        if (!isLt10M) {
+          this.$message.error('上传图片大小不能超过 10MB!');
+        }
+        return isPng || isJPG && isLt10M;
       },
       error(err) {
         this.$notify.error({
@@ -118,3 +114,4 @@
     }
   };
 </script>
+

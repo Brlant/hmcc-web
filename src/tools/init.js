@@ -141,8 +141,8 @@ export function init(Vue) {
 
   // 通用请求方法
   Vue.prototype.$httpRequestOpera = function (httpPromise, option = {
-    successTitle: '',
-    errorTitle: '',
+    successTitle: '操作成功',
+    errorTitle: '操作失败',
     success: res => {
     },
     error: res => {
@@ -150,27 +150,15 @@ export function init(Vue) {
   }) {
     const {successTitle, errorTitle, success, error} = option;
     httpPromise.then(res => {
-      if (res.code) {
-        if (res.code === 200) {
-          successTitle && this.$notify.success({
-            duration: 2000,
-            message: successTitle
-          });
-          success(res);
-        } else {
-          error(res);
-        }
-      } else {
-        successTitle && this.$notify.success({
-          duration: 2000,
-          message: successTitle
-        });
-        success(res);
-      }
-    }).catch(e => {
-      errorTitle && this.$notify.error({
+      this.$notify.success({
         duration: 2000,
-        message: e.response && e.response.data && e.response.data.msg || errorTitle || '操作失败'
+        message: successTitle
+      });
+      success(res);
+    }).catch(e => {
+      this.$notify.error({
+        duration: 2000,
+        message: e.response && e.response.data && e.response.data.msg || errorTitle
       });
       error(e);
     });
@@ -178,7 +166,7 @@ export function init(Vue) {
 
   //格式化历史数据方法
   Vue.prototype.$formatDevData = function (item, type) {
-    let unit = ['', '℃', '%', '%'];
+    let unit = ['', '℃', '%', 'V'];
     let prop = ['', 'temperature', 'humidity', 'voltage'];
     if (!item[prop[type]]) return '';
     return item[prop[type]].toFixed(2) + unit[type];
@@ -186,7 +174,7 @@ export function init(Vue) {
 
   // 格式化设备首页数据
   Vue.prototype.$formatDevIndexData = function (item, devType) {
-    let unit = ['', '℃', '%', '%'];
+    let unit = ['', '℃', '%', 'V'];
     let prop = ['', 'temperature', 'humidity', 'voltage'];
     if (devType && devType === '4') {
       if (!item[prop[2]]) return '';

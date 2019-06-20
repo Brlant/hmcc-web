@@ -4,7 +4,7 @@ export default {
       checkList: [
         {label: '温度值', key: '1', unit: '℃', show: true},
         {label: '湿度值', key: '2', unit: '%', show: true},
-        {label: '电压值', key: '3', unit: '%', show: true},
+        {label: '电压值', key: '3', unit: 'V', show: true},
         {label: '离线时间', key: '4', unit: 'min', show: true}
       ],
       conditions: [
@@ -29,9 +29,7 @@ export default {
         10: '10分钟',
         15: '15分钟',
         30: '30分钟'
-      },
-      alarmTypeList: ['低温', '高温', '低湿度', '高湿度', '低电压', '高电压', '离线'],
-      alarmLevelList: ['', '一级', '二级', '三级']
+      }
     };
   }
 };

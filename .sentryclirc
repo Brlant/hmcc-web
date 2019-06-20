@@ -1,7 +1,7 @@
 [auth]
-token=a4ff61c33109430b97d242478df8fd20ede0ece2cfe540baac13e953a31c3316
+token=6f84ddf78570418c835b079f6553fe949b1399712f70424f82c81c51d9f34db7
 
 [defaults]
-url=https://f-log.sinopharm-bio.com/
+url=http://f-log.cdcerp.net
 org=sentry
-project=hmcc-web
+project=dtop-web

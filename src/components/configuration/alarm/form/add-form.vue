@@ -1,429 +1,308 @@
 <template>
-  <dialog-template :btnSavePosition="100">
-    <template slot="title">{{actionType}}</template>
+  <dialog-template :btnSavePosition="120">
+    <template slot="title">{{actionType}}告警规则</template>
     <template slot="btnSave">
-      <el-button :disabled="doing" @click="save('tempForm')" plain type="primary" style="margin-bottom: 20px">保存</el-button>
+      <el-button :disabled="doing" @click="save('tempForm')" plain type="primary">保存</el-button>
     </template>
     <template slot="content">
-      <el-form :model="form" :rules="rules" label-width="160px" ref="tempForm">
-        <el-form-item label="冷链标签" prop="sensorId">
-          <el-select :remote-method="queryProbeList" filterable placeholder="请输入名称搜索冷链标签"
-                     remote v-model="form.sensorId" @change="sensorIdChange">
-            <el-option :key="item.id" :label="item.name" :value="item.id"
-                       v-for="item in probeList"></el-option>
+      <el-form :model="form" :rules="rules" label-width="120px" ref="tempForm">
+        <el-form-item label="规则名称" prop="ruleName">
+          <oms-input placeholder="请输入规则名称" type="text" v-model="form.ruleName"></oms-input>
+        </el-form-item>
+        <two-column>
+          <el-form-item label="规则条件逻辑" prop="logicType" slot="left">
+            <el-radio-group size="small" v-model="form.logicType">
+              <el-radio-button :key="item.key" :label="item.key" v-for="item in logicList">{{item.label}}
+              </el-radio-button>
+            </el-radio-group>
+          </el-form-item>
+          <el-form-item label="级别" prop="warnLevel" slot="right">
+            <el-radio-group size="small" v-model="form.warnLevel">
+              <el-radio-button :key="item.key" :label="item.key" v-for="item in levels">{{item.label}}</el-radio-button>
+            </el-radio-group>
+          </el-form-item>
+        </two-column>
+
+
+        <el-form-item label="延时通知时间" prop="warnKeepTime">
+          <!--<oms-input type="text" v-model.number="form.warnKeepTime" placeholder="请输入延时通知时间">-->
+          <!--<template slot="append">min</template>-->
+          <!--</oms-input>-->
+          <el-select placeholder="请选择延时通知时间" v-model="form.warnKeepTime">
+            <el-option :key="key * 1" :label="item" :value="key * 1"
+                       v-for="(item, key) in offLine">
+            </el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="告警通知组" prop="alarmNoticeGroupId">
-          <el-select remote :remote-method="queryNotifyListNew" v-model="form.alarmNoticeGroupId" filterable
-                     placeholder="请输入名称搜索告警通知组"
-                     remotev-model="form.alarmNoticeGroupId">
-            <el-option :key="item.id" :label="item.name" :value="item.id"
-                       v-for="item in notifyList"></el-option>
-          </el-select>
+        <el-form-item>
+          <des-btn @click="addRule" icon="plus" v-has="'show'" v-show="isShowAddRuleBtn">添加条件</des-btn>
         </el-form-item>
-        <div class="border-left-color" style="margin-left: 20px">温度告警 </div>
-        <el-form-item label="温度告警开关">
-          <el-switch @change="temperatureAlarmFlagChange" v-model="form.temperatureAlarmFlag" active-value="1" inactive-value="0"></el-switch>
-        </el-form-item>
-        <div v-if="form.temperatureAlarmFlag === '1'">
+        <div :key="index" class="part-border-box no-border" v-for="(item, index) in form.details">
           <el-row>
-            <el-col :span="12">
-              <el-form-item label="温度最低值" prop="temperatureMin">
-                <oms-input placeholder="请输入温度最低值" type="number" v-model.number="form.temperatureMin">
-                  <template slot="append">℃</template>
-                </oms-input>
+            <el-col :span="8">
+              <el-form-item :prop="`details.${index}.monitorType`"
+                            :rules="[{ required: true, message: '请选择监控项', trigger: 'change' }]"
+                            label-width="0">
+                <el-select :disabled="item.checkDisabled" @change="checkChange(item)"
+                           placeholder="请选择监控项" v-model="item.monitorType">
+                  <el-option :key="item.key" :label="item.label" :value="item.key"
+                             v-for="item in checkList" v-show="item.show"></el-option>
+                </el-select>
               </el-form-item>
             </el-col>
-            <el-col :span="12">
-              <el-form-item label="温度最高值" prop="temperatureMax">
-                <oms-input placeholder="请输入温度最高值" type="number" v-model.number="form.temperatureMax">
-                  <template slot="append">℃</template>
+            <el-col :span="1"></el-col>
+            <el-col :span="4" align="center">
+              <el-form-item :prop="`details.${index}.compareType`"
+                            :rules="[{ required: true, message: '请选择条件', trigger: 'change' }]"
+                            label-width="0">
+                <el-select :disabled="item.disabled" @change="compareTypeChange(item, index)" placeholder="请选择条件"
+                           v-model="item.compareType">
+                  <el-option :key="item.key" :label="item.label" :value="item.key"
+                             v-for="item in conditions"
+                             v-show="item.monitorType !== '4' && item.key!== '2'"></el-option>
+                </el-select>
+              </el-form-item>
+            </el-col>
+            <el-col :span="1"></el-col>
+            <el-col :span="8">
+              <el-form-item :prop="`details.${index}.threshold`"
+                            :rules="[{ required: true, message: '请输入阀值', trigger: 'blur' }]" label-width="0"
+                            v-show="item.monitorType !== '4'">
+                <oms-input :disabled="item.thresholdDisabled" placeholder="请输入阀值" type="text" v-model="item.threshold">
+                  <template slot="append" v-if="unitIcon(item)">{{unitIcon(item)}}</template>
                 </oms-input>
               </el-form-item>
+              <el-form-item :prop="`details.${index}.threshold`"
+                            :rules="[{ required: true, message: '请选择阀值', trigger: 'change' }]" label-width="0"
+                            v-show="item.monitorType === '4'">
+                <el-select :disabled="item.thresholdDisabled" placeholder="请输入阀值"
+                           v-model="item.threshold">
+                  <el-option :key="key * 1" :label="item" :value="key * 1" v-for="(item, key) in offLine"
+                             v-show="key > 0"></el-option>
+                </el-select>
+              </el-form-item>
+
+            </el-col>
+            <el-col :span="2" align="center" class="opera-btn">
+              <des-btn @click="deleteRule(item)" icon="delete" v-has="'show'"/>
             </el-col>
           </el-row>
-          <el-form-item label="温度1级告警延迟时间" prop="temperatureLevelOneAlarmDelayTime">
-            <el-select clearable placeholder="请选择" v-model="form.temperatureLevelOneAlarmDelayTime">
-              <el-option :key="item" :label="item + '分钟'" :value="item"
-                         v-for="item in timeList"></el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item label="温度2级告警延迟时间" prop="temperatureLevelTwoAlarmDelayTime">
-            <el-select clearable placeholder="请选择" v-model="form.temperatureLevelTwoAlarmDelayTime">
-              <el-option :key="item" :label="item + '分钟'" :value="item"
-                         v-for="item in timeList"></el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item label="温度3级告警延迟时间" prop="temperatureLevelThreeAlarmDelayTime">
-            <el-select clearable placeholder="请选择" v-model="form.temperatureLevelThreeAlarmDelayTime">
-              <el-option :key="item" :label="item + '分钟'" :value="item"
-                         v-for="item in timeList"></el-option>
-            </el-select>
-          </el-form-item>
-        </div>
-        <div class="border-left-color" style="margin-left: 20px">湿度告警 </div>
+          <!--<el-row>-->
+          <!--<el-col :span="8">-->
+          <!--<el-form-item label-width="0"-->
+          <!--:rules="[{ required: true, message: '请选择生效开始时间', trigger: 'change' }]">-->
+          <!--<el-time-picker v-model="item.startTime" placeholder="请选择生效开始时间"/>-->
+          <!--</el-form-item>-->
+          <!--</el-col>-->
+          <!--<el-col :span="1"></el-col>-->
+          <!--<el-col :span="8">-->
+          <!--<el-form-item label-width="0"-->
+          <!--:rules="[{ required: true, message: '请选择生效结束时间', trigger: 'change' }]">-->
+          <!--<el-time-picker v-model="item.endTime" type="date" placeholder="请选择生效结束时间"/>-->
+          <!--</el-form-item>-->
+          <!--</el-col>-->
+          <!--<el-col :span="1"></el-col>-->
+          <!--<el-col :span="6">-->
 
-        <el-form-item label="湿度告警开关">
-          <el-switch @change="humidityAlarmFlagChange" v-model="form.humidityAlarmFlag" active-value="1" inactive-value="0"></el-switch>
-        </el-form-item>
-        <div v-if="form.humidityAlarmFlag === '1'">
-          <el-row>
-            <el-col :span="12">
-              <el-form-item label="湿度最低值" prop="humidityMin">
-                <oms-input placeholder="请输入湿度最低值" type="number" v-model.number="form.humidityMin">
-                  <template slot="append">%</template>
-                </oms-input>
-              </el-form-item>
-            </el-col>
-            <el-col :span="12">
-              <el-form-item label="湿度最高值" prop="humidityMax">
-                <oms-input placeholder="请输入湿度最高值" type="number" v-model.number="form.humidityMax">
-                  <template slot="append">%</template>
-                </oms-input>
-              </el-form-item>
-            </el-col>
-          </el-row>
-          <el-form-item label="湿度1级告警延迟时间" prop="humidityLevelOneAlarmDelayTime">
-            <el-select clearable placeholder="请选择" v-model="form.humidityLevelOneAlarmDelayTime">
-              <el-option :key="item" :label="item + '分钟'" :value="item"
-                         v-for="item in timeList"></el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item label="湿度2级告警延迟时间" prop="humidityLevelTwoAlarmDelayTime">
-            <el-select clearable placeholder="请选择" v-model="form.humidityLevelTwoAlarmDelayTime">
-              <el-option :key="item" :label="item + '分钟'" :value="item"
-                         v-for="item in timeList"></el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item label="湿度3级告警延迟时间" prop="humidityLevelThreeAlarmDelayTime">
-            <el-select clearable placeholder="请选择" v-model="form.humidityLevelThreeAlarmDelayTime">
-              <el-option :key="item" :label="item + '分钟'" :value="item"
-                         v-for="item in timeList"></el-option>
-            </el-select>
-          </el-form-item>
-        </div>
-
-        <div class="border-left-color" style="margin-left: 20px">电压告警</div>
-
-        <el-form-item label="电压告警开关">
-          <el-switch @change="voltageAlarmFlagChange" v-model="form.voltageAlarmFlag" active-value="1" inactive-value="0"></el-switch>
-        </el-form-item>
-        <div v-if="form.voltageAlarmFlag === '1'">
-          <el-row >
-            <el-col :span="12">
-              <el-form-item label="电压最低值" prop="voltageMin">
-                <oms-input placeholder="请输入电压最低值" type="number" v-model.number="form.voltageMin">
-                  <template slot="append">%</template>
-                </oms-input>
-              </el-form-item>
-            </el-col>
-            <el-col :span="12">
-              <el-form-item label="电压最高值" prop="voltageMax">
-                <oms-input placeholder="请输入电压最高值" type="number" v-model="form.voltageMax">
-                  <template slot="append">%</template>
-                </oms-input>
-              </el-form-item>
-            </el-col>
-          </el-row>
-          <el-form-item label="电压1级告警延迟时间" prop="voltageLevelOneAlarmDelayTime">
-            <el-select clearable placeholder="请选择" v-model="form.voltageLevelOneAlarmDelayTime">
-              <el-option :key="item" :label="item + '分钟'" :value="item"
-                         v-for="item in timeList"></el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item label="电压2级告警延迟时间" prop="voltageLevelTwoAlarmDelayTime">
-            <el-select clearable placeholder="请选择" v-model="form.voltageLevelTwoAlarmDelayTime">
-              <el-option :key="item" :label="item + '分钟'" :value="item"
-                         v-for="item in timeList"></el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item label="电压3级告警延迟时间" prop="voltageLevelThreeAlarmDelayTime">
-            <el-select clearable placeholder="请选择" v-model="form.voltageLevelThreeAlarmDelayTime">
-              <el-option :key="item" :label="item + '分钟'" :value="item"
-                         v-for="item in timeList"></el-option>
-            </el-select>
-          </el-form-item>
-        </div>
-        <div class="border-left-color" style="margin-left: 20px">离线告警</div>
-        <el-form-item label="离线告警开关">
-          <el-switch @change="offLineFlagChange" v-model="form.offLineFlag" active-value="1" inactive-value="0"></el-switch>
-        </el-form-item>
-        <div v-if="form.offLineFlag === '1'">
-          <el-form-item label="离线1级告警延迟时间" prop="offLineLevelOneAlarmDelayTime">
-            <el-select clearable placeholder="请选择" v-model="form.offLineLevelOneAlarmDelayTime">
-              <el-option :key="item" :label="item + '分钟'" :value="item"
-                         v-for="item in timeList"></el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item label="离线2级告警延迟时间" prop="offLineLevelTwoAlarmDelayTime">
-            <el-select clearable placeholder="请选择" v-model="form.offLineLevelTwoAlarmDelayTime">
-              <el-option :key="item" :label="item + '分钟'" :value="item"
-                         v-for="item in timeList"></el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item label="离线3级告警延迟时间" prop="offLineLevelThreeAlarmDelayTime">
-            <el-select clearable placeholder="请选择" v-model="form.offLineLevelThreeAlarmDelayTime">
-              <el-option :key="item" :label="item + '分钟'" :value="item"
-                         v-for="item in timeList"></el-option>
-            </el-select>
-          </el-form-item>
+          <!--</el-col>-->
+          <!--</el-row>-->
         </div>
       </el-form>
     </template>
   </dialog-template>
 </template>
 <script>
-  import methodsMixin from '@/mixins/methodsMixin';
-
   import {AlarmRule} from '@/resources';
 
   export default {
-    mixins: [methodsMixin],
-
     data() {
       return {
-        form: {
-          alarmNoticeGroupId: '',
-          sensorId: '',
-          temperatureMax: '',
-          temperatureMin: '',
-          humidityMin: '',
-          humidityMax: '',
-          voltageMin: '',
-          voltageMax: '',
-          temperatureAlarmFlag: '0',
-          humidityAlarmFlag: '0',
-          voltageAlarmFlag: '0',
-          offLineFlag: '0',
-          levelOneAlarmDelayTime: '',
-          levelThreeAlarmDelayTime: '',
-          levelTwoAlarmDelayTime: '',
-          temperatureLevelOneAlarmDelayTime: '',
-          temperatureLevelTwoAlarmDelayTime: '',
-          temperatureLevelThreeAlarmDelayTime: '',
-          humidityLevelOneAlarmDelayTime: '',
-          humidityLevelTwoAlarmDelayTime: '',
-          humidityLevelThreeAlarmDelayTime: '',
-          voltageLevelOneAlarmDelayTime: '',
-          voltageLevelTwoAlarmDelayTime: '',
-          voltageLevelThreeAlarmDelayTime: '',
-          offLineLevelOneAlarmDelayTime: '',
-          offLineLevelTwoAlarmDelayTime: '',
-          offLineLevelThreeAlarmDelayTime: ''
+        formModel: {
+          ruleName: '',
+          logicType: '0',
+          warnLevel: '0',
+          warnKeepTime: 0,
+          details: []
         },
+        ruleModel: {
+          monitorType: '',
+          compareType: '0',
+          warnLevel: '1',
+          startTime: '',
+          endTime: '',
+          threshold: '',
+          checkDisabled: false,
+          disabled: false,
+          thresholdDisabled: false
+        },
+        form: {},
         doing: false,
         rules: {
-          sensorId: [
-            {required: true, message: '请选择冷链标签', trigger: 'change'}
+          ruleName: [
+            {required: true, message: '请输入规则名称', trigger: 'blur'}
           ],
-          temperatureMax: [
-            {required: true, message: '请输入温度最高值', trigger: 'blur'}
+          type: [
+            {required: true, message: '请输入类型', trigger: 'blur'}
           ],
-          temperatureMin: [
-            {required: true, message: '请输入温度最低值', trigger: 'blur'}
+          logicType: [
+            {required: true, message: '请选择规则条件逻辑', trigger: 'change'}
           ],
-          humidityMax: [
-            {required: true, message: '请输入湿度最高值', trigger: 'blur'}
-          ],
-          humidityMin: [
-            {required: true, message: '请输入湿度最低值', trigger: 'blur'}
-          ],
-          voltageMax: [
-            {required: true, message: '请输入电压最高值', trigger: 'blur'}
-          ],
-          voltageMin: [
-            {required: true, message: '请输入电压最低值', trigger: 'blur'}
-          ],
-          offLineLevelOneAlarmDelayTime: [
-            {required: true, message: '请输入1级告警延迟时间', trigger: 'change'}
-          ],
-          offLineLevelTwoAlarmDelayTime: [
-            {required: true, message: '请输入2级告警延迟时间', trigger: 'change'}
-          ],
-          offLineLevelThreeAlarmDelayTime: [
-            {required: true, message: '请输入3级告警延迟时间', trigger: 'change'}
-          ],
-          temperatureLevelOneAlarmDelayTime: [
-            {required: true, message: '请输入1级告警延迟时间', trigger: 'change'}
-          ],
-          temperatureLevelTwoAlarmDelayTime: [
-            {required: true, message: '请输入2级告警延迟时间', trigger: 'change'}
-          ],
-          temperatureLevelThreeAlarmDelayTime: [
-            {required: true, message: '请输入3级告警延迟时间', trigger: 'change'}
-          ],
-          humidityLevelOneAlarmDelayTime: [
-            {required: true, message: '请输入1级告警延迟时间', trigger: 'change'}
-          ],
-          humidityLevelTwoAlarmDelayTime: [
-            {required: true, message: '请输入2级告警延迟时间', trigger: 'change'}
-          ],
-          humidityLevelThreeAlarmDelayTime: [
-            {required: true, message: '请输入3级告警延迟时间', trigger: 'change'}
-          ],
-          voltageLevelOneAlarmDelayTime: [
-            {required: true, message: '请输入1级告警延迟时间', trigger: 'change'}
-          ],
-          voltageLevelTwoAlarmDelayTime: [
-            {required: true, message: '请输入2级告警延迟时间', trigger: 'change'}
-          ],
-          voltageLevelThreeAlarmDelayTime: [
-            {required: true, message: '请输入3级告警延迟时间', trigger: 'change'}
-          ],
-          alarmNoticeGroupId: [
-            {required: true, message: '请选择告警通知组', trigger: 'change'}
+          warnKeepTime: [
+            {required: true, message: '请输入延时通知时间', trigger: 'blur'}
           ]
         },
-        timeList: [1, 2, 3, 5, 10, 30],
-        actionType: '添加'
+        actionType: '添加',
+        offLine: this.$parent.$parent.offLine,
+        checkList: this.$parent.$parent.checkList,
+        conditions: this.$parent.$parent.conditions,
+        levels: this.$parent.$parent.levels,
+        logicList: this.$parent.$parent.logicList
       };
     },
-    props: {
-      formItem: Object,
-      index: Number
+    computed: {
+      isShowAddRuleBtn() {
+        // 添加条件，最多是条件的种类个数
+        // 种类有2种
+        // 特殊情况，选择离线时间时，只能是一条规则
+        let details = this.form.details || [];
+        return !(details.length > 1 || details.length === 1 && details[0].monitorType === '4');
+      }
     },
+    props: ['formItem', 'index'],
     watch: {
       index: function (val) {
-        this.probeList = [];
-        this.$refs['tempForm'].clearValidate();
+        if (val !== 0) return;
+        this.$refs['tempForm'].resetFields();
         if (this.formItem.id) {
-          this.probeList = [
-            {name: this.formItem.sensorName, id: this.formItem.sensorId, no: this.formItem.sensorNo}
-          ];
-          this.notifyList = [
-            {
-              id: this.formItem.alarmNoticeGroupId,
-              name: this.formItem.alarmNoticeGroupName
-            }
-          ];
-          this.form = Object.assign({}, this.formItem);
+          this.queryDetail();
           this.actionType = '编辑';
         } else {
-          this.form = {
-            alarmNoticeGroupId: '',
-            sensorId: '',
-            temperatureMax: '',
-            temperatureMin: '',
-            humidityMin: '',
-            humidityMax: '',
-            voltageMin: '',
-            voltageMax: '',
-            temperatureAlarmFlag: '0',
-            humidityAlarmFlag: '0',
-            voltageAlarmFlag: '0',
-            offLineFlag: '0',
-            levelOneAlarmDelayTime: '',
-            levelThreeAlarmDelayTime: '',
-            levelTwoAlarmDelayTime: '',
-            temperatureLevelOneAlarmDelayTime: '',
-            temperatureLevelTwoAlarmDelayTime: '',
-            temperatureLevelThreeAlarmDelayTime: '',
-            humidityLevelOneAlarmDelayTime: '',
-            humidityLevelTwoAlarmDelayTime: '',
-            humidityLevelThreeAlarmDelayTime: '',
-            voltageLevelOneAlarmDelayTime: '',
-            voltageLevelTwoAlarmDelayTime: '',
-            voltageLevelThreeAlarmDelayTime: '',
-            offLineLevelOneAlarmDelayTime: '',
-            offLineLevelTwoAlarmDelayTime: '',
-            offLineLevelThreeAlarmDelayTime: ''
-          };
-          this.$nextTick(() => {
-            this.$refs.tempForm && this.$refs.tempForm.clearValidate();
-          });
+          this.form = Object.assign({}, this.formModel);
           this.actionType = '添加';
         }
       }
     },
     methods: {
-      queryNotifyListNew(query) {
-        if (!this.form.sensorId) return;
-        let item = this.probeList.find(f => f.id === this.form.sensorId);
-        let params = {
-          orgId: item.orgId,
-          keyWord: query
-        };
-        this.queryNotifyList(params);
+      addRule() {
+        let details = this.form.details || [];
+        if (!details.length) {
+          details.push(Object.assign({}, this.ruleModel));
+          return;
+        }
+        details.push(Object.assign({}, details[0], {
+          threshold: '',
+          checkDisabled: this.switchDisabled(),
+          disabled: this.switchDisabled(),
+          thresholdDisabled: false,
+          compareType: this.switchCompareType(details[0].compareType)
+        }));
       },
-      sensorIdChange(val) {
-        this.notifyList = [];
-        this.form.alarmNoticeGroupId = '';
+      switchDisabled() {
+        return this.form.details && this.form.details.length && this.form.details[0].disabled;
       },
-      temperatureAlarmFlagChange() {
-        this.form.temperatureMin = '';
-        this.form.temperatureMax = '';
-        this.form.temperatureLevelOneAlarmDelayTime = '';
-        this.form.temperatureLevelTwoAlarmDelayTime = '';
-        this.form.temperatureLevelThreeAlarmDelayTime = '';
-        this.$nextTick(() => {
-          this.$refs.tempForm.clearValidate();
-        })
+      switchCompareType(val) {
+        return val === '0' ? '1' : '0';
       },
-      humidityAlarmFlagChange() {
-        this.form.humidityMin = '';
-        this.form.humidityMax = '';
-        this.form.humidityLevelOneAlarmDelayTime = '';
-        this.form.humidityLevelTwoAlarmDelayTime = '';
-        this.form.humidityLevelThreeAlarmDelayTime = '';
-        this.$nextTick(() => {
-          this.$refs.tempForm.clearValidate();
-        })
+      deleteRule(item) {
+        let index = this.form.details.indexOf(item);
+        index !== -1 && this.form.details.splice(index, 1);
       },
-      voltageAlarmFlagChange() {
-        this.form.voltageMin = '';
-        this.form.voltageMax = '';
-        this.form.voltageLevelOneAlarmDelayTime = '';
-        this.form.voltageLevelTwoAlarmDelayTime = '';
-        this.form.voltageLevelThreeAlarmDelayTime = '';
-        this.$nextTick(() => {
-          this.$refs.tempForm.clearValidate();
-        })
+      unitIcon(item) {
+        let ary = this.checkList.filter(f => f.key === item.monitorType);
+        return ary.length ? ary[0].unit : '';
       },
-      offLineFlagChange() {
-        this.form.offLineLevelOneAlarmDelayTime = '';
-        this.form.offLineLevelTwoAlarmDelayTime = '';
-        this.form.offLineLevelThreeAlarmDelayTime = '';
-        this.$nextTick(() => {
-          this.$refs.tempForm.clearValidate();
-        })
+      checkChange(item) {
+        item.disabled = item.monitorType === '4';
+        item.threshold = item.disabled ? '' : '';
+
+        //若选择离线时间，删除其他条件
+        if (item.monitorType === '4') {
+          item.compareType = '1';
+          if (this.form.details.length > 1) {
+            this.form.details = [item];
+          }
+          return;
+        }
+        // 若是其他监控项， 所有条件的监控项，都设成一样
+        this.form.details.forEach(i => {
+          i.monitorType = item.monitorType;
+        });
+      },
+      // 条件改变时，若条件个数是2条，切换对应的另外一条数据
+      compareTypeChange(item, index) {
+        let details = this.form.details || [];
+        if (details.length !== 2) return;
+        let modifierIndex = index === 0 ? 1 : 0;
+        let modifierItem = Object.assign({}, details[modifierIndex], {
+          compareType: this.switchCompareType(details[modifierIndex].compareType)
+        });
+        details.splice(modifierIndex, 1, modifierItem);
+      },
+      // 打开弹窗，判断监控项，离线时间，只能添加一个条件
+      modifierCheckList(item) {
+        let count = 0;
+        this.form.details.forEach(i => {
+          if (i.monitorType === '4') {
+            count++;
+          }
+        });
+        this.checkList[3].show = !count || (count && item.monitorType === '4');
+      },
+      queryDetail() {
+        AlarmRule.get(this.formItem.id).then(res => {
+          this.setTime(res.data);
+          res.data.details.forEach(i => {
+            i.checkDisabled = true;
+            i.disabled = true;
+            i.thresholdDisabled = true;
+          });
+          this.form = res.data;
+        });
+      },
+      setTime(data) {
+        if (!data.details) return;
+        data.details.forEach(i => {
+          let str = this.$moment().format('YYYY-MM-DD') + ' ';
+          i.startTime && (i.startTime = new Date(i.startTime = str + i.startTime));
+          i.endTime && (i.endTime = new Date(i.endTime = str + i.endTime));
+        });
       },
       save(formName) {
         this.$refs[formName].validate((valid) => {
           if (valid && this.doing === false) {
-            this.probeList.forEach(i => {
-              if (i.id === this.form.sensorId) {
-                this.form.sensorName = i.name;
-                this.form.sensorNo = i.no;
-              }
+            if (!this.form.details.length) {
+              this.$notify.info({
+                message: '请添加条件'
+              });
+              return;
+            }
+            const parent = this.$parent.$parent;
+            let form = JSON.parse(JSON.stringify(this.form));
+            form.details.forEach(i => {
+              i.startTime = parent.formatTime(i.startTime, 'HH:mm:ss');
+              i.endTime = parent.formatTime(i.endTime, 'HH:mm:ss');
             });
+            this.doing = true;
+
             if (!this.form.id) {
-              this.doing = true;
-              this.$httpRequestOpera(AlarmRule.save(this.form), {
+              this.$httpRequestOpera(AlarmRule.save(form), {
+                successTitle: '添加成功',
                 errorTitle: '添加失败',
                 success: res => {
-                  if (res.code === 200) {
-                    this.$notify.success({message: '添加成功'});
-                    this.doing = false;
-                    this.$emit('change', res.data);
-                  } else {
-                    this.doing = false;
-                  }
+                  this.doing = false;
+                  this.$emit('change', res.data);
                 },
                 error: () => {
                   this.doing = false;
                 }
               });
             } else {
-              this.$httpRequestOpera(AlarmRule.update(this.form), {
+              this.$httpRequestOpera(AlarmRule.update(form.id, form), {
+                successTitle: '修改成功',
                 errorTitle: '修改失败',
                 success: res => {
-                  if (res.code === 200) {
-                    this.$notify.success({message: '修改成功'});
-                    this.doing = false;
-                    this.$emit('change', res.data);
-                  } else {
-                    this.doing = false;
-                  }
+                  this.doing = false;
+                  this.$emit('change', res.data);
                 },
                 error: () => {
                   this.doing = false;
@@ -432,6 +311,7 @@
             }
           }
         });
+
       }
     }
   };

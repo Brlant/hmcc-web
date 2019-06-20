@@ -46,7 +46,7 @@ import Loading from 'element-ui/lib/loading';
 import Icon from 'element-ui/lib/icon';
 import Row from 'element-ui/lib/row';
 import Col from 'element-ui/lib/col';
-import ElUpload from 'element-ui/lib/upload';
+// import Upload from 'element-ui/lib/upload';
 import Progress from 'element-ui/lib/progress';
 import Spinner from 'element-ui/lib/spinner';
 import Message from 'element-ui/lib/message';
@@ -65,8 +65,6 @@ import ColorPicker from 'element-ui/lib/color-picker';
 import Transfer from 'element-ui/lib/transfer';
 import locale from 'element-ui/lib/locale';
 import CollapseTransition from 'element-ui/lib/transitions/collapse-transition';
-import Divider from 'element-ui/lib/divider';
-import ElForm from 'element-ui/lib/form';
 import {
   compressedImg,
   CuPagination,
@@ -97,14 +95,15 @@ import {
   TwoColumn
 } from '@dtop/dtop-web-common';
 
-import Upload from '../components/common/upload/upload.vue';
-import UploadRelation from '../components/common/upload/upload.relation.vue';
-import perm from '../components/common/perm.vue';
+import upload from '../components/common/upload/upload.vue';
+import uploadRelation from '../components/common/upload/upload.relation.vue';
+import ElForm from '../components/common/form/src/form.vue';
 import DialogTemplate from '@/components/common/dialog-template';
 import SearchTemplate from '@/components/common/search-template';
 import refreshCycle from '@/components/common/refresh-cycle';
+import devOptionInfo from '@/components/common/dev/option-info';
+import ruleNotifyScan from '@/components/common/rule-notify-scan';
 import WholeErrorSignHandle from '@/tools/whole-error-sign-handle';
-import {Aside, Container, Empty, Main, Statistic} from 'element-ui'
 
 const tinyVue = [
   Pagination,
@@ -166,12 +165,12 @@ const tinyVue = [
   ColorPicker,
   Transfer,
   CollapseTransition,
-  Upload,
-  ElUpload,
-  UploadRelation,
+  upload,
+  uploadRelation,
   ElForm,
-  perm,
   refreshCycle,
+  devOptionInfo,
+  ruleNotifyScan,
   //公用组件
   CuPagination,
   Dict,
@@ -201,11 +200,7 @@ const tinyVue = [
   SearchTemplate,
   Scrollbar,
   compressedImg,
-  TnInputAutoComplete,
-  Divider,
-  Statistic,
-  Empty,
-  Container, Main, Aside,
+  TnInputAutoComplete
 ];
 
 const install = function (Vue, opts = {}) {

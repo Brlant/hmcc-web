@@ -1,4 +1,4 @@
-<style lang="scss" scoped>
+<style lang="scss" scoped="">
   @import "../../assets/scss/mixins";
 
   body {
@@ -7,10 +7,6 @@
 
   .main-card-box {
     width: 550px;
-    z-index: 1;
-  left: 75%;
-  top: 48%;
-  padding: 30px;
   }
 
   .logo-part {
@@ -55,7 +51,7 @@
 <template>
   <div>
     <el-card class="box-card main-card-box">
-      <div class="logo-part clearfix">智慧医院管理系统</div>
+      <div class="logo-part clearfix"><img src="../../assets/img/logo_pic.png">MCC冷链监控</div>
 
 
       <div style="padding:0 20px">
@@ -106,6 +102,9 @@
           <el-form key="el-form--login" label-position="top" ref="loginForm" label-width="80px" :model="user"
                    :rules="rules"
                    @submit.prevent="done" onsubmit="return false">
+            <el-form-item label="系统代码" prop="orgCode">
+              <oms-input v-model="user.orgCode"></oms-input>
+            </el-form-item>
             <el-form-item label="账号" prop="account">
               <el-input v-model="user.account" placeholder="手机号/邮箱/用户名"></el-input>
             </el-form-item>
@@ -133,12 +132,11 @@
         </div>
       </div>
     </el-card>
-    <div class="login-bg"></div>
   </div>
 </template>
 
 <script>
-  import {http, User} from '@/resources';
+  import {http, User} from '../../resources';
 
   const timeInterval = 60;
   let phoneReg = /^1[0-9]{10}$/;
@@ -150,13 +148,17 @@
         if (value === '') {
           callback(new Error('请输入密码'));
         } else {
+          let rl = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[^]{8,16}$/;
+          if (!rl.test(self.resetUser.password)) {
+            callback('新密码必须包含数字、大写字母,小写字母,至少8-16个字符');
+          } else {
             if (self.resetUser.password2 !== '') {
               this.$refs.resetForm.validateField('password2');
             }
             callback();
+          }
         }
       };
-
       let validatePass2 = (rule, value, callback) => {
         if (value === '') {
           callback(new Error('请再次输入密码'));
@@ -171,12 +173,16 @@
           account: '',
           code: '',
           type: 1,
+          orgCode: '',
           email: '',
           phoneCode: '',
           phone: ''
         },
         resetUser: {userId: '', code: '', password: '', password2: ''},
         resetUserRules: {
+          orgCode: [
+            {required: true, message: '请输入系统代码', trigger: 'blur'}
+          ],
           code: [
             {required: true, message: '请输入短信验证码', trigger: 'blur'}
           ],
@@ -193,6 +199,9 @@
         showCode: false,
         btnString: '提交',
         rules: {
+          orgCode: [
+            {required: true, message: '请输入系统代码', trigger: 'blur'}
+          ],
           account: [
             {required: true, message: '请输入账号'}
           ],

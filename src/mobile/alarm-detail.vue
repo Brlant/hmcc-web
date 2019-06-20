@@ -1,53 +1,85 @@
+<style scoped>
+  .form-header-part .header {
+    line-height: 24px;
+    height: 24px;
+  }
+
+  .empty-info.mini {
+    margin-top: 100px;
+  }
+  .index-tit {
+    font-size: 20px;
+  }
+  .tn-cell {
+    font-size: 16px;
+  }
+</style>
 <template>
   <div>
-    <div class="empty-info" v-if="!detail.id">暂无数据</div>
+    <div v-if="!detail.id" class="empty-info mini">暂无数据</div>
     <div v-else>
       <div class="form-header-part">
         <div class="header">
-          <div class="sign f-dib"></div>
-          <h3 class="tit f-dib index-tit">
+          <h3 class="tit f-dib index-tit" :class="{active: pageSets[0].key === currentTab.key}">
             {{pageSets[0].name}}</h3>
         </div>
         <div class="content" style="overflow: hidden">
-          <tn-ceil :rowSpan="rowSpan" label="发生时间">{{detail.occurrenceTime | time}}</tn-ceil>
-          <tn-ceil :rowSpan="rowSpan" label="恢复时间">{{detail.recoveryTime | time}}</tn-ceil>
-          <tn-ceil :rowSpan="rowSpan" label="告警类型">{{alarmTypeList[detail.type]}}</tn-ceil>
-          <tn-ceil :rowSpan="rowSpan" label="告警等级">{{alarmLevelList[detail.level]}}</tn-ceil>
-          <tn-ceil :rowSpan="rowSpan" label="所属单位">{{detail.orgName}}</tn-ceil>
-          <tn-ceil :rowSpan="rowSpan" label="冷链设备">{{detail.freezerDevName}}</tn-ceil>
-          <tn-ceil :rowSpan="rowSpan" label="冷链标签">{{detail.sensorName}}</tn-ceil>
-          <tn-ceil :rowSpan="rowSpan" label="告警值" v-show="detail.value">{{detail.value}}</tn-ceil>
-          <tn-ceil :rowSpan="rowSpan" label="恢复值" v-show="detail.recoveryValue">{{detail.recoveryValue}}</tn-ceil>
-          <tn-ceil :rowSpan="rowSpan" label="处理时间" v-show="detail.handlingTime">{{detail.handlingTime | time}}</tn-ceil>
-          <tn-ceil :rowSpan="rowSpan" label="处理人" v-show="detail.handlingUserName">{{detail.handlingUserName}}</tn-ceil>
-          <tn-ceil :rowSpan="rowSpan" label="处理情况" v-show="detail.handlingCondition">{{detail.handlingCondition}}</tn-ceil>
+          <tn-ceil label="发生时间" :span="rowSpan">{{detail.createTime | time}}</tn-ceil>
+          <tn-ceil label="恢复时间" :span="rowSpan">{{detail.restoreTime | time}}</tn-ceil>
+          <tn-ceil label="持续时间" :span="rowSpan">
+            {{formatKeepTime(detail)}}
+          </tn-ceil>
+          <tn-ceil label="异常类型" :span="rowSpan">
+            <el-tooltip :key="icon" v-for="icon in detail.warnTypes && detail.warnTypes.split(',') || []"
+                        class="item" effect="dark"
+                        :content="iconClass[icon].title + (detail.warnLevel === '0' ? '告警，级别:低' : '告警，级别:高')"
+                        placement="top">
+              <f-a :class="detail.warnLevel === '0' ? 'icon-warning' :'icon-danger'"
+                   :name="iconClass[icon].icon"></f-a>
+            </el-tooltip>
+          </tn-ceil>
+          <tn-ceil label="监控对象" :span="rowSpan">
+            <span>{{formatTitle(detail)}}</span>
+          </tn-ceil>
+          <tn-ceil label="设备名称" :span="rowSpan">
+            <el-tooltip effect="dark" :content="tempTypeList[detail.devType]" placement="top">
+              <f-a class="icon-danger ver-a-mid" :name="DevIcon[detail.devType][1]"></f-a>
+            </el-tooltip>
+            <span>{{detail.devName}}</span>
+          </tn-ceil>
+          <tn-ceil label="设备编号/编码" :span="rowSpan">{{detail.devNo}}/{{detail.devCode}}</tn-ceil>
+          <tn-ceil label="创建时间" :span="rowSpan">{{detail.insertTime | time}}</tn-ceil>
+          <tn-ceil label="告警规则" :span="rowSpan">{{detail.warnHisInfo}}</tn-ceil>
+          <tn-ceil label="触发信息" :span="rowSpan">{{detail.triggerInfo}}</tn-ceil>
+          <tn-ceil label="状态" :span="rowSpan">{{detail.confirmStatus === '1' ? '已确认' : '未确认'}}</tn-ceil>
+          <tn-ceil label="处理时间" :span="rowSpan" v-show="detail.confirmTime">{{detail.confirmTime | time}}</tn-ceil>
+          <tn-ceil label="处理人" :span="rowSpan" v-show="detail.confirmerId">{{detail.confirmerId}}</tn-ceil>
+          <tn-ceil label="情况说明" :span="rowSpan" v-show="detail.confirmContent">{{detail.confirmContent}}</tn-ceil>
         </div>
       </div>
       <div class="form-header-part">
         <div class="header">
-          <div class="sign f-dib"></div>
-          <h3 class="tit f-dib index-tit">
+          <h3 class="tit f-dib index-tit" :class="{active: pageSets[1].key === currentTab.key}">
             {{pageSets[1].name}}</h3>
         </div>
-        <div class="content" style="overflow: hidden">
-          <chart-line :detail="detail" :filter="filters" :isRecord="true" chartWidth="100%"/>
+        <div class="content">
+          <chart-line :filters="filters" :isRecord="true" :detail="detail" chartWidth="100%"/>
         </div>
       </div>
     </div>
   </div>
 </template>
 <script>
-  import ChartLine from '@/components/monitoring/temp-new/chart-line-new';
+  import {WarnRecord} from './resources';
+  import utils from '@/tools/utils';
+  import ChartLine from './chart-line-new';
   import AlarmMixin from '@/mixins/alarmMixin';
   import AlarmEventMixin from '@/mixins/alarmEventMixin';
   import TnCeil from './tn-cell';
 
+  const {DevIcon} = utils;
   const halfDay = 60 * 60 * 1000;
   export default {
-    props: {
-      index: Number,
-      formItem: Object
-    },
     components: {ChartLine, TnCeil},
     mixins: [AlarmMixin, AlarmEventMixin],
     data() {
@@ -56,7 +88,7 @@
         loading: false,
         pageSets: [
           {name: '基本信息', key: 0},
-          {name: '历史数据', key: 1}
+          {name: '历史数据', key: 0}
         ],
         currentTab: {},
         tempList: [],
@@ -67,7 +99,8 @@
           devId: '',
           devCode: '',
           valType: ['1']
-        }
+        },
+        DevIcon
       };
     },
     mounted() {
@@ -80,6 +113,10 @@
       close() {
         this.$emit('right-close');
       },
+      formatKeepTime(detail) {
+        let formatMsToTime = utils.formatMsToTime;
+        return formatMsToTime((detail.restoreTime ? detail.restoreTime : Date.now()) - detail.createTime);
+      },
       queryDetail() {
         let id = this.$route.params.id;
         if (id === 'id') {
@@ -87,7 +124,7 @@
         }
         window.localStorage.setItem('alarmId', id);
         this.loading = true;
-        this.$http.post(`/alarm-event/${id}`).then(res => {
+        WarnRecord.get(id).then(res => {
           this.detail = res.data;
           this.loading = false;
           this.$nextTick(() => {
@@ -105,11 +142,14 @@
         return time ? this.$moment(time).format(str) : '';
       },
       queryTempData() {
-        let {occurrenceTime, recoveryTime, sensorId} = this.detail;
+        let {formatTime, getValType} = this;
+        let {createTime, restoreTime, devCode, ccsDevId, warnTypes} = this.detail;
         this.filters = {
-          startDate: new Date(occurrenceTime - halfDay),
-          endDate: new Date(recoveryTime ? recoveryTime + halfDay : Date.now()),
-          id: sensorId
+          startTime: formatTime(createTime - halfDay),
+          endTime: formatTime(restoreTime ? restoreTime + halfDay : Date.now()),
+          devId: ccsDevId,
+          devCode: devCode,
+          valType: getValType(warnTypes)
         };
       }
     }

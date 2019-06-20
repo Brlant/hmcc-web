@@ -1,4 +1,4 @@
-<style lang="scss" scoped>
+<style lang="scss" scoped="">
   $leftWidth: 200px;
   .content-part {
     .content-left {
@@ -158,7 +158,8 @@
             {required: true, message: '请输入角色名称', trigger: 'blur'}
           ],
           name: [
-            {required: true, message: '请输入角色英文名称', trigger: 'blur'}
+            {required: true, message: '请输入角色英文名称', trigger: 'blur'},
+            {type: 'name', message: '请输入正确的角色英文名称', validator: checkName, trigger: 'blur'}
           ],
           remark: [
             {required: true, message: '请输入角色描述', trigger: 'blur'}
@@ -221,7 +222,7 @@
       getCheckedMenu: function (data, menuList) {
         for (let i = 0; i < data.length; i++) {
           if (data[i].indeterminate || data[i].checked) {
-            menuList.push(data[i].data);
+            menuList.push(data[i].key);
           }
           if (data[i].childNodes) {
             this.getCheckedMenu(data[i].childNodes, menuList);
@@ -239,12 +240,12 @@
           let menuList = [];
           this.getCheckedMenu(this.$refs['tree'].root.childNodes, menuList);
           menuList.forEach(val => {
-            rolelist.push({name: val.id, title: val.label});
+            rolelist.push({name: val});
           });
           this.form.permissionList = rolelist;
-          this.form.systemObjectId = 'hmcc-system';
           if (this.action === 'add') {
-            Access.saveSystem(this.form).then(() => {
+            this.form.objectId = 'ccs-system';
+            Access.save(this.form).then(() => {
               this.doing = false;
               this.$notify.success({
                 duration: 2000,

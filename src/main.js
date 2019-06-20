@@ -10,8 +10,6 @@ import Vuex from 'vuex';
 import store from './store';
 import {init} from './tools/init';
 import App from './App.vue';
-import * as Sentry from '@sentry/browser';
-import * as Integrations from '@sentry/integrations';
 
 import 'echarts/lib/chart/bar';
 import 'echarts/lib/chart/scatter';
@@ -27,32 +25,33 @@ import ECharts from 'vue-echarts/components/ECharts.vue';
 // 引入高德地图vue组件
 import VueAMap, {lazyAMapApiLoaderInstance} from 'vue-amap';
 
+import Raven from 'raven-js';
+import RavenVue from 'raven-js/plugins/vue';
+
 // // 初始化视口宽度
 // initViewPort(router);
 
-// 下拉树
-import Treeselect from '@riophae/vue-treeselect'
-import '@riophae/vue-treeselect/dist/vue-treeselect.css'
-
 Vue.component('ECharts', ECharts);
-Vue.component('Treeselect', Treeselect)
 Vue.use(require('vue-moment'), {moment});
 Vue.use(tinyVue);
 Vue.use(Vuex);
 Vue.use(VueAMap);
 
 if (process.env.NODE_ENV === 'production') {
-  Sentry.init({
-    dsn: 'https://eb94ae86f9104780be615d09d50416f2@f-log.sinopharm-bio.com/3',
-    integrations: [new Integrations.Vue({Vue, attachProps: true})],
-    shouldSendCallback: (date) => {// 过滤错误日志
-      let filterArray = ['Request failed with status code 401', 'Request failed with status code 502'];
-      if (date && date.hasOwnProperty('exception') && date.exception.hasOwnProperty('values') && filterArray.indexOf(date.exception.values[0].value) > -1 || date && date.transaction && date.transaction.indexOf('http://requirejs.org/docs/errors.html') > -1) {
-        return false;
+  // 日志工具
+  Raven
+    .config('https://62f56ceea555483fab3d6238ff4a80d0@f-log.cdcerp.net/3', {
+      serverName: 'ccs',
+      shouldSendCallback: (date) => {// 过滤错误日志
+        let filterArray = ['Request failed with status code 401', 'Request failed with status code 502'];
+        if (date && date.hasOwnProperty('exception') && date.exception.hasOwnProperty('values') && filterArray.indexOf(date.exception.values[0].value) > -1 || date && date.transaction && date.transaction.indexOf('http://requirejs.org/docs/errors.html') > -1) {
+          return false;
+        }
+        return date;
       }
-      return date;
-    }
-  });
+    })
+    .addPlugin(RavenVue, Vue)
+    .install();
 }
 
 init(Vue);
@@ -76,30 +75,6 @@ window.$lazyAMapApiLoaderInstance =  function () {
 
 // window.$mapInit();
 
-
-Vue.prototype.$getDict = function (groupName) {
-  if (!groupName) return [];
-  const state = this.$store.state;
-  if (state.dict[groupName]) {
-    return state.dict[groupName];
-  } else {
-    const ary = state.requestingDictAry;
-    if (ary.includes(groupName)) return [];
-    ary.push(groupName);
-    this.$store.commit('initRequestingDictAry', ary);
-    this.$http.get(`/dictGroup/${groupName}/items`).then(res => {
-      state.dict[groupName] = res.data;
-      this.$store.commit('initDict', state.dict);
-      const ary_new = state.requestingDictAry;
-      let index = ary_new.indexOf(groupName);
-      if (index !== -1) {
-        ary_new.splice(index, 1);
-      }
-      this.$store.commit('initRequestingDictAry', ary_new);
-    });
-    return [];
-  }
-};
 new Vue({
   router,
   store,

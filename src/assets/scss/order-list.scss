@@ -2,9 +2,9 @@
 .order-list {
 
   .order-list-header {
-    background: $tableHeaderColor !important;
-    line-height: 20px;
-    padding: 10px 5px 10px 15px;
+    background: $tableHeaderColor;
+    line-height: 45px;
+    padding: 0 5px 0 15px;
     margin: 0 0 5px 0;
 
     &.mt-10 {
@@ -29,7 +29,7 @@
 
       .order-list-item-bg {
         position: absolute;
-        opacity: 1;
+        opacity: 0.3;
         top: 0;
         bottom: 0;
         left: 0;
@@ -64,63 +64,6 @@
           background: $dialog-left-bg;
         }
       }
-
-      &.status-common {
-        .order-list-item-bg {
-          border-left-color: #67c23a
-        }
-
-        &:hover, &.active {
-          .order-list-item-bg {
-            opacity: 1;
-            //background: $order_color_0
-          }
-
-          box-shadow: 2px 0 5px 2px #67c23a
-        }
-        .alarm-title {
-          color: #67c23a;
-        }
-      }
-
-
-      &.status-close {
-        .order-list-item-bg {
-          border-left-color: #cdcfd2
-        }
-
-        &:hover, &.active {
-          .order-list-item-bg {
-            opacity: 1;
-            //background: $order_color_0
-          }
-
-          box-shadow: 2px 0 5px 2px #eee
-        }
-        .alarm-title {
-          color: #eee;
-        }
-      }
-
-      &.status-alarm {
-        .order-list-item-bg {
-          border-left-color: $error-color
-        }
-
-        &:hover, &.active {
-          .order-list-item-bg {
-            opacity: 1;
-            //background: $order_color_0
-          }
-
-          box-shadow: 2px 0 5px 2px $error-color
-        }
-        .alarm-title {
-          color: $error-color;
-        }
-      }
-
-
 
       &.status-0 {
         .order-list-item-bg {

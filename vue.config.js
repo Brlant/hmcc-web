@@ -5,34 +5,17 @@ function resolve(dir) {
   return path.join(__dirname, '..', dir);
 }
 
-let proxyTargets = {
-  hmcc: 'http://hmcc.cdcerp.cn',
-  un: 'http://un-hmcc.cdcerp.cn',
-  yj: 'http://192.168.5.13:8083',
-}
-let proxyTarget = process.env.npm_config_url || proxyTargets.yj;
-console.log('当前代理地址：', proxyTarget)
 module.exports = {
   devServer: {
     open: true,
-    port: process.env.npm_config_port || '8017',
+    port: '8006',
     https: false,
     hotOnly: false,
     disableHostCheck: true,
     proxy: {
       '/api': {
-        target: proxyTarget,
-        changOrigin: true,
-        pathRewrite: {
-          '/api': ''
-        }
-      },
-      '/hengshi': {
-        target: 'https://data-analysis.tracentsure.com',
-        changOrigin: true,
-        pathRewrite: {
-          '/hengshi': ''
-        }
+        target: 'http://ccs.cdcerp.net',
+        changOrigin: true
       }
     }
   },
@@ -47,7 +30,7 @@ module.exports = {
       filename: 'index.html',
       // 当使用 title 选项时，
       // template 中的 title 标签需要是 <title><%= htmlWebpackPlugin.options.title %></title>
-      title: '智慧医院管理系统'
+      title: 'MCC冷链监控'
     },
     mobile: {
       // page 的入口
@@ -58,7 +41,7 @@ module.exports = {
       filename: 'mobile.html',
       // 当使用 title 选项时，
       // template 中的 title 标签需要是 <title><%= htmlWebpackPlugin.options.title %></title>
-      title: '智慧医院管理系统'
+      title: 'MCC冷链监控'
     }
   },
   configureWebpack: {

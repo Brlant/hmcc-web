@@ -1,114 +1,96 @@
 <template>
-  <div class="order-page">
-    <!--<status-list :activeStatus="activeStatus" :checkStatus="checkStatus" :statusList="statusType"/>-->
-    <div class="order-list" style="margin-top: 20px">
-      <el-row class="order-list-header">
-        <el-col :span="8">设备编码</el-col>
-        <el-col :span="7">设备名称</el-col>
-        <el-col :span="3">温度</el-col>
-        <el-col :span="3">湿度</el-col>
-        <el-col :span="3">电压</el-col>
-      </el-row>
-      <el-row v-if="loadingData">
-        <el-col :span="24">
-          <oms-loading :loading="loadingData"></oms-loading>
-        </el-col>
-      </el-row>
-      <el-row v-else-if="!dataList.length">
-        <el-col :span="24">
-          <div class="empty-info">
-            暂无信息
-          </div>
-        </el-col>
-      </el-row>
-      <div class="order-list-body flex-list-dom" v-else>
-        <div class="order-list-item order-list-item-bg"
-             v-for="item in dataList" @click="showItem(item)">
-          <el-row>
-            <el-col :span="8" class="R">{{item.devCode}}</el-col>
-            <el-col :span="7" class="R">{{item.devName}}</el-col>
-            <el-col :span="3" class="R">{{item.temperature}}</el-col>
-            <el-col :span="3" class="R">{{item.humidity}}</el-col>
-            <el-col :span="3" class="R">{{item.voltage}}</el-col>
-          </el-row>
-        </div>
-      </div>
-    </div>
-
-    <div class="text-center" v-show="(dataList.length || pager.currentPage !== 1) && !loadingData">
-      <el-pagination :current-page="pager.currentPage" :page-size="pager.pageSize"
-                     :page-sizes="[10,20,50,100]"
-                     :total="pager.count" @current-change="handleCurrentChange"
-                     @size-change="handleSizeChange"
-                     layout="total, sizes, prev, pager, next, jumper">
-      </el-pagination>
-    </div>
+  <div class="container">
+    <logsic-part @open="open" @queryWareHouse="queryWareHouse" ref="logsic"></logsic-part>
+    <warehouse-part @open="open" class="w-part" ref="warehouse"></warehouse-part>
+    <page-right :css="{'width':'900px','padding':0}" :show="showIndex !== -1" @right-close="resetRightBox">
+      <form-part :form-item="form" :type="type" @refresh="refresh" @right-close="resetRightBox"></form-part>
+    </page-right>
   </div>
 </template>
 <script>
-  import SearchPart from './search';
-  import CommonMixin from '@/mixins/commonMixin';
+  import LogsicPart from './logisticscenter/index';
+  import WarehousePart from './warehouse/index';
+  import formPart from './form';
+  import {CcsWarehouse} from '@/resources';
 
   export default {
-    components: {
-      SearchPart
-    },
-    mixins: [CommonMixin],
+    components: {WarehousePart, LogsicPart, formPart},
     data() {
       return {
-        filters: {
-          status: '1',
-          devCode: '',
-          devName: ''
-        }
+        showIndex: -1,
+        form: {},
+        type: ''
       };
     },
-    computed: {
-      perms() {
-        return this.$route.meta.perms;
-      }
-    },
-    watch: {
-      filters: {
-        handler: function (val) {
-          this.queryList(1);
-        },
-        deep: true
-      }
-    },
-    mounted() {
-      this.queryList(1);
-    },
     methods: {
-      showRecordDate: function (data) {
-        if (!data) return '';
-        return data ? this.$moment(data).format('YYYY-MM-DD HH:mm:ss') : '';
+      resetRightBox() {
+        this.showIndex = -1;
       },
-      searchResult: function (search) {
-        this.filters = Object.assign({}, this.filters, search);
+      queryWareHouse() {
+        const that = this.$refs['warehouse'];
+        that.queryWarehouse(1);
       },
-      queryList(pageNo) {
-        this.pager.currentPage = pageNo;
-        let params = Object.assign({}, {
-          pageNo: pageNo,
-          pageSize: this.pager.pageSize
-        }, this.filters);
-        this.loadingData = true;
-        let nowTime = new Date();
-        this.nowTime = nowTime;
-        this.$http.get('/ccsMonitorRelation', {params}).then(res => {
-          if (this.nowTime > nowTime) return;
-          if (res.code) res.data = res.data;
-          this.dataList = res.data.currentList || [];
-          this.pager.count = res.data.count;
-          this.loadingData = false;
+      open(form, type) {
+        this.form = Object.assign({}, form);
+        this.type = type;
+        this.showIndex = 0;
+      },
+      replaceItem(ary, item) {
+        let index = -1;
+        ary.forEach((i, k) => {
+          if (i.id === item.id) {
+            index = k;
+          }
+        });
+        index !== -1 && ary.splice(index, 1, item);
+      },
+      deleteStore(item, type) {
+        this.$confirmOpera(`是否删除"${item.warehouseCode}"`, () => {
+          this.$httpRequestOpera(CcsWarehouse.delete(item.id), {
+            successTitle: '删除成功',
+            errorTitle: '删除失败',
+            success: () => {
+              const logsic = this.$refs['logsic'];
+              const warehouse = this.$refs['warehouse'];
+              type === '1' && warehouse.queryWarehouse();
+              if (type === '0') {
+                logsic.getList();
+                logsic.currentItem = {};
+              }
+              if (type === '2') {
+                warehouse.queryArea();
+                warehouse.currentArea = {};
+              }
+            }
+          });
         });
       },
-      showItem(item) {
-        let type = item.devType === '4' ? '2' : '1';
-        let id = item.ccsDevId;
-        this.$router.push({path: '/monitoring/store/temp', query: {id, type}});
-      },
+      refresh(data, type, actionType) {
+        const logsic = this.$refs['logsic'];
+        const warehouse = this.$refs['warehouse'];
+        if (type === '0') {
+          if (actionType === 1) {
+            logsic.getList();
+          } else {
+            this.replaceItem(logsic.logisticsCenterList, data);
+            logsic.currentItem = Object.assign({}, data);
+          }
+        } else if (type === '1') {
+          if (actionType === 1) {
+            warehouse.queryWarehouse();
+          } else {
+            this.replaceItem(warehouse.warehouseList, data);
+          }
+        } else if (type === '2') {
+          if (actionType === 1) {
+            warehouse.queryArea();
+          } else {
+            this.replaceItem(warehouse.areaList, data);
+            warehouse.currentArea = Object.assign({}, data);
+          }
+        }
+        this.resetRightBox();
+      }
     }
   };
 </script>

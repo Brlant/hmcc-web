@@ -1,44 +1,62 @@
-<style lang="scss" scoped>
-  .el-form::after {
-    content: '';
-    clear: both;
-    display: table;
-  }
-</style>
 <template>
-  <search-template :isShow="showSearch" :isShowAdvance="false" @search="search" @reset="reset" @isShow="isShow">
-    <template slot="title">查询</template>
+  <search-template :isShow="showSearch" :isShowAdvance="false" @isShow="isShow" @reset="reset" @search="search">
+    <template slot="title">告警规则查询</template>
     <template slot="btn">
       <slot name="btn"></slot>
     </template>
     <template slot="content">
       <el-form class="advanced-query-form" onsubmit="return false">
-        <el-col :span="8">
-          <oms-form-row label="冷链标签" :span="4">
-            <el-select :remote-method="queryProbeList" filterable placeholder="请输入名称搜索冷链标签" remote
-                       v-model="searchCondition.sensorId">
-              <el-option :key="item.id" :label="item.name" :value="item.id"
-                         v-for="item in probeList"></el-option>
-            </el-select>
-          </oms-form-row>
-        </el-col>
+        <el-row>
+          <el-col :span="6">
+            <oms-form-row :span="6" label="规则名称">
+              <oms-input @keyup.native.enter="search" placeholder="请输入名称"
+                         v-model.trim="searchCondition.ruleName"></oms-input>
+            </oms-form-row>
+          </el-col>
+          <el-col :span="7">
+            <oms-form-row :span="9" label="规则条件逻辑">
+              <el-radio-group @change="search" size="small" v-model="searchCondition.logicType">
+                <el-radio-button :key="item.key" :label="item.key" v-for="item in logicList">{{item.label}}
+                </el-radio-button>
+              </el-radio-group>
+            </oms-form-row>
+          </el-col>
+          <el-col :span="4">
+            <oms-form-row :span="6" label="级别">
+              <el-radio-group @change="search" size="small" v-model="searchCondition.warnLevel">
+                <el-radio-button :key="item.key" :label="item.key" v-for="item in levels">{{item.label}}
+                </el-radio-button>
+              </el-radio-group>
+            </oms-form-row>
+          </el-col>
+          <el-col :span="7">
+            <oms-form-row :span="8" label="延时通知时间">
+              <oms-input @keyup.native.enter="search" placeholder="请输入延时通知时间"
+                         v-model.number="searchCondition.warnKeepTime">
+                <template slot="append">min</template>
+              </oms-input>
+            </oms-form-row>
+          </el-col>
+        </el-row>
       </el-form>
     </template>
   </search-template>
 </template>
 <script>
-  import methodsMixin from '@/mixins/methodsMixin';
-
   export default {
-    mixins: [methodsMixin],
     data: function () {
       return {
         searchCondition: {
-          sensorId: ''
+          ruleName: '',
+          logicType: '',
+          warnLevel: '',
+          warnKeepTime: ''
         },
         showSearch: false,
         list: [],
-        times: []
+        times: [],
+        levels: this.$parent.levels,
+        logicList: this.$parent.logicList
       };
     },
     methods: {
@@ -47,7 +65,10 @@
       },
       reset() {
         this.searchCondition = {
-          sensorId: ''
+          ruleName: '',
+          logicType: '',
+          warnLevel: '',
+          warnKeepTime: ''
         };
         this.$emit('search', this.searchCondition);
       },

@@ -1,19 +1,10 @@
-import {Address, formatAddress, formatAddressByType} from '@dtop/dtop-web-common';
+import {Address} from '@dtop/dtop-web-common';
 
 export default {
   address: Address.value,
   orderType: {
     0: {'title': '启用', status: '1', num: ''},
     1: {'title': '停用', status: '0', num: ''}
-  },
-  coolType: {
-    0: {'title': '启用', status: '1', num: ''},
-    1: {'title': '停用', status: '0', num: ''},
-    2: {'title': '维修', status: '2', num: ''},
-    3: {'title': '备用', status: '3', num: ''},
-    4: {'title': '报废', status: '4', num: ''},
-    5: {'title': '盘苗', status: '5', num: ''},
-    6: {'title': '除霜', status: '6', num: ''},
   },
   wifiType: {
     0: {'title': '全部', status: null, num: ''},
@@ -277,8 +268,7 @@ export default {
     ms = time - d * dT - h * hT - m * mT - s * sT;
     return (d ? `${d}d` : '') + (h ? `${h}h` : '') +
       (m ? `${m}m` : '') + (s ? `${s}s` : '');
-  },
-  formatAddressByType
+  }
 };
 
 //深拷贝
@@ -293,9 +283,4 @@ export const deepCopy = function (source) {
     }
   }
   return sourceCopy;
-};
-
-export const formatDictLabel = (key, list) => {
-  let item = list.find(i => i.key === key) || {};
-  return item.label;
 };

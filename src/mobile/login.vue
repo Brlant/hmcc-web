@@ -17,18 +17,18 @@
 <template>
   <div class="tn-login">
     <div class="logo-part">MCC冷链监控</div>
-    <el-form :model="user" :rules="rules" @submit.prevent="done" label-position="top" label-width="80px"
-             onsubmit="return false" ref="loginForm">
-      <!--<el-form-item label="系统代码" prop="orgCode" v-if="needCode">-->
-      <!--  <oms-input :showFocus="isFocus === 1" v-model="user.orgCode"></oms-input>-->
-      <!--</el-form-item>-->
-      <el-form-item label="用户名" prop="username">
-        <oms-input :showFocus="isFocus === 2" @blur="check()" placeholder="手机号/邮箱/用户名"
-                   v-model="user.username"></oms-input>
+    <el-form label-position="top" ref="loginForm" label-width="80px" :model="user" :rules="rules"
+             @submit.prevent="done" onsubmit="return false">
+      <el-form-item label="系统代码" prop="orgCode" v-if="needCode">
+        <oms-input v-model="user.orgCode" :showFocus="isFocus === 1"></oms-input>
       </el-form-item>
-      <el-form-item label="密码" prop="password" style="position:relative">
-        <oms-input :showFocus="isFocus === 3" placeholder="请输入密码" type="password"
-                   v-model="user.password"></oms-input>
+      <el-form-item label="用户名" prop="username">
+        <oms-input v-model="user.username" :showFocus="isFocus === 2" placeholder="手机号/邮箱/用户名"
+                   @blur="check()"></oms-input>
+      </el-form-item>
+      <el-form-item label="密码" style="position:relative" prop="password">
+        <oms-input v-model="user.password" :showFocus="isFocus === 3" type="password"
+                   placeholder="请输入密码"></oms-input>
       </el-form-item>
       <el-form-item label="验证码" v-show="showCode">
         <div style="display:flex">
@@ -41,7 +41,7 @@
       </el-form-item>
 
       <el-form-item label-width="80px">
-        <el-button @click="done" native-type="submit" style="display:block;width:100%;" type="primary">
+        <el-button type="primary" @click="done" style="display:block;width:100%;" native-type="submit">
           {{btnString}} <i class="el-icon-loading" v-show="loading"></i></el-button>
 
       </el-form-item>
@@ -88,10 +88,10 @@
       done() {
         this.$refs['loginForm'].validate((valid) => {
           if (valid) {
-            this.btnString = '登录中..';
+            this.btnString = '登陆中..';
             this.loading = true;
             let userCopy = JSON.parse(JSON.stringify(this.user));
-            // userCopy.orgCode = this.needCode ? this.trim(this.user.orgCode) : '';
+            userCopy.orgCode = this.needCode ? this.trim(this.user.orgCode) : '';
             userCopy.username = this.trim(this.user.username);
             userCopy.encryptionPsw = base64(userCopy.password);
             delete userCopy.password;
@@ -113,7 +113,7 @@
               if (data.code === 405) {
                 this.needCode = true;
               }
-              this.btnString = '登录';
+              this.btnString = '登陆';
               this.loading = false;
             });
           }

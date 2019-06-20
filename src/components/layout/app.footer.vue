@@ -1,4 +1,4 @@
-<style lang="scss" scoped>
+<style lang="scss" scoped="">
   $activeColor: #00bff3;
   .main-footer {
     position: absolute;

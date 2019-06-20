@@ -120,14 +120,7 @@
         if (!url) return '/';
         if (typeof url === 'string') return url;
         return {path: url.path, query: url.query};
-      },
-      queryWeChat() {
-        Auth.queryWeChatInfo().then(res => {
-          this.$store.commit('initWeChatInfo', res.data);
-        }).catch(() => {
-          this.$store.commit('initWeChatInfo', {});
-        });
-      },
+      }
     },
     mounted: function () {
       // 不鉴权的路径, 直接显示返回路径对应的页面
@@ -151,8 +144,6 @@
           }
           data = JSON.parse(data);
           this.$store.commit('initUser', data);
-          this.$getDict('coolDevType');
-          this.queryWeChat();
         }).catch(() => {
           Auth.logout().then(() => {
             this.$router.addRoutes(ErrorPage);

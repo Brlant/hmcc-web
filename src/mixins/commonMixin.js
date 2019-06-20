@@ -17,11 +17,6 @@ export default {
       nowTime: ''
     };
   },
-  computed: {
-    permPage() {
-      return this.$route.meta.permPage || {};
-    }
-  },
   methods: {
 
     queryUtil(http, pageNo, beforeRequest, success) {
@@ -29,15 +24,14 @@ export default {
       let params = Object.assign({}, {
         pageNo: pageNo,
         pageSize: this.pager.pageSize
-      }, this.filters);
+      }, this.filters, {status: null});
       this.loadingData = true;
       beforeRequest && beforeRequest();
       let nowTime = new Date();
       this.nowTime = nowTime;
       http(params).then(res => {
         if (this.nowTime > nowTime) return;
-
-        this.dataList = res.data.list || [];
+        this.dataList = res.data.currentList || [];
         this.pager.count = res.data.count;
         this.loadingData = false;
         success && success();
@@ -96,7 +90,7 @@ export default {
     },
     formatTimeAry(times, index) {
       if (!times) return;
-      return times[index];
+      return this.formatTime(times[index]);
     },
     formatTime(time, str = 'YYYY-MM-DD HH:mm:ss') {
       return time ? this.$moment(time).format(str) : '';

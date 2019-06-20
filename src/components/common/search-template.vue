@@ -20,7 +20,7 @@
             重置
           </el-button>
           <el-button @click="showSearch = !showSearch" plain
-                     size="small" v-has="'show'" v-show="isShowAdvance">高级检索
+                     size="small" type="primary" v-has="'show'" v-show="isShowAdvance">高级检索
           </el-button>
           <slot name="btn"></slot>
         </el-button-group>

@@ -1,6 +1,7 @@
+
 stages:
   - test
-  - build
+  - deploy
 
 # 变量
 variables:
@@ -15,11 +16,3 @@ before_script:
 lint:
   stage: test
   script: npm run lint
-
-local-build:
-  stage: build
-  script:
-    - npm run build
-    - scp -r dist/* root@172.25.10.10:/opt/dev-web-dist/hmcc
-  only:
-    - dev

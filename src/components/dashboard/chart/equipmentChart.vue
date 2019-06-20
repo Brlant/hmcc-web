@@ -7,24 +7,27 @@
 </template>
 
 <script>
-  import TimeMixins from '@/mixins/timeMixin';
   export default {
-    mixins: [TimeMixins],
     name: 'equipmentChart',
     data() {
       return {
         cycle: 0,
         options: {
           title: {
-            text: '冷链设备组成'
+            text: '设备类型组成'
           },
           tooltip: {
             trigger: 'item',
             formatter: '{a} <br/>{b}: {c} ({d}%)'
           },
+          // legend: {
+          //   orient: 'vertical',
+          //   x: 'left',
+          //   data: ['有线温度', '无线温度', '冷柜温度', '车载温度']
+          // },
           series: [
             {
-              name: '冷链设备组成',
+              name: '设备类型组成',
               type: 'pie',
               radius: ['40%', '80%'],
               center: ['50%', '60%'],
@@ -48,33 +51,24 @@
         }
       };
     },
-    computed: {
-      coolDevType() {
-        return this.$getDict('coolDevType');
-      }
-    },
     mounted() {
       this.queryData();
     },
     methods: {
-      getLabel(key) {
-        let item = this.coolDevType.find(f => f.key === key) || {};
-        return item.label;
-      },
       queryData() {
-        this.$http('/index/gainFreezerDevComposition').then(res => {
-          if(res.code === 200) {
-            let data = res.data;
-            this.options.series[0].data = Object.keys(data).map(m => ({
-              value: data[m],
-              name: this.getLabel(m)
-            }));
-            // console.log(this.options.series[0].data);
-            if (!this.cycle) return;
-            this.setTimes(setTimeout(this.queryData, this.cycle));
-          }
+        this.$http('/ccsIndex/gainDevComposition').then(res => {
+          this.options.series[0].data = [
+            {value: res.data[0], name: '有线温度计'},
+            {value: res.data[1], name: '无线温度计'},
+            {value: res.data[2], name: '冷柜温度计'},
+            {value: res.data[3], name: '车载温度计'},
+            {value: res.data[4] ? res.data[4] : 0, name: '温度计'}
+          ];
+          if (!this.cycle) return;
+          this.$parent.setTimes(setTimeout(this.queryData, this.cycle));
         });
       }
     }
   };
 </script>
+
