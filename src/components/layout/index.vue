@@ -69,7 +69,7 @@
 </template>
 
 <script>
-  import AppHeader from './app.header-new.vue';
+  import AppHeader from './app.header.vue';
   import AppFooter from './app.footer.vue';
   import attachmentDialog from '../common/attachment/attachment.dialog.vue';
   import printDialog from '../common/print.loading.vue';
