@@ -70,7 +70,7 @@ export const routes = [
           },
           {
             path: '/dev/gateway',
-            component: () => import('./components/temp/common/index.vue'),
+            component: () => import('./components/dev/gateway/index.vue'),
             meta: {
               moduleId: 'dev', title: '网关管理', perm: 'ccs-wired-dev-scan',
               type: 1, perms: ['ccs-wired-dev-add', 'ccs-wired-dev-edit']

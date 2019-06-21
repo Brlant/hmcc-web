@@ -93,6 +93,27 @@ Vue.prototype.$http = http;
 
 
 
+
+//冷链设备管理
+export const gateway = resource('/gateway', http, {
+  query(params) {
+    return http.post('/gateway/page', params);
+  },
+  update(obj) {
+    return http.put('//gateway', obj);
+  },
+  queryStateNum(params) {
+    return http.post('/gateway/count', params);
+  },
+  stop(id) {
+    return http.put(`/gateway/disable/${id}`);
+  },
+  start(id) {
+    return http.put(`/gateway/active/${id}`);
+  }
+});
+
+
 //冷链设备管理
 export const cool = resource('/freezer-dev', http, {
   query(params) {
