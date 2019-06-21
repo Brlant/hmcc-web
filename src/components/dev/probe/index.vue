@@ -32,22 +32,22 @@
         </el-col>
       </el-row>
       <div class="order-list-body flex-list-dom" v-else="">
-        <div :class="[formatRowClass(item.devStatus, statusType) ,{'active':currentItemId===item.id}]"
+        <div :class="[formatRowClass(item.status, statusType) ,{'active':currentItemId===item.id}]"
              @click="showItemDetail(item)" class="order-list-item"
              v-for="item in dataList">
           <el-row>
-            <el-col :span="3" class="R">{{item.devName}}</el-col>
-            <el-col :span="4" class="R">{{item.devCode}}</el-col>
+            <el-col :span="3" class="R">{{item.name}}</el-col>
+            <el-col :span="4" class="R">{{item.no}}</el-col>
             <el-col :span="5" class="R">{{item.orgName}}</el-col>
-            <el-col :span="3" class="R">{{item.devNo}}</el-col>
+            <el-col :span="3" class="R">{{item.type}}</el-col>
             <el-col :span="2">
-              {{formatStatus(item.devStatus, statusType)}}
+              {{formatStatus(item.status, statusType)}}
             </el-col>
-            <el-col :span="4">{{item.createTime | date}}</el-col>
+            <el-col :span="4">{{item.calibrationTime | date}}</el-col>
             <el-col :span="3" class="opera-btn">
               <des-btn @click="edit(item)" icon="edit" v-has="perms[1]">编辑</des-btn>
-              <des-btn @click="edit(item)" icon="forbidden" v-show="item.devStatus === '1'" v-has="perms[1]">停用</des-btn>
-              <des-btn @click="edit(item)" icon="forbidden" v-has="perms[1]" v-show="item.devStatus === '0'">停用</des-btn>
+              <des-btn icon="forbidden" v-show="item.status === '1'" v-has="perms[1]" @click="stop(item)">停用</des-btn>
+              <des-btn icon="start" v-has="perms[1]" v-show="item.status === '0'" @click="start(item)">启用</des-btn>
             </el-col>
           </el-row>
           <div class="order-list-item-bg"></div>
@@ -76,7 +76,7 @@
   import addForm from './form/add-form.vue';
   import showForm from './form/show-form';
   import CommonMixin from '@/mixins/commonMixin';
-  import {TempDev} from '@/resources';
+  import {probe} from '@/resources';
 
   export default {
     components: {
@@ -155,13 +155,13 @@
         });
       },
       queryList(pageNo) {
-        const http = TempDev.query;
+        const http = probe.query;
         let isAll = typeof this.filters.devType === 'number';
         const params = this.queryUtil(http, pageNo);
       },
       queryStatusNum(params) {
-        const pm = Object.assign({}, params, {devStatus: null});
-        const http = TempDev.queryStateNum;
+        const pm = Object.assign({}, params, {status: null});
+        const http = probe.queryStateNum;
         const res = {};
         this.queryStatusNumUtil(http, pm, this.statusType, res);
       },
@@ -184,13 +184,26 @@
           this.form = item;
         });
       },
-      deleteItem(item) {
+      start(item) {
         this.currentItem = item;
         this.currentItemId = item.id;
-        this.$confirmOpera(`是否删除温度计"${item.devName}"`, () => {
-          this.$httpRequestOpera(TempDev.delete(item.id), {
-            successTitle: '删除成功',
-            errorTitle: '删除失败',
+        this.$confirmOpera(`是否启用探头"${item.Name}"`, () => {
+          this.$httpRequestOpera(probe.start(item.id), {
+            successTitle: '启用成功',
+            errorTitle: '启用失败',
+            success: () => {
+              this.queryList(1);
+            }
+          });
+        });
+      },
+      stop(item) {
+        this.currentItem = item;
+        this.currentItemId = item.id;
+        this.$confirmOpera(`是否停用探头"${item.Name}"`, () => {
+          this.$httpRequestOpera(probe.stop(item.id), {
+            successTitle: '停用成功',
+            errorTitle: '停用失败',
             success: () => {
               this.queryList(1);
             }

@@ -10,7 +10,31 @@ export const http = axios.create({
 });
 
 http.interceptors.response.use(response => {
-  return response;
+  if (response.data.code) {
+    let data = {data: response.data};
+    switch (response.data.code) {
+      case 200 :
+        return data;
+      case 401:
+        window.location.href = '#/login';
+        return data;
+      case 403:
+        Notification.error({
+          message: '您没有权限请求信息，请联系管理员。',
+          onClose: function () {
+            window.localStorage.removeItem(noticeTipKey);
+          }
+        });
+        return data;
+      case 400:
+        Notification.error({
+          message: response.data.msg,
+        });
+        return data;
+    }
+  } else {
+    return response;
+  }
 }, error => {
   // 清空标志
   WholeErrorSignHandle.clear();
@@ -67,6 +91,24 @@ http.interceptors.response.use(response => {
 });
 
 Vue.prototype.$http = http;
+
+
+//探头管理
+export const probe = resource('/sensor', http, {
+  query(params) {
+    return http.get('/sensor/page', {params});
+  },
+  queryStateNum(params) {
+    return http.get('/sensor/count', {params});
+  },
+  stop(id) {
+    return http.put(`/sensor/disable/{id}`);
+  },
+  start(id) {
+    return http.put(`/sensor/active/{id}`);
+  }
+});
+
 
 // warehouseDevImage
 export const warehouseDevImage = resource('/warehouseDevImage', http, {});

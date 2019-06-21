@@ -17,16 +17,15 @@
               {{pageSets[0].name}}</h3>
           </div>
           <div class="content">
-            <oms-col :isShow="true" :rowSpan="span" label="名称">{{formItem.devName}}</oms-col>
-            <oms-col :isShow="true" :rowSpan="span" label="编号">{{formItem.devNo}}</oms-col>
-            <oms-col :isShow="true" :rowSpan="span" label="所属单位">{{formItem.devCode}}</oms-col>
-            <oms-col :isShow="true" :rowSpan="span" label="型号">{{formItem.devCode}}</oms-col>
+            <oms-col :isShow="true" :rowSpan="span" label="名称">{{formItem.name}}</oms-col>
+            <oms-col :isShow="true" :rowSpan="span" label="编号">{{formItem.no}}</oms-col>
+            <oms-col :isShow="true" :rowSpan="span" label="所属单位">{{formItem.orgName}}</oms-col>
+            <oms-col :isShow="true" :rowSpan="span" label="型号">{{formItem.type}}</oms-col>
             <oms-col :isShow="true" :rowSpan="span" label="状态">
-              {{parent.formatStatus(formItem.devStatus, statusType)}}
+              {{parent.formatStatus(formItem.status, statusType)}}
             </oms-col>
-            <oms-col :isShow="true" :rowSpan="span" label="校准期">{{formItem.createTime | date}}
+            <oms-col :isShow="true" :rowSpan="span" label="校准期">{{formItem.calibrationTime | date}}
             </oms-col>
-            <oms-col :isShow="true" :rowSpan="span" label="备注">{{formItem.comment}}</oms-col>
           </div>
         </div>
       </div>

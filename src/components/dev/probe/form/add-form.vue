@@ -6,8 +6,8 @@
     </template>
     <template slot="content">
       <el-form :model="form" :rules="rules" label-width="140px" ref="tempForm">
-        <el-form-item label="名称" prop="devName">
-          <oms-input placeholder="请输入名称" type="text" v-model="form.devName"/>
+        <el-form-item label="名称" prop="name">
+          <oms-input placeholder="请输入名称" type="text" v-model="form.name"/>
         </el-form-item>
         <el-form-item label="所属单位" prop="orgId">
           <org-select :list="orgList"
@@ -15,16 +15,16 @@
                       placeholder="请输入名称搜索单位" v-model="form.orgId"></org-select>
         </el-form-item>
         <el-form-item label="编号">
-          <oms-input placeholder="请输入设备编号" type="input" v-model="form.devNo"/>
+          <oms-input placeholder="请输入设备编号" type="input" v-model="form.no"/>
         </el-form-item>
         <el-form-item label="型号">
-          <oms-input placeholder="请输入型号" type="textarea" v-model="form.comment"/>
+          <oms-input placeholder="请输入型号" type="textarea" v-model="form.type"/>
         </el-form-item>
-        <el-form-item label="校准期" prop="createTime">
-          <el-date-picker placeholder="请选择" type="date" v-model="form.createTime" value-format="timestamp"/>
+        <el-form-item label="校准期" prop="calibrationTime">
+          <el-date-picker placeholder="请选择" type="date" v-model="form.calibrationTime" value-format="timestamp"/>
         </el-form-item>
         <el-form-item label="状态">
-          <el-switch active-text="启用" active-value="1" inactive-text="停用" inactive-value="0" v-model="form.devStatus">
+          <el-switch active-text="启用" active-value="1" inactive-text="停用" inactive-value="0" v-model="form.status">
           </el-switch>
         </el-form-item>
       </el-form>
@@ -32,7 +32,7 @@
   </dialog-template>
 </template>
 <script>
-  import {TempDev} from '@/resources';
+  import {probe} from '@/resources';
 
   export default {
     data() {
@@ -43,19 +43,16 @@
           devCode: [
             {required: true, message: '请输入编码', trigger: 'blur'}
           ],
-          devName: [
+          name: [
             {required: true, message: '请输入名称', trigger: 'blur'}
           ],
-          temp: [
-            {required: true, message: '请输入当前温度', trigger: 'blur'}
+          orgId: [
+            {required: true, message: '请选择所属单位', trigger: 'change'}
           ],
-          voltage: [
-            {required: true, message: '请输入当前电压', trigger: 'blur'}
-          ],
-          createTime: [
+          calibrationTime: [
             {required: true, message: '请选择校准期', trigger: 'change'}
           ],
-          devNo: [
+          no: [
             {required: true, message: '请输入设备编号', trigger: 'blur'}
           ]
         },
@@ -75,14 +72,11 @@
           this.actionType = '编辑';
         } else {
           this.form = {
-            devCode: '',
-            devName: '',
-            devStatus: '1',
-            devType: '',
-            monitorStatus: '0',
-            comment: '',
-            createTime: '',
-            devNo: ''
+            name: '',
+            status: '1',
+            type: '',
+            calibrationTime: '',
+            no: ''
           };
           this.actionType = '添加';
         }
@@ -98,11 +92,11 @@
       save(formName) {
         this.$refs[formName].validate((valid) => {
           if (valid && this.doing === false) {
-            // this.form.createTime = this.form.createTime ? this.$moment(this.form.createTime).format('YYYY-MM-DD') : '';
+            // this.form.calibrationTime = this.form.calibrationTime ? this.$moment(this.form.calibrationTime).format('YYYY-MM-DD') : '';
             if (!this.form.id) {
               this.form.devType = '' + (this.type - 1);
               this.doing = true;
-              this.$httpRequestOpera(TempDev.save(this.form), {
+              this.$httpRequestOpera(probe.save(this.form), {
                 successTitle: '添加成功',
                 errorTitle: '添加失败',
                 success: res => {
@@ -114,7 +108,7 @@
                 }
               });
             } else {
-              this.$httpRequestOpera(TempDev.update(this.form.id, this.form), {
+              this.$httpRequestOpera(probe.update(this.form.id, this.form), {
                 successTitle: '修改成功',
                 errorTitle: '修改失败',
                 success: res => {
