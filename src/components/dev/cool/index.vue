@@ -1,8 +1,8 @@
 <template>
   <div class="order-page">
-    <search-part :type="type" @search="searchResult">
+    <search-part  @search="searchResult">
       <template slot="btn">
-        <el-button @click="add" plain size="small" v-has="perms[0]" v-if="type">
+        <el-button @click="add" plain size="small" v-has="perms[0]">
           <f-a class="icon-small" name="plus"></f-a>
           添加
         </el-button>
@@ -40,7 +40,7 @@
             <el-col :span="3" class="R">{{item.no}}</el-col>
             <el-col :span="4" class="R">{{item.orgName}}</el-col>
             <el-col :span="3" class="R">{{item.type}}</el-col>
-            <el-col :span="3" class="R">{{item.barnd}}</el-col>
+            <el-col :span="3" class="R">{{item.brand}}</el-col>
             <el-col :span="3" class="R">{{item.version}}</el-col>
 
             <el-col :span="3">{{item.startUsingTime | date}}</el-col>
@@ -49,8 +49,6 @@
             </el-col>
             <el-col :span="3" class="opera-btn">
               <des-btn @click="edit(item)" icon="edit" v-has="perms[1]">编辑</des-btn>
-              <des-btn @click="edit(item)" icon="forbidden" v-show="item.status === '1'" v-has="perms[1]">停用</des-btn>
-              <des-btn @click="edit(item)" icon="forbidden" v-has="perms[1]" v-show="item.status === '0'">停用</des-btn>
             </el-col>
           </el-row>
           <div class="order-list-item-bg"></div>
@@ -79,7 +77,7 @@
   import addForm from './form/add-form.vue';
   import showForm from './form/show-form';
   import CommonMixin from '@/mixins/commonMixin';
-  import {TempDev} from '@/resources';
+  import {cool} from '@/resources';
 
   export default {
     components: {
@@ -156,12 +154,13 @@
         });
       },
       queryList(pageNo) {
-        const http = TempDev.query;
+        const http = cool.query;
         const params = this.queryUtil(http, pageNo);
+        this.queryStatusNum(params)
       },
       queryStatusNum(params) {
         const pm = Object.assign({}, params, {status: null});
-        const http = TempDev.queryStateNum;
+        const http = cool.queryStateNum;
         const res = {};
         this.queryStatusNumUtil(http, pm, this.statusType, res);
       },

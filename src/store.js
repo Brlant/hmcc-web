@@ -29,7 +29,17 @@ const state = {
   devCode: '',
   findPath: true,
   times: [],
-  isShowTemp: false
+  isShowTemp: false,
+  medicalDevType: [
+    {key: '0', label: '未知'},
+    {key: '1', label: '医用'},
+    {key: '2', label: '非医用'}
+  ],
+  doorDevType: [
+    {key: '0', label: '未知'},
+    {key: '1', label: '玻璃门'},
+    {key: '2', label: '避光们'}
+  ]
 };
 
 const mutations = {

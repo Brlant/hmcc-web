@@ -18,7 +18,7 @@
           <oms-input placeholder="请输入类型"  v-model="form.type"/>
         </el-form-item>
         <el-form-item label="品牌">
-          <oms-input placeholder="请输入品牌"  v-model="form.barnd"/>
+          <oms-input placeholder="请输入品牌"  v-model="form.brand"/>
         </el-form-item>
         <el-form-item label="型号">
           <oms-input placeholder="请输入型号"  v-model="form.version"/>
@@ -28,20 +28,23 @@
         </el-form-item>
         <el-form-item label="是否医用设备">
           <el-radio-group v-model="form.medicalFlag">
-            <el-radio :label="3" v-for="item in medicalDevType" :key="item.key">{{item.label}}</el-radio>
+            <el-radio :label="item.key" v-for="item in medicalDevType" :key="item.key">{{item.label}}</el-radio>
           </el-radio-group>
         </el-form-item>
         <el-form-item label="门板类型">
           <el-radio-group v-model="form.doorSheetType">
-            <el-radio :label="3" v-for="item in doorDevType" :key="item.key">{{item.label}}</el-radio>
+            <el-radio :label="item.key" v-for="item in doorDevType" :key="item.key">{{item.label}}</el-radio>
           </el-radio-group>
         </el-form-item>
         <el-form-item label="容积">
           <oms-input placeholder="请输入容积"  v-model="form.volume"/>
         </el-form-item>
-        <el-form-item label="状态">
-          <el-switch active-text="启用" active-value="1" inactive-text="停用" inactive-value="0" v-model="form.devStatus">
-          </el-switch>
+        <el-form-item label="状态" prop="status">
+          <el-select placeholder="请选择状态" v-model="form.status" popper-class="selects--custom">
+            <el-option :key="item.status" :label="item.title" :value="item.status"
+                       v-for="(item, index) in statusType">
+            </el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="备注">
           <oms-input placeholder="请输入型号" type="textarea" v-model="form.remark"/>
@@ -51,12 +54,13 @@
   </dialog-template>
 </template>
 <script>
-  import {TempDev} from '@/resources';
-
+  import {cool} from '@/resources';
   export default {
     data() {
       return {
-        form: {},
+        form: {
+          status: '1'
+        },
         doing: false,
         rules: {
           no: [
@@ -66,31 +70,33 @@
             {required: true, message: '请选择所属单位', trigger: 'change'}
           ],
           type: [
-            {required: true, message: '请输入设备类型', trigger: 'blur'}
+            {required: true, message: '请输入类型', trigger: 'blur'}
+          ],
+          status: [
+            {required: true, message: '请选择状态', trigger: 'change'}
           ]
         },
-        medicalDevType: [
-          {key: '0', label: '未知'},
-          {key: '1', label: '未知'},
-          {key: '2', label: '未知'}
-        ],
-        doorDevType: [
-          {key: '0', label: '未知'},
-          {key: '1', label: '玻璃门'},
-          {key: '2', label: '避光们'}
-        ],
         actionType: '添加',
         orgList: []
       };
     },
     props: {
       formItem: Object,
-      index: Number
+      index: Number,
+      statusType: Object
+    },
+    computed: {
+      medicalDevType () {
+        return this.$store.state.medicalDevType;
+      },
+      doorDevType () {
+        return this.$store.state.doorDevType;
+      }
     },
     watch: {
       index: function (val) {
-        this.$refs['tempForm'].clearValidate();
-        if (this.formItem.ccsDevId) {
+        this.$refs['tempForm'] && this.$refs['tempForm'].clearValidate();
+        if (this.formItem.id) {
           this.form = Object.assign({}, this.formItem);
           this.actionType = '编辑';
         } else {
@@ -111,26 +117,38 @@
           if (valid && this.doing === false) {
             // this.form.createTime = this.form.createTime ? this.$moment(this.form.createTime).format('YYYY-MM-DD') : '';
             if (!this.form.id) {
-              this.form.devType = '' + (this.type - 1);
+              this.orgList.forEach(i => {
+                if(i.id === this.form.orgId) {
+                  this.form.orgName = i.name;
+                }
+              });
               this.doing = true;
-              this.$httpRequestOpera(TempDev.save(this.form), {
-                successTitle: '添加成功',
+              this.$httpRequestOpera(cool.save(this.form), {
                 errorTitle: '添加失败',
                 success: res => {
-                  this.doing = false;
-                  this.$emit('change', res.data);
+                  if(res.data.code === 200) {
+                    this.$notify.success({message: '添加成功'});
+                    this.doing = false;
+                    this.$emit('change', res.data);
+                  } else {
+                    this.doing = false;
+                  }
                 },
                 error: () => {
                   this.doing = false;
                 }
               });
             } else {
-              this.$httpRequestOpera(TempDev.update(this.form.id, this.form), {
-                successTitle: '修改成功',
+              this.$httpRequestOpera(cool.update(this.form), {
                 errorTitle: '修改失败',
                 success: res => {
-                  this.doing = false;
-                  this.$emit('change', res.data);
+                  if(res.data.code === 200) {
+                    this.$notify.success({message: '修改成功'});
+                    this.doing = false;
+                    this.$emit('change', res.data);
+                  } else {
+                    this.doing = false;
+                  }
                 },
                 error: () => {
                   this.doing = false;

@@ -17,20 +17,23 @@
               {{pageSets[0].name}}</h3>
           </div>
           <div class="content">
-            <oms-col :isShow="true" :rowSpan="span" label="编号">{{formItem.devNo}}</oms-col>
-            <oms-col :isShow="true" :rowSpan="span" label="所属单位">{{formItem.devCode}}</oms-col>
-            <oms-col :isShow="true" :rowSpan="span" label="类型">{{formItem.devCode}}</oms-col>
-            <oms-col :isShow="true" :rowSpan="span" label="品牌">{{formItem.devCode}}</oms-col>
-            <oms-col :isShow="true" :rowSpan="span" label="型号">{{formItem.devCode}}</oms-col>
-            <oms-col :isShow="true" :rowSpan="span" label="型号">{{formItem.devCode}}</oms-col>
-            <oms-col :isShow="true" :rowSpan="span" label="是否医用设备">{{formItem.devCode}}</oms-col>
-            <oms-col :isShow="true" :rowSpan="span" label="门板类型">{{formItem.devCode}}</oms-col>
-            <oms-col :isShow="true" :rowSpan="span" label="容积">{{formItem.devCode}}</oms-col>
-            <oms-col :isShow="true" :rowSpan="span" label="状态">
-              {{parent.formatStatus(formItem.devStatus, statusType)}}
+            <oms-col :isShow="true" :rowSpan="span" label="编号">{{formItem.no}}</oms-col>
+            <oms-col :isShow="true" :rowSpan="span" label="所属单位">{{formItem.orgName}}</oms-col>
+            <oms-col :isShow="true" :rowSpan="span" label="类型">{{formItem.type}}</oms-col>
+            <oms-col :isShow="true" :rowSpan="span" label="品牌">{{formItem.brand}}</oms-col>
+            <oms-col :isShow="true" :rowSpan="span" label="型号">{{formItem.version}}</oms-col>
+            <oms-col :isShow="true" :rowSpan="span" label="是否医用设备">
+              {{formatDictLabel(formItem.medicalFlag, medicalDevType)}}
             </oms-col>
-            <oms-col :isShow="true" :rowSpan="span" label="图片">{{formItem.devCode}}</oms-col>
-            <oms-col :isShow="true" :rowSpan="span" label="备注">{{formItem.comment}}</oms-col>
+            <oms-col :isShow="true" :rowSpan="span" label="门板类型">
+              {{formatDictLabel(formItem.doorSheetType, doorDevType)}}
+            </oms-col>
+            <oms-col :isShow="true" :rowSpan="span" label="容积">{{formItem.volume}}</oms-col>
+            <oms-col :isShow="true" :rowSpan="span" label="状态">
+              {{parent.formatStatus(formItem.status, statusType)}}
+            </oms-col>
+            <oms-col :isShow="true" :rowSpan="span" label="图片">{{formItem.photoUrl}}</oms-col>
+            <oms-col :isShow="true" :rowSpan="span" label="备注">{{formItem.remark}}</oms-col>
           </div>
         </div>
       </div>
@@ -38,6 +41,7 @@
   </dialog-template>
 </template>
 <script>
+  import {formatDictLabel} from '@/tools/utils'
   export default {
     props: {
       index: Number,
@@ -54,8 +58,17 @@
         currentTab: {},
         tempList: [],
         currentIndex: -1,
-        parent: this.$parent.$parent
+        parent: this.$parent.$parent,
+        formatDictLabel
       };
+    },
+    computed: {
+      medicalDevType () {
+        return this.$store.state.medicalDevType;
+      },
+      doorDevType () {
+        return this.$store.state.doorDevType;
+      }
     },
     watch: {
       index(val) {

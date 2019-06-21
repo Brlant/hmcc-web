@@ -92,10 +92,29 @@ http.interceptors.response.use(response => {
 Vue.prototype.$http = http;
 
 
+
+//冷链设备管理
+export const cool = resource('/freezer-dev', http, {
+  query(params) {
+    return http.post('/freezer-dev/page', params);
+  },
+  update(obj) {
+    return http.put('/freezer-dev', obj);
+  },
+  queryStateNum(params) {
+    return http.post('/freezer-dev/count', params);
+  }
+});
+
+
+
 //探头管理
 export const probe = resource('/sensor', http, {
   query(params) {
     return http.post('/sensor/page', params);
+  },
+  update(obj) {
+    return http.put('/sensor', obj);
   },
   queryStateNum(params) {
     return http.post('/sensor/count', params);

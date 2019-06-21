@@ -16,7 +16,7 @@
         <el-col :span="8">
           <oms-form-row label="编号" :span="8">
             <oms-input placeholder="请输入编号" @keyup.native.enter="search"
-                       v-model.trim="searchCondition.devCode"></oms-input>
+                       v-model.trim="searchCondition.no"></oms-input>
           </oms-form-row>
         </el-col>
         <el-col :span="8">
@@ -28,7 +28,7 @@
         <el-col :span="8">
           <oms-form-row label="类型" :span="8">
             <oms-input placeholder="请输入型号" @keyup.native.enter="search"
-                       v-model.trim="searchCondition.devNo"></oms-input>
+                       v-model.trim="searchCondition.version"></oms-input>
           </oms-form-row>
         </el-col>
       </el-form>
@@ -42,11 +42,10 @@
     data: function () {
       return {
         searchCondition: {
-          devCode: null,
+          no: null,
           devName: null,
           devType: null,
-          status: null,
-          devNo: null
+          version: null
         },
         showSearch: false,
         list: [],
@@ -55,10 +54,6 @@
       };
     },
     mounted() {
-      let devCode = this.$route.query.devCode;
-      if (!devCode) return;
-      this.searchCondition.devCode = devCode;
-      this.searchCondition.devNo = this.$route.query.devNo;
       this.search();
     },
     methods: {
@@ -73,11 +68,10 @@
       },
       reset() {
         this.searchCondition = {
-          devCode: null,
+          no: null,
           devName: null,
           devType: null,
-          status: null,
-          devNo: null
+          version: null
         };
         this.$emit('search', this.searchCondition);
       },

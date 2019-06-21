@@ -293,3 +293,8 @@ export const deepCopy = function (source) {
   }
   return sourceCopy;
 };
+
+export const formatDictLabel = (key, list) => {
+  let item = list.find(i => i.key === key) || {};
+  return item.label;
+};

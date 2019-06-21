@@ -1,8 +1,8 @@
 <template>
   <div class="order-page">
-    <search-part :type="type" @search="searchResult">
+    <search-part @search="searchResult">
       <template slot="btn">
-        <el-button @click="add" plain size="small" v-has="perms[0]" v-if="type">
+        <el-button @click="add" plain size="small" v-has="perms[0]">
           <f-a class="icon-small" name="plus"></f-a>
           添加
         </el-button>

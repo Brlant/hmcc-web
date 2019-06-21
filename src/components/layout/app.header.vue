@@ -422,14 +422,9 @@
         this.isCollapse = !this.isCollapse;
         this.$store.commit('changeBodyLeft', this.isCollapse);
         window.localStorage.setItem('collapse', this.isCollapse ? 1 : 0);
-      },
-      changeSkin: function (skin) {
-        this.skin = skin;
-        window.localStorage.setItem('skin', JSON.stringify(skin));
       }
     },
     mounted: function () {
-      this.skin = this.skinList[0];
       let isCollapse = window.localStorage.getItem('collapse');
       if (isCollapse) {
         isCollapse = parseInt(isCollapse, 10);

@@ -63,7 +63,7 @@
     watch: {
       index: function (val) {
         this.$refs['tempForm'].clearValidate();
-        if (this.formItem.ccsDevId) {
+        if (this.formItem.id) {
           this.form = Object.assign({}, this.formItem);
           this.actionType = '编辑';
         } else {
@@ -100,6 +100,7 @@
                 errorTitle: '添加失败',
                 success: res => {
                   if(res.data.code === 200) {
+                    this.$notify.success({message: '添加成功'});
                     this.doing = false;
                     this.$emit('change', res.data);
                   } else {
@@ -111,12 +112,16 @@
                 }
               });
             } else {
-              this.$httpRequestOpera(probe.update(this.form.id, this.form), {
-                successTitle: '修改成功',
+              this.$httpRequestOpera(probe.update(this.form), {
                 errorTitle: '修改失败',
                 success: res => {
-                  this.doing = false;
-                  this.$emit('change', res.data);
+                  if(res.data.code === 200) {
+                    this.$notify.success({message: '修改成功'});
+                    this.doing = false;
+                    this.$emit('change', res.data);
+                  } else {
+                    this.doing = false;
+                  }
                 },
                 error: () => {
                   this.doing = false;
