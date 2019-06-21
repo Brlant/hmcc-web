@@ -6,6 +6,15 @@ export default {
     0: {'title': '启用', status: '1', num: ''},
     1: {'title': '停用', status: '0', num: ''}
   },
+  coolType: {
+    0: {'title': '启用', status: '1', num: ''},
+    1: {'title': '停用', status: '0', num: ''},
+    2: {'title': '维修', status: '2', num: ''},
+    3: {'title': '备用', status: '3', num: ''},
+    4: {'title': '报废', status: '4', num: ''},
+    5: {'title': '盘苗', status: '5', num: ''},
+    6: {'title': '除霜', status: '6', num: ''},
+  },
   wifiType: {
     0: {'title': '全部', status: null, num: ''},
     1: {'title': '使用中', status: '4', num: ''},

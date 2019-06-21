@@ -6,7 +6,7 @@
     </template>
     <template slot="content">
       <el-form :model="form" :rules="rules" label-width="140px" ref="tempForm">
-        <el-form-item label="编号">
+        <el-form-item label="编号" prop="no">
           <oms-input placeholder="请输入设备编号" type="input" v-model="form.no"/>
         </el-form-item>
         <el-form-item label="所属单位" prop="orgId">
@@ -14,14 +14,14 @@
                       :remoteMethod="queryAllOrg"
                       placeholder="请输入名称搜索单位" v-model="form.orgId"></org-select>
         </el-form-item>
-        <el-form-item label="类型">
+        <el-form-item label="类型" prop="type">
           <oms-input placeholder="请输入类型"  v-model="form.type"/>
         </el-form-item>
         <el-form-item label="品牌">
           <oms-input placeholder="请输入品牌"  v-model="form.barnd"/>
         </el-form-item>
         <el-form-item label="型号">
-          <oms-input placeholder="请输入型号"  v-model="form.vsrsion"/>
+          <oms-input placeholder="请输入型号"  v-model="form.version"/>
         </el-form-item>
         <el-form-item label="设备启用时间">
           <el-date-picker placeholder="请选择" type="date" v-model="form.startUsingTime" value-format="timestamp"/>
@@ -62,20 +62,11 @@
           no: [
             {required: true, message: '请输入编码', trigger: 'blur'}
           ],
-          name: [
-            {required: true, message: '请输入名称', trigger: 'blur'}
+          orgId: [
+            {required: true, message: '请选择所属单位', trigger: 'change'}
           ],
-          temp: [
-            {required: true, message: '请输入当前温度', trigger: 'blur'}
-          ],
-          voltage: [
-            {required: true, message: '请输入当前电压', trigger: 'blur'}
-          ],
-          createTime: [
-            {required: true, message: '请选择校准期', trigger: 'change'}
-          ],
-          devNo: [
-            {required: true, message: '请输入设备编号', trigger: 'blur'}
+          type: [
+            {required: true, message: '请输入设备类型', trigger: 'blur'}
           ]
         },
         medicalDevType: [
@@ -103,16 +94,7 @@
           this.form = Object.assign({}, this.formItem);
           this.actionType = '编辑';
         } else {
-          this.form = {
-            no: '',
-            name: '',
-            devStatus: '1',
-            devType: '',
-            monitorStatus: '0',
-            comment: '',
-            createTime: '',
-            devNo: ''
-          };
+          this.form = {};
           this.actionType = '添加';
         }
       }

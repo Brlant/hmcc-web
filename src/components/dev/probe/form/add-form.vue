@@ -23,10 +23,6 @@
         <el-form-item label="校准期" prop="calibrationTime">
           <el-date-picker placeholder="请选择" type="date" v-model="form.calibrationTime" value-format="timestamp"/>
         </el-form-item>
-        <el-form-item label="状态">
-          <el-switch active-text="启用" active-value="1" inactive-text="停用" inactive-value="0" v-model="form.status">
-          </el-switch>
-        </el-form-item>
       </el-form>
     </template>
   </dialog-template>

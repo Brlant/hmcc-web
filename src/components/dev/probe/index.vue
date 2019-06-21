@@ -8,7 +8,7 @@
         </el-button>
       </template>
     </search-part>
-    <status-list :activeStatus="activeStatus" :checkStatus="checkStatus" :statusList="statusType" v-show="!!type"/>
+    <status-list :activeStatus="activeStatus" :checkStatus="checkStatus" :statusList="statusType"/>
     <div class="order-list" style="margin-top: 20px">
       <el-row class="order-list-header">
         <el-col :span="3">名称</el-col>
@@ -86,8 +86,6 @@
     data() {
       return {
         statusType: JSON.parse(JSON.stringify(utils.orderType)),
-        wifiType: utils.wifiType,
-        orderType: utils.orderType,
         filters: {
           status: '1',
           devCode: '',
@@ -101,11 +99,6 @@
       };
     },
     computed: {
-      type() {
-        const type = this.$route.meta.type;
-        this.init(type);
-        return type;
-      },
       perms() {
         return this.$route.meta.perms;
       }
@@ -126,17 +119,6 @@
         if (!data) return '';
         return data ? this.$moment(data).format('YYYY-MM-DD HH:mm:ss') : '';
       },
-      init(val) {
-        this.activeStatus = 0;
-        this.filters = {
-          status: '1',
-          devCode: '',
-          devName: ''
-        };
-        this.$nextTick(() => {
-          this.filters.status = val === 2 ? null : '1';
-        });
-      },
       searchResult: function (search) {
         this.filters = Object.assign({}, this.filters, search);
       },
@@ -156,7 +138,6 @@
       },
       queryList(pageNo) {
         const http = probe.query;
-        let isAll = typeof this.filters.devType === 'number';
         const params = this.queryUtil(http, pageNo);
         this.queryStatusNum(params);
       },

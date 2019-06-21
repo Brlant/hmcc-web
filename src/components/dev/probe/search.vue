@@ -50,7 +50,6 @@
         searchCondition: {
           no: null,
           name: null,
-          status: null,
           type: null
         },
         showSearch: false,
@@ -79,7 +78,6 @@
         this.searchCondition = {
           no: null,
           name: null,
-          status: null,
           type: null
         };
         this.$emit('search', this.searchCondition);

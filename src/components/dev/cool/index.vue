@@ -33,24 +33,24 @@
         </el-col>
       </el-row>
       <div class="order-list-body flex-list-dom" v-else="">
-        <div :class="[formatRowClass(item.devStatus, statusType) ,{'active':currentItemId===item.id}]"
+        <div :class="[formatRowClass(item.status, statusType) ,{'active':currentItemId===item.id}]"
              @click="showItemDetail(item)" class="order-list-item"
              v-for="item in dataList">
           <el-row>
-            <el-col :span="3" class="R">{{item.devName}}</el-col>
+            <el-col :span="3" class="R">{{item.no}}</el-col>
             <el-col :span="4" class="R">{{item.orgName}}</el-col>
-            <el-col :span="3" class="R">{{item.devCode}}</el-col>
-            <el-col :span="3" class="R">{{item.devNo}}</el-col>
-            <el-col :span="3" class="R">{{item.devNo}}</el-col>
+            <el-col :span="3" class="R">{{item.type}}</el-col>
+            <el-col :span="3" class="R">{{item.barnd}}</el-col>
+            <el-col :span="3" class="R">{{item.version}}</el-col>
 
-            <el-col :span="3">{{item.createTime | date}}</el-col>
+            <el-col :span="3">{{item.startUsingTime | date}}</el-col>
             <el-col :span="2">
-              {{formatStatus(item.devStatus, statusType)}}
+              {{formatStatus(item.status, statusType)}}
             </el-col>
             <el-col :span="3" class="opera-btn">
               <des-btn @click="edit(item)" icon="edit" v-has="perms[1]">编辑</des-btn>
-              <des-btn @click="edit(item)" icon="forbidden" v-show="item.devStatus === '1'" v-has="perms[1]">停用</des-btn>
-              <des-btn @click="edit(item)" icon="forbidden" v-has="perms[1]" v-show="item.devStatus === '0'">停用</des-btn>
+              <des-btn @click="edit(item)" icon="forbidden" v-show="item.status === '1'" v-has="perms[1]">停用</des-btn>
+              <des-btn @click="edit(item)" icon="forbidden" v-has="perms[1]" v-show="item.status === '0'">停用</des-btn>
             </el-col>
           </el-row>
           <div class="order-list-item-bg"></div>
@@ -88,13 +88,11 @@
     mixins: [CommonMixin],
     data() {
       return {
-        statusType: JSON.parse(JSON.stringify(utils.orderType)),
-        wifiType: utils.wifiType,
-        orderType: utils.orderType,
+        statusType: JSON.parse(JSON.stringify(utils.coolType)),
         filters: {
           status: '1',
-          devCode: '',
-          devName: ''
+          type: '',
+          no: ''
         },
         dialogComponents: {
           0: addForm,
@@ -133,8 +131,8 @@
         this.activeStatus = 0;
         this.filters = {
           status: '1',
-          devCode: '',
-          devName: ''
+          type: '',
+          no: ''
         };
         this.$nextTick(() => {
           this.filters.status = val === 2 ? null : '1';
@@ -159,11 +157,10 @@
       },
       queryList(pageNo) {
         const http = TempDev.query;
-        let isAll = typeof this.filters.devType === 'number';
         const params = this.queryUtil(http, pageNo);
       },
       queryStatusNum(params) {
-        const pm = Object.assign({}, params, {devStatus: null});
+        const pm = Object.assign({}, params, {status: null});
         const http = TempDev.queryStateNum;
         const res = {};
         this.queryStatusNumUtil(http, pm, this.statusType, res);
@@ -185,19 +182,6 @@
         this.defaultPageRight.width = '900px';
         this.$nextTick(() => {
           this.form = item;
-        });
-      },
-      deleteItem(item) {
-        this.currentItem = item;
-        this.currentItemId = item.id;
-        this.$confirmOpera(`是否删除温度计"${item.devName}"`, () => {
-          this.$httpRequestOpera(TempDev.delete(item.id), {
-            successTitle: '删除成功',
-            errorTitle: '删除失败',
-            success: () => {
-              this.queryList(1);
-            }
-          });
         });
       },
       change() {
