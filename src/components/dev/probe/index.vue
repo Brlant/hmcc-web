@@ -158,6 +158,7 @@
         const http = probe.query;
         let isAll = typeof this.filters.devType === 'number';
         const params = this.queryUtil(http, pageNo);
+        this.queryStatusNum(params);
       },
       queryStatusNum(params) {
         const pm = Object.assign({}, params, {status: null});
@@ -187,12 +188,12 @@
       start(item) {
         this.currentItem = item;
         this.currentItemId = item.id;
-        this.$confirmOpera(`是否启用探头"${item.Name}"`, () => {
+        this.$confirmOpera(`是否启用探头"${item.name}"`, () => {
           this.$httpRequestOpera(probe.start(item.id), {
             successTitle: '启用成功',
             errorTitle: '启用失败',
             success: () => {
-              this.queryList(1);
+              item.status = '1';
             }
           });
         });
@@ -200,12 +201,12 @@
       stop(item) {
         this.currentItem = item;
         this.currentItemId = item.id;
-        this.$confirmOpera(`是否停用探头"${item.Name}"`, () => {
+        this.$confirmOpera(`是否停用探头"${item.name}"`, () => {
           this.$httpRequestOpera(probe.stop(item.id), {
             successTitle: '停用成功',
             errorTitle: '停用失败',
             success: () => {
-              this.queryList(1);
+              item.status = '0';
             }
           });
         });

@@ -11,13 +11,12 @@ export const http = axios.create({
 
 http.interceptors.response.use(response => {
   if (response.data.code) {
-    let data = {data: response.data};
     switch (response.data.code) {
       case 200 :
-        return data;
+        return response;
       case 401:
         window.location.href = '#/login';
-        return data;
+        return response;
       case 403:
         Notification.error({
           message: '您没有权限请求信息，请联系管理员。',
@@ -25,12 +24,12 @@ http.interceptors.response.use(response => {
             window.localStorage.removeItem(noticeTipKey);
           }
         });
-        return data;
+        return response;
       case 400:
         Notification.error({
           message: response.data.msg,
         });
-        return data;
+        return response;
     }
   } else {
     return response;
@@ -96,16 +95,16 @@ Vue.prototype.$http = http;
 //探头管理
 export const probe = resource('/sensor', http, {
   query(params) {
-    return http.get('/sensor/page', {params});
+    return http.post('/sensor/page', params);
   },
   queryStateNum(params) {
-    return http.get('/sensor/count', {params});
+    return http.post('/sensor/count', params);
   },
   stop(id) {
-    return http.put(`/sensor/disable/{id}`);
+    return http.put(`/sensor/disable/${id}`);
   },
   start(id) {
-    return http.put(`/sensor/active/{id}`);
+    return http.put(`/sensor/active/${id}`);
   }
 });
 

@@ -7,47 +7,44 @@
     <template slot="content">
       <el-form :model="form" :rules="rules" label-width="140px" ref="tempForm">
         <el-form-item label="编号">
-          <oms-input placeholder="请输入设备编号" type="input" v-model="form.devNo"/>
+          <oms-input placeholder="请输入设备编号" type="input" v-model="form.no"/>
         </el-form-item>
         <el-form-item label="所属单位" prop="orgId">
           <org-select :list="orgList"
-                      :remoteMethod="$route.meta.level ===2 ? queryOwnCustomer :queryAllOrg"
+                      :remoteMethod="queryAllOrg"
                       placeholder="请输入名称搜索单位" v-model="form.orgId"></org-select>
         </el-form-item>
         <el-form-item label="类型">
-          <oms-input placeholder="请输入类型"  v-model="form.comment"/>
+          <oms-input placeholder="请输入类型"  v-model="form.type"/>
         </el-form-item>
         <el-form-item label="品牌">
-          <oms-input placeholder="请输入品牌"  v-model="form.comment"/>
+          <oms-input placeholder="请输入品牌"  v-model="form.barnd"/>
         </el-form-item>
         <el-form-item label="型号">
-          <oms-input placeholder="请输入型号"  v-model="form.comment"/>
+          <oms-input placeholder="请输入型号"  v-model="form.vsrsion"/>
         </el-form-item>
         <el-form-item label="设备启用时间">
-          <el-date-picker placeholder="请选择" type="date" v-model="form.createTime" value-format="timestamp"/>
+          <el-date-picker placeholder="请选择" type="date" v-model="form.startUsingTime" value-format="timestamp"/>
         </el-form-item>
         <el-form-item label="是否医用设备">
-          <el-radio-group v-model="form.radio">
+          <el-radio-group v-model="form.medicalFlag">
             <el-radio :label="3" v-for="item in medicalDevType" :key="item.key">{{item.label}}</el-radio>
           </el-radio-group>
         </el-form-item>
         <el-form-item label="门板类型">
-          <el-radio-group v-model="form.radio">
+          <el-radio-group v-model="form.doorSheetType">
             <el-radio :label="3" v-for="item in doorDevType" :key="item.key">{{item.label}}</el-radio>
           </el-radio-group>
         </el-form-item>
         <el-form-item label="容积">
-          <oms-input placeholder="请输入型号"  v-model="form.comment"/>
-        </el-form-item>
-        <el-form-item label="型号">
-          <oms-input placeholder="请输入型号"  v-model="form.comment"/>
+          <oms-input placeholder="请输入容积"  v-model="form.volume"/>
         </el-form-item>
         <el-form-item label="状态">
           <el-switch active-text="启用" active-value="1" inactive-text="停用" inactive-value="0" v-model="form.devStatus">
           </el-switch>
         </el-form-item>
         <el-form-item label="备注">
-          <oms-input placeholder="请输入型号" type="textarea" v-model="form.comment"/>
+          <oms-input placeholder="请输入型号" type="textarea" v-model="form.remark"/>
         </el-form-item>
       </el-form>
     </template>
@@ -62,10 +59,10 @@
         form: {},
         doing: false,
         rules: {
-          devCode: [
+          no: [
             {required: true, message: '请输入编码', trigger: 'blur'}
           ],
-          devName: [
+          name: [
             {required: true, message: '请输入名称', trigger: 'blur'}
           ],
           temp: [
@@ -107,8 +104,8 @@
           this.actionType = '编辑';
         } else {
           this.form = {
-            devCode: '',
-            devName: '',
+            no: '',
+            name: '',
             devStatus: '1',
             devType: '',
             monitorStatus: '0',

@@ -141,8 +141,8 @@ export function init(Vue) {
 
   // 通用请求方法
   Vue.prototype.$httpRequestOpera = function (httpPromise, option = {
-    successTitle: '操作成功',
-    errorTitle: '操作失败',
+    successTitle: '',
+    errorTitle: '',
     success: res => {
     },
     error: res => {
@@ -150,7 +150,7 @@ export function init(Vue) {
   }) {
     const {successTitle, errorTitle, success, error} = option;
     httpPromise.then(res => {
-      this.$notify.success({
+      successTitle && this.$notify.success({
         duration: 2000,
         message: successTitle
       });
@@ -158,7 +158,7 @@ export function init(Vue) {
     }).catch(e => {
       this.$notify.error({
         duration: 2000,
-        message: e.response && e.response.data && e.response.data.msg || errorTitle
+        message: e.response && e.response.data && e.response.data.msg || errorTitle || '操作失败'
       });
       error(e);
     });

@@ -11,7 +11,7 @@
         </el-form-item>
         <el-form-item label="所属单位" prop="orgId">
           <org-select :list="orgList"
-                      :remoteMethod="$route.meta.level ===2 ? queryOwnCustomer :queryAllOrg"
+                      :remoteMethod="queryAllOrg"
                       placeholder="请输入名称搜索单位" v-model="form.orgId"></org-select>
         </el-form-item>
         <el-form-item label="编号">
@@ -92,16 +92,23 @@
       save(formName) {
         this.$refs[formName].validate((valid) => {
           if (valid && this.doing === false) {
-            // this.form.calibrationTime = this.form.calibrationTime ? this.$moment(this.form.calibrationTime).format('YYYY-MM-DD') : '';
+
+            this.orgList.forEach(i => {
+              if(i.id === this.form.orgId) {
+                this.form.orgName = i.name;
+              }
+            });
             if (!this.form.id) {
-              this.form.devType = '' + (this.type - 1);
               this.doing = true;
               this.$httpRequestOpera(probe.save(this.form), {
-                successTitle: '添加成功',
                 errorTitle: '添加失败',
                 success: res => {
-                  this.doing = false;
-                  this.$emit('change', res.data);
+                  if(res.data.code === 200) {
+                    this.doing = false;
+                    this.$emit('change', res.data);
+                  } else {
+                    this.doing = false;
+                  }
                 },
                 error: () => {
                   this.doing = false;

@@ -16,19 +16,19 @@
         <el-col :span="8">
           <oms-form-row label="名称" :span="4">
             <oms-input placeholder="请输入名称" @keyup.native.enter="search"
-                       v-model.trim="searchCondition.devName"></oms-input>
+                       v-model.trim="searchCondition.name"></oms-input>
           </oms-form-row>
         </el-col>
         <el-col :span="8">
           <oms-form-row label="编号" :span="8">
             <oms-input placeholder="请输入编号" @keyup.native.enter="search"
-                       v-model.trim="searchCondition.devCode"></oms-input>
+                       v-model.trim="searchCondition.no"></oms-input>
           </oms-form-row>
         </el-col>
         <el-col :span="8">
           <oms-form-row label="型号" :span="8">
             <oms-input placeholder="请输入型号" @keyup.native.enter="search"
-                       v-model.trim="searchCondition.devNo"></oms-input>
+                       v-model.trim="searchCondition.type"></oms-input>
           </oms-form-row>
         </el-col>
         <el-col :span="8">
@@ -48,11 +48,10 @@
     data: function () {
       return {
         searchCondition: {
-          devCode: null,
-          devName: null,
-          devType: null,
+          no: null,
+          name: null,
           status: null,
-          devNo: null
+          type: null
         },
         showSearch: false,
         list: [],
@@ -61,10 +60,9 @@
       };
     },
     mounted() {
-      let devCode = this.$route.query.devCode;
-      if (!devCode) return;
-      this.searchCondition.devCode = devCode;
-      this.searchCondition.devNo = this.$route.query.devNo;
+      let no = this.$route.query.no;
+      if (!no) return;
+      this.searchCondition.no = no;
       this.search();
     },
     methods: {
@@ -79,11 +77,10 @@
       },
       reset() {
         this.searchCondition = {
-          devCode: null,
-          devName: null,
-          devType: null,
+          no: null,
+          name: null,
           status: null,
-          devNo: null
+          type: null
         };
         this.$emit('search', this.searchCondition);
       },
