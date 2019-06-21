@@ -32,8 +32,17 @@
             <oms-col :isShow="true" :rowSpan="span" label="状态">
               {{parent.formatStatus(formItem.status, statusType)}}
             </oms-col>
-            <oms-col :isShow="true" :rowSpan="span" label="图片">{{formItem.photoUrl}}</oms-col>
-            <oms-col :isShow="true" :rowSpan="span" label="备注">{{formItem.remark}}</oms-col>
+            <oms-col :isShow="true" :rowSpan="span" label="备注">
+              {{formItem.remark}}
+            </oms-col>
+            <oms-row :span="5" label="图片" class="clearfix">
+              <div :class="{'base-pic-item':formItem.photoUrl,'base-pic-item-normal':!formItem.photoUrl} "
+                   @click="handlePreview(formItem.photoId)">
+                <compressed-img v-if="formItem.photoUrl"
+                                :src="formItem.photoUrl?formItem.photoUrl+'?image&action=resize:w_380,m_0':'/static/img/userpic.png' "/>
+                <img src="/static/img/userpic.png" v-else>
+              </div>
+            </oms-row>
           </div>
         </div>
       </div>
@@ -79,6 +88,9 @@
       }
     },
     methods: {
+      handlePreview: function (id) {
+        this.$store.commit('changeAttachment', id);
+      },
       showRecordDate: function (data) {
         return data ? this.$moment(data).format('YYYY-MM-DD HH:mm:ss') : '';
       },
