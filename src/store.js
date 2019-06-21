@@ -38,7 +38,7 @@ const state = {
   doorDevType: [
     {key: '0', label: '未知'},
     {key: '1', label: '玻璃门'},
-    {key: '2', label: '避光们'}
+    {key: '2', label: '避光门'}
   ]
 };
 

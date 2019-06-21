@@ -64,6 +64,9 @@
       index: function (val) {
         this.$refs['tempForm'].clearValidate();
         if (this.formItem.id) {
+          this.orgList = [
+            {name: this.formItem.orgName, id: this.formItem.orgId}
+          ];
           this.form = Object.assign({}, this.formItem);
           this.actionType = '编辑';
         } else {
