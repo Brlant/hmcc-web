@@ -23,6 +23,9 @@
         <el-form-item label="型号">
           <oms-input placeholder="请输入型号"  v-model="form.version"/>
         </el-form-item>
+        <el-form-item label="设备图片">
+          <oms-upload-picture :photoUrl="form.photoUrl" @change="changPhoto"></oms-upload-picture>
+        </el-form-item>
         <el-form-item label="设备启用时间">
           <el-date-picker placeholder="请选择" type="date" v-model="form.startUsingTime" value-format="timestamp"/>
         </el-form-item>
@@ -54,8 +57,12 @@
   </dialog-template>
 </template>
 <script>
+  import omsUploadPicture from '@/components/common/upload/upload.picture';
   import {cool} from '@/resources';
   export default {
+    components: {
+      omsUploadPicture
+    },
     data() {
       return {
         form: {
@@ -109,6 +116,12 @@
       }
     },
     methods: {
+      changPhoto: function (photo) {
+        if (photo) {
+          this.form.photoId = photo.attachmentId;
+          this.form.photoUrl = photo.url;
+        }
+      },
       queryAllOrg: function (query) {// 查询货主
         let params = {keyWord: query};
         this.$http.get('/orgs/pager', {params: params}).then(res => {
