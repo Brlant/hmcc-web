@@ -21,7 +21,7 @@ http.interceptors.response.use(response => {
         Notification.error({
           message: '您没有权限请求信息，请联系管理员。',
           onClose: function () {
-            window.localStorage.removeItem(noticeTipKey);
+            window.localStorage.removeItem('noticeError');
           }
         });
         return response;
