@@ -12,18 +12,15 @@
 
     <div class="order-list" style="margin-top: 20px">
       <el-row class="order-list-header">
-        <el-col :span="1">
-          <el-checkbox @change="checkAll" v-model="isCheckAll"></el-checkbox>
-        </el-col>
         <el-col :span="3">
           发生时间
         </el-col>
         <el-col :span="3">恢复时间</el-col>
-        <el-col :span="2">持续时间</el-col>
-        <el-col :span="2">异常类型</el-col>
-        <el-col :span="4">监控对象</el-col>
-        <el-col :span="4">设备名称</el-col>
-        <el-col :span="2">状态</el-col>
+        <el-col :span="3">处理时间</el-col>
+        <el-col :span="2">告警类型</el-col>
+        <el-col :span="4">探头</el-col>
+        <el-col :span="2">告警等级</el-col>
+        <el-col :span="4">处理情况</el-col>
         <el-col :span="3">操作</el-col>
       </el-row>
       <el-row v-if="loadingData">
@@ -42,44 +39,19 @@
         <div :class="[{'active':currentItemId===item.id}]" @click.stop.prevent="checkItem(item)"
              class="order-list-item no-pointer order-list-item-bg" v-for="item in dataList">
           <el-row>
-            <el-col :span="1">
-              <div @click.stop.prevent="checkItem(item)" class="el-checkbox-warp" v-if="item.confirmStatus === '0'">
-                <el-checkbox v-model="item.isChecked"></el-checkbox>
-              </div>
-            </el-col>
             <el-col :span="3">{{item.createTime | time}}</el-col>
             <el-col :span="3">{{item.restoreTime | time}}</el-col>
-            <el-col :span="2">{{formatMsToTime((item.restoreTime ? item.restoreTime : Date.now()) - item.createTime)}}
+            <el-col :span="3">{{formatMsToTime((item.restoreTime ? item.restoreTime : Date.now()) - item.createTime)}}
             </el-col>
+            <el-col :span="2"></el-col>
+            <el-col :span="4"></el-col>
             <el-col :span="2">
-              <el-tooltip :content="iconClass[icon].title + (item.warnLevel === '0' ? '告警，级别:低' : '告警，级别:高')"
-                          :key="icon"
-                          class="item" effect="dark"
-                          placement="top"
-                          v-for="icon in item.warnTypes && item.warnTypes.split(',') || []">
-                <f-a :class="item.warnLevel === '0' ? 'icon-warning' :'icon-danger'" :name="iconClass[icon].icon"></f-a>
-              </el-tooltip>
-              <!--<el-tooltip effect="dark" content="告警级别" placement="top">-->
-              <!--<span>{{levels[item.warnLevel].label}}</span>-->
-              <!--</el-tooltip>-->
-              <!--<span :key="icon" v-for="icon in item.warnTypes && item.warnTypes.split(',') || []"-->
-              <!--:title="iconClass[icon].title">-->
-              <!--<f-a class="icon-danger" :name="iconClass[icon].icon"></f-a>-->
-              <!--</span>-->
             </el-col>
             <el-col :span="4">
-              <span @click.stop="goToRouter(item)" class="active-text">{{formatTitle(item)}}</span>
+              {{item.details}}
             </el-col>
-            <el-col :span="4">
-              <el-tooltip :content="tempTypeList[item.devType]" effect="dark" placement="top">
-                <f-a :name="DevIcon[item.devType][1]" class="icon-danger ver-a-mid"></f-a>
-              </el-tooltip>
-              <span @click.stop="goToDev(item)" class="active-text">{{item.devName}}</span>
-            </el-col>
-            <el-col :span="2">{{confirmStatus[item.confirmStatus]}}</el-col>
             <el-col :span="3">
-              <des-btn @click="confirmItem(item)" icon="affirm" v-has="'ccs-warn-record-process'"
-                       v-show="item.confirmStatus === '0' ">处理
+              <des-btn @click="confirmItem(item)" icon="affirm" v-has="'ccs-warn-record-process'" v-show="!item.details">处理
               </des-btn>
               <des-btn @click="showItemDetail(item)" icon="detail" v-has="'show'">详情</des-btn>
             </el-col>
@@ -145,7 +117,6 @@
           2: '取消'
         },
         DevIcon,
-        isCheckAll: false,
         warnRecordIdList: [],
         currentBatchPart: null,
         showBatchIndex: -1, currentPart: null,
@@ -183,28 +154,6 @@
           this.warnRecordIdList.splice(idIndex, 1);
         }
       },
-      checkAll() {
-        // 全选
-        if (this.isCheckAll) {
-          this.dataList.forEach(item => {
-            item.isChecked = true;
-            let index = this.checkList.indexOf(item);
-            if (index === -1 && item.confirmStatus === '0') {
-              this.checkList.push(item);
-            }
-            let idIndex = this.warnRecordIdList.indexOf(item.id);
-            if (idIndex === -1 && item.confirmStatus === '0') {
-              this.warnRecordIdList.push(item.id);
-            }
-          });
-        } else {
-          this.dataList.forEach(item => {
-            item.isChecked = false;
-          });
-          this.checkList = [];
-          this.warnRecordIdList = [];
-        }
-      },
       searchResult: function (search) {
         this.filters = Object.assign({}, this.filters, search);
       },
@@ -216,21 +165,9 @@
         // 清空数据
         this.checkList = [];
         this.warnRecordIdList = [];
-        this.isCheckAll = false;
         const http = WarnRecord.query;
-        const params = this.queryUtil(http, pageNo);
-        this.dataList.forEach(val => {
-          if (val.confirmStatus === '0') {
-            val.isChecked = false;
-          }
-        });
-        // this.queryStatusNum(params);
-      },
-      queryStatusNum(params) {
-        const pm = Object.assign({}, params, {status: null});
-        const http = WarnRecord.queryStatusNum;
-        const res = {};
-        this.queryStatusNumUtil(http, pm, this.statusType, res);
+        // const params = this.queryUtil(http, pageNo);
+        this.dataList = [{id: 'adfasd'}];
       },
       resetRightBox() {
         this.$router.push('/alarm/record');

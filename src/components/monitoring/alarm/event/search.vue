@@ -12,45 +12,31 @@
     <template slot="content">
       <el-form class="advanced-query-form" onsubmit="return false">
         <el-row>
-          <el-col :span="7">
+          <el-col :span="8">
             <oms-form-row :span="5" label="发生时间">
               <el-date-picker :default-time="['00:00:00', '23:59:59']" class="el-date-picker--mini" placeholder="请选择"
                               type="datetimerange" v-model="times1"/>
             </oms-form-row>
           </el-col>
-          <el-col :span="6">
+          <el-col :span="8">
             <oms-form-row :span="5" label="恢复时间">
               <el-date-picker :default-time="['00:00:00', '23:59:59']" class="el-date-picker--mini" placeholder="请选择"
                               type="datetimerange" v-model="times2"/>
             </oms-form-row>
           </el-col>
-          <el-col :span="5">
-            <oms-form-row :span="4" label="设备">
-              <el-select :remote-method="queryAllTemp" @change="search"
-                         clearable filterable
-                         placeholder="请输入名称搜索设备" popper-class="selects--custom" remote reserve-keyword
-                         v-model="searchCondition.devId">
-                <el-option :key="item.id" :label="item.devName" :value="item.id"
-                           v-for="(item, index) in allTempList">
-                  <dev-option-info :item="item"/>
-                </el-option>
+          <el-col :span="8">
+            <oms-form-row :span="4" label="探头">
+              <el-select :remote-method="queryProbeList" filterable placeholder="请输入名称搜索探头" remote
+                         v-model="searchCondition.sensorId">
+                <el-option :key="item.id" :label="item.name" :value="item.id"
+                           v-for="item in probeList"></el-option>
               </el-select>
-              <!--<oms-input placeholder="请输入设备名称" v-model.trim="searchCondition.devName" @keyup.native.enter="search"/>-->
-            </oms-form-row>
-          </el-col>
-          <el-col :span="6">
-            <oms-form-row :span="8" label="状态">
-              <el-radio-group @change="search" size="small" v-model="searchCondition.confirmStatus">
-                <el-radio-button :label="0">未确认</el-radio-button>
-                <el-radio-button :label="1">已确认</el-radio-button>
-                <el-radio-button :label="2">取消</el-radio-button>
-              </el-radio-group>
             </oms-form-row>
           </el-col>
         </el-row>
         <el-row>
-          <el-col :span="7">
-            <oms-form-row :span="5" label="异常类型">
+          <el-col :span="8">
+            <oms-form-row :span="5" label="告警类型">
               <el-radio-group @change="search" size="small" v-model="searchCondition.warnType">
                 <el-radio-button :label="1">温度</el-radio-button>
                 <el-radio-button :label="2">湿度</el-radio-button>
@@ -59,8 +45,17 @@
               </el-radio-group>
             </oms-form-row>
           </el-col>
+          <el-col :span="8">
+            <oms-form-row :span="5" label="告警级别">
+              <el-radio-group @change="search" size="small" v-model="searchCondition.warnLevel">
+                <el-radio-button label="1">一级</el-radio-button>
+                <el-radio-button label="2">二级</el-radio-button>
+                <el-radio-button label="3">三级</el-radio-button>
+              </el-radio-group>
+            </oms-form-row>
+          </el-col>
           <el-col :span="4">
-            <oms-form-row :span="8" label="是否恢复">
+            <oms-form-row :span="11" label="是否恢复">
               <el-radio-group @change="search" size="small" v-model="searchCondition.recoveryStatus">
                 <el-radio-button :label="1">是</el-radio-button>
                 <el-radio-button :label="0">否</el-radio-button>
@@ -68,10 +63,10 @@
             </oms-form-row>
           </el-col>
           <el-col :span="4">
-            <oms-form-row :span="8" label="告警级别">
-              <el-radio-group @change="search" size="small" v-model="searchCondition.warnLevel">
-                <el-radio-button :label="0">低</el-radio-button>
-                <el-radio-button :label="1">高</el-radio-button>
+            <oms-form-row :span="11" label="是否处理">
+              <el-radio-group @change="search" size="small" v-model="searchCondition.recoveryStatus">
+                <el-radio-button :label="1">是</el-radio-button>
+                <el-radio-button :label="0">否</el-radio-button>
               </el-radio-group>
             </oms-form-row>
           </el-col>
@@ -82,7 +77,7 @@
 </template>
 <script>
   import methodsMixin from '@/mixins/methodsMixin';
-  import {http} from '@/resources';
+  import {http, probe} from '@/resources';
   import utils from '@/tools/utils';
 
   export default {
@@ -104,10 +99,17 @@
         showSearch: false,
         list: [],
         times1: [],
-        times2: []
+        times2: [],
+        probeList: []
       };
     },
     methods: {
+      queryProbeList(query) {
+        let params = {keyWord: query};
+        probe.query(params).then(res => {
+          this.probeList = res.data.data.list;
+        });
+      },
       exportSearchFile: function () {
         this.$store.commit('initPrint', {
           isPrinting: true,

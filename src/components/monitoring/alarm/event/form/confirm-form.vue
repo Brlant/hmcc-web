@@ -5,15 +5,8 @@
       <el-button :disabled="doing" @click="save('tempForm')" plain type="primary">保存</el-button>
     </template>
     <template slot="content">
-      <el-form :model="form" label-width="100px" ref="tempForm">
-        <el-form-item label="类型" prop="devName">
-          <el-radio-group size="small" v-model="form.confirmType">
-            <el-radio-button :key="key" :label="key"
-                             v-for="(item, key) in confirmStatus">{{item}}
-            </el-radio-button>
-          </el-radio-group>
-        </el-form-item>
-        <el-form-item label="情况说明">
+      <el-form :model="form" :rules="rules" label-width="100px" ref="tempForm">
+        <el-form-item label="情况说明" prop="confirmContent">
           <oms-input placeholder="请输入情况说明" type="textarea" v-model="form.confirmContent"/>
         </el-form-item>
       </el-form>
@@ -29,6 +22,11 @@
         form: {
           confirmType: '1',
           confirmContent: ''
+        },
+        rules: {
+          confirmContent: [
+            {required: true, message: '请输入情况说明', trigger: 'blur'}
+          ]
         },
         doing: false
       };
