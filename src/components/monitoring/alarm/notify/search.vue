@@ -30,7 +30,7 @@
               </el-radio-group>
             </oms-form-row>
           </el-col>
-          <el-col :span="6">
+          <el-col :span="8">
             <oms-form-row :span="6" label="消息类型">
               <el-radio-group @change="search" size="small" v-model="searchCondition.recordType">
                 <el-radio-button :label="0">告警</el-radio-button>
@@ -38,7 +38,9 @@
               </el-radio-group>
             </oms-form-row>
           </el-col>
-          <el-col :span="6">
+        </el-row>
+        <el-row>
+          <el-col :span="8">
             <oms-form-row :span="6" label="发送状态">
               <el-radio-group @change="search" size="small" v-model="searchCondition.sendStatus">
                 <el-radio-button label="1">成功</el-radio-button>
@@ -46,15 +48,12 @@
               </el-radio-group>
             </oms-form-row>
           </el-col>
-        </el-row>
-        <el-row>
           <el-col :span="10">
             <oms-form-row :span="4" label="通知时间">
               <el-date-picker :default-time="['00:00:00', '23:59:59']" class="el-date-picker--mini" placeholder="请选择"
                               type="datetimerange" v-model="times"/>
             </oms-form-row>
           </el-col>
-          <el-col :span="12"></el-col>
         </el-row>
       </el-form>
     </template>

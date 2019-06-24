@@ -4,11 +4,12 @@
 
     <div class="order-list" style="margin-top: 20px">
       <el-row class="order-list-header">
+        <el-col :span="6">探头</el-col>
+        <el-col :span="3">通知类型</el-col>
+        <el-col :span="3">通知方式</el-col>
+        <el-col :span="3">消息类型</el-col>
         <el-col :span="6">通知时间</el-col>
-        <el-col :span="6">设备名称</el-col>
-        <el-col :span="4">通知类型</el-col>
-        <el-col :span="4">消息类型</el-col>
-        <el-col :span="4">发送状态</el-col>
+        <el-col :span="3">发送状态</el-col>
       </el-row>
       <el-row v-if="loadingData">
         <el-col :span="24">
@@ -23,15 +24,16 @@
         </el-col>
       </el-row>
       <div class="order-list-body flex-list-dom" v-else="">
-        <div :class="[{'active':currentItemId===item.id}]" @click="showItemDetail(item)"
-             class="order-list-item order-list-item-bg"
+        <div :class="[{'active':currentItemId===item.id}]" class="order-list-item order-list-item-bg no-pointer"
              v-for="item in dataList">
           <el-row>
-            <el-col :span="6">{{item.createTime | time}}</el-col>
             <el-col :span="6">{{item.devName}}</el-col>
-            <el-col :span="4">{{checkList[Number(item.notifyType) - 1].label}}</el-col>
-            <el-col :span="4">{{item.recordType === '0' ? '告警' : '恢复'}}</el-col>
-            <el-col :span="4">{{item.sendStatus === '1' ? '成功' : '失败'}}</el-col>
+            <el-col :span="3"></el-col>
+            <el-col :span="3"></el-col>
+            <el-col :span="3"></el-col>
+            <el-col :span="3"></el-col>
+            <el-col :span="6"></el-col>
+            <el-col :span="4"></el-col>
           </el-row>
         </div>
       </div>
@@ -96,15 +98,13 @@
         this.activeStatus = key;
       },
       queryList(pageNo) {
-        const http = NotifyRecord.query;
-        const params = this.queryUtil(http, pageNo);
-        // this.queryStatusNum(params);
-      },
-      queryStatusNum(params) {
-        const pm = Object.assign({}, params, {status: null});
-        const http = NotifyRecord.queryStatusNum;
-        const res = {};
-        this.queryStatusNumUtil(http, pm, this.statusType, res);
+
+        this.dataList = [
+          {id: ''}
+        ];
+
+        // const http = NotifyRecord.query;
+        // this.queryUtil(http, pageNo);
       },
       resetRightBox() {
         this.showIndex = -1;
