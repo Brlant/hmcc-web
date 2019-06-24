@@ -11,9 +11,10 @@
     <div class="order-list" style="margin-top: 20px">
       <el-row class="order-list-header">
         <el-col :span="4">操作人</el-col>
-        <el-col :span="6">测试类型</el-col>
+        <el-col :span="4">测试类型</el-col>
         <el-col :span="6">测试时间</el-col>
         <el-col :span="4">系统结果</el-col>
+        <el-col :span="2">状态</el-col>
         <el-col :span="4">操作</el-col>
       </el-row>
       <el-row v-if="loadingData">
@@ -33,15 +34,20 @@
              class="order-list-item no-pointer order-list-item-bg"
              v-for="item in dataList">
           <el-row>
-            <el-col :span="4" class="R">{{item.operationUserId}}</el-col>
-            <el-col :span="6" class="R">
-              {{item.test === '0' ? '短信' : '微信'}}
+            <el-col :span="4" class="R">{{item.operationUserName}}</el-col>
+            <el-col :span="4" class="R">
+              {{item.type === '0' ? '短信' : '微信'}}
               <div class="f-grey">{{item.noticeTarget}}</div>
             </el-col>
             <el-col :span="6" class="R">{{item.time|time}}</el-col>
             <el-col :span="4" class="R">{{item.result}}</el-col>
+            <el-col :span="2">
+              {{item.artificialConfirm === '0' ?  '未确认' : '已确认'}}
+            </el-col>
             <el-col :span="4" class="opera-btn">
               <des-btn @click="edit(item)" icon="edit" v-has="perms[1]">编辑</des-btn>
+              <des-btn @click="confirmItem(item)" icon="edit" v-has="perms[2]"
+                       v-show="item.artificialConfirm === '0'">确认</des-btn>
             </el-col>
           </el-row>
         </div>
@@ -66,13 +72,13 @@
   </div>
 </template>
 <script>
-  import utils from '@/tools/utils';
   import SearchPart from './search';
   import addForm from './form/add-form.vue';
   import showForm from './form/show-form';
   import CommonMixin from '@/mixins/commonMixin';
-  import {probe} from '@/resources';
+  import {AlarmTest} from '@/resources';
   import QCodeDialog from '../notification/q-code-dialog';
+
   export default {
     components: {
       SearchPart,
@@ -132,15 +138,8 @@
         });
       },
       queryList(pageNo) {
-        const http = probe.query;
-        const params = this.queryUtil(http, pageNo);
-        this.queryStatusNum(params);
-      },
-      queryStatusNum(params) {
-        const pm = Object.assign({}, params, {status: null});
-        const http = probe.queryStateNum;
-        const res = {};
-        this.queryStatusNumUtil(http, pm, this.statusType, res);
+        const http = AlarmTest.query;
+        this.queryUtil(http, pageNo);
       },
       add() {
         this.form = {};
@@ -161,17 +160,35 @@
           this.form = item;
         });
       },
-      start(item) {
+      deleteItem(item) {
         this.currentItem = item;
         this.currentItemId = item.id;
-        this.$confirmOpera(`是否启用探头"${item.name}"`, () => {
-          this.$httpRequestOpera(probe.start(item.id), {
-            errorTitle: '启用失败',
+        this.$confirmOpera(`是否删除告警测试"${item.name}"`, () => {
+          this.$httpRequestOpera(AlarmTest.delete(item.id), {
+            errorTitle: '删除失败',
             success: (res) => {
-              if(res.data.code === 200) {
-                item.status = '1';
-              }else {
-                this.$notify.error({message: res.data.msg})
+              if (res.data.code === 200) {
+                this.queryList(1);
+              } else {
+                this.$notify.error({message: res.data.msg});
+              }
+            }
+          });
+        });
+      },
+      confirmItem(item) {
+        this.$confirmOpera(`是否确认"${item.operationUserName}"的告警测试`, () => {
+          let obj = {
+            id: item.id,
+            artificialConfirm: '1'
+          };
+          this.$httpRequestOpera(AlarmTest.confirm(obj), {
+            errorTitle: '确认失败',
+            success: (res) => {
+              if (res.data.code === 200) {
+                item.artificialConfirm = '1';
+              } else {
+                this.$notify.error({message: res.data.msg});
               }
             }
           });

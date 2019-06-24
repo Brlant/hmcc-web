@@ -9,12 +9,12 @@
         <el-form-item label="操作人" prop="operationUserId">
           <el-select placeholder="请输入名称搜索操作人" v-model="form.operationUserId"
                      filterable clearable remote :remote-method="queryUserList"
-                     @click.native.once="queryUserList('')">
+                     @click.native.once="queryUserList('')" @change="operationUserChange">
             <el-option :label="item.name" :value="item.id" :key="item.id"
                        v-for="item in userList"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="测试类型">
+        <el-form-item label="测试类型" prop="type">
           <el-radio-group v-model="form.type" size="small" @change="checkChange(form)">
             <el-radio-button :label="item.key" :key="item.key" v-for="item in alarmTestList">{{item.label}}
             </el-radio-button>
@@ -25,7 +25,7 @@
   </dialog-template>
 </template>
 <script>
-  import {probe, OrgUser} from '@/resources';
+  import {AlarmTest, OrgUser} from '@/resources';
 
   export default {
     data() {
@@ -73,6 +73,9 @@
       }
     },
     methods: {
+      operationUserChange() {
+        this.form.type = '';
+      },
       queryUserList(query) {
         let params = {keyWord: query};
         let orgId = this.$store.state.user.userCompanyAddress;
@@ -81,6 +84,7 @@
         });
       },
       checkChange(item) {
+        if(!item.operationUserId) return;
         if (item.type === '0') {
           this.checkContactWay(item);
         } else {
@@ -156,14 +160,14 @@
         this.$refs[formName].validate((valid) => {
           if (valid && this.doing === false) {
 
-            this.orgList.forEach(i => {
-              if(i.id === this.form.orgId) {
-                this.form.orgName = i.name;
+            this.userList.forEach(i => {
+              if(i.id === this.form.operationUserId) {
+                this.form.operationUserName = i.name;
               }
             });
             if (!this.form.id) {
               this.doing = true;
-              this.$httpRequestOpera(probe.save(this.form), {
+              this.$httpRequestOpera(AlarmTest.save(this.form), {
                 errorTitle: '添加失败',
                 success: res => {
                   if(res.data.code === 200) {
@@ -179,7 +183,7 @@
                 }
               });
             } else {
-              this.$httpRequestOpera(probe.update(this.form), {
+              this.$httpRequestOpera(AlarmTest.update(this.form), {
                 errorTitle: '修改失败',
                 success: res => {
                   if(res.data.code === 200) {

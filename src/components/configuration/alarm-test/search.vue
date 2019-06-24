@@ -31,6 +31,14 @@
             </el-radio-group>
           </oms-form-row>
         </el-col>
+        <el-col :span="8">
+          <oms-form-row label="状态" :span="8">
+            <el-radio-group v-model="searchCondition.artificialConfirm" size="small">
+              <el-radio-button :label="item.key" :key="item.key" v-for="item in statusList">{{item.label}}
+              </el-radio-button>
+            </el-radio-group>
+          </oms-form-row>
+        </el-col>
       </el-form>
     </template>
   </search-template>
@@ -43,12 +51,17 @@
       return {
         searchCondition: {
           operationUserId: '',
-          type: ''
+          type: '',
+          artificialConfirm: ''
         },
         showSearch: false,
         alarmTestList: [
           {key: 0, label: '短信报警'},
           {key: 1, label: '微信报警'}
+        ],
+        statusList: [
+          {key: '0', label: '未确认'},
+          {key: '1', label: '已确认'}
         ],
         userList: []
       };
@@ -73,7 +86,8 @@
       reset() {
         this.searchCondition = {
           operationUserId: '',
-          type: ''
+          type: '',
+          artificialConfirm: ''
         };
         this.$emit('search', this.searchCondition);
       },

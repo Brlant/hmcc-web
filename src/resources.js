@@ -92,13 +92,26 @@ http.interceptors.response.use(response => {
 Vue.prototype.$http = http;
 
 
+// 告警测试
+export const AlarmTest = resource('/alarm-test-log', http, {
+  query(params) {
+    return http.post('/alarm-test-log/page', params);
+  },
+  update(obj) {
+    return http.put('/alarm-test-log', obj);
+  },
+  confirm(obj) {
+    return http.put('/alarm-test-log/confirm', obj);
+  }
+});
+
 // 告警通知组
 export const AlarmNotifyGroup = resource('/alarm-notice-group', http, {
   query(params) {
     return http.post('/alarm-notice-group/page', params);
   },
   update(obj) {
-    return http.put('//alarm-notice-group', obj);
+    return http.put('/alarm-notice-group', obj);
   }
 });
 

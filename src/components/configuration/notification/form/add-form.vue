@@ -233,7 +233,7 @@
         })
       },
       checkChange(item) {
-        debugger;
+        if(!item.alarmNoticeUserId) return;
         item.alarmNoticeTarget = '';
         if (item.alarmNoticeType === '0') {
           this.checkContactWay(item);
@@ -243,7 +243,6 @@
         }
       },
       checkContactWay(item) {
-        debugger;
         this.userList.forEach(i => {
           if (i.id === item.alarmNoticeUserId) {
             item.noPass = false;
