@@ -86,7 +86,8 @@ export const routes = [
           {
             path: '/configuration/alarm',
             component: () => import('./components/configuration/alarm/index.vue'),
-            meta: {moduleId: 'configuration', title: '告警规则', perm: 'ccs-warn-rule-scan'}
+            meta: {moduleId: 'configuration', title: '告警规则', perm: 'ccs-warn-rule-scan',
+              perms: ['ccs-wired-dev-add', 'ccs-wired-dev-edit']}
           },
           {
             path: '/configuration/notification',

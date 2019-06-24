@@ -174,8 +174,10 @@
           this.$httpRequestOpera(gateway.start(item.id), {
             successTitle: '启用成功',
             errorTitle: '启用失败',
-            success: () => {
-              item.status = '1';
+            success: (res) => {
+              if(res.data.code === 200) {
+                item.status = '1';
+              }
             }
           });
         });
@@ -187,8 +189,10 @@
           this.$httpRequestOpera(gateway.stop(item.id), {
             successTitle: '停用成功',
             errorTitle: '停用失败',
-            success: () => {
-              item.status = '0';
+            success: (res) => {
+              if(res.data.code === 200) {
+                item.status = '0';
+              }
             }
           });
         });

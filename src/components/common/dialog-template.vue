@@ -1,15 +1,37 @@
 <style lang="scss">
   .dialog-template {
-    $width: 180px;
+
+    &.showLeft {
+      $width: 180px;
+
+      &.content-part {
+        .content-left {
+          width: $width;
+        }
+
+        .content-right {
+          > h3 {
+            left: $width;
+            margin-bottom: 0;
+          }
+
+          left: $width;
+          padding-top: 65px;
+          padding-right: 0;
+        }
+      }
+    }
+
+    $width: 0;
 
     &.content-part {
       .content-left {
-        width: $width;
+        width: 0;
       }
 
       .content-right {
         > h3 {
-          left: $width;
+          left: 0;
           margin-bottom: 0;
         }
 
@@ -18,6 +40,7 @@
         padding-right: 0;
       }
     }
+
 
     .dialog-template_scroll {
       overflow: hidden;
@@ -31,8 +54,8 @@
   }
 </style>
 <template>
-  <div class="content-part dialog-template">
-    <div class="content-left">
+  <div class="content-part dialog-template" :class="{showLeft: showLeft}">
+    <div class="content-left" v-if="showLeft">
       <h2 class="clearfix right-title">
         <slot name="title"></slot>
       </h2>
@@ -46,7 +69,8 @@
       </div>
     </div>
     <div class="content-right content-padding">
-      <h3>{{title}}</h3>
+      <h3 v-if="showLeft">{{title}}</h3>
+      <h3 v-else><slot name="title"></slot></h3>
       <el-scrollbar tag="div" class="dialog-template_scroll" @scroll="throttle">
         <div class="dialog-template_scroll_content">
           <slot name="content"></slot>
@@ -74,7 +98,8 @@
       btnSavePosition: {
         type: Number,
         default: 80
-      }
+      },
+      showLeft: Boolean
     },
     data() {
       return {

@@ -92,6 +92,18 @@ http.interceptors.response.use(response => {
 Vue.prototype.$http = http;
 
 
+// AlarmRule
+export const AlarmRule = resource('/alarm-rule', http, {
+  query(params) {
+    return http.post('/alarm-rule/page', params);
+  },
+  update(obj) {
+    return http.put('/alarm-rule', obj);
+  }
+});
+
+
+
 
 
 //冷链设备管理
@@ -208,15 +220,6 @@ export const DevMonitoring = resource('/ccsMonitordev', http, {
     return http.get('/ccsMonitordev/countMonitordevGroup', {params});
   }
 });
-
-// 通知规则对象
-export const NotifyRule = resource('/ccsNotifyList', http, {});
-
-// 告警规则组对象
-export const AlarmRuleGroup = resource('/ccsWarnRuleGroup', http, {});
-
-// 告警规则对象
-export const AlarmRule = resource('/ccsWarnRule', http, {});
 
 // 仓位设备关系对象
 export const WarehouseDevRelation = resource('/ccsWarehouseDevRelation', http, {

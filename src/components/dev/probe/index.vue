@@ -171,10 +171,11 @@
         this.currentItemId = item.id;
         this.$confirmOpera(`是否启用探头"${item.name}"`, () => {
           this.$httpRequestOpera(probe.start(item.id), {
-            successTitle: '启用成功',
             errorTitle: '启用失败',
-            success: () => {
-              item.status = '1';
+            success: (res) => {
+              if(res.data.code === 200) {
+                item.status = '1';
+              }
             }
           });
         });
@@ -184,10 +185,11 @@
         this.currentItemId = item.id;
         this.$confirmOpera(`是否停用探头"${item.name}"`, () => {
           this.$httpRequestOpera(probe.stop(item.id), {
-            successTitle: '停用成功',
             errorTitle: '停用失败',
-            success: () => {
-              item.status = '0';
+            success: (res) => {
+              if(res.data.code === 200) {
+                item.status = '0';
+              }
             }
           });
         });
