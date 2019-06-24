@@ -254,3 +254,8 @@
     max-width: 100%;
   }
 }
+
+.border-left-color {
+  border-left: 4px solid $activeColor;
+  padding-left: 4px;
+}

@@ -92,6 +92,17 @@ http.interceptors.response.use(response => {
 Vue.prototype.$http = http;
 
 
+// 告警通知组
+export const AlarmNotifyGroup = resource('/alarm-notice-group', http, {
+  query(params) {
+    return http.post('/alarm-rule/page', params);
+  },
+  update(obj) {
+    return http.put('//alarm-notice-group', obj);
+  }
+});
+
+
 // AlarmRule
 export const AlarmRule = resource('/alarm-rule', http, {
   query(params) {
@@ -101,9 +112,6 @@ export const AlarmRule = resource('/alarm-rule', http, {
     return http.put('/alarm-rule', obj);
   }
 });
-
-
-
 
 
 //冷链设备管理

@@ -11,8 +11,8 @@
 
     <div class="order-list" style="margin-top: 10px">
       <el-row class="order-list-header">
-        <el-col :span="20">名称</el-col>
-        <!--<el-col :span="10">创建时间</el-col>-->
+        <el-col :span="8">名称</el-col>
+        <el-col :span="12">所属单位</el-col>
         <el-col :span="4">操作</el-col>
       </el-row>
       <el-row v-if="loadingData">
@@ -31,10 +31,11 @@
         <div :class="['status-no', {'active':currentItemId===item.id}]" @click="showItemDetail(item)"
              class="order-list-item order-list-item-bg " v-for="item in dataList">
           <el-row>
-            <el-col :span="20">{{item.notifyListName}}</el-col>
+            <el-col :span="8">{{item.name}}</el-col>
+            <el-col :span="8">{{item.orgName}}</el-col>
             <el-col :span="4" class="opera-btn">
               <des-btn @click="edit(item)" icon="edit" v-has="'ccs-notify-edit'">编辑</des-btn>
-              <des-btn @click="deleteItem(item)" icon="delete" v-has="'ccs-notify-del'" v-show="item.dataType === '0'">
+              <des-btn @click="deleteItem(item)" icon="delete" v-has="'ccs-notify-del'">
                 删除
               </des-btn>
             </el-col>
@@ -66,7 +67,7 @@
   import addForm from './form/add-form.vue';
   import showForm from './form/show-form.vue';
   import CommonMixin from '@/mixins/commonMixin';
-  import {NotifyRule} from '@/resources';
+  import {AlarmNotifyGroup} from '@/resources';
   import QCodeDialog from './q-code-dialog';
 
   export default {
@@ -121,7 +122,7 @@
         });
       },
       queryList(pageNo) {
-        const http = NotifyRule.query;
+        const http = AlarmNotifyGroup.query;
         this.queryUtil(http, pageNo);
       },
       add() {
@@ -146,8 +147,8 @@
       deleteItem(item) {
         this.currentItem = item;
         this.currentItemId = item.id;
-        this.$confirmOpera(`是否删除通知列表"${item.notifyListName}"`, () => {
-          this.$httpRequestOpera(NotifyRule.delete(item.id), {
+        this.$confirmOpera(`是否删除通知列表"${item.name}"`, () => {
+          this.$httpRequestOpera(AlarmNotifyGroup.delete(item.id), {
             successTitle: '删除成功',
             errorTitle: '删除失败',
             success: () => {
