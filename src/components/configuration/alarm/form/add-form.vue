@@ -17,15 +17,15 @@
         </el-form-item>
         <el-row v-if="form.temperatureAlarmFlag === '1'">
           <el-col :span="12">
-            <el-form-item label="温度最高值" prop="temperatureMax">
-              <oms-input placeholder="请输入温度最高值" type="input" v-model.number="form.temperatureMax">
+            <el-form-item label="温度最低值" prop="temperatureMin">
+              <oms-input placeholder="请输入温度最低值" type="input" v-model.number="form.temperatureMin">
                 <template slot="append">℃</template>
               </oms-input>
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="温度最低值" prop="temperatureMin">
-              <oms-input placeholder="请输入温度最低值" type="input" v-model.number="form.temperatureMin">
+            <el-form-item label="温度最高值" prop="temperatureMax">
+              <oms-input placeholder="请输入温度最高值" type="input" v-model.number="form.temperatureMax">
                 <template slot="append">℃</template>
               </oms-input>
             </el-form-item>
@@ -38,15 +38,15 @@
         </el-form-item>
         <el-row v-if="form.humidityAlarmFlag === '1'">
           <el-col :span="12">
-            <el-form-item label="湿度最高值" prop="humidityMax">
-              <oms-input placeholder="请输入湿度最高值" type="input" v-model.number="form.humidityMax">
+            <el-form-item label="湿度最低值" prop="humidityMin">
+              <oms-input placeholder="请输入湿度最低值" type="input" v-model.number="form.humidityMin">
                 <template slot="append">%</template>
               </oms-input>
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="湿度最低值" prop="humidityMin">
-              <oms-input placeholder="请输入湿度最低值" type="input" v-model.number="form.humidityMin">
+            <el-form-item label="湿度最高值" prop="humidityMax">
+              <oms-input placeholder="请输入湿度最高值" type="input" v-model.number="form.humidityMax">
                 <template slot="append">%</template>
               </oms-input>
             </el-form-item>
