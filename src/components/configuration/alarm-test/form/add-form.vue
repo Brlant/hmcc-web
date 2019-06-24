@@ -9,12 +9,12 @@
         <el-form-item label="操作人" prop="operationUserId">
           <el-select placeholder="请输入名称搜索操作人" v-model="form.operationUserId"
                      filterable clearable remote :remote-method="queryUserList"
-                     @click.native.once="queryUserList('')" @change="operationUserChange">
+                     @click.native.once="queryUserList('')">
             <el-option :label="item.name" :value="item.id" :key="item.id"
                        v-for="item in userList"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="测试类型" prop="type">
+        <el-form-item label="测试类型">
           <el-radio-group v-model="form.type" size="small" @change="checkChange(form)">
             <el-radio-button :label="item.key" :key="item.key" v-for="item in alarmTestList">{{item.label}}
             </el-radio-button>
@@ -25,7 +25,7 @@
   </dialog-template>
 </template>
 <script>
-  import {AlarmTest, OrgUser} from '@/resources';
+  import {probe, OrgUser} from '@/resources';
 
   export default {
     data() {
@@ -54,8 +54,7 @@
     },
     props: {
       formItem: Object,
-      index: Number,
-      getQCodeInfo: Function
+      index: Number
     },
     watch: {
       index: function (val) {
@@ -74,18 +73,14 @@
       }
     },
     methods: {
-      operationUserChange() {
-        this.form.type = '';
-      },
       queryUserList(query) {
         let params = {keyWord: query};
         let orgId = this.$store.state.user.userCompanyAddress;
-        OrgUser.queryUsers(orgId, params).then(res => {
+        OrgUser.queryOrgInfo(orgId, params).then(res => {
           this.userList = res.data.list;
         });
       },
       checkChange(item) {
-        if (!item.operationUserId) return;
         if (item.type === '0') {
           this.checkContactWay(item);
         } else {
@@ -95,7 +90,7 @@
       },
       checkContactWay(item) {
         this.userList.forEach(i => {
-          if (i.id === item.operationUserId) {
+          if (i.id ===  item.operationUserId) {
             item.noPass = false;
             if (!i.phone) {
               item.noPass = true;
@@ -103,7 +98,7 @@
                 message: `联系人"${i.name}"无法取得手机联系方式，请尝试微信`
               });
             } else {
-              item.noticeTarget = i.phone;
+              item.noticeTarget = item.phone;
             }
           }
         });
@@ -137,7 +132,6 @@
       loopQueryInfo(item) {
         if (item.noticeTarget || this.index !== 0) return;
         let code = this.getQCodeInfo();
-        if (!code || !code.ticket) return;
         this.$http.get(`/ccsWeChat/queryWeChatTicketInfo/${code.ticket}`).then(res => {
           item.loading = false;
           if (res.data.openId === '400') {
@@ -162,17 +156,17 @@
         this.$refs[formName].validate((valid) => {
           if (valid && this.doing === false) {
 
-            this.userList.forEach(i => {
-              if (i.id === this.form.operationUserId) {
-                this.form.operationUserName = i.name;
+            this.orgList.forEach(i => {
+              if(i.id === this.form.orgId) {
+                this.form.orgName = i.name;
               }
             });
             if (!this.form.id) {
               this.doing = true;
-              this.$httpRequestOpera(AlarmTest.save(this.form), {
+              this.$httpRequestOpera(probe.save(this.form), {
                 errorTitle: '添加失败',
                 success: res => {
-                  if (res.code === 200) {
+                  if(res.data.code === 200) {
                     this.$notify.success({message: '添加成功'});
                     this.doing = false;
                     this.$emit('change', res.data);
@@ -185,10 +179,10 @@
                 }
               });
             } else {
-              this.$httpRequestOpera(AlarmTest.update(this.form), {
+              this.$httpRequestOpera(probe.update(this.form), {
                 errorTitle: '修改失败',
                 success: res => {
-                  if (res.code === 200) {
+                  if(res.data.code === 200) {
                     this.$notify.success({message: '修改成功'});
                     this.doing = false;
                     this.$emit('change', res.data);

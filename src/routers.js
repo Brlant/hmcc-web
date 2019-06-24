@@ -92,12 +92,14 @@ export const routes = [
           {
             path: '/configuration/notification',
             component: () => import('./components/configuration/notification/index.vue'),
-            meta: {moduleId: 'configuration', title: '告警通知组', perm: 'ccs-notify-scan'}
+            meta: {moduleId: 'configuration', title: '告警通知组', perm: 'ccs-notify-scan',
+              perms: ['ccs-wired-dev-add', 'ccs-wired-dev-edit']}
           },
           {
             path: '/configuration/test',
-            component: () => import('./components/test.vue'),
-            meta: {moduleId: 'configuration', title: '报警测试', perm: 'ccs-notify-scan'}
+            component: () => import('./components/configuration/alarm-test/index.vue'),
+            meta: {moduleId: 'configuration', title: '告警测试', perm: 'ccs-notify-scan',
+              perms: ['ccs-wired-dev-add', 'ccs-wired-dev-edit']}
           }
         ]
       },

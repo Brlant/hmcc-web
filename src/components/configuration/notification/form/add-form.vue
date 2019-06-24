@@ -225,6 +225,12 @@
         item.alarmNoticeTarget = '';
         item.alarmNoticeType = '';
         item.remark = '';
+        item.alarmNoticeUserName = '';
+        this.userList.forEach(i => {
+          if(i.id === item.alarmNoticeUserId) {
+            item.alarmNoticeUserName = i.name;
+          }
+        })
       },
       checkChange(item) {
         item.alarmNoticeTarget = '';
@@ -239,7 +245,7 @@
         this.userList.forEach(i => {
           if (i.id === item.alarmNoticeUserId) {
             item.noPass = false;
-            if (item.alarmNoticeType === '1' && !i.phone) {
+            if (!i.phone) {
               item.noPass = true;
               this.$notify.info({
                 message: `联系人"${i.name}"无法取得手机联系方式，请尝试微信`
@@ -361,6 +367,23 @@
             if (this.checkWeChatWay()) return;
             // 拼装给后台的数据
             const form = JSON.parse(JSON.stringify(this.form));
+
+            form.levelOneAlarmObjectList.forEach(i => {
+              i.alarmLevel = '1';
+            });
+            form.levelTwoAlarmObjectList.forEach(i => {
+              i.alarmLevel = '2';
+            });
+            form.levelThreeAlarmObjectList.forEach(i => {
+              i.alarmLevel = '3';
+            });
+
+            this.orgList.forEach(i => {
+              if(i.id === form.orgId) {
+                form.orgName = i.name;
+              }
+            });
+
             if (!this.form.id) {
               this.doing = true;
               this.$httpRequestOpera(AlarmNotifyGroup.save(form), {
