@@ -24,7 +24,7 @@
             <span class="border-left-color">一级告警 </span>
             <des-btn icon="plus" @click="addRule(form.levelOneAlarmObjectList)"> 添加通知人</des-btn>
           </el-form-item>
-          <div class="part-border-box" v-for="(item, index) in form.levelOneAlarmObjectList" :key="index">
+          <div class="part-border-box" v-for="(item, index) in form.levelOneAlarmObjectList" :key="item.id">
             <des-btn v-has="'show'" class="btn-modify" icon="delete"
                      @click="deleteRule(item, form.levelOneAlarmObjectList)"/>
             <div>
@@ -63,7 +63,7 @@
             <span class="border-left-color">二级告警 </span>
             <des-btn icon="plus" @click="addRule(form.levelTwoAlarmObjectList)"> 添加通知人</des-btn>
           </el-form-item>
-          <div class="part-border-box" v-for="(item, index) in form.levelTwoAlarmObjectList" :key="index">
+          <div class="part-border-box" v-for="(item, index) in form.levelTwoAlarmObjectList" :key="item.id">
             <des-btn v-has="'show'" class="btn-modify" icon="delete"
                      @click="deleteRule(item, form.levelTwoAlarmObjectList)"/>
             <div>
@@ -102,7 +102,7 @@
             <span class="border-left-color">三级告警 </span>
             <des-btn icon="plus" @click="addRule(form.levelThreeAlarmObjectList)"> 添加通知人</des-btn>
           </el-form-item>
-          <div class="part-border-box" v-for="(item, index) in form.levelThreeAlarmObjectList" :key="index">
+          <div class="part-border-box" v-for="(item, index) in form.levelThreeAlarmObjectList" :key="item.id">
             <des-btn v-has="'show'" class="btn-modify" icon="delete"
                      @click="deleteRule(item, form.levelThreeAlarmObjectList)"/>
             <div>
@@ -215,7 +215,7 @@
         }
       },
       addRule(list) {
-        list.splice(0, 0, Object.assign({}, this.ruleModel));
+        list.splice(0, 0, Object.assign({}, this.ruleModel, {id: Math.random()}));
       },
       deleteRule(item, list) {
         let index = list.indexOf(item);
@@ -233,6 +233,7 @@
         })
       },
       checkChange(item) {
+        debugger;
         item.alarmNoticeTarget = '';
         if (item.alarmNoticeType === '0') {
           this.checkContactWay(item);
@@ -242,6 +243,7 @@
         }
       },
       checkContactWay(item) {
+        debugger;
         this.userList.forEach(i => {
           if (i.id === item.alarmNoticeUserId) {
             item.noPass = false;
@@ -251,8 +253,7 @@
                 message: `联系人"${i.name}"无法取得手机联系方式，请尝试微信`
               });
             } else {
-              item.alarmNoticeTarget = item.phone;
-
+              item.alarmNoticeTarget = i.phone;
             }
           }
         });
@@ -308,10 +309,28 @@
       },
       queryDetail() {
         AlarmNotifyGroup.get(this.formItem.id).then(res => {
-          res.data.details.forEach(i => {
-            this.formatContactWay(i);
+          res.data.data.levelOneAlarmObjectList.forEach(i => {
+            this.userList.push({
+              id: i.alarmNoticeUserId,
+              name: i.alarmNoticeUserName,
+              phone: i.alarmNoticeTarget
+            });
           });
-          this.form = res.data;
+          res.data.data.levelTwoAlarmObjectList.forEach(i => {
+            this.userList.push({
+              id: i.alarmNoticeUserId,
+              name: i.alarmNoticeUserName,
+              phone: i.alarmNoticeTarget
+            });
+          });
+          res.data.data.levelThreeAlarmObjectList.forEach(i => {
+            this.userList.push({
+              id: i.alarmNoticeUserId,
+              name: i.alarmNoticeUserName,
+              phone: i.alarmNoticeTarget
+            });
+          });
+          this.form = res.data.data;
         });
       },
       formatContactWay(item) {

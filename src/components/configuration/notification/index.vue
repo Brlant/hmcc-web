@@ -149,10 +149,13 @@
         this.currentItemId = item.id;
         this.$confirmOpera(`是否删除通知列表"${item.name}"`, () => {
           this.$httpRequestOpera(AlarmNotifyGroup.delete(item.id), {
-            successTitle: '删除成功',
             errorTitle: '删除失败',
-            success: () => {
-              this.queryList(1);
+            success: (res) => {
+              if(res.data.code === 200) {
+                this.queryList(1);
+              } else {
+                this.$notify.error({message: res.data.msg})
+              }
             }
           });
         });

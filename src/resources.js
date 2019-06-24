@@ -95,7 +95,7 @@ Vue.prototype.$http = http;
 // 告警通知组
 export const AlarmNotifyGroup = resource('/alarm-notice-group', http, {
   query(params) {
-    return http.post('/alarm-rule/page', params);
+    return http.post('/alarm-notice-group/page', params);
   },
   update(obj) {
     return http.put('//alarm-notice-group', obj);

@@ -98,7 +98,7 @@
                 message: `联系人"${i.name}"无法取得手机联系方式，请尝试微信`
               });
             } else {
-              item.noticeTarget = item.phone;
+              item.noticeTarget = i.phone;
             }
           }
         });

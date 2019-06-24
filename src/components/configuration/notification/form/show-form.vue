@@ -29,7 +29,7 @@
               {{pageSets[1].name}}</h3>
           </div>
           <div class="content">
-            <div v-if="!notify.levelOneAlarmObjectList.length">
+            <div v-if="notify.levelOneAlarmObjectList">
               <div>一级告警</div>
               <div class="order-list clearfix" style="padding-top: 10px">
                 <el-row class="order-list-header">
@@ -38,15 +38,12 @@
                   <el-col :span="8">联系方式</el-col>
                   <el-col :span="8">备注</el-col>
                 </el-row>
-                <div class="empty-info mini">
-                  暂无信息
-                </div>
                 <div class="order-list-body flex-list-dom">
                   <div :key="index" class="order-list-item no-pointer order-list-item-bg"
                        v-for="(item, index) in notify.levelOneAlarmObjectList">
                     <el-row>
                       <el-col :span="4">{{item.alarmNoticeUserName}}</el-col>
-                      <el-col :span="4">{{checkList[item.notifyType].label}}</el-col>
+                      <el-col :span="4">{{checkList[item.alarmNoticeType].label}}</el-col>
                       <el-col :span="8" class="R">
                         {{item.alarmNoticeTarget}}
                       </el-col>
@@ -56,8 +53,8 @@
                 </div>
               </div>
             </div>
-            <div v-if="!notify.levelTwoAlarmObjectList.length">
-              <div>二级告警</div>
+            <div v-if="notify.levelTwoAlarmObjectList">
+              <div class="mt-10">二级告警</div>
               <div class="order-list clearfix" style="padding-top: 10px">
                 <el-row class="order-list-header">
                   <el-col :span="4">通知人</el-col>
@@ -65,15 +62,12 @@
                   <el-col :span="8">联系方式</el-col>
                   <el-col :span="8">备注</el-col>
                 </el-row>
-                <div class="empty-info mini">
-                  暂无信息
-                </div>
                 <div class="order-list-body flex-list-dom">
                   <div :key="index" class="order-list-item no-pointer order-list-item-bg"
                        v-for="(item, index) in notify.levelTwoAlarmObjectList">
                     <el-row>
                       <el-col :span="4">{{item.alarmNoticeUserName}}</el-col>
-                      <el-col :span="4">{{checkList[item.notifyType].label}}</el-col>
+                      <el-col :span="4">{{checkList[item.alarmNoticeType].label}}</el-col>
                       <el-col :span="8" class="R">
                         {{item.alarmNoticeTarget}}
                       </el-col>
@@ -83,8 +77,8 @@
                 </div>
               </div>
             </div>
-            <div v-if="!notify.levelThreeAlarmObjectList.length">
-              <div>三级告警</div>
+            <div v-if="notify.levelThreeAlarmObjectList">
+              <div class="mt-10">三级告警</div>
               <div class="order-list clearfix" style="padding-top: 10px">
                 <el-row class="order-list-header">
                   <el-col :span="4">通知人</el-col>
@@ -92,15 +86,12 @@
                   <el-col :span="8">联系方式</el-col>
                   <el-col :span="8">备注</el-col>
                 </el-row>
-                <div class="empty-info mini">
-                  暂无信息
-                </div>
                 <div class="order-list-body flex-list-dom">
                   <div :key="index" class="order-list-item no-pointer order-list-item-bg"
                        v-for="(item, index) in notify.levelThreeAlarmObjectList">
                     <el-row>
                       <el-col :span="4">{{item.alarmNoticeUserName}}</el-col>
-                      <el-col :span="4">{{checkList[item.notifyType].label}}</el-col>
+                      <el-col :span="4">{{checkList[item.alarmNoticeType].label}}</el-col>
                       <el-col :span="8" class="R">
                         {{item.alarmNoticeTarget}}
                       </el-col>
@@ -147,7 +138,7 @@
         if (item.memberSource === '1') return;
         User.get(item.targetStr).then(res => {
           item.name = res.data.name;
-          item.targetStr = item.notifyType === '1' ? res.data.phone : res.data.email;
+          item.targetStr = item.alarmNoticeType === '1' ? res.data.phone : res.data.email;
         });
       },
       selectTab(item) {
@@ -160,10 +151,7 @@
         this.notify = {};
         this.loading = true;
         AlarmNotifyGroup.get(this.formItem.id).then(res => {
-          res.data.details.forEach(i => {
-            this.formatContactWay(i);
-          });
-          this.notify = res.data;
+          this.notify = res.data.data;
           this.loading = false;
         });
       }

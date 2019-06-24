@@ -175,6 +175,8 @@
             success: (res) => {
               if(res.data.code === 200) {
                 item.status = '1';
+              } else {
+                this.$notify.error({message: res.data.msg})
               }
             }
           });
@@ -189,6 +191,8 @@
             success: (res) => {
               if(res.data.code === 200) {
                 item.status = '0';
+              } else {
+                this.$notify.error({message: res.data.msg})
               }
             }
           });
