@@ -31,7 +31,7 @@
 </template>
 
 <script>
-  import {OrgUser, User} from '../../../../resources';
+  import {OrgUser, User, Access} from '../../../../resources';
 
   export default {
     name: 'editForm',
@@ -122,14 +122,6 @@
         doing: false
       };
     },
-    computed: {
-      user() {
-        return this.$store.state.user;
-      }
-    },
-    mounted() {
-      this.getRoleSelect();
-    },
     watch: {
       formItem: function (val) {
         this.$refs['accountform'].clearValidate();
@@ -149,21 +141,21 @@
         if (!val) {
           this.$refs['accountform'].resetFields();
         }
-      },
-      user(val) {
-        this.getRoleSelect();
       }
+    },
+    mounted() {
+      this.getRoleSelect();
     },
     methods: {
       getRoleSelect: function () {
-        let orgId = this.user.userCompanyAddress;
-        if (!orgId) {
-          this.roleSelect = [];
-          return;
-        }
-        let params = {objectId: 'cerp-system'};
-        this.$http.get(`/erp-access/orgs/${orgId}/self`, {params}).then(res => {
-          this.roleSelect = res.data;
+        let param = {
+          usableStatus: 1,
+          objectId: 'hmcc-system',
+          pageNo: 1,
+          pageSize: 100
+        };
+        Access.query(param).then(res => {
+          this.roleSelect = res.data.list;
         });
       },
       onSubmit: function (formName) {
@@ -182,22 +174,21 @@
               roleId: m
             };
           });
-          formData.orgId = this.user.userCompanyAddress;
-          formData.objectId = 'cerp-system';
+          formData.objectId = 'hmcc-system';
           if (this.action === 'add') {
             OrgUser.save(formData).then(() => {
               this.doing = false;
               this.$notify.success({
                 duration: 2000,
                 name: '成功',
-                message: '新增货主用户"' + self.form.name + '"成功'
+                message: '新增用户"' + self.form.name + '"成功'
               });
               formData.list = this.getSelectRoles(formData, this.roleSelect);
               self.$emit('change', formData);
             }).catch(() => {
               this.$notify.error({
                 duration: 2000,
-                message: '新增货主用户"' + self.form.name + '"失败'
+                message: '新增用户"' + self.form.name + '"失败'
               });
               this.doing = false;
             });
@@ -207,14 +198,14 @@
               this.$notify.success({
                 duration: 2000,
                 name: '成功',
-                message: '修改货主用户"' + self.form.name + '"成功'
+                message: '修改用户"' + self.form.name + '"成功'
               });
               formData.list = this.getSelectRoles(formData, this.roleSelect);
               self.$emit('change', formData);
             }).catch(() => {
               this.$notify.error({
                 duration: 2000,
-                message: '修改货主用户"' + self.form.name + '"失败'
+                message: '修改用户"' + self.form.name + '"失败'
               });
               this.doing = false;
             });

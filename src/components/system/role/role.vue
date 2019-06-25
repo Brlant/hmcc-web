@@ -281,7 +281,7 @@
       getPageList: function () {// 查询角色列表
         let param = Object.assign({}, {
           deleteFlag: false,
-          objectId: 'ccs-system'
+          objectId: 'hmcc-system'
         }, this.filters);
         Access.query(param).then(res => {
           if (param.keyWord !== this.filters.keyWord) return;
