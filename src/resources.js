@@ -91,6 +91,20 @@ http.interceptors.response.use(response => {
 
 Vue.prototype.$http = http;
 
+// 告警通知
+export const NotifyRecord = resource('/ccsNotifyRecord', http, {});
+
+
+// 告警事件
+export const alarmEvent = resource('/alarm-event', http, {
+  query(params) {
+    return http.post('/alarm-event/page', params);
+  },
+  batchConfirmItem(obj) {
+    return http.put('/alarm-event/handle', obj);
+  }
+});
+
 
 // 告警测试
 export const AlarmTest = resource('/alarm-test-log', http, {
@@ -116,7 +130,7 @@ export const AlarmNotifyGroup = resource('/alarm-notice-group', http, {
 });
 
 
-// AlarmRule
+// 告警规则
 export const AlarmRule = resource('/alarm-rule', http, {
   query(params) {
     return http.post('/alarm-rule/page', params);
@@ -186,16 +200,6 @@ export const probe = resource('/sensor', http, {
 export const warehouseDevImage = resource('/warehouseDevImage', http, {});
 
 export const DevBackUp = resource('/ccsDevBackup', http, {});
-
-// 告警记录
-export const NotifyRecord = resource('/ccsNotifyRecord', http, {});
-
-// 告警记录
-export const WarnRecord = resource('/ccsWarnRecord', http, {
-  batchConfirmItem(obj) {
-    return http.put('/ccsWarnRecord/batch-confirm', obj);
-  }
-});
 
 export const OrgUser = resource('/oms/user/org', http, {
   queryOrgInfo: (id, params) => {

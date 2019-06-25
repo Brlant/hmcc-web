@@ -6,25 +6,24 @@
     </template>
     <template slot="content">
       <el-form :model="form" :rules="rules" label-width="100px" ref="tempForm">
-        <el-form-item label="情况说明" prop="confirmContent">
-          <oms-input placeholder="请输入情况说明" type="textarea" v-model="form.confirmContent"/>
+        <el-form-item label="情况说明" prop="handlingCondition">
+          <oms-input placeholder="请输入情况说明" type="textarea" v-model="form.handlingCondition"/>
         </el-form-item>
       </el-form>
     </template>
   </dialog-template>
 </template>
 <script>
-  import {WarnRecord} from '@/resources';
+  import {alarmEvent} from '@/resources';
 
   export default {
     data() {
       return {
         form: {
-          confirmType: '1',
-          confirmContent: ''
+          handlingCondition: ''
         },
         rules: {
-          confirmContent: [
+          handlingCondition: [
             {required: true, message: '请输入情况说明', trigger: 'blur'}
           ]
         },
@@ -47,8 +46,7 @@
     watch: {
       index: function (val) {
         this.form = {
-          confirmType: '1',
-          confirmContent: ''
+          handlingCondition: ''
         };
       }
     },
@@ -56,12 +54,16 @@
       save(formName) {
         this.$refs[formName].validate((valid) => {
           if (valid && this.doing === false) {
-            this.$httpRequestOpera(WarnRecord.update(this.formItem.id, this.form), {
-              successTitle: '处理成功',
+            this.form.id = this.formItem.id;
+            this.$httpRequestOpera(alarmEvent.batchConfirmItem(this.form), {
               errorTitle: '处理失败',
               success: res => {
-                this.doing = false;
-                this.$emit('change', res.data);
+                if (res.data.code === 200) {
+                  this.doing = false;
+                  this.$emit('change', res.data);
+                } else {
+                  this.doing = false;
+                }
               },
               error: () => {
                 this.doing = false;

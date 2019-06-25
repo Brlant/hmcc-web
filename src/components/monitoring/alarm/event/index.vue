@@ -1,6 +1,6 @@
 <template>
   <div class="order-page">
-    <search-part @search="searchResult">
+    <search-part @search="searchResult" :alarmTypeList="alarmTypeList">
       <template slot="btn">
         <el-button @click="batchConfirmItem" plain size="small" v-has="'ccs-warn-record-process'"
                    v-if="checkList.length>0">
@@ -39,19 +39,16 @@
         <div :class="[{'active':currentItemId===item.id}]" @click.stop.prevent="checkItem(item)"
              class="order-list-item no-pointer order-list-item-bg" v-for="item in dataList">
           <el-row>
-            <el-col :span="3">{{item.createTime | time}}</el-col>
-            <el-col :span="3">{{item.restoreTime | time}}</el-col>
-            <el-col :span="3">{{formatMsToTime((item.restoreTime ? item.restoreTime : Date.now()) - item.createTime)}}
+            <el-col :span="3">{{item.occurrenceTime | time}}</el-col>
+            <el-col :span="3">{{item.recoveryTime | time}}</el-col>
+            <el-col :span="3">{{item.handlingTime | time}}
             </el-col>
-            <el-col :span="2"></el-col>
-            <el-col :span="4"></el-col>
-            <el-col :span="2">
-            </el-col>
-            <el-col :span="4">
-              {{item.details}}
-            </el-col>
+            <el-col :span="2">{{alarmTypeList[item.type]}}</el-col>
+            <el-col :span="4">{{item.sensorName}}</el-col>
+            <el-col :span="2">{{alarmLevelList[item.level]}}</el-col>
+            <el-col :span="4">{{item.handlingCondition}}</el-col>
             <el-col :span="3">
-              <des-btn @click="confirmItem(item)" icon="affirm" v-has="'ccs-warn-record-process'" v-show="!item.details">处理
+              <des-btn @click="confirmItem(item)" icon="affirm" v-has="'ccs-warn-record-process'" v-show="!item.handlingCondition">处理
               </des-btn>
               <des-btn @click="showItemDetail(item)" icon="detail" v-has="'show'">详情</des-btn>
             </el-col>
@@ -71,6 +68,7 @@
 
     <page-right :css="{'width':'900px','padding':0}" :show="showIndex !== -1" @right-close="resetRightBox">
       <component :formItem="form" :index="showIndex" :is="currentPart" @change="change"
+                 :alarmTypeList="alarmTypeList" :alarmLevelList="alarmLevelList"
                  @right-close="resetRightBox"/>
     </page-right>
 
@@ -86,7 +84,7 @@
   import showForm from './form/show-form.vue';
   import batchConfirmForm from './form/batch-confirm-form.vue';
   import confirmForm from './form/confirm-form';
-  import {WarnRecord} from '@/resources';
+  import {alarmEvent} from '@/resources';
   import utils from '@/tools/utils';
   import AlarmEventMixin from '@/mixins/alarmEventMixin';
   import AlarmMixin from '@/mixins/alarmMixin';
@@ -101,9 +99,7 @@
     mixins: [CommonMixin, AlarmEventMixin, AlarmMixin],
     data() {
       return {
-        filters: {
-          status: '0'
-        },
+        filters: {},
         dialogComponents: {
           0: showForm,
           1: confirmForm
@@ -120,7 +116,9 @@
         warnRecordIdList: [],
         currentBatchPart: null,
         showBatchIndex: -1, currentPart: null,
-        checkList: []
+        checkList: [],
+        alarmTypeList: ['低温', '高温', '低湿度', '高湿度', '低电压', '高电压', '离线'],
+        alarmLevelList: ['', '一级', '二级', '三级']
       };
     },
     watch: {
@@ -137,7 +135,6 @@
     },
     methods: {
       checkItem: function (item) {
-        console.log('111', item);
         // 单选
         item.isChecked = !item.isChecked;
         let index = this.checkList.indexOf(item);
@@ -165,9 +162,8 @@
         // 清空数据
         this.checkList = [];
         this.warnRecordIdList = [];
-        const http = WarnRecord.query;
-        // const params = this.queryUtil(http, pageNo);
-        this.dataList = [{id: 'adfasd'}];
+        const http = alarmEvent.query;
+        const params = this.queryUtil(http, pageNo);
       },
       resetRightBox() {
         this.$router.push('/alarm/record');

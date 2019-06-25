@@ -37,17 +37,16 @@
         <el-row>
           <el-col :span="8">
             <oms-form-row :span="5" label="告警类型">
-              <el-radio-group @change="search" size="small" v-model="searchCondition.warnType">
-                <el-radio-button :label="1">温度</el-radio-button>
-                <el-radio-button :label="2">湿度</el-radio-button>
-                <el-radio-button :label="3">电压</el-radio-button>
-                <el-radio-button :label="4">离线时间</el-radio-button>
-              </el-radio-group>
+              <el-select filterable placeholder="请选择告警类型"
+                         v-model="searchCondition.type" @change="search">
+                <el-option :key="index" :label="item" :value="index"
+                           v-for="(item, index) in alarmTypeList"></el-option>
+              </el-select>
             </oms-form-row>
           </el-col>
           <el-col :span="8">
             <oms-form-row :span="5" label="告警级别">
-              <el-radio-group @change="search" size="small" v-model="searchCondition.warnLevel">
+              <el-radio-group @change="search" size="small" v-model="searchCondition.level">
                 <el-radio-button label="1">一级</el-radio-button>
                 <el-radio-button label="2">二级</el-radio-button>
                 <el-radio-button label="3">三级</el-radio-button>
@@ -56,17 +55,17 @@
           </el-col>
           <el-col :span="4">
             <oms-form-row :span="11" label="是否恢复">
-              <el-radio-group @change="search" size="small" v-model="searchCondition.recoveryStatus">
-                <el-radio-button :label="1">是</el-radio-button>
-                <el-radio-button :label="0">否</el-radio-button>
+              <el-radio-group @change="search" size="small" v-model="searchCondition.recoveryFlag">
+                <el-radio-button :label="true">是</el-radio-button>
+                <el-radio-button :label="false">否</el-radio-button>
               </el-radio-group>
             </oms-form-row>
           </el-col>
           <el-col :span="4">
             <oms-form-row :span="11" label="是否处理">
-              <el-radio-group @change="search" size="small" v-model="searchCondition.recoveryStatus">
-                <el-radio-button :label="1">是</el-radio-button>
-                <el-radio-button :label="0">否</el-radio-button>
+              <el-radio-group @change="search" size="small" v-model="searchCondition.handleFlag">
+                <el-radio-button :label="true">是</el-radio-button>
+                <el-radio-button :label="false">否</el-radio-button>
               </el-radio-group>
             </oms-form-row>
           </el-col>
@@ -81,20 +80,22 @@
   import utils from '@/tools/utils';
 
   export default {
+    props: {
+      alarmTypeList: Array
+    },
     mixins: [methodsMixin],
     data: function () {
       return {
         searchCondition: {
-          occurBegin: '',
-          occurEnd: '',
-          restoreBegin: '',
-          restoreEnd: '',
-          devName: '',
-          devId: '',
-          confirmStatus: '',
-          warnType: '',
-          warnLevel: '',
-          recoveryStatus: null
+          type: '',
+          level: '',
+          sensorId: '',
+          startDate: '',
+          endDate: '',
+          recoveryStartDate: '',
+          recoveryEndDate: '',
+          handleFlag: '',
+          recoveryFlag: ''
         },
         showSearch: false,
         list: [],
@@ -136,23 +137,23 @@
       },
       search() {
         const parent = this.$parent;
-        this.searchCondition.occurBegin = parent.formatTimeAry(this.times1, 0);
-        this.searchCondition.occurEnd = parent.formatTimeAry(this.times1, 1);
-        this.searchCondition.restoreBegin = parent.formatTimeAry(this.times2, 0);
-        this.searchCondition.restoreEnd = parent.formatTimeAry(this.times2, 1);
+        this.searchCondition.startDate = parent.formatTimeAry(this.times1, 0);
+        this.searchCondition.endDate = parent.formatTimeAry(this.times1, 1);
+        this.searchCondition.recoveryStartDate = parent.formatTimeAry(this.times2, 0);
+        this.searchCondition.recoveryEndDate = parent.formatTimeAry(this.times2, 1);
         this.$emit('search', this.searchCondition);
       },
       reset() {
         this.searchCondition = {
-          occurBegin: '',
-          occurEnd: '',
-          restoreBegin: '',
-          restoreEnd: '',
-          devName: '',
-          confirmStatus: '',
-          warnType: '',
-          warnLevel: '',
-          recoveryStatus: null
+          type: '',
+          level: '',
+          sensorId: '',
+          startDate: '',
+          endDate: '',
+          recoveryStartDate: '',
+          recoveryEndDate: '',
+          handleFlag: '',
+          recoveryFlag: ''
         };
         this.times1 = [];
         this.times2 = [];

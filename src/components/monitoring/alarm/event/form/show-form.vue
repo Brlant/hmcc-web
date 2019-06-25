@@ -17,17 +17,16 @@
               {{pageSets[0].name}}</h3>
           </div>
           <div class="content" style="overflow: hidden">
-            <oms-col :isShow="true" :rowSpan="rowSpan" label="发生时间">{{detail.createTime | time}}</oms-col>
-            <oms-col :isShow="true" :rowSpan="rowSpan" label="恢复时间">{{detail.restoreTime | time}}</oms-col>
-            <oms-col :isShow="true" :rowSpan="rowSpan" label="告警类型"></oms-col>
-            <oms-col :isShow="true" :rowSpan="rowSpan" label="告警等级"></oms-col>
-            <oms-col :isShow="true" :rowSpan="rowSpan" label="探头"></oms-col>
-            <oms-col :isShow="true" :rowSpan="rowSpan" label="告警值"></oms-col>
-            <oms-col :isShow="true" :rowSpan="rowSpan" label="恢复值"></oms-col>
-            <oms-col :isShow="true" :rowSpan="rowSpan" label="处理时间">{{detail.confirmTime | time}}</oms-col>
+            <oms-col :isShow="true" :rowSpan="rowSpan" label="发生时间">{{detail.occurrenceTime | time}}</oms-col>
+            <oms-col :isShow="true" :rowSpan="rowSpan" label="恢复时间">{{detail.recoveryTime | time}}</oms-col>
+            <oms-col :isShow="true" :rowSpan="rowSpan" label="告警类型">{{alarmTypeList[detail.type]}}</oms-col>
+            <oms-col :isShow="true" :rowSpan="rowSpan" label="告警等级">{{alarmLevelList[detail.level]}}</oms-col>
+            <oms-col :isShow="true" :rowSpan="rowSpan" label="探头">{{detail.sensorName}}</oms-col>
+            <oms-col :isShow="true" :rowSpan="rowSpan" label="告警值">{{detail.value}}</oms-col>
+            <oms-col :isShow="true" :rowSpan="rowSpan" label="恢复值">{{detail.recoveryValue}}</oms-col>
+            <oms-col :isShow="true" :rowSpan="rowSpan" label="处理时间">{{detail.handlingTime | time}}</oms-col>
             <oms-col :isShow="true" :rowSpan="rowSpan" label="处理人">{{detail.confirmerId}}</oms-col>
-            <oms-col :isShow="true" :rowSpan="rowSpan" label="处理情况">{{detail.confirmContent}}</oms-col>
-            <oms-col :isShow="true" :rowSpan="rowSpan" label="创建时间">{{detail.insertTime | time}}</oms-col>
+            <oms-col :isShow="true" :rowSpan="rowSpan" label="处理情况">{{detail.handlingCondition}}</oms-col>
           </div>
         </div>
       </div>
@@ -35,7 +34,7 @@
   </dialog-template>
 </template>
 <script>
-  import {WarnRecord} from '@/resources';
+  import {alarmEvent} from '@/resources';
   import utils from '@/tools/utils';
   import ChartLine from '@/components/monitoring/temp-new/chart-line-new';
   import AlarmMixin from '@/mixins/alarmMixin';
@@ -43,7 +42,9 @@
   export default {
     props: {
       index: Number,
-      formItem: Object
+      formItem: Object,
+      alarmTypeList: Array,
+      alarmLevelList: Array
     },
     components: {ChartLine},
     mixins: [AlarmMixin, AlarmEventMixin],
@@ -86,8 +87,9 @@
         return formatMsToTime((detail.restoreTime ? detail.restoreTime : Date.now()) - detail.createTime);
       },
       queryDetail() {
+        this.detail = this.formItem;
         // this.loading = true;
-        // WarnRecord.get(this.formItem.id).then(res => {
+        // alarmEvent.get(this.formItem.id).then(res => {
         //   this.detail = res.data;
         //   this.loading = false;
         // });
