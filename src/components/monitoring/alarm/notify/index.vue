@@ -5,11 +5,10 @@
     <div class="order-list" style="margin-top: 20px">
       <el-row class="order-list-header">
         <el-col :span="6">探头</el-col>
-        <el-col :span="3">通知类型</el-col>
-        <el-col :span="3">通知方式</el-col>
-        <el-col :span="3">消息类型</el-col>
+        <el-col :span="4">通知类型</el-col>
+        <el-col :span="4">通知方式</el-col>
         <el-col :span="6">通知时间</el-col>
-        <el-col :span="3">发送状态</el-col>
+        <el-col :span="4">发送状态</el-col>
       </el-row>
       <el-row v-if="loadingData">
         <el-col :span="24">
@@ -27,13 +26,13 @@
         <div :class="[{'active':currentItemId===item.id}]" class="order-list-item order-list-item-bg no-pointer"
              v-for="item in dataList">
           <el-row>
-            <el-col :span="6">{{item.devName}}</el-col>
-            <el-col :span="3"></el-col>
-            <el-col :span="3"></el-col>
-            <el-col :span="3"></el-col>
-            <el-col :span="3"></el-col>
-            <el-col :span="6"></el-col>
-            <el-col :span="4"></el-col>
+            <el-col :span="6">{{item.sensorName}}</el-col>
+            <el-col :span="4">{{item.way === '0' ? '告警' : '恢复'}}</el-col>
+            <el-col :span="4">{{item.type === '0' ? '短信' : '微信'}}</el-col>
+            <el-col :span="6">{{item.time | time}}</el-col>
+            <el-col :span="4">
+              {{item.status === '1' ? '成功' : '失败'}}
+            </el-col>
           </el-row>
         </div>
       </div>
@@ -98,13 +97,8 @@
         this.activeStatus = key;
       },
       queryList(pageNo) {
-
-        this.dataList = [
-          {id: ''}
-        ];
-
-        // const http = NotifyRecord.query;
-        // this.queryUtil(http, pageNo);
+        const http = NotifyRecord.query;
+        this.queryUtil(http, pageNo);
       },
       resetRightBox() {
         this.showIndex = -1;

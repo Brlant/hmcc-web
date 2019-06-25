@@ -92,7 +92,11 @@ http.interceptors.response.use(response => {
 Vue.prototype.$http = http;
 
 // 告警通知
-export const NotifyRecord = resource('/ccsNotifyRecord', http, {});
+export const NotifyRecord = resource('/alarm-notice-record', http, {
+  query(params) {
+    return http.post('/alarm-notice-record/page', params);
+  }
+});
 
 
 // 告警事件

@@ -15,19 +15,19 @@
           <el-col :span="8">
             <oms-form-row :span="5" label="发生时间">
               <el-date-picker :default-time="['00:00:00', '23:59:59']" class="el-date-picker--mini" placeholder="请选择"
-                              type="datetimerange" v-model="times1"/>
+                              type="datetimerange" v-model="times1" @change="search"/>
             </oms-form-row>
           </el-col>
           <el-col :span="8">
             <oms-form-row :span="5" label="恢复时间">
               <el-date-picker :default-time="['00:00:00', '23:59:59']" class="el-date-picker--mini" placeholder="请选择"
-                              type="datetimerange" v-model="times2"/>
+                              type="datetimerange" v-model="times2" @change="search"/>
             </oms-form-row>
           </el-col>
           <el-col :span="8">
             <oms-form-row :span="4" label="探头">
               <el-select :remote-method="queryProbeList" filterable placeholder="请输入名称搜索探头" remote
-                         v-model="searchCondition.sensorId">
+                         v-model="searchCondition.sensorId" @change="search">
                 <el-option :key="item.id" :label="item.name" :value="item.id"
                            v-for="item in probeList"></el-option>
               </el-select>
