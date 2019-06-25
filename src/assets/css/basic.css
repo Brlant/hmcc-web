@@ -41,7 +41,7 @@ ul, ol, li {
 }
 
 .container {
-  width: auto;
+  width: 100%;
 }
 
 .text-center {

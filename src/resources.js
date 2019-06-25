@@ -397,7 +397,7 @@ export const User = resource('/oms/user', http, {
 // 角色管理对象
 export const Access = resource('/oms/access', http, {
   getRoleMenus: () => {
-    return http.get('/oms/access/menus/tree', {params: {objectId: 'ccs-system'}});
+    return http.get('/oms/access/menus/tree', {params: {objectId: 'hmcc-system'}});
   },
   getOrgRoleMenus: (orgId) => {
     return http.get('/oms/access/org/' + orgId + '/admin/menus/tree');
