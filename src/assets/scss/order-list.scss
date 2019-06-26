@@ -67,7 +67,7 @@
 
       &.status-common {
         .order-list-item-bg {
-          border-left-color: #409eff
+          border-left-color: #67c23a
         }
 
         &:hover, &.active {
@@ -76,7 +76,10 @@
             //background: $order_color_0
           }
 
-          box-shadow: 2px 0 5px 2px #409eff
+          box-shadow: 2px 0 5px 2px #67c23a
+        }
+        .alarm-title {
+          color: #67c23a;
         }
       }
 
@@ -94,6 +97,9 @@
 
           box-shadow: 2px 0 5px 2px #eee
         }
+        .alarm-title {
+          color: #eee;
+        }
       }
 
       &.status-alarm {
@@ -108,6 +114,9 @@
           }
 
           box-shadow: 2px 0 5px 2px $error-color
+        }
+        .alarm-title {
+          color: $error-color;
         }
       }
 

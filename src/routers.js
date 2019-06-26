@@ -16,24 +16,12 @@ export const routes = [
           {
             path: '/monitoring/equipment',
             component: () => import('./components/monitoring/equipment/index.vue'),
-            meta: {moduleId: 'monitoring', title: '本单位设备监控', perm: 'ccs-monitordev-scan', pageType: 1}
+            meta: {moduleId: 'monitoring', title: '本单位设备监控', perm: 'ccs-monitordev-scan', type: 1}
           },
           {
-            path: '/monitoring/org/hot/spot',
-            component: () => import('./components/monitoring/org/route-view.vue'),
-            meta: {moduleId: 'monitoring', title: '接种单位设备监控', perm: 'ccs-hotmonitor-scan', pageType: 2, subMenuId: 'org'},
-            children: [
-              {
-                path: '',
-                component: () => import('./components/monitoring/org/index.vue'),
-                meta: {moduleId: 'monitoring'}
-              },
-              {
-                path: '/monitoring/org/hot/spot/temp',
-                component: () => import('./components/monitoring/temp-new/index.vue'),
-                meta: {moduleId: 'monitoring', showDev: false}
-              }
-            ]
+            path: '/monitoring/pov/equipment',
+            component: () => import('./components/monitoring/equipment/index.vue'),
+            meta: {moduleId: 'monitoring', title: '接种单位设备监控', perm: 'ccs-hotmonitor-scan', type: 2}
           },
           {
             path: '/monitoring/store/:id',

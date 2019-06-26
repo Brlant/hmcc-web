@@ -1,11 +1,42 @@
 <style lang="scss" scoped>
   .order-list-body {
     .cool-content {
-      border-bottom: 1px solid #eee;
+      margin-top: 25px;
+      .dev {
+        border-bottom: 1px solid #eee;
+        margin-bottom: 20px;
+        /*align-items: normal;*/
+      }
+      .dev-title {
+        text-align: center;
+        font-weight: bold;
+        font-size: 24px;
+      }
+
+      .img {
+        width: auto;
+        height: auto;
+        max-width: 100%;
+        max-height: 100%;
+      }
+      .opera-btn {
+        text-align: center;
+        .des-btn +.des-btn {
+          margin-left: 15px;
+        }
+      }
     }
+
     .order-list-item {
       cursor: auto;
+      position: relative;
     }
+  }
+  .alarm-title {
+    font-size: 20px;
+    position: absolute;
+    left: 20px;
+    top: 8px;
   }
 </style>
 <template>
@@ -34,30 +65,42 @@
       <div class="order-list-body flex-list-dom" v-else="">
         <div :class="[formatRowAlarmClass(item) ,{'active':currentItemId===item.id}]" class="order-list-item"
              v-for="item in dataList">
-          <el-row class="cool-content">
-            <el-col :span="1">
-               <span class="alarm-title">
-               <el-tag type="danger" v-if="item.alarm">告警</el-tag>
-               <el-tag type="success" v-if="!item.alarm && item.status === '1'">正常</el-tag>
-               <el-tag type="info" v-if="!item.alarm && item.status === '0'">未监控</el-tag>
-            </span>
+              <span class="alarm-title">
+                      <span v-if="item.alarm">告警</span>
+                      <span v-if="!item.alarm && item.status === '1'">正常</span>
+                      <span v-if="!item.alarm && item.status === '0'">未监控</span>
+              </span>
+          <el-row>
+            <el-col :span="10">
+              <div class="cool-content">
+
+                <div class="dev-title">{{item.no}}</div>
+                <el-row class="dev">
+                  <el-col :span="16">
+                    <oms-row label="类型" :span="6">{{item.no}}</oms-row>
+                    <oms-row label="型号" :span="6">{{item.version}}</oms-row>
+                    <oms-row label="单位" :span="6">{{item.orgName}}</oms-row>
+                  </el-col>
+                  <el-col :span="8">
+                    <img class="img" :src="Cool">
+                  </el-col>
+                </el-row>
+                <div class="opera-btn">
+                  <des-btn @click="monitorTemp(item)" icon="start" v-has="'ccs-monitordev-switch'"
+                           v-show="item.status==='0'">开启监控
+                  </des-btn>
+                  <des-btn @click="cancelMonitorTemp(item)"
+                           icon="forbidden" v-has="'ccs-monitordev-switch'" v-show="item.status==='1'">取消监控
+                  </des-btn>
+                  <des-btn @click="edit(item)" icon="edit" v-has="'ccs-monitordev-edit'">编辑</des-btn>
+                  <des-btn @click="deleteItem(item)" icon="delete" v-has="'ccs-monitordev-del'">删除</des-btn>
+                </div>
+              </div>
             </el-col>
-            <el-col :span="6" style="padding-left: 5px">设备：{{item.no}}</el-col>
-            <el-col :span="2">类型：{{item.type}}</el-col>
-            <el-col :span="4">型号：{{item.version}}</el-col>
-            <el-col :span="5">单位：{{item.orgName}}</el-col>
-            <el-col :span="6" class="opera-btn">
-              <des-btn @click="monitorTemp(item)" icon="start" v-has="'ccs-monitordev-switch'"
-                       v-show="item.status==='0'">开启监控
-              </des-btn>
-              <des-btn @click="cancelMonitorTemp(item)"
-                       icon="forbidden" v-has="'ccs-monitordev-switch'" v-show="item.status==='1'">取消监控
-              </des-btn>
-              <des-btn @click="edit(item)" icon="edit" v-has="'ccs-monitordev-edit'">编辑</des-btn>
-              <des-btn @click="deleteItem(item)" icon="delete" v-has="'ccs-monitordev-del'">删除</des-btn>
+            <el-col :span="14">
+              <dev-list :dev-item="item"/>
             </el-col>
           </el-row>
-          <dev-list :dev-item="item"/>
           <div class="order-list-item-bg"></div>
         </div>
       </div>
@@ -86,6 +129,7 @@
   import CommonMixin from '@/mixins/commonMixin';
   import {DevMonitoring, MonitoringObjGroup} from '@/resources';
   import DevList from './dev-list';
+  import Cool from '@/assets/img/cool.jpg';
 
   export default {
     components: {
@@ -103,7 +147,8 @@
         typeList: [
           {title: '车辆', id: '1'},
           {title: '冷柜', id: '2'}
-        ]
+        ],
+        Cool
       };
     },
     watch: {
@@ -135,10 +180,10 @@
         this.filters.activeFlag = this.filters.status;
         this.dataList = [
           {
-            no: '冰箱1号',
+            no: '罗泾1#冰箱3101131701-05-0004',
             type: '冰箱',
-            version: 'tc-001',
-            orgName: '长宁疾控',
+            version: '海尔药品保存箱HYC-940',
+            orgName: '长宁区疾控预防中心',
             status: '1',
             alarm: false,
             details: [
@@ -149,14 +194,18 @@
               {
                 name: '探头2号', no: 's-002', type: '至强1号', temp: '5', humidity: '70', voltage: 220, time: Date.now(),
                 tempScope: [2, 8], humidityScope: [50, 70], voltageScope: [200, 240], alarm: ''
+              },
+              {
+                name: '探头11号', no: 's-002', type: '至强1号', temp: '5', humidity: '70', voltage: 220, time: Date.now(),
+                tempScope: [2, 8], humidityScope: [50, 70], voltageScope: [200, 240], alarm: ''
               }
             ]
           },
           {
-            no: '冰箱2号',
+            no: '罗泾1#冰箱3101131701-05-0004',
             type: '冰箱',
             version: 'tc-001',
-            orgName: '长宁疾控',
+            orgName: '长宁区疾控预防中心',
             status: '0',
             alarm: false,
             details: [
@@ -174,7 +223,7 @@
             no: '冰柜1号',
             type: '冰柜',
             version: 'tc-001',
-            orgName: '长宁疾控',
+            orgName: '长宁区疾控预防中心',
             status: '1',
             alarm: true,
             details: [
@@ -193,7 +242,7 @@
       },
       formatRowAlarmClass(item) {
         if (item.status === '1') {
-          return item.alarm ? 'status-alarm' : 'status-common'
+          return item.alarm ? 'status-alarm' : 'status-common';
         } else {
           return 'status-close';
         }
