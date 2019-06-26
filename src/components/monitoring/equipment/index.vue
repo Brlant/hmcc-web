@@ -1,3 +1,13 @@
+<style lang="scss" scoped>
+  .order-list-body {
+    .cool-content {
+      border-bottom: 1px solid #eee;
+    }
+    .order-list-item {
+      cursor: auto;
+    }
+  }
+</style>
 <template>
   <div class="order-page">
     <search-part @search="searchResult">
@@ -8,9 +18,6 @@
         </el-button>
       </template>
     </search-part>
-
-    <status-list :activeStatus="activeStatus" :checkStatus="checkStatus" :statusList="statusType"/>
-
     <div class="order-list" style="margin-top: 20px">
       <el-row class="order-list-header">
         <el-col :span="4">编码</el-col>
@@ -33,15 +40,14 @@
         </el-col>
       </el-row>
       <div class="order-list-body flex-list-dom" v-else="">
-        <div :class="[formatRowClass(item.status, statusType) ,{'active':currentItemId===item.id}]"
-             @click="showItemDetail(item)" class="order-list-item"
+        <div :class="[formatRowAlarmClass(item) ,{'active':currentItemId===item.id}]" class="order-list-item"
              v-for="item in dataList">
-          <el-row>
+          <el-row class="cool-content">
             <el-col :span="4">{{item.no}}</el-col>
             <el-col :span="3">{{item.type}}</el-col>
             <el-col :span="3">{{item.version}}</el-col>
             <el-col :span="6">{{item.orgName}}</el-col>
-            <el-col :span="2">{{item.status === '0' ? '未激活'  : '激活'}}</el-col>
+            <el-col :span="2">{{item.status === '0' ? '未激活' : '激活'}}</el-col>
             <el-col :span="6" class="opera-btn">
               <des-btn @click="monitorTemp(item)" icon="start" v-has="'ccs-monitordev-switch'"
                        v-show="item.status==='0'">开启监控
@@ -91,9 +97,7 @@
     data() {
       return {
         statusType: utils.orderType,
-        filters: {
-          status: '1'
-        },
+        filters: {},
         dialogComponents: {
           0: addForm,
           1: showForm
@@ -119,10 +123,6 @@
       searchResult: function (search) {
         this.filters = Object.assign({}, this.filters, search);
       },
-      checkStatus(item, key) {
-        this.filters.status = item.status;
-        this.activeStatus = key;
-      },
       resetRightBox() {
         this.showIndex = -1;
       },
@@ -138,24 +138,67 @@
         this.dataList = [
           {
             no: '冰箱1号',
+            type: '冰箱',
+            version: 'tc-001',
+            orgName: '长宁疾控',
+            status: '1',
+            alarm: false,
+            details: [
+              {
+                name: '探头1号', no: 's-001', type: '至强1号', temp: '7.2', humidity: '60', voltage: 220, time: Date.now(),
+                tempScope: [2, 8], humidityScope: [50, 70], voltageScope: [200, 240], alarm: ''
+              },
+              {
+                name: '探头2号', no: 's-002', type: '至强1号', temp: '5', humidity: '70', voltage: 220, time: Date.now(),
+                tempScope: [2, 8], humidityScope: [50, 70], voltageScope: [200, 240], alarm: ''
+              }
+            ]
+          },
+          {
+            no: '冰箱2号',
+            type: '冰箱',
+            version: 'tc-001',
+            orgName: '长宁疾控',
+            status: '0',
+            alarm: false,
+            details: [
+              {
+                name: '探头2号', no: 's-001', type: '至强1号', temp: '7.2', humidity: '60', voltage: 220, time: Date.now(),
+                tempScope: [2, 8], humidityScope: [50, 70], voltageScope: [200, 240], alarm: ''
+              },
+              {
+                name: '探头3号', no: 's-002', type: '至强1号', temp: '5', humidity: '70', voltage: 220, time: Date.now(),
+                tempScope: [2, 8], humidityScope: [50, 70], voltageScope: [200, 240], alarm: ''
+              }
+            ]
+          },
+          {
+            no: '冰柜1号',
             type: '冰柜',
             version: 'tc-001',
             orgName: '长宁疾控',
             status: '1',
+            alarm: true,
             details: [
-              {name: '探头1号', no: 's-001', type: '至强1号', temp: '7.2', humidity: '60', voltage: 220, time: Date.now()},
-              {name: '探头2号', no: 's-002', type: '至强1号', temp: '5', humidity: '70', voltage: 220, time: Date.now()}
+              {
+                name: '探头4号', no: 's-001', type: '至强1号', temp: 1.8, humidity: 60, voltage: 220, time: Date.now(),
+                tempScope: [2, 8], humidityScope: [50, 70], voltageScope: [200, 240], alarm: '0'
+              },
+              {
+                name: '探头5号', no: 's-002', type: '至强1号', temp: '5', humidity: 40, voltage: 220, time: Date.now(),
+                tempScope: [2, 8], humidityScope: [50, 70], voltageScope: [200, 240], alarm: '1'
+              }
             ]
           }
         ];
         // const params = this.queryUtil(http, pageNo);
-        // this.queryStatusNum(params);
       },
-      queryStatusNum(params) {
-        const pm = Object.assign({}, params, {status: null});
-        const http = DevMonitoring.queryStateNum;
-        const res = {};
-        this.queryStatusNumUtil(http, pm, this.statusType, res);
+      formatRowAlarmClass(item) {
+        if (item.status === '1') {
+          return item.alarm ? 'status-alarm' : 'status-common'
+        } else {
+          return 'status-close';
+        }
       },
       add() {
         this.form = {};
