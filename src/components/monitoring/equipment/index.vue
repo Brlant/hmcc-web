@@ -15,10 +15,10 @@
       <el-row class="order-list-header">
         <el-col :span="4">编码</el-col>
         <el-col :span="3">类型</el-col>
-        <el-col :span="4">监控状态</el-col>
-        <!--<el-col :span="3">告警状态</el-col>-->
-        <el-col :span="4">状态</el-col>
-        <el-col :span="9">操作</el-col>
+        <el-col :span="3">型号</el-col>
+        <el-col :span="6">单位</el-col>
+        <el-col :span="2">监控状态</el-col>
+        <el-col :span="6">操作</el-col>
       </el-row>
       <el-row v-if="loadingData">
         <el-col :span="24">
@@ -33,27 +33,27 @@
         </el-col>
       </el-row>
       <div class="order-list-body flex-list-dom" v-else="">
-        <div :class="[formatRowClass(item.activeFlag, statusType) ,{'active':currentItemId===item.id}]"
+        <div :class="[formatRowClass(item.status, statusType) ,{'active':currentItemId===item.id}]"
              @click="showItemDetail(item)" class="order-list-item"
              v-for="item in dataList">
           <el-row>
-            <el-col :span="4">{{item.monitordevCode}}</el-col>
-            <el-col :span="3">{{typeList[item.monitordevType-1] && typeList[item.monitordevType-1].title}}</el-col>
-            <el-col :span="4">{{item.monitorFlag | formatMonitoringStatus}}</el-col>
-            <!--<el-col :span="3">{{item.warnStatus | formatAlarmStatus}}</el-col>-->
-            <el-col :span="4">{{item.activeFlag | formatUseStatus}}</el-col>
-            <el-col :span="9" class="opera-btn">
+            <el-col :span="4">{{item.no}}</el-col>
+            <el-col :span="3">{{item.type}}</el-col>
+            <el-col :span="3">{{item.version}}</el-col>
+            <el-col :span="6">{{item.orgName}}</el-col>
+            <el-col :span="2">{{item.status === '0' ? '未激活'  : '激活'}}</el-col>
+            <el-col :span="6" class="opera-btn">
               <des-btn @click="monitorTemp(item)" icon="start" v-has="'ccs-monitordev-switch'"
-                       v-show="item.monitorFlag==='0'">开启监控
+                       v-show="item.status==='0'">开启监控
               </des-btn>
               <des-btn @click="cancelMonitorTemp(item)"
-                       icon="forbidden" v-has="'ccs-monitordev-switch'" v-show="item.monitorFlag==='1'">取消监控
+                       icon="forbidden" v-has="'ccs-monitordev-switch'" v-show="item.status==='1'">取消监控
               </des-btn>
               <des-btn @click="edit(item)" icon="edit" v-has="'ccs-monitordev-edit'">编辑</des-btn>
               <des-btn @click="deleteItem(item)" icon="delete" v-has="'ccs-monitordev-del'">删除</des-btn>
-              <!--<des-btn v-has="'ccs-monitordev-rulecfg'" icon="edit" @click="ruleConfig(`d,${item.id}`)">配置规则</des-btn>-->
             </el-col>
           </el-row>
+          <dev-list :dev-item="item"/>
           <div class="order-list-item-bg"></div>
         </div>
       </div>
@@ -68,7 +68,7 @@
       </el-pagination>
     </div>
 
-    <page-right :css="{'width':'900px','padding':0}" :show="showIndex !== -1" @right-close="resetRightBox">
+    <page-right :css="{'width':'800px','padding':0}" :show="showIndex !== -1" @right-close="resetRightBox">
       <component :formItem="form" :index="showIndex" :is="currentPart" @change="change" @right-close="resetRightBox"/>
     </page-right>
 
@@ -81,10 +81,11 @@
   import showForm from './form/show-form.vue';
   import CommonMixin from '@/mixins/commonMixin';
   import {DevMonitoring, MonitoringObjGroup} from '@/resources';
+  import DevList from './dev-list';
 
   export default {
     components: {
-      SearchPart
+      SearchPart, DevList
     },
     mixins: [CommonMixin],
     data() {
@@ -134,8 +135,21 @@
       queryList(pageNo) {
         const http = DevMonitoring.query;
         this.filters.activeFlag = this.filters.status;
-        const params = this.queryUtil(http, pageNo);
-        this.queryStatusNum(params);
+        this.dataList = [
+          {
+            no: '冰箱1号',
+            type: '冰柜',
+            version: 'tc-001',
+            orgName: '长宁疾控',
+            status: '1',
+            details: [
+              {name: '探头1号', no: 's-001', type: '至强1号', temp: '7.2', humidity: '60', voltage: 220, time: Date.now()},
+              {name: '探头2号', no: 's-002', type: '至强1号', temp: '5', humidity: '70', voltage: 220, time: Date.now()}
+            ]
+          }
+        ];
+        // const params = this.queryUtil(http, pageNo);
+        // this.queryStatusNum(params);
       },
       queryStatusNum(params) {
         const pm = Object.assign({}, params, {status: null});

@@ -15,12 +15,8 @@
           </el-col>
           <el-col :span="5">
             <oms-form-row :span="8" label="类型">
-              <!--<el-select filterable remote placeholder="请选择类型" :clearable="true"-->
-              <!--v-model="searchCondition.monitordevType" @change="search">-->
-              <!--<el-option :label="item.title" :value="item.id" :key="item.id" v-for="item in typeList"></el-option>-->
-              <!--</el-select>-->
               <el-radio-group @change="search" size="small" v-model="searchCondition.monitordevType">
-                <el-radio-button :key="item.id" :label="item.id" v-for="item in typeList">{{item.title}}
+                <el-radio-button :key="item.key" :label="item.key" v-for="item in coolDevType">{{item.label}}
                 </el-radio-button>
               </el-radio-group>
             </oms-form-row>
@@ -64,6 +60,11 @@
     },
     mounted() {
       this.initSearchParams();
+    },
+    computed: {
+      coolDevType() {
+        return this.$store.state.coolDevType
+      }
     },
     methods: {
       initSearchParams() {

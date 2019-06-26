@@ -39,7 +39,9 @@
           <el-row>
             <el-col :span="3" class="R">{{item.no}}</el-col>
             <el-col :span="4" class="R">{{item.orgName}}</el-col>
-            <el-col :span="3" class="R">{{item.type}}</el-col>
+            <el-col :span="3" class="R">
+              {{formatDictLabel(item.type, coolDevType)}}
+            </el-col>
             <el-col :span="3" class="R">{{item.brand}}</el-col>
             <el-col :span="3" class="R">{{item.version}}</el-col>
 
@@ -78,7 +80,7 @@
   import showForm from './form/show-form';
   import CommonMixin from '@/mixins/commonMixin';
   import {cool} from '@/resources';
-
+  import {formatDictLabel} from '@/tools/utils'
   export default {
     components: {
       SearchPart
@@ -96,17 +98,16 @@
           0: addForm,
           1: showForm
         },
+        formatDictLabel,
         defaultPageRight: {'width': '700px', 'padding': 0}
       };
     },
     computed: {
-      type() {
-        const type = this.$route.meta.type;
-        this.init(type);
-        return type;
-      },
       perms() {
         return this.$route.meta.perms;
+      },
+      coolDevType() {
+        return this.$store.state.coolDevType
       }
     },
     watch: {
@@ -124,17 +125,6 @@
       showRecordDate: function (data) {
         if (!data) return '';
         return data ? this.$moment(data).format('YYYY-MM-DD HH:mm:ss') : '';
-      },
-      init(val) {
-        this.activeStatus = 0;
-        this.filters = {
-          status: '1',
-          type: '',
-          no: ''
-        };
-        this.$nextTick(() => {
-          this.filters.status = val === 2 ? null : '1';
-        });
       },
       searchResult: function (search) {
         this.filters = Object.assign({}, this.filters, search);

@@ -19,7 +19,9 @@
           <div class="content">
             <oms-col :isShow="true" :rowSpan="span" label="编号">{{formItem.no}}</oms-col>
             <oms-col :isShow="true" :rowSpan="span" label="所属单位">{{formItem.orgName}}</oms-col>
-            <oms-col :isShow="true" :rowSpan="span" label="类型">{{formItem.type}}</oms-col>
+            <oms-col :isShow="true" :rowSpan="span" label="类型">
+              {{formatDictLabel(formItem.type, coolDevType)}}
+            </oms-col>
             <oms-col :isShow="true" :rowSpan="span" label="品牌">{{formItem.brand}}</oms-col>
             <oms-col :isShow="true" :rowSpan="span" label="型号">{{formItem.version}}</oms-col>
             <oms-col :isShow="true" :rowSpan="span" label="是否医用设备">
@@ -77,6 +79,9 @@
       },
       doorDevType () {
         return this.$store.state.doorDevType;
+      },
+      coolDevType() {
+        return this.$store.state.coolDevType
       }
     },
     watch: {

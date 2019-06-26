@@ -91,7 +91,7 @@ export default {
     },
     formatTimeAry(times, index) {
       if (!times) return;
-      return this.formatTime(times[index]);
+      return times[index];
     },
     formatTime(time, str = 'YYYY-MM-DD HH:mm:ss') {
       return time ? this.$moment(time).format(str) : '';
