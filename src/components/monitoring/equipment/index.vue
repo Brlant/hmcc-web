@@ -19,14 +19,6 @@
       </template>
     </search-part>
     <div class="order-list" style="margin-top: 20px">
-      <el-row class="order-list-header">
-        <el-col :span="4">编码</el-col>
-        <el-col :span="3">类型</el-col>
-        <el-col :span="3">型号</el-col>
-        <el-col :span="6">单位</el-col>
-        <el-col :span="2">监控状态</el-col>
-        <el-col :span="6">操作</el-col>
-      </el-row>
       <el-row v-if="loadingData">
         <el-col :span="24">
           <oms-loading :loading="loadingData"></oms-loading>
@@ -43,11 +35,17 @@
         <div :class="[formatRowAlarmClass(item) ,{'active':currentItemId===item.id}]" class="order-list-item"
              v-for="item in dataList">
           <el-row class="cool-content">
-            <el-col :span="4">{{item.no}}</el-col>
-            <el-col :span="3">{{item.type}}</el-col>
-            <el-col :span="3">{{item.version}}</el-col>
-            <el-col :span="6">{{item.orgName}}</el-col>
-            <el-col :span="2">{{item.status === '0' ? '未激活' : '激活'}}</el-col>
+            <el-col :span="1">
+               <span class="alarm-title">
+               <el-tag type="danger" v-if="item.alarm">告警</el-tag>
+               <el-tag type="success" v-if="!item.alarm && item.status === '1'">正常</el-tag>
+               <el-tag type="info" v-if="!item.alarm && item.status === '0'">未监控</el-tag>
+            </span>
+            </el-col>
+            <el-col :span="6" style="padding-left: 5px">设备：{{item.no}}</el-col>
+            <el-col :span="2">类型：{{item.type}}</el-col>
+            <el-col :span="4">型号：{{item.version}}</el-col>
+            <el-col :span="5">单位：{{item.orgName}}</el-col>
             <el-col :span="6" class="opera-btn">
               <des-btn @click="monitorTemp(item)" icon="start" v-has="'ccs-monitordev-switch'"
                        v-show="item.status==='0'">开启监控
