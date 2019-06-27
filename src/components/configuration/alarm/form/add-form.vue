@@ -94,18 +94,24 @@
                        v-for="item in timeList"></el-option>
           </el-select>
         </el-form-item>
+        <el-form-item label="告警通知组" prop="alarmNoticeGroupId">
+          <el-select remote :remote-method="queryNotifyList" v-model="form.alarmNoticeGroupId" filterable placeholder="请输入名称搜索告警通知组"
+                     remotev-model="form.alarmNoticeGroupId">
+            <el-option :key="item.id" :label="item.name" :value="item.id"
+                       v-for="item in notifyList"></el-option>
+          </el-select>
+        </el-form-item>
       </el-form>
     </template>
   </dialog-template>
 </template>
 <script>
-  import {AlarmRule, probe} from '@/resources';
-
+  import {AlarmRule, probe, AlarmNotifyGroup} from '@/resources';
   export default {
     data() {
       return {
         form: {
-          alarmNoticeGroupId: '234234234',
+          alarmNoticeGroupId: '',
           sensorId: '',
           temperatureMax: '',
           temperatureMin: '',
@@ -152,11 +158,15 @@
           ],
           levelThreeAlarmDelayTime: [
             {required: true, message: '请输入3级告警延迟时间', trigger: 'blur'}
+          ],
+          alarmNoticeGroupId: [
+            {required: true, message: '请选择告警通知组', trigger: 'change'}
           ]
         },
         timeList: [5, 10, 30],
         actionType: '添加',
-        probeList: []
+        probeList: [],
+        notifyList: []
       };
     },
     props: {
@@ -196,6 +206,12 @@
         let params = {keyWord: query};
         probe.query(params).then(res => {
           this.probeList = res.data.data.list;
+        });
+      },
+      queryNotifyList(query) {
+        let params = {keyWord: query};
+        AlarmNotifyGroup.query(params).then(res => {
+          this.notifyList = res.data.data.list;
         });
       },
       save(formName) {
