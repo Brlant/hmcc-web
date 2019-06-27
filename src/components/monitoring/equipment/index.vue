@@ -201,7 +201,7 @@
       },
       formatRowAlarmClass(item) {
         let status = item.monitorStatus;
-        return status === '0' ? 'monitorStatus-close' : status === '1' ? 'monitorStatus-common' : 'monitorStatus-alarm';
+        return status === '0' ? 'status-close' : status === '1' ? 'status-common' : 'status-alarm';
       },
       add() {
         this.form = {};
