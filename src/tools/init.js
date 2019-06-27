@@ -150,11 +150,23 @@ export function init(Vue) {
   }) {
     const {successTitle, errorTitle, success, error} = option;
     httpPromise.then(res => {
-      successTitle && this.$notify.success({
-        duration: 2000,
-        message: successTitle
-      });
-      success(res);
+      if (res.data.code) {
+        if (res.data.code === 200) {
+          successTitle && this.$notify.success({
+            duration: 2000,
+            message: successTitle
+          });
+          success(res);
+        } else {
+          error(res);
+        }
+      } else {
+        successTitle && this.$notify.success({
+          duration: 2000,
+          message: successTitle
+        });
+        success(res);
+      }
     }).catch(e => {
       this.$notify.error({
         duration: 2000,

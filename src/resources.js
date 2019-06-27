@@ -91,6 +91,21 @@ http.interceptors.response.use(response => {
 
 Vue.prototype.$http = http;
 
+
+// 告警设备
+export const monitorRelation = resource('/monitor-relation', http, {
+  query(params) {
+    return http.post('/monitor-relation/page', params);
+  },
+  stop(id) {
+    return http.put(`/gateway/disable/${id}`);
+  },
+  start(id) {
+    return http.put(`/gateway/active/${id}`);
+  }
+});
+
+
 // 告警通知
 export const NotifyRecord = resource('/alarm-notice-record', http, {
   query(params) {
@@ -177,7 +192,6 @@ export const cool = resource('/freezer-dev', http, {
     return http.post('/freezer-dev/count', params);
   }
 });
-
 
 
 //探头管理

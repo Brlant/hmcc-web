@@ -1,42 +1,11 @@
 <style lang="scss" scoped>
   .order-list-body {
     .cool-content {
-      margin-top: 25px;
-      .dev {
-        border-bottom: 1px solid #eee;
-        margin-bottom: 20px;
-        /*align-items: normal;*/
-      }
-      .dev-title {
-        text-align: center;
-        font-weight: bold;
-        font-size: 24px;
-      }
-
-      .img {
-        width: auto;
-        height: auto;
-        max-width: 100%;
-        max-height: 100%;
-      }
-      .opera-btn {
-        text-align: center;
-        .des-btn +.des-btn {
-          margin-left: 15px;
-        }
-      }
+      border-bottom: 1px solid #eee;
     }
-
     .order-list-item {
       cursor: auto;
-      position: relative;
     }
-  }
-  .alarm-title {
-    font-size: 20px;
-    position: absolute;
-    left: 20px;
-    top: 8px;
   }
 </style>
 <template>
@@ -65,42 +34,30 @@
       <div class="order-list-body flex-list-dom" v-else="">
         <div :class="[formatRowAlarmClass(item) ,{'active':currentItemId===item.id}]" class="order-list-item"
              v-for="item in dataList">
-              <span class="alarm-title">
-                      <span v-if="item.alarm">告警</span>
-                      <span v-if="!item.alarm && item.status === '1'">正常</span>
-                      <span v-if="!item.alarm && item.status === '0'">未监控</span>
-              </span>
-          <el-row>
-            <el-col :span="10">
-              <div class="cool-content">
-
-                <div class="dev-title">{{item.no}}</div>
-                <el-row class="dev">
-                  <el-col :span="16">
-                    <oms-row label="类型" :span="6">{{item.no}}</oms-row>
-                    <oms-row label="型号" :span="6">{{item.version}}</oms-row>
-                    <oms-row label="单位" :span="6">{{item.orgName}}</oms-row>
-                  </el-col>
-                  <el-col :span="8">
-                    <img class="img" :src="Cool">
-                  </el-col>
-                </el-row>
-                <div class="opera-btn">
-                  <des-btn @click="monitorTemp(item)" icon="start" v-has="'ccs-monitordev-switch'"
-                           v-show="item.status==='0'">开启监控
-                  </des-btn>
-                  <des-btn @click="cancelMonitorTemp(item)"
-                           icon="forbidden" v-has="'ccs-monitordev-switch'" v-show="item.status==='1'">取消监控
-                  </des-btn>
-                  <des-btn @click="edit(item)" icon="edit" v-has="'ccs-monitordev-edit'">编辑</des-btn>
-                  <des-btn @click="deleteItem(item)" icon="delete" v-has="'ccs-monitordev-del'">删除</des-btn>
-                </div>
-              </div>
+          <el-row class="cool-content">
+            <el-col :span="1">
+               <span class="alarm-title">
+               <el-tag type="danger" v-if="item.monitorStatus === '2'">告警</el-tag>
+               <el-tag type="success" v-if="item.monitorStatus === '1'">正常</el-tag>
+               <el-tag type="info" v-if="item.monitorStatus === '0'">未监控</el-tag>
+            </span>
             </el-col>
-            <el-col :span="14">
-              <dev-list :dev-item="item"/>
+            <el-col :span="6" style="padding-left: 5px">设备：{{item.monitorTargetName}}</el-col>
+            <el-col :span="2">类型：{{item.type}}</el-col>
+            <el-col :span="4">型号：{{item.version}}</el-col>
+            <el-col :span="5">单位：{{item.orgName}}</el-col>
+            <el-col :span="6" class="opera-btn">
+              <des-btn @click="monitorTemp(item)" icon="start" v-has="'ccs-monitordev-switch'"
+                       v-show="item.monitorStatus==='0'">开启监控
+              </des-btn>
+              <des-btn @click="cancelMonitorTemp(item)"
+                       icon="forbidden" v-has="'ccs-monitordev-switch'" v-show="item.monitorStatus==='1'">取消监控
+              </des-btn>
+              <des-btn @click="edit(item)" icon="edit" v-has="'ccs-monitordev-edit'">编辑</des-btn>
+              <des-btn @click="deleteItem(item)" icon="delete" v-has="'ccs-monitordev-del'">删除</des-btn>
             </el-col>
           </el-row>
+          <dev-list :dev-item="item"/>
           <div class="order-list-item-bg"></div>
         </div>
       </div>
@@ -127,9 +84,8 @@
   import addForm from './form/add-form.vue';
   import showForm from './form/show-form.vue';
   import CommonMixin from '@/mixins/commonMixin';
-  import {DevMonitoring, MonitoringObjGroup} from '@/resources';
+  import {monitorRelation} from '@/resources';
   import DevList from './dev-list';
-  import Cool from '@/assets/img/cool.jpg';
 
   export default {
     components: {
@@ -147,9 +103,13 @@
         typeList: [
           {title: '车辆', id: '1'},
           {title: '冷柜', id: '2'}
-        ],
-        Cool
+        ]
       };
+    },
+    computed: {
+      type () {
+        return this.$route.meta.type
+      }
     },
     watch: {
       filters: {
@@ -157,6 +117,9 @@
           this.queryList(1);
         },
         deep: true
+      },
+      type() {
+        this.queryList(1);
       }
     },
     mounted() {
@@ -176,76 +139,69 @@
         });
       },
       queryList(pageNo) {
-        const http = DevMonitoring.query;
-        this.filters.activeFlag = this.filters.status;
-        this.dataList = [
-          {
-            no: '罗泾1#冰箱3101131701-05-0004',
-            type: '冰箱',
-            version: '海尔药品保存箱HYC-940',
-            orgName: '长宁区疾控预防中心',
-            status: '1',
-            alarm: false,
-            details: [
-              {
-                name: '探头1号', no: 's-001', type: '至强1号', temp: '7.2', humidity: '60', voltage: 220, time: Date.now(),
-                tempScope: [2, 8], humidityScope: [50, 70], voltageScope: [200, 240], alarm: ''
-              },
-              {
-                name: '探头2号', no: 's-002', type: '至强1号', temp: '5', humidity: '70', voltage: 220, time: Date.now(),
-                tempScope: [2, 8], humidityScope: [50, 70], voltageScope: [200, 240], alarm: ''
-              },
-              {
-                name: '探头11号', no: 's-002', type: '至强1号', temp: '5', humidity: '70', voltage: 220, time: Date.now(),
-                tempScope: [2, 8], humidityScope: [50, 70], voltageScope: [200, 240], alarm: ''
-              }
-            ]
-          },
-          {
-            no: '罗泾1#冰箱3101131701-05-0004',
-            type: '冰箱',
-            version: 'tc-001',
-            orgName: '长宁区疾控预防中心',
-            status: '0',
-            alarm: false,
-            details: [
-              {
-                name: '探头2号', no: 's-001', type: '至强1号', temp: '7.2', humidity: '60', voltage: 220, time: Date.now(),
-                tempScope: [2, 8], humidityScope: [50, 70], voltageScope: [200, 240], alarm: ''
-              },
-              {
-                name: '探头3号', no: 's-002', type: '至强1号', temp: '5', humidity: '70', voltage: 220, time: Date.now(),
-                tempScope: [2, 8], humidityScope: [50, 70], voltageScope: [200, 240], alarm: ''
-              }
-            ]
-          },
-          {
-            no: '冰柜1号',
-            type: '冰柜',
-            version: 'tc-001',
-            orgName: '长宁区疾控预防中心',
-            status: '1',
-            alarm: true,
-            details: [
-              {
-                name: '探头4号', no: 's-001', type: '至强1号', temp: 1.8, humidity: 60, voltage: 220, time: Date.now(),
-                tempScope: [2, 8], humidityScope: [50, 70], voltageScope: [200, 240], alarm: '0'
-              },
-              {
-                name: '探头5号', no: 's-002', type: '至强1号', temp: '5', humidity: 40, voltage: 220, time: Date.now(),
-                tempScope: [2, 8], humidityScope: [50, 70], voltageScope: [200, 240], alarm: '1'
-              }
-            ]
-          }
-        ];
-        // const params = this.queryUtil(http, pageNo);
+        const http = monitorRelation.query;
+        this.filters.subordinateFlag = this.type === 2;
+        // this.dataList = [
+        //   {
+        //     no: '冰箱1号',
+        //     type: '冰箱',
+        //     version: 'tc-001',
+        //     orgName: '长宁疾控',
+        //     monitorStatus: '1',
+        //     alarm: false,
+        //     details: [
+        //       {
+        //         name: '探头1号', no: 's-001', type: '至强1号', temp: '7.2', humidity: '60', voltage: 220, time: Date.now(),
+        //         tempScope: [2, 8], humidityScope: [50, 70], voltageScope: [200, 240], alarm: ''
+        //       },
+        //       {
+        //         name: '探头2号', no: 's-002', type: '至强1号', temp: '5', humidity: '70', voltage: 220, time: Date.now(),
+        //         tempScope: [2, 8], humidityScope: [50, 70], voltageScope: [200, 240], alarm: ''
+        //       }
+        //     ]
+        //   },
+        //   {
+        //     no: '冰箱2号',
+        //     type: '冰箱',
+        //     version: 'tc-001',
+        //     orgName: '长宁疾控',
+        //     monitorStatus: '0',
+        //     alarm: false,
+        //     details: [
+        //       {
+        //         name: '探头2号', no: 's-001', type: '至强1号', temp: '7.2', humidity: '60', voltage: 220, time: Date.now(),
+        //         tempScope: [2, 8], humidityScope: [50, 70], voltageScope: [200, 240], alarm: ''
+        //       },
+        //       {
+        //         name: '探头3号', no: 's-002', type: '至强1号', temp: '5', humidity: '70', voltage: 220, time: Date.now(),
+        //         tempScope: [2, 8], humidityScope: [50, 70], voltageScope: [200, 240], alarm: ''
+        //       }
+        //     ]
+        //   },
+        //   {
+        //     no: '冰柜1号',
+        //     type: '冰柜',
+        //     version: 'tc-001',
+        //     orgName: '长宁疾控',
+        //     monitorStatus: '1',
+        //     alarm: true,
+        //     details: [
+        //       {
+        //         name: '探头4号', no: 's-001', type: '至强1号', temp: 1.8, humidity: 60, voltage: 220, time: Date.now(),
+        //         tempScope: [2, 8], humidityScope: [50, 70], voltageScope: [200, 240], alarm: '0'
+        //       },
+        //       {
+        //         name: '探头5号', no: 's-002', type: '至强1号', temp: '5', humidity: 40, voltage: 220, time: Date.now(),
+        //         tempScope: [2, 8], humidityScope: [50, 70], voltageScope: [200, 240], alarm: '1'
+        //       }
+        //     ]
+        //   }
+        // ];
+        this.queryUtil(http, pageNo);
       },
       formatRowAlarmClass(item) {
-        if (item.status === '1') {
-          return item.alarm ? 'status-alarm' : 'status-common';
-        } else {
-          return 'status-close';
-        }
+        let status = item.monitorStatus;
+        return status === '0' ? 'monitorStatus-close' : status === '1' ? 'monitorStatus-common' : 'monitorStatus-alarm';
       },
       add() {
         this.form = {};
@@ -260,8 +216,8 @@
       deleteItem(item) {
         this.currentItem = item;
         this.currentItemId = item.id;
-        this.$confirmOpera(`是否删除监控设备"${item.monitordevCode}"`, () => {
-          this.$httpRequestOpera(DevMonitoring.delete(item.id), {
+        this.$confirmOpera(`是否删除监控设备"${item.monitorTargetName}"`, () => {
+          this.$httpRequestOpera(monitorRelation.delete(item.monitorTargetId), {
             successTitle: '删除成功',
             errorTitle: '删除失败',
             success: () => {
@@ -271,14 +227,14 @@
         });
       },
       monitorTemp(item) {
-        this.$confirmOpera(`是否监控设备"${item.monitordevCode}"`, () => {
+        this.$confirmOpera(`是否开启监控设备"${item.monitorTargetName}"`, () => {
           let obj = {
             activeFlag: '1',
             targetId: item.id
           };
-          this.$httpRequestOpera(MonitoringObjGroup.modifyMonitorStatus(obj), {
-            successTitle: '监控成功',
-            errorTitle: '监控失败',
+          this.$httpRequestOpera(monitorRelation.start(obj), {
+            successTitle: '开启监控完成',
+            errorTitle: '开启监控失败',
             success: () => {
               item.monitorFlag = '1';
             }
@@ -286,15 +242,15 @@
         });
       },
       cancelMonitorTemp(item) {
-        this.$confirmOpera(`是否取消对设备"${item.monitordevCode}"的监控`, () => {
+        this.$confirmOpera(`是否关闭对设备"${item.monitorTargetName}"的监控`, () => {
           let obj = {
             activeFlag: '0',
             targetId: item.id
           };
-          this.$httpRequestOpera(MonitoringObjGroup.modifyMonitorStatus(obj), {
-            successTitle: '取消成功',
-            errorTitle: '取消失败',
-            success: () => {
+          this.$httpRequestOpera(monitorRelation.stop(obj), {
+            successTitle: '关闭监控成功',
+            errorTitle: '关闭监控失败',
+            success: res => {
               item.monitorFlag = '0';
             }
           });

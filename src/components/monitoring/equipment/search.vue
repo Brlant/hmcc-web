@@ -30,20 +30,22 @@
               </el-radio-group>
             </oms-form-row>
           </el-col>
-          <!--<el-col :span="6">-->
-          <!--<oms-form-row label="告警状态" :span="8">-->
-          <!--<el-radio-group v-model="searchCondition.warnStatus" size="small" @change="search">-->
-          <!--<el-radio-button label="0">正常</el-radio-button>-->
-          <!--<el-radio-button label="1">告警</el-radio-button>-->
-          <!--</el-radio-group>-->
-          <!--</oms-form-row>-->
-          <!--</el-col>-->
+        </el-row>
+        <el-row v-show="type === 2">
+          <el-col :span="8">
+            <oms-form-row :span="5" label="单位">
+              <org-select :list="orgList"
+                          :remoteMethod="filterPOV"
+                          placeholder="请输入名称搜索单位" v-model="searchCondition.orgId"></org-select>
+            </oms-form-row>
+          </el-col>
         </el-row>
       </el-form>
     </template>
   </search-template>
 </template>
 <script>
+  import {BaseInfo} from '@/resources';
   export default {
     data: function () {
       return {
@@ -56,7 +58,8 @@
         showSearch: false,
         typeList: this.$parent.typeList,
         list: [],
-        times: []
+        times: [],
+        orgList: []
       };
     },
     mounted() {
@@ -65,9 +68,23 @@
     computed: {
       coolDevType() {
         return this.$store.state.coolDevType
+      },
+      type () {
+        return this.$route.meta.type
       }
     },
     methods: {
+      filterPOV: function (query) {// 过滤POV
+        let orgId = this.$store.state.user.userCompanyAddress;
+        if (!orgId) return;
+        let params = {
+          keyWord: query,
+          relation: '0'
+        };
+        BaseInfo.queryOrgByValidReation(orgId, params).then(res => {
+          this.orgList = res.data;
+        });
+      },
       initSearchParams() {
         let query = this.$route.query;
         if (!query.code) return;

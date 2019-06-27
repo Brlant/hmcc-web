@@ -1,10 +1,12 @@
 <style lang="scss" scoped>
   .dev-list {
-    margin: 10px 0;
+    margin-top: 10px;
   }
   .dev-list {
+    display: flex;
+    justify-content: space-between;
     .item {
-      padding: 10px 20px;
+      padding: 0 10px;
       .content {
         background: #f2f6fc;
         border-radius: 4px;
@@ -18,30 +20,71 @@
       float: right;
     }
   }
+  .text-overflow {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
 </style>
 <template>
-  <div class="dev-list">
-    <div class="item"  v-for="item in devItem.details">
+  <el-row class="dev-list">
+    <el-col class="item" :span="12" v-for="item in devItem.sensorDataList">
       <div class="content">
-        <oms-row label="探头" :span="8">{{item.name}} {{item.no}} {{item.type}}</oms-row>
-        <div v-show="devItem.status === '1'">
-          <oms-row label="温度" :span="8">
-            <span class="fl" :class="{'text-danger': item.alarm.includes('0')}">{{item.temp}} ℃</span>
-            <span class="fr">[{{item.tempScope.join('~')}} ℃]</span>
-          </oms-row>
-          <oms-row label="湿度" :span="8">
-            <span class="fl" :class="{'text-danger': item.alarm.includes('1')}">{{item.humidity}} %</span>
-            <span class="fr">[{{item.humidityScope.join('~')}} %]</span>
-          </oms-row>
-          <oms-row label="电压" :span="8" :class="{'text-danger': item.alarm.includes('2')}">
-            <span class="fl">{{item.voltage}} V</span>
-            <span class="fr">[{{item.voltageScope.join('~')}} V]</span>
-          </oms-row>
-          <oms-row label="最后更新时间" :span="8">{{item.time | time}}</oms-row>
+        <el-row >
+          <el-col :span="12">
+            <oms-row label="设备" :span="8" class="text-overflow">
+              <el-tooltip effect="dark" placement="top" :content="item.name + ' ' + item.no + ' ' + item.type ">
+                <i class="el-icon-warning-outline ml-10"/>
+                <span>{{item.name}} {{item.no}} {{item.type}}</span>
+              </el-tooltip>
+            </oms-row>
+          </el-col>
+          <el-col :span="12" v-show="devItem.status === '1'">
+            <oms-row label="更新" :span="6">{{item.lastUpdateTime | time}}</oms-row>
+          </el-col>
+        </el-row>
+        <div v-show="devItem.monitorStatus === '1'">
+          <el-row>
+            <el-col :span="8">
+              <oms-row label="温度" :span="12">
+                <template v-if="item.temperature !== null">
+                  <span class="fl" :class="{'text-danger': item.alarm}">{{item.temperature}} ℃</span>
+                  <el-tooltip effect="dark" placement="top" :content="`温度范围：${item.temperatureMax}~${item.temperatureMin}℃`">
+                    <i class="el-icon-warning-outline ml-10"/>
+                  </el-tooltip>
+                </template>
+                <template v-else>
+                    暂无数据
+                </template>
+              </oms-row>
+            </el-col>
+            <el-col :span="8">
+              <oms-row label="湿度" :span="12">
+                <tempplate v-if="item.humidity !== null">
+                  <span class="fl" :class="{'text-danger': item.alarm}">{{item.humidity}} %</span>
+                  <el-tooltip effect="dark" placement="top" :content="`湿度范围：${item.humidityMax}~${item.humidityMin}%`">
+                    <i class="el-icon-warning-outline ml-10"/>
+                  </el-tooltip>
+                </tempplate>
+                <template v-else>暂无数据</template>
+              </oms-row>
+            </el-col>
+            <el-col :span="8">
+              <template v-if="item.humidity !== null">
+                <oms-row label="电压" :span="12" :class="{'text-danger': item.alarm}">
+                  <span class="fl">{{item.voltage}} V</span>
+                  <el-tooltip effect="dark" placement="top" :content="`电压范围：${item.voltageMax}~${item.voltageMax}V`">
+                    <i class="el-icon-warning-outline ml-10"/>
+                  </el-tooltip>
+                </oms-row>
+              </template>
+              <template>暂无数据</template>
+            </el-col>
+          </el-row>
         </div>
       </div>
-    </div>
-  </div>
+    </el-col>
+  </el-row>
 </template>
 <script>
   export default {

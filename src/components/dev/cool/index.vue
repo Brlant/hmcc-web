@@ -11,7 +11,7 @@
     <status-list :activeStatus="activeStatus" :checkStatus="checkStatus" :statusList="statusType" v-show="!!type"/>
     <div class="order-list" style="margin-top: 20px">
       <el-row class="order-list-header">
-        <el-col :span="3">编号</el-col>
+        <el-col :span="3">名称</el-col>
         <el-col :span="4">所属单位</el-col>
         <el-col :span="3">类型</el-col>
         <el-col :span="3">品牌</el-col>
@@ -37,7 +37,10 @@
              @click="showItemDetail(item)" class="order-list-item"
              v-for="item in dataList">
           <el-row>
-            <el-col :span="3" class="R">{{item.no}}</el-col>
+            <el-col :span="3" class="R">
+              {{item.name}}
+              <div class="f-grey">{{item.no}}</div>
+            </el-col>
             <el-col :span="4" class="R">{{item.orgName}}</el-col>
             <el-col :span="3" class="R">
               {{formatDictLabel(item.type, coolDevType)}}

@@ -6,6 +6,9 @@
     </template>
     <template slot="content">
       <el-form :model="form" :rules="rules" label-width="140px" ref="tempForm">
+        <el-form-item label="名称" prop="name">
+          <oms-input placeholder="请输入名称" type="input" v-model="form.name"/>
+        </el-form-item>
         <el-form-item label="编号" prop="no">
           <oms-input placeholder="请输入设备编号" type="input" v-model="form.no"/>
         </el-form-item>
@@ -72,6 +75,9 @@
         },
         doing: false,
         rules: {
+          name: [
+            {required: true, message: '请输入名称', trigger: 'blur'}
+          ],
           no: [
             {required: true, message: '请输入编码', trigger: 'blur'}
           ],

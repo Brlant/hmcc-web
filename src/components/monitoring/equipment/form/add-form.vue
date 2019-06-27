@@ -15,29 +15,31 @@
   }
 </style>
 <template>
-  <dialog-template :pageSets="pageSets" @selectTab="selectTab" :btnSavePosition="100">
+  <dialog-template :btnSavePosition="100">
     <template slot="title">{{actionType}}设备监控</template>
     <template slot="btnSave">
       <el-button type="primary" plain @click="save('tempForm')" :disabled="doing">保存</el-button>
     </template>
     <template slot="content">
       <el-form ref="tempForm" :model="form" label-width="100px" :rules="rules">
-        <el-form-item label="冷链设备" prop="coolId">
-          <el-select :remote-method="queryCoolList" filterable placeholder="请输入名称搜索冷链设备" remote v-model="form.coolId">
-            <el-option :key="item.id" :label="item.no" :value="item.id"
+        <el-form-item label="接种单位" prop="orgId" v-if="type === 2">
+          <org-select :list="orgList"
+                      :remoteMethod="filterPOV"
+                      placeholder="请输入名称搜索单位" v-model="form.orgId"></org-select>
+        </el-form-item>
+        <el-form-item label="冷链设备" prop="monitorTargetId">
+          <el-select :remote-method="queryCoolList" filterable placeholder="请输入名称搜索冷链设备" remote
+                     v-model="form.monitorTargetId">
+            <el-option :key="item.id" :label="item.name" :value="item.id"
                        v-for="item in coolList"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="探头" prop="probeIds">
+        <el-form-item label="探头" prop="sensorIdList">
           <el-select :remote-method="queryProbeList" filterable multiple
-                     placeholder="请输入名称搜索探头" remote v-model="form.probeIds">
+                     placeholder="请输入名称搜索探头" remote v-model="form.sensorIdList">
             <el-option :key="item.id" :label="item.name" :value="item.id"
                        v-for="item in probeList"></el-option>
           </el-select>
-        </el-form-item>
-        <el-form-item label="状态">
-          <el-switch active-text="启用" inactive-text="停用" v-model="form.activeFlag"
-                     active-value="1" inactive-value="0"></el-switch>
         </el-form-item>
       </el-form>
     </template>
@@ -45,7 +47,7 @@
 </template>
 <script>
   import methodsMixin from '@/mixins/methodsMixin';
-  import {DevMonitoring, probe, cool} from '@/resources';
+  import {cool, monitorRelation, probe, BaseInfo} from '@/resources';
   import TwoColumn from '@dtop/dtop-web-common/packages/two-column';
 
   export default {
@@ -56,31 +58,41 @@
       return {
         currentTab: {},
         form: {
-          coolId: '',
-          probeIds: []
+          orgId: '',
+          monitorTargetId: '',
+          sensorIdList: []
         },
         doing: false,
         rules: {
-          coolId: [
+          orgId: [
+            {required: true, message: '请选择接种单位', trigger: 'change'}
+          ],
+          monitorTargetId: [
             {required: true, message: '请选择冷链设备', trigger: 'change'}
           ],
-          probeIds: [
+          sensorIdList: [
             {required: true, type: 'array', message: '探头', trigger: 'change'}
           ]
         },
         actionType: '添加',
         coolList: [],
-        probeList: []
+        probeList: [],
+        orgList: []
       };
+    },
+    computed: {
+      type() {
+        return this.$route.meta.type;
+      }
     },
     watch: {
       index: function (val) {
-        this.allTempList = [];
+        this.coolList = [];
+        this.probeList = [];
         if (val !== 0) return;
         this.$refs['tempForm'].resetFields();
         this.form.devIds = [];
         if (this.formItem.id) {
-          this.queryDetail();
           this.actionType = '编辑';
         } else {
           this.resetForm();
@@ -89,14 +101,33 @@
       }
     },
     methods: {
+      filterPOV: function (query) {// 过滤POV
+        let orgId = this.$store.state.user.userCompanyAddress;
+        if (!orgId) return;
+        let params = {
+          keyWord: query,
+          relation: '0'
+        };
+        BaseInfo.queryOrgByValidReation(orgId, params).then(res => {
+          this.orgList = res.data;
+        });
+      },
       queryCoolList(query) {
-        let params = {keyWord: query};
+        if (this.type === 2 && !this.form.orgId) return;
+        let params = {
+          keyWord: query,
+          orgId: this.form.orgId || this.$store.state.user.userCompanyAddress
+        };
         cool.query(params).then(res => {
           this.coolList = res.data.data.list;
         });
       },
       queryProbeList(query) {
-        let params = {keyWord: query};
+        if (this.type === 2 && !this.form.orgId) return;
+        let params = {
+          keyWord: query,
+          orgId: this.form.orgId || this.$store.state.user.userCompanyAddress
+        };
         probe.query(params).then(res => {
           this.probeList = res.data.data.list;
         });
@@ -107,45 +138,41 @@
       selectTab(item) {
         this.currentTab = item;
       },
-      queryDetail() {
-        DevMonitoring.get(this.formItem.id).then(res => {
-          this.form = Object.assign({devIds: [], details: []}, res.data);
-          this.form.details = this.form.devs.map((m, index) => {
-            return {
-              id: m.ccsDevId,
-              name: this.form.relationNames && this.form.relationNames[index] || ''
-            };
-          });
-          this.queryAllTemp();
-        });
-      },
       save(formName) {
         this.$refs[formName].validate((valid) => {
           if (valid && this.doing === false) {
+            this.orgList.forEach(i => {
+              if(i.id === this.form.orgId) {
+                this.form.orgName = i.name;
+              }
+            });
             let form = JSON.parse(JSON.stringify(this.form));
-            form.devIds = form.details.map(m => m.id);
-            form.relationNames = form.details.map(m => m.name || null);
             if (!form.id) {
               this.doing = true;
-              this.$httpRequestOpera(DevMonitoring.save(form), {
-                successTitle: '添加成功',
+              this.$httpRequestOpera(monitorRelation.save(form), {
                 errorTitle: '添加失败',
                 success: res => {
                   this.doing = false;
-                  this.resetForm();
-                  this.$emit('change', res.data);
+                  if (res.data.code === 200) {
+                    this.resetForm();
+                    this.$emit('change', res.data.data);
+                    this.$notify.success({message: '添加成功'});
+                  }
                 },
                 error: () => {
                   this.doing = false;
                 }
               });
             } else {
-              this.$httpRequestOpera(DevMonitoring.update(form.id, form), {
-                successTitle: '修改成功',
+              this.$httpRequestOpera(monitorRelation.update(form), {
                 errorTitle: '修改失败',
                 success: res => {
                   this.doing = false;
-                  this.$emit('change', res.data);
+                  if (res.data.code === 200) {
+                    this.resetForm();
+                    this.$emit('change', res.data.data);
+                    this.$notify.success({message: '修改成功'});
+                  }
                 },
                 error: () => {
                   this.doing = false;

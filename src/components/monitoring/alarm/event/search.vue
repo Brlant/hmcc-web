@@ -56,16 +56,16 @@
           <el-col :span="4">
             <oms-form-row :span="11" label="是否恢复">
               <el-radio-group @change="search" size="small" v-model="searchCondition.recoveryFlag">
-                <el-radio-button :label="true">是</el-radio-button>
-                <el-radio-button :label="false">否</el-radio-button>
+                <el-radio-button :label="1">是</el-radio-button>
+                <el-radio-button :label="0">否</el-radio-button>
               </el-radio-group>
             </oms-form-row>
           </el-col>
           <el-col :span="4">
             <oms-form-row :span="11" label="是否处理">
               <el-radio-group @change="search" size="small" v-model="searchCondition.handleFlag">
-                <el-radio-button :label="true">是</el-radio-button>
-                <el-radio-button :label="false">否</el-radio-button>
+                <el-radio-button :label="1">是</el-radio-button>
+                <el-radio-button :label="0">否</el-radio-button>
               </el-radio-group>
             </oms-form-row>
           </el-col>
