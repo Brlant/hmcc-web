@@ -33,8 +33,8 @@
         </el-col>
       </el-row>
       <div class="order-list-body flex-list-dom" v-else="">
-        <div :class="[formatRowClass(item.status, statusType) ,{'active':currentItemId===item.id}]"
-             @click="showItemDetail(item)" class="order-list-item"
+        <div :class="[{'active':currentItemId===item.id}]"
+             @click="showItemDetail(item)" class="order-list-item order-list-item-bg"
              v-for="item in dataList">
           <el-row>
             <el-col :span="3" class="R">
@@ -56,7 +56,7 @@
               <des-btn @click="edit(item)" icon="edit" v-has="perms[1]">编辑</des-btn>
             </el-col>
           </el-row>
-          <div class="order-list-item-bg"></div>
+          <!--<div class="order-list-item-bg"></div>-->
         </div>
       </div>
     </div>
@@ -93,7 +93,6 @@
       return {
         statusType: JSON.parse(JSON.stringify(utils.coolType)),
         filters: {
-          status: '1',
           type: '',
           no: ''
         },

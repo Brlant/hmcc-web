@@ -8,7 +8,7 @@
         </el-button>
       </template>
     </search-part>
-    <status-list :activeStatus="activeStatus" :checkStatus="checkStatus" :statusList="statusType"/>
+    <!--<status-list :activeStatus="activeStatus" :checkStatus="checkStatus" :statusList="statusType"/>-->
     <div class="order-list" style="margin-top: 20px">
       <el-row class="order-list-header">
         <el-col :span="4">编号</el-col>
@@ -32,8 +32,8 @@
         </el-col>
       </el-row>
       <div class="order-list-body flex-list-dom" v-else="">
-        <div :class="[formatRowClass(item.status, statusType) ,{'active':currentItemId===item.id}]"
-             @click="showItemDetail(item)" class="order-list-item" v-for="item in dataList">
+        <div :class="[{'active':currentItemId===item.id}]"
+             @click="showItemDetail(item)" class="order-list-item order-list-item-bg" v-for="item in dataList">
           <el-row>
             <el-col :span="4" class="R">{{item.no}}</el-col>
             <el-col :span="6" class="R">{{item.orgName}}</el-col>
@@ -51,7 +51,7 @@
               <des-btn icon="start" v-has="perms[1]" v-show="item.status === '0'" @click="start(item)">启用</des-btn>
             </el-col>
           </el-row>
-          <div class="order-list-item-bg"></div>
+          <!--<div class="order-list-item-bg"></div>-->
         </div>
       </div>
     </div>
@@ -88,7 +88,7 @@
       return {
         statusType: JSON.parse(JSON.stringify(utils.orderType)),
         filters: {
-          status: '1',
+          status: '',
           devCode: '',
           devName: ''
         },
@@ -140,7 +140,7 @@
       queryList(pageNo) {
         const http = gateway.query;
         const params = this.queryUtil(http, pageNo);
-        this.queryStatusNum(params);
+        // this.queryStatusNum(params);
       },
       queryStatusNum(params) {
         const pm = Object.assign({}, params, {status: null});

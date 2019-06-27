@@ -8,7 +8,7 @@
         </el-button>
       </template>
     </search-part>
-    <status-list :activeStatus="activeStatus" :checkStatus="checkStatus" :statusList="statusType"/>
+    <!--<status-list :activeStatus="activeStatus" :checkStatus="checkStatus" :statusList="statusType"/>-->
     <div class="order-list" style="margin-top: 20px">
       <el-row class="order-list-header">
         <el-col :span="3">名称</el-col>
@@ -32,8 +32,8 @@
         </el-col>
       </el-row>
       <div class="order-list-body flex-list-dom" v-else="">
-        <div :class="[formatRowClass(item.status, statusType) ,{'active':currentItemId===item.id}]"
-             @click="showItemDetail(item)" class="order-list-item"
+        <div :class="[{'active':currentItemId===item.id}]"
+             @click="showItemDetail(item)" class="order-list-item order-list-item-bg"
              v-for="item in dataList">
           <el-row>
             <el-col :span="3" class="R">{{item.name}}</el-col>
@@ -50,7 +50,6 @@
               <des-btn icon="start" v-has="perms[1]" v-show="item.status === '0'" @click="start(item)">启用</des-btn>
             </el-col>
           </el-row>
-          <div class="order-list-item-bg"></div>
         </div>
       </div>
     </div>
@@ -139,7 +138,7 @@
       queryList(pageNo) {
         const http = probe.query;
         const params = this.queryUtil(http, pageNo);
-        this.queryStatusNum(params);
+        // this.queryStatusNum(params);
       },
       queryStatusNum(params) {
         const pm = Object.assign({}, params, {status: null});
