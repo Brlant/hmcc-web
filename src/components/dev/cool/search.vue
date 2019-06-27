@@ -63,7 +63,7 @@
       };
     },
     mounted() {
-      this.search();
+
     },
     methods: {
       queryAllOrg: function (query) {// 查询货主

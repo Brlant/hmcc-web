@@ -143,12 +143,12 @@
         this.$refs[formName].validate((valid) => {
           if (valid && this.doing === false) {
             // this.form.createTime = this.form.createTime ? this.$moment(this.form.createTime).format('YYYY-MM-DD') : '';
+            this.orgList.forEach(i => {
+              if(i.id === this.form.orgId) {
+                this.form.orgName = i.name;
+              }
+            });
             if (!this.form.id) {
-              this.orgList.forEach(i => {
-                if(i.id === this.form.orgId) {
-                  this.form.orgName = i.name;
-                }
-              });
               this.doing = true;
               this.$httpRequestOpera(cool.save(this.form), {
                 errorTitle: '添加失败',
