@@ -76,7 +76,7 @@
 </template>
 <script>
   import methodsMixin from '@/mixins/methodsMixin';
-  import {http, probe} from '@/resources';
+  import {http} from '@/resources';
   import utils from '@/tools/utils';
 
   export default {
@@ -100,17 +100,10 @@
         showSearch: false,
         list: [],
         times1: [],
-        times2: [],
-        probeList: []
+        times2: []
       };
     },
     methods: {
-      queryProbeList(query) {
-        let params = {keyWord: query};
-        probe.query(params).then(res => {
-          this.probeList = res.data.data.list;
-        });
-      },
       exportSearchFile: function () {
         this.$store.commit('initPrint', {
           isPrinting: true,

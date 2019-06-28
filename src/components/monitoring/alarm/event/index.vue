@@ -84,7 +84,6 @@
   import SearchPart from './search';
   import CommonMixin from '@/mixins/commonMixin';
   import showForm from './form/show-form.vue';
-  import batchConfirmForm from './form/batch-confirm-form.vue';
   import confirmForm from './form/confirm-form';
   import {alarmEvent} from '@/resources';
   import utils from '@/tools/utils';
@@ -95,8 +94,7 @@
 
   export default {
     components: {
-      SearchPart,
-      batchConfirmForm
+      SearchPart
     },
     mixins: [CommonMixin, AlarmEventMixin, AlarmMixin],
     data() {

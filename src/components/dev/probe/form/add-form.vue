@@ -29,8 +29,11 @@
 </template>
 <script>
   import {probe} from '@/resources';
+  import methodsMixin from '@/mixins/methodsMixin';
 
   export default {
+    mixins: [methodsMixin],
+
     data() {
       return {
         form: {},
@@ -82,12 +85,6 @@
       }
     },
     methods: {
-      queryAllOrg: function (query) {// 查询货主
-        let params = {keyWord: query};
-        this.$http.get('/orgs/pager', {params: params}).then(res => {
-          this.orgList = res.data.list;
-        });
-      },
       save(formName) {
         this.$refs[formName].validate((valid) => {
           if (valid && this.doing === false) {

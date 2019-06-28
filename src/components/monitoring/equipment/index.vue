@@ -42,11 +42,29 @@
                <el-tag type="info" v-if="item.monitorStatus === '0'">未监控</el-tag>
             </span>
             </el-col>
-            <el-col :span="6" style="padding-left: 5px">设备：{{item.monitorTargetName}}</el-col>
-            <el-col :span="2">类型：{{item.type}}</el-col>
-            <el-col :span="4">型号：{{item.version}}</el-col>
-            <el-col :span="5">单位：{{item.orgName}}</el-col>
+            <el-col :span="6" class="text-overflow" style="padding-left: 5px">
+              设备：
+              <el-tooltip effect="dark" placement="top" :content="item.monitorTargetName">
+                <span>{{item.monitorTargetName}}</span>
+              </el-tooltip>
+            </el-col>
+            <el-col :span="2" class="text-overflow">
+              类型：{{coolDevType[item.monitorTargetType].label}}
+            </el-col>
+            <el-col :span="4" class="text-overflow">
+              型号：
+              <el-tooltip effect="dark" placement="top" :content="item.version">
+                <span>{{item.monitorTargetVersion}}</span>
+              </el-tooltip>
+            </el-col>
+            <el-col :span="5" class="text-overflow">
+              单位：
+              <el-tooltip effect="dark" placement="top" :content="item.orgName">
+                <span>{{item.orgName}}</span>
+              </el-tooltip>
+            </el-col>
             <el-col :span="6" class="opera-btn">
+              <des-btn @click="monitorTemp(item)" icon="chaxun" v-has="'ccs-monitordev-switch'">查看历史数据</des-btn>
               <des-btn @click="monitorTemp(item)" icon="start" v-has="'ccs-monitordev-switch'"
                        v-show="item.monitorStatus==='0'">开启监控
               </des-btn>
@@ -109,6 +127,9 @@
     computed: {
       type () {
         return this.$route.meta.type
+      },
+      coolDevType() {
+        return this.$store.state.coolDevType;
       }
     },
     watch: {

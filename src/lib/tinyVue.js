@@ -101,8 +101,6 @@ import ElForm from '../components/common/form/src/form.vue';
 import DialogTemplate from '@/components/common/dialog-template';
 import SearchTemplate from '@/components/common/search-template';
 import refreshCycle from '@/components/common/refresh-cycle';
-import devOptionInfo from '@/components/common/dev/option-info';
-import ruleNotifyScan from '@/components/common/rule-notify-scan';
 import WholeErrorSignHandle from '@/tools/whole-error-sign-handle';
 
 const tinyVue = [
@@ -169,8 +167,6 @@ const tinyVue = [
   uploadRelation,
   ElForm,
   refreshCycle,
-  devOptionInfo,
-  ruleNotifyScan,
   //公用组件
   CuPagination,
   Dict,

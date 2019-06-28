@@ -25,24 +25,21 @@
   </search-template>
 </template>
 <script>
+  import methodsMixin from '@/mixins/methodsMixin';
+
   export default {
+    mixins: [methodsMixin],
+
     data: function () {
       return {
         searchCondition: {
           name: '',
           orgId: ''
         },
-        showSearch: false,
-        orgList: []
+        showSearch: false
       };
     },
     methods: {
-      queryAllOrg: function (query) {// 查询货主
-        let params = {keyWord: query};
-        this.$http.get('/orgs/pager', {params: params}).then(res => {
-          this.orgList = res.data.list;
-        });
-      },
       search() {
         const parent = this.$parent;
         this.$emit('search', this.searchCondition);

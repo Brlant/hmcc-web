@@ -20,11 +20,6 @@
       float: right;
     }
   }
-  .text-overflow {
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-  }
 </style>
 <template>
   <el-row class="dev-list">
@@ -32,10 +27,9 @@
       <div class="content">
         <el-row >
           <el-col :span="12">
-            <oms-row label="设备" :span="8" class="text-overflow">
+            <oms-row label="设备" :span="8">
               <el-tooltip effect="dark" placement="top" :content="item.name + ' ' + item.no + ' ' + item.type ">
-                <i class="el-icon-warning-outline ml-10"/>
-                <span>{{item.name}} {{item.no}} {{item.type}}</span>
+                <div class="text-overflow">{{item.name}} {{item.no}} {{item.type}}</div>
               </el-tooltip>
             </oms-row>
           </el-col>

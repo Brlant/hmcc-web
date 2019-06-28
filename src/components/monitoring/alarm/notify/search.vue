@@ -55,7 +55,6 @@
 </template>
 <script>
   import methodsMixin from '@/mixins/methodsMixin';
-  import {probe} from '@/resources';
   export default {
     mixins: [methodsMixin],
     data: function () {
@@ -69,17 +68,10 @@
         },
         showSearch: false,
         list: [],
-        times: [],
-        probeList: []
+        times: []
       };
     },
     methods: {
-      queryProbeList(query) {
-        let params = {keyWord: query};
-        probe.query(params).then(res => {
-          this.probeList = res.data.data.list;
-        });
-      },
       search() {
         const parent = this.$parent;
         this.searchCondition.notifyBegin = parent.formatTimeAry(this.times, 0);

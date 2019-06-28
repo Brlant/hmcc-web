@@ -15,7 +15,8 @@
       <el-form class="advanced-query-form" onsubmit="return false">
         <el-col :span="8">
           <oms-form-row label="探头" :span="4">
-            <el-select :remote-method="queryProbeList" filterable placeholder="请输入名称搜索探头" remote v-model="searchCondition.sensorId">
+            <el-select :remote-method="queryProbeList" filterable placeholder="请输入名称搜索探头" remote
+                       v-model="searchCondition.sensorId">
               <el-option :key="item.id" :label="item.name" :value="item.id"
                          v-for="item in probeList"></el-option>
             </el-select>
@@ -26,10 +27,10 @@
   </search-template>
 </template>
 <script>
-  import utils from '@/tools/utils';
-  import {probe} from '@/resources';
+  import methodsMixin from '@/mixins/methodsMixin';
 
   export default {
+    mixins: [methodsMixin],
     data: function () {
       return {
         searchCondition: {
@@ -37,20 +38,10 @@
         },
         showSearch: false,
         list: [],
-        times: [],
-        probeList: []
+        times: []
       };
     },
-    mounted() {
-
-    },
     methods: {
-      queryProbeList(query) {
-        let params = {keyWord: query};
-        probe.query(params).then(res => {
-          this.probeList = res.data.data.list;
-        });
-      },
       search() {
         this.$emit('search', this.searchCondition);
       },

@@ -63,8 +63,11 @@
 </template>
 <script>
   import omsUploadPicture from '@/components/common/upload/upload.picture';
+  import methodsMixin from '@/mixins/methodsMixin';
+
   import {cool} from '@/resources';
   export default {
+    mixins: [methodsMixin],
     components: {
       omsUploadPicture
     },
@@ -91,8 +94,7 @@
             {required: true, message: '请选择状态', trigger: 'change'}
           ]
         },
-        actionType: '添加',
-        orgList: []
+        actionType: '添加'
       };
     },
     props: {
@@ -132,12 +134,6 @@
           this.form.photoId = photo.attachmentId;
           this.form.photoUrl = photo.url;
         }
-      },
-      queryAllOrg: function (query) {// 查询货主
-        let params = {keyWord: query};
-        this.$http.get('/orgs/pager', {params: params}).then(res => {
-          this.orgList = res.data.list;
-        });
       },
       save(formName) {
         this.$refs[formName].validate((valid) => {

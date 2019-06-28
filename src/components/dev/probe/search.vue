@@ -50,9 +50,12 @@
   </search-template>
 </template>
 <script>
-  import utils from '@/tools/utils';
+
+  import methodsMixin from '@/mixins/methodsMixin';
 
   export default {
+    mixins: [methodsMixin],
+
     data: function () {
       return {
         searchCondition: {

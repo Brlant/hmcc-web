@@ -29,8 +29,9 @@
 </template>
 <script>
   import {gateway} from '@/resources';
-
+  import methodsMixin from '@/mixins/methodsMixin';
   export default {
+    mixins: [methodsMixin],
     data() {
       return {
         form: {},
@@ -49,8 +50,7 @@
             {required: true, message: '请选择所属单位', trigger: 'change'}
           ]
         },
-        actionType: '添加',
-        orgList: []
+        actionType: '添加'
       };
     },
     props: {
@@ -73,12 +73,6 @@
       }
     },
     methods: {
-      queryAllOrg: function (query) {// 查询货主
-        let params = {keyWord: query};
-        this.$http.get('/orgs/pager', {params: params}).then(res => {
-          this.orgList = res.data.list;
-        });
-      },
       save(formName) {
         this.$refs[formName].validate((valid) => {
           if (valid && this.doing === false) {

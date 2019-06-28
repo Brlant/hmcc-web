@@ -95,7 +95,8 @@
           </el-select>
         </el-form-item>
         <el-form-item label="告警通知组" prop="alarmNoticeGroupId">
-          <el-select remote :remote-method="queryNotifyList" v-model="form.alarmNoticeGroupId" filterable placeholder="请输入名称搜索告警通知组"
+          <el-select remote :remote-method="queryNotifyList" v-model="form.alarmNoticeGroupId" filterable
+                     placeholder="请输入名称搜索告警通知组"
                      remotev-model="form.alarmNoticeGroupId">
             <el-option :key="item.id" :label="item.name" :value="item.id"
                        v-for="item in notifyList"></el-option>
@@ -106,8 +107,13 @@
   </dialog-template>
 </template>
 <script>
-  import {AlarmRule, probe, AlarmNotifyGroup} from '@/resources';
+  import methodsMixin from '@/mixins/methodsMixin';
+
+  import {AlarmRule} from '@/resources';
+
   export default {
+    mixins: [methodsMixin],
+
     data() {
       return {
         form: {
@@ -164,9 +170,7 @@
           ]
         },
         timeList: [5, 10, 30],
-        actionType: '添加',
-        probeList: [],
-        notifyList: []
+        actionType: '添加'
       };
     },
     props: {
@@ -202,18 +206,6 @@
       }
     },
     methods: {
-      queryProbeList(query) {
-        let params = {keyWord: query};
-        probe.query(params).then(res => {
-          this.probeList = res.data.data.list;
-        });
-      },
-      queryNotifyList(query) {
-        let params = {keyWord: query};
-        AlarmNotifyGroup.query(params).then(res => {
-          this.notifyList = res.data.data.list;
-        });
-      },
       save(formName) {
         this.$refs[formName].validate((valid) => {
           if (valid && this.doing === false) {

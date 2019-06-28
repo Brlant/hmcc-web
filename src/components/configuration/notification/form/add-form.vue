@@ -144,8 +144,11 @@
 </template>
 <script>
   import {AlarmNotifyGroup, OrgUser, User} from '@/resources';
+  import methodsMixin from '@/mixins/methodsMixin';
 
   export default {
+    mixins: [methodsMixin],
+
     data() {
       return {
         formModel: {
@@ -176,8 +179,7 @@
           {label: '短信', key: '0', placeholder: '请输入手机号', validator: this.checkPhone},
           {label: '微信', key: '1'}
         ],
-        userList: [],
-        orgList: []
+        userList: []
       };
     },
     computed: {},
@@ -196,12 +198,6 @@
       }
     },
     methods: {
-      queryAllOrg: function (query) {// 查询货主
-        let params = {keyWord: query};
-        this.$http.get('/orgs/pager', {params: params}).then(res => {
-          this.orgList = res.data.list;
-        });
-      },
       checkPhone(rule, value, callback) {
         if (value === '') {
           callback(new Error('请输入手机号码'));
