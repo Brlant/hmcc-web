@@ -42,28 +42,27 @@
                <el-tag type="info" v-if="item.monitorStatus === '0'">未监控</el-tag>
             </span>
             </el-col>
-            <el-col :span="6" class="text-overflow" style="padding-left: 5px">
-              设备：
-              <el-tooltip effect="dark" placement="top" :content="item.monitorTargetName">
+            <el-col :span="14" class="text-overflow" style="padding-left: 5px">
+              <span>
+                设备：
+                <el-tooltip effect="dark" placement="top" :content="item.monitorTargetName">
                 <span>{{item.monitorTargetName}}</span>
               </el-tooltip>
-            </el-col>
-            <el-col :span="2" class="text-overflow">
-              类型：{{coolDevType[item.monitorTargetType].label}}
-            </el-col>
-            <el-col :span="4" class="text-overflow">
-              型号：
-              <el-tooltip effect="dark" placement="top" :content="item.version">
+              </span>
+              <span class="ml-15">
+                型号：
+              <el-tooltip effect="dark" placement="top" :content="item.monitorTargetVersion">
                 <span>{{item.monitorTargetVersion}}</span>
               </el-tooltip>
-            </el-col>
-            <el-col :span="5" class="text-overflow">
-              单位：
+              </span>
+              <span class="ml-15">
+                单位：
               <el-tooltip effect="dark" placement="top" :content="item.orgName">
                 <span>{{item.orgName}}</span>
               </el-tooltip>
+              </span>
             </el-col>
-            <el-col :span="6" class="opera-btn">
+            <el-col :span="10" class="opera-btn" align="right">
               <des-btn @click="monitorTemp(item)" icon="chaxun" v-has="'ccs-monitordev-switch'">查看历史数据</des-btn>
               <des-btn @click="monitorTemp(item)" icon="start" v-has="'ccs-monitordev-switch'"
                        v-show="item.monitorStatus==='0'">开启监控

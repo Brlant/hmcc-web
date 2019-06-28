@@ -28,7 +28,7 @@
                       placeholder="请输入名称搜索单位" v-model="form.orgId"></org-select>
         </el-form-item>
         <el-form-item label="冷链设备" prop="monitorTargetId">
-          <el-select :remote-method="queryCoolList" filterable placeholder="请输入名称搜索冷链设备" remote
+          <el-select :remote-method="queryCoolListCondition" filterable placeholder="请输入名称搜索冷链设备" remote
                      v-model="form.monitorTargetId">
             <el-option :key="item.id" :label="item.name" :value="item.id"
                        v-for="item in coolList"></el-option>
@@ -112,15 +112,13 @@
           this.orgList = res.data;
         });
       },
-      queryCoolList(query) {
+      queryCoolListCondition(query) {
         if (this.type === 2 && !this.form.orgId) return;
         let params = {
           keyWord: query,
           orgId: this.form.orgId || this.$store.state.user.userCompanyAddress
         };
-        cool.query(params).then(res => {
-          this.coolList = res.data.data.list;
-        });
+        this.queryCoolList(params);
       },
       queryProbeList(query) {
         if (this.type === 2 && !this.form.orgId) return;

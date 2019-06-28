@@ -54,12 +54,12 @@
             </el-col>
             <el-col :span="8">
               <oms-row label="湿度" :span="12">
-                <tempplate v-if="item.humidity !== null">
+                <template v-if="item.humidity !== null">
                   <span class="fl" :class="{'text-danger': item.alarm}">{{item.humidity}} %</span>
                   <el-tooltip effect="dark" placement="top" :content="`湿度范围：${item.humidityMax}~${item.humidityMin}%`">
                     <i class="el-icon-warning-outline ml-10"/>
                   </el-tooltip>
-                </tempplate>
+                </template>
                 <template v-else>暂无数据</template>
               </oms-row>
             </el-col>

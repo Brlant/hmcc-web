@@ -1,29 +1,25 @@
 <template>
   <div class="order-page">
     <search-part @search="searchResult"/>
-    <chart-line :filters="filters" chartWidth="1200px" v-if="filters.length === 1"/>
-    <chart-line-multiple :filters="filters" chartWidth="1200px" v-else/>
+    <chart-line-multiple :filter="filter" chartWidth="1200px"/>
   </div>
 </template>
 <script>
   import SearchPart from './search';
-  import ChartLine from './chart-line-new';
   import ChartLineMultiple from './chart-line-new-multiple-dev';
 
   export default {
     components: {
-      SearchPart, ChartLine, ChartLineMultiple
+      SearchPart, ChartLineMultiple
     },
     data() {
       return {
-        loadingData: false,
-        filters: [],
-        tempInfo: {}
+        filter: [],
       };
     },
     methods: {
       searchResult: function (search) {
-        this.filters = JSON.parse(JSON.stringify(search));
+        this.filter = JSON.parse(JSON.stringify(search));
       }
     }
   };

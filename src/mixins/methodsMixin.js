@@ -1,20 +1,13 @@
-import {probe, AlarmNotifyGroup} from '@/resources';
+import {AlarmNotifyGroup, cool, probe} from '@/resources';
 
-// 得到嵌套参数
-const getProps = (vm, prop) => {
-  let isLot = prop.includes('.');
-  if (!isLot) return vm[prop];
-  return prop.split('.').reduce((pre, next) => {
-    return pre[next];
-  }, vm);
-};
 
 export default {
   data() {
     return {
       probeList: [],
       orgList: [],
-      notifyList
+      notifyList: [],
+      coolList: []
     };
   },
   methods: {
@@ -34,6 +27,17 @@ export default {
       let params = {keyWord: query};
       AlarmNotifyGroup.query(params).then(res => {
         this.notifyList = res.data.data.list;
+      });
+    },
+    queryCoolList(query) {
+      let params = {
+        keyWord: query,
+      };
+      if (typeof query === 'object') {
+        params = query;
+      }
+      cool.query(params).then(res => {
+        this.coolList = res.data.data.list;
       });
     },
   }

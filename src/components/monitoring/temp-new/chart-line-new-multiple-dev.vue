@@ -19,17 +19,15 @@
 <script>
   const unitAry = ['', '°C', '%', 'V'];
   const titleAry = ['', '温度', '湿度', '电压'];
-  import {TempDev} from '@/resources';
-  import axios from 'axios';
-  import Echarts from 'echarts/lib/echarts';
   import moment from 'moment';
+  import Echarts from 'echarts/lib/echarts';
 
   function formatTime(time) {
     return moment(time).format('YYYY-MM-DD: HH:mm:ss');
   }
 
   export default {
-    props: ['filters', 'isRecord', 'detail', 'chartWidth'],
+    props: ['filter', 'isRecord', 'detail', 'chartWidth'],
     data() {
       return {
         loadingData: false,
@@ -37,8 +35,9 @@
       };
     },
     watch: {
-      filters: {
-        handler: function () {
+      filter: {
+        handler: function (val) {
+          if (!val.freezerDevId) return;
           this.queryList();
         },
         deep: true,
@@ -48,50 +47,25 @@
     methods: {
       getLegend(typeList) {
         return {
-          data: typeList.map(m => m.devName)
+          data: typeList.map(m => m.name)
         };
       },
-      getYAxis(typeList) {
+      getYAxis(m) {
         let {setMaxAndMin} = this;
-        return typeList.map((m, index) => {
-          let ot = this.isRecord ? 40 : 50;
-          let obj = {
-            name: titleAry[m] + `(${unitAry[m]})`,
-            offset: index === 2 ? ot : 0,
-            type: 'value'
-          };
-          setMaxAndMin(obj, m);
-          return obj;
-        });
+        let obj = {
+          name: titleAry[m] + `(${unitAry[m]})`,
+          type: 'value'
+        };
+        setMaxAndMin(obj);
+        return obj;
       },
       setMaxAndMin(obj, type) {
-
         obj.min = value => value.min;
         obj.max = value => value.max;
-
-        // if (type === '1') {
-        //   obj.min = value => value.min;
-        //   obj.max = value => value.max;
-        // } else if (type === '2') {
-        //   obj.min = value => value.min;
-        //   obj.max = value => value.max;
-        // } else {
-        //   obj.max = function (value) {
-        //     return value.max !== Infinity
-        //       ? value.max + value.max > 10 ? 10 : 5
-        //       : '';
-        //   };
-        //   obj.min = function (value) {
-        //     let v = value.min - value.min > 10 ? 10 : 5;
-        //     return value.min !== Infinity
-        //       ? v > 0 ? v : 0
-        //       : value.min;
-        //   };
-        // }
       },
       getData(data, i, index) {
         return {
-          name: i.devName,
+          name: i.name,
           type: 'line',
           showSymbol: true,
           symbolSize: 6,
@@ -188,64 +162,37 @@
         };
       },
       queryList() {
-        if (!this.filters.length) {
-          this.isHasData = false;
-          return;
-        }
         let {getLegend, getYAxis, getData, getOption, getAlarmLine} = this;
         const option = getOption();
         // 设置图例
-        option.legend = getLegend(this.filters);
         // 设置Y轴
-        option.yAxis = getYAxis(this.filters[0].valType);
+        option.yAxis = getYAxis(this.filter.type);
         option.series = [];
-        let httpAry = [];
-        this.filters.forEach((i, index) => {
-          const {startTime, endTime, devId, devCode, valType, startPrice} = i;
-          const params = {startTime, endTime, devId, devCode, valType: valType[0], startPrice};
-          httpAry.push(TempDev.queryTempData(params));
-        });
+
         this.loadingData = true;
         this.isHasData = false;
-        axios.all(httpAry)
-          .then(axios.spread((...args) => {
-            this.loadingData = false;
-            this.filters.forEach((i, index) => {
-              const data = args[index].data.ccsDevDataRecordDTOList && args[index].data.ccsDevDataRecordDTOList.map(m => {
+        this.$http.post('/historical-data', this.filter).then(res => {
+          this.loadingData = false;
+          if (res.data.code === 200) {
+            this.isHasData = true;
+            option.legend = getLegend(res.data.data.devDataList);
+            res.data.data.devDataList.forEach(i => {
+              const data = i.dataList.map(m => {
                 return {
                   name: m.createTime,
-                  value: [m.createTime, m.devActval, m.insertTime]
+                  value: [m.createTime, m.value, m.insertTime]
                 };
               }) || [];
-              data.length && (this.isHasData = true);
-              option.series.push(getData(data, i, index));
+              option.series.push(getData(data, i));
             });
             this.$nextTick(() => {
               let chartDom = document.getElementById('newChartLine');
               if (!chartDom) return;
               let chartLine = Echarts.init(chartDom, 'light');
               if (!chartLine) return;
-              let {isRecord, detail} = this;
-              if (isRecord && option.series.length) {
-                // 时间标线， 起始时间，终止时间
-                option.series.forEach(i => {
-                  const data = i.markLine.data;
-                  if (data.length > 1) return;
-                  data.push(getAlarmLine(detail.createTime));
-                  detail.restoreTime && data.push(getAlarmLine(detail.restoreTime));
-                });
-                chartLine.setOption(option);
-              } else {
-                chartLine.setOption(option);
-              }
+              chartLine.setOption(option);
             });
-          })).catch(e => {
-          this.loadingData = false;
-          this.isHasData = false;
-          this.$notify.error({
-            title: '查询错误',
-            message: e.response && e.response.data && e.response.data.msg || ''
-          });
+          }
         });
       }
     }
