@@ -50,21 +50,21 @@
   </search-template>
 </template>
 <script>
-  import methodsMixin from '@/mixins/methodsMixin';
+  import utils from '@/tools/utils';
+
   export default {
-    mixins: [methodsMixin],
     data: function () {
       return {
         searchCondition: {
           no: null,
           name: null,
           type: null,
-          status: null,
-          orgId: ''
+          status: null
         },
         showSearch: false,
         list: [],
-        times: []
+        times: [],
+        orgList: []
       };
     },
     mounted() {
@@ -74,6 +74,12 @@
       this.search();
     },
     methods: {
+      queryAllOrg: function (query) {// 查询货主
+        let params = {keyWord: query};
+        this.$http.get('/orgs/pager', {params: params}).then(res => {
+          this.orgList = res.data.list;
+        });
+      },
       search() {
         this.$emit('search', this.searchCondition);
       },
@@ -82,8 +88,7 @@
           no: null,
           name: null,
           type: null,
-          status: null,
-          orgId: ''
+          status: null
         };
         this.$emit('search', this.searchCondition);
       },

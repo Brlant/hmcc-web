@@ -26,7 +26,8 @@ export const routes = [
           {
             path: '/monitoring/store/:id',
             component: () => import('./components/monitoring/store/index.vue'),
-            meta: {moduleId: 'monitoring', title: '委托仓库监控', perm: 'ccs-warehouse-scan', subMenuId: 'store'}
+            meta: {moduleId: 'monitoring', title: '委托仓库监控', perm: 'ccs-warehouse-scan', subMenuId: 'store',
+            perms: ['ccs-wired-dev-add', 'ccs-wired-dev-edit']}
           },
           {
             path: '/monitoring/temp',
