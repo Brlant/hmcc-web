@@ -64,7 +64,6 @@
     </div>
     <attachmentDialog/>
     <print-dialog/>
-    <rule-notify ref="ruleNotify"/>
   </div>
 </template>
 
@@ -73,7 +72,6 @@
   import AppFooter from './app.footer.vue';
   import attachmentDialog from '../common/attachment/attachment.dialog.vue';
   import printDialog from '../common/print.loading.vue';
-  import ruleNotify from '@/components/common/rule-notify';
   import TimeMixins from '@/mixins/timeMixin';
 
   export default {
@@ -81,16 +79,10 @@
       AppHeader,
       AppFooter,
       attachmentDialog,
-      printDialog,
-      ruleNotify
+      printDialog
     },
     mixins: [TimeMixins],
     beforeRouteUpdate(to, from, next) {
-      this.$refs.ruleNotify.resetRightBox();
-      if (to.path.includes('distribution') || to.path.includes('dashboard')) {
-        return next();
-      }
-      this.clearAllTimes();
       next();
     },
     methods: {

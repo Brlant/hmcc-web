@@ -20,7 +20,8 @@
         <el-col :span="2">告警类型</el-col>
         <el-col :span="4">探头</el-col>
         <el-col :span="2">告警等级</el-col>
-        <el-col :span="4">处理情况</el-col>
+        <el-col :span="2">状态</el-col>
+        <el-col :span="2">处理情况</el-col>
         <el-col :span="3">操作</el-col>
       </el-row>
       <el-row v-if="loadingData">
@@ -46,7 +47,8 @@
             <el-col :span="2">{{alarmTypeList[item.type]}}</el-col>
             <el-col :span="4">{{item.sensorName}}</el-col>
             <el-col :span="2">{{alarmLevelList[item.level]}}</el-col>
-            <el-col :span="4">{{item.handlingCondition}}</el-col>
+            <el-col :span="2">{{item.recoveryStatus === '0' ? '告警' : '恢复'}}</el-col>
+            <el-col :span="2">{{item.handlingCondition}}</el-col>
             <el-col :span="3">
               <des-btn @click="confirmItem(item)" icon="affirm" v-has="'ccs-warn-record-process'" v-show="!item.handlingCondition">处理
               </des-btn>

@@ -39,7 +39,7 @@
               </el-tooltip>
             </oms-row>
           </el-col>
-          <el-col :span="12" v-show="devItem.status === '1'">
+          <el-col :span="12" v-show="devItem.monitorStatus === '1' && item.lastUpdateTime">
             <oms-row label="更新" :span="6">{{item.lastUpdateTime | time}}</oms-row>
           </el-col>
         </el-row>
@@ -70,7 +70,7 @@
               </oms-row>
             </el-col>
             <el-col :span="8">
-              <template v-if="item.humidity !== null">
+              <template v-if="item.voltage !== null">
                 <oms-row label="电压" :span="12" :class="{'text-danger': item.alarm}">
                   <span class="fl">{{item.voltage}} V</span>
                   <el-tooltip effect="dark" placement="top" :content="`电压范围：${item.voltageMax}~${item.voltageMax}V`">
@@ -78,7 +78,7 @@
                   </el-tooltip>
                 </oms-row>
               </template>
-              <template>暂无数据</template>
+              <template v-else>暂无数据</template>
             </el-col>
           </el-row>
         </div>
