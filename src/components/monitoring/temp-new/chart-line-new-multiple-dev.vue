@@ -31,7 +31,7 @@
       <div id="newChartLine" class="chart-Line" :style="{width: chartWidth}"></div>
     </div>
     <el-tabs class="tabs" v-model="activeIndex" v-if="dataList.length">
-      <el-tab-pane :label="item.name" :name="index + ''" v-for="(item, index) in probeList"></el-tab-pane>
+      <el-tab-pane :label="item.name" :name="index + ''" :key="item.id" v-for="(item, index) in probeList"></el-tab-pane>
       <el-table :data="dataList" v-loading="loadingListData" class="header-list" border
                 header-row-class-name="headerClass">
         <el-table-column prop="value" :label="title" :sortable="true">
