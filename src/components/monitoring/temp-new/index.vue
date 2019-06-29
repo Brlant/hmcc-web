@@ -1,7 +1,7 @@
 <template>
   <div class="order-page">
     <search-part @search="searchResult"/>
-    <chart-line-multiple :filter="filter" chartWidth="1200px"/>
+    <chart-line-multiple :filter="filter"/>
   </div>
 </template>
 <script>

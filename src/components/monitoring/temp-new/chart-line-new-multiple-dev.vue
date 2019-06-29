@@ -1,12 +1,28 @@
-<style scoped="">
-  .chart-Line {
-    height: 400px;
-    width: 1200px;
-    background: #fff;
+<style lang="scss">
+  .probe-chart {
+
+    .chart-Line {
+      height: 400px;
+      width: 100%;
+      background: #fff;
+    }
+
+    .tabs {
+      padding-top: 20px;
+      text-align: center;
+      background: #fff;
+      .el-tabs__nav-wrap {
+        height: 40px;
+      }
+
+      .el-tabs__nav-scroll {
+        display: inline-block;
+      }
+    }
   }
 </style>
 <template>
-  <div>
+  <div class="probe-chart">
     <!--<div v-if="!dataList || !dataList.length" class="empty-info">暂无信息</div>-->
     <oms-loading v-if="loadingData" :loading="loadingData"/>
     <div v-else-if="!isHasData" class="empty-info">暂无信息</div>
@@ -14,6 +30,35 @@
     <div v-else>
       <div id="newChartLine" class="chart-Line" :style="{width: chartWidth}"></div>
     </div>
+    <el-tabs class="tabs" v-model="activeIndex" v-if="dataList.length">
+      <el-tab-pane :label="item.name" :name="index + ''" v-for="(item, index) in probeList"></el-tab-pane>
+      <el-table :data="dataList" v-loading="loadingListData" class="header-list" border
+                header-row-class-name="headerClass">
+        <el-table-column prop="value" :label="title" :sortable="true">
+          <template slot-scope="scope">
+            <span>{{scope.row.value}} {{unitTitle}}</span>
+          </template>
+        </el-table-column>
+        <el-table-column prop="insertTime" label="插入时间" :sortable="true">
+          <template slot-scope="scope">
+            <span>{{scope.row.insertTime | time}}</span>
+          </template>
+        </el-table-column>
+        <el-table-column prop="createTime" label="创建时间" :sortable="true">
+          <template slot-scope="scope">
+            <span>{{scope.row.createTime | time}}</span>
+          </template>
+        </el-table-column>
+      </el-table>
+      <div class="text-center">
+        <el-pagination
+          layout="total, sizes, prev, pager, next, jumper" @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"
+          :total="pager.count" :page-sizes="[10,20,50,100]" :pageSize="pager.pageSize"
+          :current-page="pager.currentPage">
+        </el-pagination>
+      </div>
+    </el-tabs>
   </div>
 </template>
 <script>
@@ -31,8 +76,25 @@
     data() {
       return {
         loadingData: false,
-        isHasData: false
+        isHasData: false,
+        probeList: [],
+        activeIndex: '0',
+        pager: {
+          currentPage: 1,
+          count: 0,
+          pageSize: 10
+        },
+        dataList: [],
+        loadingListData: false,
       };
+    },
+    computed: {
+      title () {
+        return titleAry[this.filter.type] || '';
+      },
+      unitTitle() {
+        return unitAry[this.filter.type] || '';
+      }
     },
     watch: {
       filter: {
@@ -42,6 +104,9 @@
         },
         deep: true,
         immediate: true
+      },
+      activeIndex() {
+        this.getCurrentList(1);
       }
     },
     methods: {
@@ -175,6 +240,7 @@
           this.loadingData = false;
           if (res.data.code === 200) {
             this.isHasData = true;
+            this.probeList = res.data.data.devDataList;
             option.legend = getLegend(res.data.data.devDataList);
             res.data.data.devDataList.forEach(i => {
               const data = i.dataList.map(m => {
@@ -192,9 +258,30 @@
               if (!chartLine) return;
               chartLine.setOption(option);
             });
+            this.getCurrentList(1);
           }
         });
-      }
+      },
+      handleSizeChange(val) {
+        this.pager.pageSize = val;
+        this.getCurrentList(1);
+      },
+      handleCurrentChange(val) {
+        this.getCurrentList(val);
+      },
+      getCurrentList(pageNo) {
+        this.loadingListData = true;
+        this.pager.currentPage = pageNo;
+        const {pager} = this;
+        let start = (pageNo - 1) * pager.pageSize;
+        let end = pageNo * pager.pageSize;
+        let item = this.probeList[this.activeIndex];
+        pager.count = item.dataList.length;
+        this.dataList = item.dataList.slice(start, end > pager.count ? pager.count : end);
+        setTimeout(() => {
+          this.loadingListData = false;
+        }, 300);
+      },
     }
   };
 </script>
