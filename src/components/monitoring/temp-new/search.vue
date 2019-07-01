@@ -68,7 +68,7 @@
           startTime: '',
           endTime: '',
           freezerDevId: '',
-          type: '',
+          type: '1',
         };
         this.times1 = [this.$moment(this.$moment().format('YYYY-MM-DD')), this.$moment()];
         this.search();
