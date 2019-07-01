@@ -238,8 +238,10 @@
         </el-table-column>
         <el-table-column label="告警类型/等级" align="center" header-align="center" prop="warnTypes" min-width="100">
           <template slot-scope="props">
-            {{alarmTypeList[props.row.type]}}
-            <div>{{alarmLevelList[props.row.level]}}告警</div>
+            <div  v-if="props.row.id">
+              {{alarmTypeList[props.row.type]}}
+              <div>{{alarmLevelList[props.row.level]}}告警</div>
+            </div>
           </template>
         </el-table-column>
         <el-table-column label="冷链设备/探头" align="center" header-align="center" prop="monitorTargetCode" min-width="200">

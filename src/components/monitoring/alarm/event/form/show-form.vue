@@ -13,7 +13,7 @@
         <div class="form-header-part">
           <div class="header">
             <div class="sign f-dib"></div>
-            <h3 :class="{active: pageSets[0].key === currentTab.key}" class="tit f-dib index-tit">
+            <h3  class="tit f-dib index-tit">
               {{pageSets[0].name}}</h3>
           </div>
           <div class="content" style="overflow: hidden">
@@ -34,7 +34,7 @@
         <div class="form-header-part">
           <div class="header">
             <div class="sign f-dib"></div>
-            <h3 :class="{active: pageSets[1].key === currentTab.key}" class="tit f-dib index-tit">
+            <h3  class="tit f-dib index-tit">
               {{pageSets[1].name}}</h3>
           </div>
           <div class="content" style="overflow: hidden">
@@ -93,10 +93,6 @@
       close() {
         this.$emit('right-close');
       },
-      formatKeepTime(detail) {
-        let formatMsToTime = utils.formatMsToTime;
-        return formatMsToTime((detail.restoreTime ? detail.restoreTime : Date.now()) - detail.createTime);
-      },
       queryDetail() {
         this.detail = this.formItem;
         this.queryTempData();
@@ -111,12 +107,11 @@
         return time ? this.$moment(time).format(str) : '';
       },
       queryTempData() {
-        let {formatTime} = this;
-        let {createTime, restoreTime, ccsDevId} = this.formItem;
+        let {occurrenceTime, recoveryTime, sensorId} = this.formItem;
         this.filters = {
-          startTime: formatTime(createTime - halfDay),
-          endTime: formatTime(restoreTime ? restoreTime + halfDay : Date.now()),
-          sensorId: ccsDevId
+          startDate: new Date(occurrenceTime - halfDay),
+          endDate: new Date(recoveryTime ? recoveryTime + halfDay : Date.now()),
+          id: sensorId
         };
       }
     }

@@ -19,8 +19,6 @@
 <script>
   const unitAry = ['', '°C', '%', 'V'];
   const titleAry = ['', '温度', '湿度', '电压'];
-  import {TempDev} from '@/resources';
-  import axios from 'axios';
   import Echarts from 'echarts/lib/echarts';
   import moment from 'moment';
 
@@ -180,10 +178,10 @@
         };
       },
       queryList() {
-        const {startTime, endTime, sensorId} = this.filter;
+        const {id} = this.filter;
         let {getLegend, getYAxis, getData, getOption, getAlarmLine} = this;
         const option = getOption();
-        if (!sensorId) return;
+        if (!id) return;
         let typeList = ['1', '2', '3'];
         // 设置图例
         option.legend = getLegend(typeList);
@@ -192,14 +190,16 @@
         option.series = [];
         this.loadingData = true;
         this.isHasData = false;
-        this.$http.post('/historical-data', this.filter).then(res => {
+        this.$http.post('/sensor/data', this.filter).then(res => {
           this.loadingData = false;
-          if(res.data.code === 200) {
+          if (res.data.code === 200) {
+            debugger;
             typeList.forEach((i, index) => {
               const data = res.data.data && res.data.data.map(m => {
+                m.value = i === '1' ? m.temperature : i === '2' ? m.humidity : m.voltage;
                 return {
                   name: m.createTime,
-                  value: [m.createTime, m.devActval, m.insertTime]
+                  value: [m.createTime, m.value, m.insertTime]
                 };
               }) || [];
               data.length && (this.isHasData = true);
@@ -215,7 +215,7 @@
               option.series.forEach(i => {
                 const data = i.markLine.data;
                 if (data.length > 1) return;
-                data.push(getAlarmLine(detail.createTime));
+                data.push(getAlarmLine(detail.occurrenceTime));
                 detail.recoveryTime && data.push(getAlarmLine(detail.recoveryTime));
               });
               chartLine.setOption(option);
