@@ -31,6 +31,16 @@
             <oms-col :isShow="true" :rowSpan="rowSpan" label="处理情况">{{detail.handlingCondition}}</oms-col>
           </div>
         </div>
+        <div class="form-header-part">
+          <div class="header">
+            <div class="sign f-dib"></div>
+            <h3 :class="{active: pageSets[1].key === currentTab.key}" class="tit f-dib index-tit">
+              {{pageSets[1].name}}</h3>
+          </div>
+          <div class="content" style="overflow: hidden">
+            <chart-line :detail="detail" :filters="filters" :isRecord="true" chartWidth="100%"/>
+          </div>
+        </div>
       </div>
     </template>
   </dialog-template>
@@ -41,6 +51,7 @@
   import ChartLine from '@/components/monitoring/temp-new/chart-line-new';
   import AlarmMixin from '@/mixins/alarmMixin';
   import AlarmEventMixin from '@/mixins/alarmEventMixin';
+  const halfDay = 60 * 60 * 1000;
   export default {
     props: {
       index: Number,
@@ -54,7 +65,7 @@
         loading: false,
         pageSets: [
           {name: '详细信息', key: 0},
-          {name: '历史数据', key: 0}
+          {name: '历史数据', key: 1}
         ],
         currentTab: {},
         tempList: [],
@@ -88,11 +99,7 @@
       },
       queryDetail() {
         this.detail = this.formItem;
-        // this.loading = true;
-        // alarmEvent.get(this.formItem.id).then(res => {
-        //   this.detail = res.data;
-        //   this.loading = false;
-        // });
+        this.queryTempData();
       },
       getValType(warnTypes) {
         let ary = warnTypes.split(',');
@@ -102,6 +109,15 @@
       },
       formatTime(time, str = 'YYYY-MM-DD HH:mm:ss') {
         return time ? this.$moment(time).format(str) : '';
+      },
+      queryTempData() {
+        let {formatTime} = this;
+        let {createTime, restoreTime, ccsDevId} = this.formItem;
+        this.filters = {
+          startTime: formatTime(createTime - halfDay),
+          endTime: formatTime(restoreTime ? restoreTime + halfDay : Date.now()),
+          sensorId: ccsDevId
+        };
       }
     }
   };

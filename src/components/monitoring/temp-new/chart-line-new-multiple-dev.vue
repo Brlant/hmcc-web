@@ -88,6 +88,8 @@
         },
         dataList: [],
         loadingListData: false,
+        oldFilter: {},
+        dataDetail: {}
       };
     },
     computed: {
@@ -104,9 +106,21 @@
           if (!val.freezerDevId) {
             this.isHasData = false;
             this.dataList = [];
+            this.oldFilter = {};
             return;
           }
-          this.queryList();
+          debugger;
+          if (this.isSame(val, this.oldFilter)) {
+            this.setChart();
+          } else {
+            if (val.startTime === this.oldFilter.startTime && val.endTime === this.oldFilter.endTime
+              && val.freezerDevId === this.oldFilter.freezerDevId && val.type !== this.oldFilter.type) {
+              this.setChart();
+            } else {
+              this.queryList();
+            }
+            this.oldFilter = JSON.parse(JSON.stringify(val));
+          }
         },
         deep: true,
         immediate: true
@@ -116,6 +130,18 @@
       }
     },
     methods: {
+      isSame(cur, old) {
+        if (!old && !cur) return true;
+        let cl = Object.keys(cur);
+        let ol = Object.keys(old);
+        if (cl.length !== ol.length) return false;
+        let i = 0;
+        while (i <= cl.length) {
+          if (cur[cl[i]] !== old[ol[i]]) return false;
+          i++;
+        }
+        return true;
+      },
       getLegend(typeList) {
         return {
           data: typeList.map(m => m.name)
@@ -233,12 +259,7 @@
         };
       },
       queryList() {
-        let {getLegend, getYAxis, getData, getOption, getAlarmLine} = this;
-        const option = getOption();
-        // 设置图例
-        // 设置Y轴
-        option.yAxis = getYAxis(this.filter.type);
-        option.series = [];
+
 
         this.loadingData = true;
         this.isHasData = false;
@@ -246,26 +267,37 @@
           this.loadingData = false;
           if (res.data.code === 200) {
             this.isHasData = true;
-            this.probeList = res.data.data.devDataList;
-            option.legend = getLegend(res.data.data.devDataList);
-            res.data.data.devDataList.forEach(i => {
-              const data = i.dataList.map(m => {
-                return {
-                  name: m.createTime,
-                  value: [m.createTime, m.value, m.insertTime]
-                };
-              }) || [];
-              option.series.push(getData(data, i));
-            });
-            this.$nextTick(() => {
-              let chartDom = document.getElementById('newChartLine');
-              if (!chartDom) return;
-              let chartLine = Echarts.init(chartDom, 'light');
-              if (!chartLine) return;
-              chartLine.setOption(option);
-            });
+            this.dataDetail = res.data.data;
+            this.setChart();
             this.getCurrentList(1);
           }
+        });
+      },
+      setChart() {
+        let {getLegend, getYAxis, getData, getOption, getAlarmLine} = this;
+        const option = getOption();
+        // 设置图例
+        // 设置Y轴
+        option.yAxis = getYAxis(this.filter.type);
+        option.series = [];
+        option.legend = getLegend(this.dataDetail.devDataList);
+        this.dataDetail.devDataList.forEach(i => {
+          const data = i.dataList.map(m => {
+            m.value = this.filter.type === '1' ? m.temperature : this.filter.type === '2' ? m.humidity : m.voltage;
+            return {
+              name: m.createTime,
+              value: [m.createTime, m.value, m.insertTime]
+            };
+          }) || [];
+          option.series.push(getData(data, i));
+        });
+        this.probeList = this.dataDetail.devDataList;
+        this.$nextTick(() => {
+          let chartDom = document.getElementById('newChartLine');
+          if (!chartDom) return;
+          let chartLine = Echarts.init(chartDom, 'light');
+          if (!chartLine) return;
+          chartLine.setOption(option);
         });
       },
       handleSizeChange(val) {
