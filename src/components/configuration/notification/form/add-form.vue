@@ -325,6 +325,12 @@
               phone: i.alarmNoticeTarget
             });
           });
+          this.orgList = [
+            {
+              id: res.data.data.orgId,
+              name: res.data.data.orgName
+            }
+          ];
           this.form = res.data.data;
         });
       },

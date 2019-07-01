@@ -181,11 +181,20 @@
       index: function (val) {
         this.$refs['tempForm'].clearValidate();
         if (this.formItem.id) {
+          this.probeList = [
+            {name: this.formItem.sensorName, id: this.formItem.sensorId}
+          ];
+          this.notifyList = [
+            {
+              id: this.formItem.alarmNoticeGroupId,
+              name: this.formItem.alarmNoticeGroupName
+            }
+          ]
           this.form = Object.assign({}, this.formItem);
           this.actionType = '编辑';
         } else {
           this.form = {
-            alarmNoticeGroupId: '234234234',
+            alarmNoticeGroupId: '',
             sensorId: '',
             temperatureMax: '',
             temperatureMin: '',

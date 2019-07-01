@@ -2,11 +2,11 @@
   <div class="order-page">
     <search-part @search="searchResult" :alarmTypeList="alarmTypeList">
       <template slot="btn">
-        <el-button @click="batchConfirmItem" plain size="small" v-has="'ccs-warn-record-process'"
-                   v-if="checkList.length>0">
-          <f-a class="icon-small" name="affirm"></f-a>
-          批量处理
-        </el-button>
+        <!--<el-button @click="batchConfirmItem" plain size="small" v-has="'ccs-warn-record-process'"-->
+                   <!--v-if="checkList.length>0">-->
+          <!--<f-a class="icon-small" name="affirm"></f-a>-->
+          <!--批量处理-->
+        <!--</el-button>-->
       </template>
     </search-part>
 
@@ -104,9 +104,6 @@
           0: showForm,
           1: confirmForm
         },
-        dialogBatchComponents: {
-          0: batchConfirmForm
-        },
         confirmStatus: {
           0: '未确认',
           1: '已确认',
@@ -192,10 +189,6 @@
         this.$nextTick(() => {
           this.form = item;
         });
-      },
-      batchConfirmItem: function () {
-        this.showBatchIndex = 0;
-        this.currentBatchPart = this.dialogBatchComponents[0];
       },
       formDashboard() {
         let id = this.$route.query.id;

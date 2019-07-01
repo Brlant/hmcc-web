@@ -41,7 +41,7 @@
                 </oms-row>
                 <oms-row v-show="formItem.voltageAlarmFlag === '1'"  label="电压最低值">{{formItem.voltageMin}}V
                 </oms-row>
-                <oms-row  label="告警通知组">{{formItem.alarmNoticeGroupId}}</oms-row>
+                <oms-row  label="告警通知组">{{formItem.alarmNoticeGroupName}}</oms-row>
               </el-col>
               <el-col :span="12">
                 <oms-row  label="温度告警开关">
