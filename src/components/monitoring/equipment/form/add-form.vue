@@ -23,7 +23,7 @@
     <template slot="content">
       <el-form ref="tempForm" :model="form" label-width="100px" :rules="rules">
         <el-form-item label="接种单位" prop="orgId" v-if="type === 2">
-          <org-select :list="orgList"
+          <org-select :list="povList"
                       :remoteMethod="filterPOV"
                       placeholder="请输入名称搜索单位" v-model="form.orgId"></org-select>
         </el-form-item>
@@ -76,8 +76,7 @@
         },
         actionType: '添加',
         coolList: [],
-        probeList: [],
-        orgList: []
+        probeList: []
       };
     },
     computed: {
@@ -101,17 +100,6 @@
       }
     },
     methods: {
-      filterPOV: function (query) {// 过滤POV
-        let orgId = this.$store.state.user.userCompanyAddress;
-        if (!orgId) return;
-        let params = {
-          keyWord: query,
-          relation: '0'
-        };
-        BaseInfo.queryOrgByValidReation(orgId, params).then(res => {
-          this.orgList = res.data;
-        });
-      },
       queryCoolListCondition(query) {
         if (this.type === 2 && !this.form.orgId) return;
         let params = {
@@ -139,7 +127,7 @@
       save(formName) {
         this.$refs[formName].validate((valid) => {
           if (valid && this.doing === false) {
-            this.orgList.forEach(i => {
+            this.povList.forEach(i => {
               if(i.id === this.form.orgId) {
                 this.form.orgName = i.name;
               }

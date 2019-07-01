@@ -40,6 +40,11 @@ export const routes = [
             path: '/monitoring/temp',
             component: () => import('./components/monitoring/temp-new/index.vue'),
             meta: {moduleId: 'monitoring', title: '历史数据查询', perm: 'ccs-devdata-scan', subMenuId: 'temp', showDev: true}
+          },
+          {
+            path: '/monitoring/temp/records',
+            component: () => import('./components/monitoring/temp-record/index.vue'),
+            meta: {moduleId: 'monitoring', title: '冷链设备温度记录', perm: 'ccs-devdata-scan', subMenuId: 'temp', showDev: true}
           }
         ]
       },

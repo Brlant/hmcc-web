@@ -1,4 +1,4 @@
-import {AlarmNotifyGroup, cool, probe} from '@/resources';
+import {AlarmNotifyGroup, cool, probe, BaseInfo} from '@/resources';
 
 
 export default {
@@ -7,7 +7,8 @@ export default {
       probeList: [],
       orgList: [],
       notifyList: [],
-      coolList: []
+      coolList: [],
+      povList: []
     };
   },
   methods: {
@@ -45,5 +46,16 @@ export default {
         this.coolList = res.data.data.list;
       });
     },
+    filterPOV: function (query) {// 过滤POV
+      let orgId = this.$store.state.user.userCompanyAddress;
+      if (!orgId) return;
+      let params = {
+        keyWord: query,
+        relation: '0'
+      };
+      BaseInfo.queryOrgByValidReation(orgId, params).then(res => {
+        this.povList = res.data;
+      });
+    }
   }
 };
