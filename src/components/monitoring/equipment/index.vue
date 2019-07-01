@@ -63,7 +63,7 @@
               </span>
             </el-col>
             <el-col :span="10" class="opera-btn" align="right">
-              <des-btn @click="monitorTemp(item)" icon="chaxun" v-has="'ccs-monitordev-switch'">查看历史数据</des-btn>
+              <des-btn @click="showHistoryData(item)" icon="chaxun" v-has="'ccs-monitordev-switch'">查看历史数据</des-btn>
               <des-btn @click="monitorTemp(item)" icon="start" v-has="'ccs-monitordev-switch'"
                        v-show="item.monitorStatus==='0'">开启监控
               </des-btn>
@@ -161,62 +161,6 @@
       queryList(pageNo) {
         const http = monitorRelation.query;
         this.filters.subordinateFlag = this.type === 2;
-        // this.dataList = [
-        //   {
-        //     no: '冰箱1号',
-        //     type: '冰箱',
-        //     version: 'tc-001',
-        //     orgName: '长宁疾控',
-        //     monitorStatus: '1',
-        //     alarm: false,
-        //     details: [
-        //       {
-        //         name: '探头1号', no: 's-001', type: '至强1号', temp: '7.2', humidity: '60', voltage: 220, time: Date.now(),
-        //         tempScope: [2, 8], humidityScope: [50, 70], voltageScope: [200, 240], alarm: ''
-        //       },
-        //       {
-        //         name: '探头2号', no: 's-002', type: '至强1号', temp: '5', humidity: '70', voltage: 220, time: Date.now(),
-        //         tempScope: [2, 8], humidityScope: [50, 70], voltageScope: [200, 240], alarm: ''
-        //       }
-        //     ]
-        //   },
-        //   {
-        //     no: '冰箱2号',
-        //     type: '冰箱',
-        //     version: 'tc-001',
-        //     orgName: '长宁疾控',
-        //     monitorStatus: '0',
-        //     alarm: false,
-        //     details: [
-        //       {
-        //         name: '探头2号', no: 's-001', type: '至强1号', temp: '7.2', humidity: '60', voltage: 220, time: Date.now(),
-        //         tempScope: [2, 8], humidityScope: [50, 70], voltageScope: [200, 240], alarm: ''
-        //       },
-        //       {
-        //         name: '探头3号', no: 's-002', type: '至强1号', temp: '5', humidity: '70', voltage: 220, time: Date.now(),
-        //         tempScope: [2, 8], humidityScope: [50, 70], voltageScope: [200, 240], alarm: ''
-        //       }
-        //     ]
-        //   },
-        //   {
-        //     no: '冰柜1号',
-        //     type: '冰柜',
-        //     version: 'tc-001',
-        //     orgName: '长宁疾控',
-        //     monitorStatus: '1',
-        //     alarm: true,
-        //     details: [
-        //       {
-        //         name: '探头4号', no: 's-001', type: '至强1号', temp: 1.8, humidity: 60, voltage: 220, time: Date.now(),
-        //         tempScope: [2, 8], humidityScope: [50, 70], voltageScope: [200, 240], alarm: '0'
-        //       },
-        //       {
-        //         name: '探头5号', no: 's-002', type: '至强1号', temp: '5', humidity: 40, voltage: 220, time: Date.now(),
-        //         tempScope: [2, 8], humidityScope: [50, 70], voltageScope: [200, 240], alarm: '1'
-        //       }
-        //     ]
-        //   }
-        // ];
         this.queryUtil(http, pageNo);
       },
       formatRowAlarmClass(item) {
@@ -275,6 +219,9 @@
             }
           });
         });
+      },
+      showHistoryData(item) {
+        this.$router.push({path: '/monitoring/temp', query: {freezerDevId: item.monitorTargetId, freezerDevName: item.monitorTargetName}})
       },
       showItemDetail(item) {
         this.currentItem = item;

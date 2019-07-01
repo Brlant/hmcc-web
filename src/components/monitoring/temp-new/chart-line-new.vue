@@ -29,7 +29,7 @@
   }
 
   export default {
-    props: ['filters', 'isRecord', 'detail', 'chartWidth'],
+    props: ['filter', 'isRecord', 'detail', 'chartWidth'],
     data() {
       return {
         loadingData: false,
@@ -37,7 +37,7 @@
       };
     },
     watch: {
-      filters: {
+      filter: {
         handler: function () {
           this.queryList();
         },

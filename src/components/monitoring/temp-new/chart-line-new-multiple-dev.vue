@@ -31,7 +31,7 @@
     <div v-else>
       <div id="newChartLine" class="chart-Line" :style="{width: chartWidth}"></div>
     </div>
-    <el-tabs class="tabs" v-model="activeIndex" v-if="dataList.length">
+    <el-tabs class="tabs" v-model="activeIndex" v-if="dataDetail.freezerDevId">
       <el-tab-pane :label="item.name" :name="index + ''" :key="item.id"
                    v-for="(item, index) in probeList"></el-tab-pane>
       <el-table :data="dataList" v-loading="loadingListData" class="header-list" border
@@ -52,7 +52,7 @@
           </template>
         </el-table-column>
       </el-table>
-      <div class="text-center">
+      <div class="text-center" v-show="dataList.length">
         <el-pagination
           layout="total, sizes, prev, pager, next, jumper" @size-change="handleSizeChange"
           @current-change="handleCurrentChange"
@@ -109,7 +109,6 @@
             this.oldFilter = {};
             return;
           }
-          debugger;
           if (this.isSame(val, this.oldFilter)) {
             this.setChart();
           } else {

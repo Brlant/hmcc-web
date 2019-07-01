@@ -38,7 +38,7 @@
               {{pageSets[1].name}}</h3>
           </div>
           <div class="content" style="overflow: hidden">
-            <chart-line :detail="detail" :filters="filters" :isRecord="true" chartWidth="100%"/>
+            <chart-line :detail="detail" :filter="filters" :isRecord="true" chartWidth="100%"/>
           </div>
         </div>
       </div>

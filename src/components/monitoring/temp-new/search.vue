@@ -56,6 +56,17 @@
     },
     mounted() {
       this.times1 = [this.$moment(this.$moment().format('YYYY-MM-DD')), this.$moment()];
+      let {freezerDevId, freezerDevName} = this.$route.query;
+      if (freezerDevId) {
+        this.coolList = [
+          {
+            id: freezerDevId,
+            name: freezerDevName
+          }
+        ];
+        this.searchCondition.freezerDevId = freezerDevId;
+        this.search();
+      }
     },
     methods: {
       search() {
