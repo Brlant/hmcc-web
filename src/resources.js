@@ -92,6 +92,15 @@ http.interceptors.response.use(response => {
 Vue.prototype.$http = http;
 
 
+export const temperatureRecord = {
+  add(obj) {
+    return http.post('/temperature-measurement-record', obj);
+  },
+  query(params) {
+    return http.post('/temperature-measurement-record/list', params);
+  }
+};
+
 // 告警设备
 export const monitorRelation = resource('/monitor-relation', http, {
   query(params) {

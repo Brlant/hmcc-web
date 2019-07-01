@@ -33,8 +33,10 @@
               </el-tooltip>
             </oms-row>
           </el-col>
-          <el-col :span="12" v-show="devItem.monitorStatus === '1' && item.lastUpdateTime">
-            <oms-row label="更新" :span="6">{{item.lastUpdateTime | time}}</oms-row>
+          <el-col :span="12">
+            <oms-row label="温度类型" :span="8">
+              {{devItem.temperatureType === '0' ? '冷藏' : '冷冻'}}
+            </oms-row>
           </el-col>
         </el-row>
         <div v-show="devItem.monitorStatus === '1'">
@@ -64,18 +66,23 @@
               </oms-row>
             </el-col>
             <el-col :span="8">
-              <template v-if="item.voltage !== null">
                 <oms-row label="电压" :span="12" :class="{'text-danger': item.alarm}">
+                  <template v-if="item.voltage !== null">
                   <span class="fl">{{item.voltage}} V</span>
                   <el-tooltip effect="dark" placement="top" :content="`电压范围：${item.voltageMax}~${item.voltageMax}V`">
                     <i class="el-icon-warning-outline ml-10"/>
                   </el-tooltip>
+                  </template>
+                  <template v-else>暂无数据</template>
                 </oms-row>
-              </template>
-              <template v-else>暂无数据</template>
             </el-col>
           </el-row>
         </div>
+        <el-row v-show="devItem.monitorStatus === '1' && item.lastUpdateTime">
+          <el-col :span="12" >
+            <oms-row label="更新" :span="8">{{item.lastUpdateTime | time}}</oms-row>
+          </el-col>
+        </el-row>
       </div>
     </el-col>
   </el-row>

@@ -1,5 +1,5 @@
 <template>
-  <search-template :isShow="showSearch" :isShowAdvance="false" @isShow="isShow" @reset="reset" @search="search">
+  <search-template :isShow="showSearch" :isShowAdvance="false" @reset="reset" @search="search">
     <template slot="title">{{$route.meta.title}}</template>
     <template slot="btn">
       <slot name="btn"></slot>
@@ -9,7 +9,7 @@
         <el-row>
           <el-col :span="8">
             <oms-form-row :span="5" label="单位">
-              <org-select :list="orgList"
+              <org-select :list="povList"
                           :remoteMethod="filterPOV" @change="orgChange"
                           placeholder="请输入名称搜索单位" v-model="searchCondition.orgId"></org-select>
             </oms-form-row>
@@ -17,7 +17,7 @@
           <el-col :span="8">
             <oms-form-row :span="5" label="冷链设备">
               <el-select :remote-method="queryCoolListCondition" filterable placeholder="请输入名称搜索冷链设备" remote
-                         v-model="searchCondition.monitorTargetId">
+                         v-model="searchCondition.freezerDevId" @change="monitorTargetIdChange">
                 <el-option :key="item.id" :label="item.name" :value="item.id"
                            v-for="item in coolList"></el-option>
               </el-select>
@@ -26,7 +26,7 @@
           <el-col :span="8">
             <oms-form-row :span="5" label="日期">
               <el-date-picker class="el-date-picker--mini" placeholder="请选择" type="month"
-                              v-model="searchCondition.monthDate"/>
+                              v-model="searchCondition.monthDate" :clearable="false"/>
             </oms-form-row>
           </el-col>
         </el-row>
@@ -36,6 +36,7 @@
 </template>
 <script>
   import methodsMixin from '@/mixins/methodsMixin';
+
   export default {
     mixins: [methodsMixin],
     data: function () {
@@ -56,7 +57,7 @@
       };
     },
     mounted() {
-
+      this.searchCondition.monthDate = new Date();
     },
     computed: {
       coolDevType() {
@@ -77,11 +78,11 @@
           freezerDevName: '',
           freezerDevId: '',
           freezerDevNo: '',
-          monthDate: ''
+          monthDate: new Date()
         };
         this.$emit('search', this.searchCondition);
       },
-      queryCoolListCondition() {
+      queryCoolListCondition(query) {
         if (!this.searchCondition.orgId) return;
         let params = {
           keyWord: query,
@@ -89,9 +90,18 @@
         };
         this.queryCoolList(params);
       },
-      orgChange() {
-        this.searchCondition.freezerDevId = [];
+      orgChange(val) {
+        this.searchCondition.freezerDevId = '';
         this.coolList = [];
+        if (!val) return;
+        let item = this.povList.find(f => f.id === val);
+        this.searchCondition.orgName = item.name;
+      },
+      monitorTargetIdChange(val) {
+        if (!val) return;
+        let item = this.coolList.find(f => f.id === val);
+        this.searchCondition.freezerDevName = item.name;
+        this.searchCondition.freezerDevNo = item.no;
       }
     }
   };

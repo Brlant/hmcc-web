@@ -3,6 +3,7 @@
     .cool-content {
       border-bottom: 1px solid #eee;
     }
+
     .order-list-item {
       cursor: auto;
     }
@@ -63,6 +64,9 @@
               </span>
             </el-col>
             <el-col :span="10" class="opera-btn" align="right">
+              <des-btn @click="record(item)" icon="report" v-has="'ccs-monitordev-switch'">
+                记录温度
+              </des-btn>
               <des-btn @click="showHistoryData(item)" icon="chaxun" v-has="'ccs-monitordev-switch'">查看历史数据</des-btn>
               <des-btn @click="monitorTemp(item)" icon="start" v-has="'ccs-monitordev-switch'"
                        v-show="item.monitorStatus==='0'">开启监控
@@ -101,7 +105,7 @@
   import addForm from './form/add-form.vue';
   import showForm from './form/show-form.vue';
   import CommonMixin from '@/mixins/commonMixin';
-  import {monitorRelation} from '@/resources';
+  import {monitorRelation, temperatureRecord} from '@/resources';
   import DevList from './dev-list';
 
   export default {
@@ -124,8 +128,8 @@
       };
     },
     computed: {
-      type () {
-        return this.$route.meta.type
+      type() {
+        return this.$route.meta.type;
       },
       coolDevType() {
         return this.$store.state.coolDevType;
@@ -221,7 +225,10 @@
         });
       },
       showHistoryData(item) {
-        this.$router.push({path: '/monitoring/temp', query: {freezerDevId: item.monitorTargetId, freezerDevName: item.monitorTargetName}})
+        this.$router.push({
+          path: '/monitoring/temp',
+          query: {freezerDevId: item.monitorTargetId, freezerDevName: item.monitorTargetName}
+        });
       },
       showItemDetail(item) {
         this.currentItem = item;
@@ -234,6 +241,23 @@
       change() {
         this.resetRightBox();
         this.queryList(1);
+      },
+      record(item) {
+        this.$confirmOpera(`是否记录此刻设备"${item.monitorTargetName}"的温度数据`, () => {
+          let obj = {
+            freezerDevId: item.monitorTargetId,
+            orgId: item.orgId,
+            refrigerationTemperature: item.sensorDataList.filter(f => f.temperatureType === '0').map(m => m.temperature).join('/'),
+            freezeTemperature: item.sensorDataList.filter(f => f.temperatureType === '1').map(m => m.temperature).join('/')
+          };
+          this.$httpRequestOpera(temperatureRecord.add(obj), {
+            successTitle: '记录完成',
+            errorTitle: '记录失败',
+            success: res => {
+
+            }
+          });
+        });
       }
     }
   };

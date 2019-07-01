@@ -1,11 +1,45 @@
 <style lang="scss" scoped>
-  .order-list-body {
-    .cool-content {
-      border-bottom: 1px solid #eee;
+  .record-content {
+    background: #fff;
+    padding-top: 20px;
+
+    .record-title {
+      font-weight: bold;
+      font-size: 16px;
+      text-align: center;
+
     }
 
-    .order-list-item {
-      cursor: auto;
+    .m-border {
+      border-bottom: 1px solid #333;
+      display: inline-block;
+      padding: 0 10px;
+      min-width: 50px;
+    }
+
+    .record-label {
+      text-align: center;
+      margin-top: 15px;
+    }
+
+    .record-table {
+      padding: 0 50px;
+      margin-top: 15px;
+
+      .table {
+        width: 100%;
+        border-collapse: collapse;
+
+        td {
+          padding: 8px;
+          border: 1px solid #ddd;
+          text-align: center;
+        }
+
+        .header {
+          font-weight: bold;
+        }
+      }
     }
   }
 </style>
@@ -13,7 +47,7 @@
   <div class="order-page">
     <search-part @search="searchResult">
       <template slot="btn">
-        <el-button @click="add" plain size="small" v-has="'ccs-monitordev-add'">
+        <el-button plain size="small" v-has="'ccs-monitordev-add'">
           <f-a class="icon-small" name="plus"></f-a>
           打印
         </el-button>
@@ -21,23 +55,91 @@
     </search-part>
     <div class="record-content">
       <div class="record-title">
-        <div></div>
-        <span></span>
-        <div>{{}}</div>
+        <div class="m-border">{{format(filter.monthDate)}}</div>
+        <span>年</span>
+        <div class="m-border">{{format(filter.monthDate, 'MM')}}</div>
         <span>月冷链设备温度记录表</span>
       </div>
       <div class="record-label">
-
+        <span>冷链设备名称：</span>
+        <div class="m-border">{{filter.freezerDevName}}</div>
+        <span>设备编码：</span>
+        <div class="m-border">{{filter.freezerDevNo}}</div>
+        <span>使用单位：</span>
+        <div class="m-border">{{filter.orgName}}</div>
       </div>
       <div class="record-table">
-
+        <el-row>
+          <el-col :span="12">
+            <table class="table">
+              <tr class="header">
+                <td rowspan="2" colspan="2">记录日期</td>
+                <td rowspan="2">记录时间</td>
+                <td colspan="2">温度（℃）</td>
+                <td rowspan="2">记录人</td>
+              </tr>
+              <tr class="header">
+                <td>冷藏</td>
+                <td>冷冻</td>
+              </tr>
+              <template v-for="(item, index) in dataList.slice(0, 16)">
+                <tr>
+                  <td rowspan="2">{{index + 1}}</td>
+                  <td>上午</td>
+                  <td>{{item[0].recordDate || '-'}}</td>
+                  <td>{{item[0].refrigerationTemperature || '-'}}</td>
+                  <td>{{item[0].freezeTemperature || '-'}}</td>
+                  <td>{{item[0].recordUserId || '未记录'}}</td>
+                </tr>
+                <tr>
+                  <td>下午</td>
+                  <td>{{item[1].recordDate || '-'}}</td>
+                  <td>{{item[1].refrigerationTemperature || '-'}}</td>
+                  <td>{{item[1].freezeTemperature || '-'}}</td>
+                  <td>{{item[1].recordUserId || '未记录'}}</td>
+                </tr>
+              </template>
+            </table>
+          </el-col>
+          <el-col :span="12">
+            <table class="table">
+              <tr class="header">
+                <td rowspan="2" colspan="2" style="border-left: 0">记录日期</td>
+                <td rowspan="2">记录时间</td>
+                <td colspan="2">温度（℃）</td>
+                <td rowspan="2">记录人</td>
+              </tr>
+              <tr class="header">
+                <td>冷藏</td>
+                <td>冷冻</td>
+              </tr>
+              <template v-for="(item, index) in dataList.slice(16)">
+                <tr>
+                  <td rowspan="2" style="border-left: 0">{{index + 17}}</td>
+                  <td>上午</td>
+                  <td>{{item[0].recordDate || '-'}}</td>
+                  <td>{{item[0].refrigerationTemperature || '-'}}</td>
+                  <td>{{item[0].freezeTemperature || '-'}}</td>
+                  <td>{{item[0].recordUserId || '未记录'}}</td>
+                </tr>
+                <tr>
+                  <td>下午</td>
+                  <td>{{item[1].recordDate || '-'}}</td>
+                  <td>{{item[1].refrigerationTemperature || '-'}}</td>
+                  <td>{{item[1].freezeTemperature || '-'}}</td>
+                  <td>{{item[1].recordUserId || '未记录'}}</td>
+                </tr>
+              </template>
+            </table>
+          </el-col>
+        </el-row>
       </div>
     </div>
   </div>
 </template>
 <script>
   import SearchPart from './search';
-
+  import {temperatureRecord} from '@/resources';
 
   export default {
     components: {
@@ -45,20 +147,64 @@
     },
     data() {
       return {
-        filters: {}
+        filter: {
+          orgName: '',
+          orgId: '',
+          freezerDevName: '',
+          freezerDevId: '',
+          freezerDevNo: '',
+          monthDate: new Date(),
+        },
+        dataList: []
       };
     },
     methods: {
       searchResult: function (search) {
-        this.filters = Object.assign({}, this.filters, search);
+        this.filter = Object.assign({}, this.filter, search);
+        this.queryList();
       },
       resetRightBox() {
         this.showIndex = -1;
       },
-      queryList(pageNo) {
-        const http = monitorRelation.query;
-        this.filters.subordinateFlag = this.type === 2;
-        this.queryUtil(http, pageNo);
+      queryList() {
+        let {orgId, freezerDevId, monthDate} = this.filter;
+        let startDate = new Date(this.$moment(monthDate).startOf('month'));
+        let endDate = new Date(this.$moment(monthDate).endOf('month'));
+        let params = {
+          orgId,
+          freezerDevId,
+          startDate,
+          endDate
+        };
+        temperatureRecord.query(params).then(res => {
+          if (res.data.code === 200) {
+            res.data.data.forEach(i => {
+              i.dayOfMonth = this.$moment(i.recordDate).format('D');
+              i.recordDate = this.$moment(i.recordDate).format('hh::mm');
+            });
+            let ary = [];
+            let i = 1;
+            while (i < 33) {
+              let list = res.data.data.filter(f => f.dayOfMonth * 1 === i);
+              if (!list.length) {
+                list.push({id: '', recordDateType: 0});
+                list.push({id: '', recordDateType: 1});
+              } else if (list.length === 1) {
+                if (list[0].recordDateType === 0) {
+                  list.push({id: '', recordDateType: 1});
+                } else {
+                  list.push({id: '', recordDateType: 0});
+                }
+              }
+              i++;
+              ary.push(list.sort((pre, cur) => pre.recordDateType - cur.recordDateType));
+            }
+            this.dataList = ary;
+          }
+        });
+      },
+      format(time, str = 'YYYY') {
+        return this.$moment(time).format(str);
       }
     }
   };

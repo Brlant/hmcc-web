@@ -34,20 +34,39 @@
                        v-for="item in coolList"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="探头" prop="sensorIdList">
-          <el-select :remote-method="queryProbeList" filterable multiple
-                     placeholder="请输入名称搜索探头" remote v-model="form.sensorIdList">
-            <el-option :key="item.id" :label="item.name" :value="item.id"
-                       v-for="item in probeList"></el-option>
-          </el-select>
-        </el-form-item>
+        <el-row v-for="(sensor, index) in form.sensorList" :key="index">
+          <el-col :span="10">
+            <el-form-item label="探头" :prop="`sensorList.${index}.sensorId`"
+                          :rules="[{ required: true, message: '请选择探头', trigger: 'change' }]">
+              <el-select :remote-method="queryProbeList" filterable
+                         placeholder="请输入名称搜索探头" remote v-model="sensor.sensorId">
+                <el-option :key="item.id" :label="item.name" :value="item.id"
+                           v-for="item in probeList"></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="9">
+            <el-form-item label="温度类型" :prop="`sensorList.${index}.temperatureType`"
+                          :rules="[{ required: true, message: '请选择温度类型', trigger: 'change' }]">
+              <el-radio-group size="small" v-model="sensor.temperatureType">
+                <el-radio-button label="0">冷藏</el-radio-button>
+                <el-radio-button label="1">冷冻</el-radio-button>
+              </el-radio-group>
+            </el-form-item>
+          </el-col>
+          <el-col :span="3" style="margin-bottom: 22px;line-height: 40px">
+            <des-btn @click="addSensor()" icon="plus"></des-btn>
+            <des-btn class="ml-10" @click="delSensor(sensor)" icon="minus"
+                     v-show="form.sensorList.length > 1"></des-btn>
+          </el-col>
+        </el-row>
       </el-form>
     </template>
   </dialog-template>
 </template>
 <script>
   import methodsMixin from '@/mixins/methodsMixin';
-  import {cool, monitorRelation, probe, BaseInfo} from '@/resources';
+  import {monitorRelation, probe} from '@/resources';
   import TwoColumn from '@dtop/dtop-web-common/packages/two-column';
 
   export default {
@@ -60,7 +79,7 @@
         form: {
           orgId: '',
           monitorTargetId: '',
-          sensorIdList: []
+          sensorList: []
         },
         doing: false,
         rules: {
@@ -70,7 +89,7 @@
           monitorTargetId: [
             {required: true, message: '请选择冷链设备', trigger: 'change'}
           ],
-          sensorIdList: [
+          sensorList: [
             {required: true, type: 'array', message: '探头', trigger: 'change'}
           ]
         },
@@ -93,9 +112,25 @@
         this.form.devIds = [];
         if (this.formItem.id) {
           this.actionType = '编辑';
+          this.probeList = this.formItem.sensorDataList.map(i => ({
+            id: i.id,
+            name: i.name
+          }));
+          this.coolList = [
+            {
+              id: this.formItem.monitorTargetId,
+              name: this.formItem.monitorTargetName
+            }
+          ];
+          this.form = JSON.parse(JSON.stringify(this.formItem));
+          this.form.sensorList = this.formItem.sensorDataList.map(i => ({
+            sensorId: i.id,
+            temperatureType: i.temperatureType
+          }));
         } else {
           this.resetForm();
           this.actionType = '添加';
+          this.addSensor();
         }
       }
     },
@@ -118,8 +153,21 @@
           this.probeList = res.data.data.list;
         });
       },
+      addSensor() {
+        this.form.sensorList.push({
+          sensorId: '',
+          temperatureType: ''
+        });
+      },
+      delSensor(item) {
+        this.form.sensorList = this.form.sensorList.filter(f => f !== item);
+      },
       resetForm() {
-        this.form = {};
+        this.form = {
+          orgId: '',
+          monitorTargetId: '',
+          sensorList: []
+        };
       },
       selectTab(item) {
         this.currentTab = item;
@@ -128,7 +176,7 @@
         this.$refs[formName].validate((valid) => {
           if (valid && this.doing === false) {
             this.povList.forEach(i => {
-              if(i.id === this.form.orgId) {
+              if (i.id === this.form.orgId) {
                 this.form.orgName = i.name;
               }
             });
