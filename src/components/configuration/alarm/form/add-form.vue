@@ -7,7 +7,8 @@
     <template slot="content">
       <el-form :model="form" :rules="rules" label-width="140px" ref="tempForm">
         <el-form-item label="探头" prop="sensorId">
-          <el-select :remote-method="queryProbeList" filterable placeholder="请输入名称搜索探头" remote v-model="form.sensorId">
+          <el-select :remote-method="queryProbeList" filterable placeholder="请输入名称搜索探头"
+                     remote v-model="form.sensorId" @change="sensorIdChange">
             <el-option :key="item.id" :label="item.name" :value="item.id"
                        v-for="item in probeList"></el-option>
           </el-select>
@@ -95,7 +96,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="告警通知组" prop="alarmNoticeGroupId">
-          <el-select remote :remote-method="queryNotifyList" v-model="form.alarmNoticeGroupId" filterable
+          <el-select remote :remote-method="queryNotifyListNew" v-model="form.alarmNoticeGroupId" filterable
                      placeholder="请输入名称搜索告警通知组"
                      remotev-model="form.alarmNoticeGroupId">
             <el-option :key="item.id" :label="item.name" :value="item.id"
@@ -215,6 +216,19 @@
       }
     },
     methods: {
+      queryNotifyListNew(query) {
+        if (!this.form.sensorId) return;
+        let item = this.probeList.find(f => f.id === this.form.sensorId);
+        let params = {
+          orgId: item.orgId,
+          keyWord: query
+        };
+        this.queryNotifyList(params);
+      },
+      sensorIdChange(val) {
+        this.notifyList = [];
+        this.form.alarmNoticeGroupId = '';
+      },
       save(formName) {
         this.$refs[formName].validate((valid) => {
           if (valid && this.doing === false) {

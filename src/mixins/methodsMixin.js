@@ -24,7 +24,12 @@ export default {
       });
     },
     queryNotifyList(query) {
-      let params = {keyWord: query};
+      let params = {
+        keyWord: query,
+      };
+      if (typeof query === 'object') {
+        params = query;
+      }
       AlarmNotifyGroup.query(params).then(res => {
         this.notifyList = res.data.data.list;
       });
