@@ -14,7 +14,7 @@
         cycle: 0,
         options: {
           title: {
-            text: '设备类型组成'
+            text: '冷链设备组成'
           },
           tooltip: {
             trigger: 'item',
@@ -27,7 +27,7 @@
           // },
           series: [
             {
-              name: '设备类型组成',
+              name: '冷链设备组成',
               type: 'pie',
               radius: ['40%', '80%'],
               center: ['50%', '60%'],

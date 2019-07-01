@@ -21,6 +21,8 @@
             <oms-col :isShow="true" :rowSpan="rowSpan" label="恢复时间">{{detail.recoveryTime | time}}</oms-col>
             <oms-col :isShow="true" :rowSpan="rowSpan" label="告警类型">{{alarmTypeList[detail.type]}}</oms-col>
             <oms-col :isShow="true" :rowSpan="rowSpan" label="告警等级">{{alarmLevelList[detail.level]}}</oms-col>
+            <oms-col :isShow="true" :rowSpan="rowSpan" label="所属单位">{{detail.orgName}}</oms-col>
+            <oms-col :isShow="true" :rowSpan="rowSpan" label="冷链设备">{{detail.freezerDevName}}</oms-col>
             <oms-col :isShow="true" :rowSpan="rowSpan" label="探头">{{detail.sensorName}}</oms-col>
             <oms-col :isShow="true" :rowSpan="rowSpan" label="告警值">{{detail.value}}</oms-col>
             <oms-col :isShow="true" :rowSpan="rowSpan" label="恢复值">{{detail.recoveryValue}}</oms-col>
@@ -42,9 +44,7 @@
   export default {
     props: {
       index: Number,
-      formItem: Object,
-      alarmTypeList: Array,
-      alarmLevelList: Array
+      formItem: Object
     },
     components: {ChartLine},
     mixins: [AlarmMixin, AlarmEventMixin],

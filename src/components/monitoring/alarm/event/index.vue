@@ -17,9 +17,9 @@
         </el-col>
         <el-col :span="3">恢复时间</el-col>
         <el-col :span="3">处理时间</el-col>
-        <el-col :span="2">告警类型</el-col>
-        <el-col :span="4">探头</el-col>
-        <el-col :span="2">告警等级</el-col>
+        <el-col :span="2">告警类型/等级</el-col>
+        <el-col :span="3">所属单位</el-col>
+        <el-col :span="3">冷链设备/探头</el-col>
         <el-col :span="2">状态</el-col>
         <el-col :span="2">处理情况</el-col>
         <el-col :span="3">操作</el-col>
@@ -44,13 +44,22 @@
             <el-col :span="3">{{item.recoveryTime | time}}</el-col>
             <el-col :span="3">{{item.handlingTime | time}}
             </el-col>
-            <el-col :span="2">{{alarmTypeList[item.type]}}</el-col>
-            <el-col :span="4">{{item.sensorName}}</el-col>
-            <el-col :span="2">{{alarmLevelList[item.level]}}</el-col>
+            <el-col :span="2">
+              {{alarmTypeList[item.type]}}
+              <div>{{alarmLevelList[item.level]}}告警</div>
+            </el-col>
+            <el-col :span="3">
+              {{item.orgName}}
+            </el-col>
+            <el-col :span="3">
+              <div>{{item.freezerDevName}}</div>
+              <div>{{item.sensorName}}</div>
+            </el-col>
             <el-col :span="2">{{item.recoveryStatus === '0' ? '告警' : '恢复'}}</el-col>
             <el-col :span="2">{{item.handlingCondition}}</el-col>
             <el-col :span="3">
-              <des-btn @click="confirmItem(item)" icon="affirm" v-has="'ccs-warn-record-process'" v-show="!item.handlingCondition">处理
+              <des-btn @click="confirmItem(item)" icon="affirm" v-has="'ccs-warn-record-process'"
+                       v-show="item.handlingStatus === '0'">处理
               </des-btn>
               <des-btn @click="showItemDetail(item)" icon="detail" v-has="'show'">详情</des-btn>
             </el-col>
@@ -69,9 +78,7 @@
     </div>
 
     <page-right :css="{'width':'900px','padding':0}" :show="showIndex !== -1" @right-close="resetRightBox">
-      <component :formItem="form" :index="showIndex" :is="currentPart" @change="change"
-                 :alarmTypeList="alarmTypeList" :alarmLevelList="alarmLevelList"
-                 @right-close="resetRightBox"/>
+      <component :formItem="form" :index="showIndex" :is="currentPart" @change="change" @right-close="resetRightBox"/>
     </page-right>
 
     <page-right :css="{'width':'900px','padding':0}" :show="showBatchIndex !== -1" @right-close="resetRightBox">
@@ -113,9 +120,7 @@
         warnRecordIdList: [],
         currentBatchPart: null,
         showBatchIndex: -1, currentPart: null,
-        checkList: [],
-        alarmTypeList: ['低温', '高温', '低湿度', '高湿度', '低电压', '高电压', '离线'],
-        alarmLevelList: ['', '一级', '二级', '三级']
+        checkList: []
       };
     },
     watch: {

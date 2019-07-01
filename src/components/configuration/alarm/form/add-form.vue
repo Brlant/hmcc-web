@@ -189,7 +189,7 @@
               id: this.formItem.alarmNoticeGroupId,
               name: this.formItem.alarmNoticeGroupName
             }
-          ]
+          ];
           this.form = Object.assign({}, this.formItem);
           this.actionType = '编辑';
         } else {

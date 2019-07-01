@@ -6,8 +6,15 @@ Vue.use(VueRouter);
 export const routes = [
   {
     path: '/',
+    redirect: '/dashboard',
     component: () => import('./components/layout/index.vue'),
     children: [
+      {
+        path: '/dashboard',
+        component: () => import('./components/dashboard/index.vue'),
+        meta: {moduleId: 'home', title: '首页', icon: 'home', perm: 'show'},
+        children: []
+      },
       {
         path: '/monitoring',
         component: () => import('./components/common/parent-route.vue'),
