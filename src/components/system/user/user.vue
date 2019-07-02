@@ -80,7 +80,7 @@
                 <dict :dict-group="'orgUserStatus'" :dict-key="formatStatus(row.status)"></dict>
               </td>
               <td class="list-op">
-                <perm label="erp-user-edit">
+                <span v-has="erp-user-edit">
                   <a href="#" @click.stop.prevent="edit(row)"><i
                     class="el-icon-t-edit"></i>编辑</a>
 
@@ -91,7 +91,7 @@
                   <oms-forbid :item="row" @forbided="useNormal" :tips='"确认启用用户\""+row.name+"\"?"'
                               v-show="row.status=== '2' "><i class="el-icon-t-start" v-show="!row.adminFlag"></i>启用
                   </oms-forbid>
-                </perm>
+                </span>
               </td>
             </tr>
             </tbody>

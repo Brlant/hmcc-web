@@ -16,11 +16,10 @@
 
   .bar-part {
     margin-bottom: 20px;
-
   }
 
   .dashboard {
-    padding-top: 20px;
+    padding-top: 20px !important;
 
     .header {
       margin: 8px 0;

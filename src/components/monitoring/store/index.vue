@@ -2,7 +2,7 @@
   <div class="order-page">
     <search-part @search="searchResult">
       <template slot="btn">
-        <el-button @click="add" plain size="small" v-has="perms[0]">
+        <el-button  plain size="small" v-has="perms[0]">
           <f-a class="icon-small" name="plus"></f-a>
           添加
         </el-button>

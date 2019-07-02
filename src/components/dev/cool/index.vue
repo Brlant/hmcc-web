@@ -8,7 +8,7 @@
         </el-button>
       </template>
     </search-part>
-    <status-list :activeStatus="activeStatus" :checkStatus="checkStatus" :statusList="statusType" v-show="!!type"/>
+    <status-list :activeStatus="activeStatus" :checkStatus="checkStatus" :statusList="statusType"/>
     <div class="order-list" style="margin-top: 20px">
       <el-row class="order-list-header">
         <el-col :span="3">名称</el-col>
