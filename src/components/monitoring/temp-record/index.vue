@@ -2,52 +2,44 @@
   .record-content {
     background: #fff;
     padding-top: 20px;
-
-    .record-title {
-      font-weight: bold;
-      font-size: 16px;
-      text-align: center;
-
-    }
-
-    .m-border {
-      border-bottom: 1px solid #333;
-      display: inline-block;
-      padding: 0 10px;
-      min-width: 50px;
-    }
-
-    .record-label {
-      text-align: center;
-      margin-top: 15px;
-    }
-
-    .record-table {
-      padding: 0 50px;
-      margin-top: 15px;
-
-      .table {
-        width: 100%;
-        border-collapse: collapse;
-
-        td {
-          padding: 8px;
-          border: 1px solid #ddd;
-          text-align: center;
-        }
-
-        .header {
-          font-weight: bold;
-        }
-      }
-    }
+  }
+  .record-title {
+    font-weight: bold;
+    font-size: 18px;
+    text-align: center;
+  }
+  .m-border {
+    border-bottom: 1px solid #333;
+    display: inline-block;
+    padding: 0 10px;
+    min-width: 50px;
+  }
+  .record-label {
+    text-align: center;
+    margin-top: 15px;
+  }
+  .record-table {
+    padding: 0 50px;
+    margin-top: 15px;
+  }
+  .table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  .table td {
+    padding: 8px;
+    border: 1px solid #ddd;
+    text-align: center;
+  }
+  .table .header {
+    font-weight: bold;
   }
 </style>
 <template>
   <div class="order-page">
     <search-part @search="searchResult">
       <template slot="btn">
-        <el-button plain size="small" v-has="'ccs-monitordev-add'">
+        <el-button plain size="small" v-has="'ccs-monitordev-add'" @click="print">
           <f-a class="icon-small" name="plus"></f-a>
           打印
         </el-button>
@@ -89,14 +81,14 @@
                   <td>{{item[0].recordDate || '-'}}</td>
                   <td>{{item[0].refrigerationTemperature || '-'}}</td>
                   <td>{{item[0].freezeTemperature || '-'}}</td>
-                  <td>{{item[0].recordUserId || '未记录'}}</td>
+                  <td class="R">{{item[0].recordUserId || '未记录'}}</td>
                 </tr>
                 <tr>
                   <td>下午</td>
                   <td>{{item[1].recordDate || '-'}}</td>
                   <td>{{item[1].refrigerationTemperature || '-'}}</td>
                   <td>{{item[1].freezeTemperature || '-'}}</td>
-                  <td>{{item[1].recordUserId || '未记录'}}</td>
+                  <td class="R">{{item[1].recordUserId || '未记录'}}</td>
                 </tr>
               </template>
             </table>
@@ -120,14 +112,14 @@
                   <td>{{item[0].recordDate || '-'}}</td>
                   <td>{{item[0].refrigerationTemperature || '-'}}</td>
                   <td>{{item[0].freezeTemperature || '-'}}</td>
-                  <td>{{item[0].recordUserId || '未记录'}}</td>
+                  <td class="R">{{item[0].recordUserId || '未记录'}}</td>
                 </tr>
                 <tr>
                   <td>下午</td>
                   <td>{{item[1].recordDate || '-'}}</td>
                   <td>{{item[1].refrigerationTemperature || '-'}}</td>
                   <td>{{item[1].freezeTemperature || '-'}}</td>
-                  <td>{{item[1].recordUserId || '未记录'}}</td>
+                  <td class="R">{{item[1].recordUserId || '未记录'}}</td>
                 </tr>
               </template>
             </table>
@@ -205,6 +197,26 @@
       },
       format(time, str = 'YYYY') {
         return this.$moment(time).format(str);
+      },
+      print() {
+        var oPop = window.open('', 'oPop');
+        let content = this.$el.querySelector('.record-content');
+        var str = '<!DOCTYPE html>';
+        str += '<html>';
+        str += '<head>';
+        str += '<meta charset="utf-8">';
+        str += '<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">';
+        str += '<style>';
+        str += '.record-content {background: #fff;  padding-top: 20px; font-size: 9pt;} .record-title {font-weight: bold;  font-size: 18px;  text-align: center;} .m-border {border-bottom: 1px solid #000;  display: inline-block;  padding: 0 10px;  min-width: 50px;} .record-label {text-align: center;  margin-top: 15px;}.record-table { margin-top: 15px;}.table {  width: 100%;  border-collapse: collapse;}.table td {  padding: 4px;  border: 1px solid #000;  text-align: center;}.table .header {  font-weight: bold;}.el-col {width: 50%; float: left}';
+        str += '</style>';
+        str += '</head>';
+        str += '<body>';
+        str += '</body>';
+        str += '</html>';
+        oPop.document.write(str);
+        oPop.document.body.append(content.cloneNode(true));
+        oPop.print();
+        oPop.close();
       }
     }
   };
