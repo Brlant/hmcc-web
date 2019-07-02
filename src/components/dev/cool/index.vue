@@ -109,7 +109,7 @@
         return this.$route.meta.perms;
       },
       coolDevType() {
-        return this.$store.state.coolDevType
+        return this.$getDict('coolDevType')
       }
     },
     watch: {

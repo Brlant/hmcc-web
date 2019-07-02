@@ -67,7 +67,7 @@
     },
     computed: {
       coolDevType() {
-        return this.$store.state.coolDevType
+        return this.$getDict('coolDevType')
       },
       type () {
         return this.$route.meta.type

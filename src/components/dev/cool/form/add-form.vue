@@ -18,9 +18,11 @@
                       placeholder="请输入名称搜索单位" v-model="form.orgId"></org-select>
         </el-form-item>
         <el-form-item label="类型" prop="type">
-          <el-radio-group v-model="form.type">
-            <el-radio :label="item.key" v-for="item in coolDevType" :key="item.key">{{item.label}}</el-radio>
-          </el-radio-group>
+          <el-select placeholder="请选择类型" v-model="form.status" popper-class="selects--custom">
+            <el-option :key="item.key" :label="item.label" :value="item.key"
+                       v-for="(item, index) in coolDevType">
+            </el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="品牌">
           <oms-input placeholder="请输入品牌"  v-model="form.brand"/>
@@ -110,7 +112,7 @@
         return this.$store.state.doorDevType;
       },
       coolDevType() {
-        return this.$store.state.coolDevType
+        return this.$getDict('coolDevType')
       }
     },
     watch: {

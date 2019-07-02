@@ -30,10 +30,6 @@ const state = {
   findPath: true,
   times: [],
   isShowTemp: false,
-  coolDevType: [
-    {key: '0', label: '冰箱'},
-    {key: '1', label: '冷柜'},
-  ],
   medicalDevType: [
     {key: '0', label: '未知'},
     {key: '1', label: '医用'},

@@ -83,6 +83,7 @@
     },
     mixins: [TimeMixins],
     beforeRouteUpdate(to, from, next) {
+      this.clearAllTimes();
       next();
     },
     methods: {

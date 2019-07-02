@@ -20,11 +20,6 @@
             trigger: 'item',
             formatter: '{a} <br/>{b}: {c} ({d}%)'
           },
-          // legend: {
-          //   orient: 'vertical',
-          //   x: 'left',
-          //   data: ['有线温度', '无线温度', '冷柜温度', '车载温度']
-          // },
           series: [
             {
               name: '冷链设备组成',
@@ -51,19 +46,26 @@
         }
       };
     },
+    computed: {
+      coolDevType() {
+        return this.$getDict('coolDevType');
+      }
+    },
     mounted() {
       this.queryData();
     },
     methods: {
+      getLabel(key) {
+        let item = this.coolDevType.find(f => f.key === key) || {};
+        return item.label;
+      },
       queryData() {
         this.$http('/ccsIndex/gainDevComposition').then(res => {
-          this.options.series[0].data = [
-            {value: res.data[0], name: '有线温度计'},
-            {value: res.data[1], name: '无线温度计'},
-            {value: res.data[2], name: '冷柜温度计'},
-            {value: res.data[3], name: '车载温度计'},
-            {value: res.data[4] ? res.data[4] : 0, name: '温度计'}
-          ];
+          let data = res.data.data;
+          this.options.series[0].data = Object.keys(data).map(m => ({
+            value: data[m],
+            name: this.getLabel(m)
+          }));
           if (!this.cycle) return;
           this.$parent.setTimes(setTimeout(this.queryData, this.cycle));
         });

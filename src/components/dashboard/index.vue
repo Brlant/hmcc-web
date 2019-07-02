@@ -126,31 +126,18 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-
-    > div {
-
-      &:first-child {
-        width: 300px;
-      }
-
-      &:last-child {
-        width: 820px;
-      }
-
-      border: 1px solid #eee;
-      padding: 15px;
-      background: #fff;
-
-      .echarts {
-        height: 300px;
-        width: 100%
-      }
-    }
   }
 
   .equipment-chart, .alarm-chart {
     position: relative;
+    border: 1px solid #eee;
+    padding: 15px;
+    background: #fff;
 
+    .echarts {
+      height: 300px;
+      width: 100%
+    }
     .refresh-cycle-dropdown {
       position: absolute;
       top: 10px;
@@ -262,16 +249,20 @@
         </el-table-column>
       </el-table>
     </div>
-    <div class="bar-part warning-chart-part">
-      <div class="equipment-chart">
-        <refresh-cycle @change="equipmentCycleChange"></refresh-cycle>
-        <equipment-chart ref="equipmentChart"></equipment-chart>
-      </div>
-      <div class="alarm-chart">
-        <refresh-cycle @change="equipmentAlarmChange"></refresh-cycle>
-        <alarm-chart ref="alarmChart"></alarm-chart>
-      </div>
-    </div>
+    <el-row class="bar-part warning-chart-part">
+      <el-col :span="8">
+        <div class="equipment-chart">
+          <refresh-cycle @change="equipmentCycleChange"></refresh-cycle>
+          <equipment-chart ref="equipmentChart"></equipment-chart>
+        </div>
+      </el-col>
+      <el-col :span="16" style="padding-left: 10px">
+        <div class="alarm-chart">
+          <refresh-cycle @change="equipmentAlarmChange"></refresh-cycle>
+          <alarm-chart ref="alarmChart"></alarm-chart>
+        </div>
+      </el-col>
+    </el-row>
     <page-right :show="showIndex !== -1" @right-close="resetRightBox" :css="{'width':'900px','padding':0}">
       <show-form :formItem="form" :index="showIndex" v-show="showIndex===0" :tempTypeList="tempTypeList"
                  @right-close="resetRightBox"/>

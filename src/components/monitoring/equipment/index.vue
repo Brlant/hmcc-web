@@ -132,7 +132,7 @@
         return this.$route.meta.type;
       },
       coolDevType() {
-        return this.$store.state.coolDevType;
+        return this.$getDict('coolDevType');
       }
     },
     watch: {

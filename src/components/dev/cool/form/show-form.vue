@@ -81,7 +81,7 @@
         return this.$store.state.doorDevType;
       },
       coolDevType() {
-        return this.$store.state.coolDevType
+        return this.$getDict('coolDevType')
       }
     },
     watch: {
