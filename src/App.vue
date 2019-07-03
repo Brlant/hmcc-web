@@ -144,6 +144,7 @@
           }
           data = JSON.parse(data);
           this.$store.commit('initUser', data);
+          this.$getDict('coolDevType');
         }).catch(() => {
           Auth.logout().then(() => {
             this.$router.addRoutes(ErrorPage);

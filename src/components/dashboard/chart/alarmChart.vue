@@ -14,8 +14,10 @@
 </template>
 
 <script>
+  import TimeMixins from '@/mixins/timeMixin';
   export default {
     name: 'alarmChart',
+    mixins: [TimeMixins],
     data() {
       return {
         cycle: 0,
@@ -112,12 +114,14 @@
     },
     methods: {
       queryData() {
-        this.$http('/ccsIndex/gainWarnRecordStat').then(res => {
-          let {series} = this.options;
-          series[1].data = res.data.dayList.map(m => [m.statTime, m.statVal]);
-          series[0].data = res.data.monthList.map(m => [m.statTime, m.statVal]);
-          if (!this.cycle) return;
-          this.$parent.setTimes(setTimeout(this.queryData, this.cycle));
+        this.$http('/index/gainWarnEventStatus').then(res => {
+          if(res.data.code === 200) {
+            let {series} = this.options;
+            series[1].data = res.data.data.dayList.map(m => [m.statTime, m.statVal]);
+            series[0].data = res.data.data.monthList.map(m => [m.statTime, m.statVal]);
+            if (!this.cycle) return;
+            this.setTimes(setTimeout(this.queryData, this.cycle));
+          }
         });
       }
     }

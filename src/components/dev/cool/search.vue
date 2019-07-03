@@ -31,14 +31,6 @@
                        v-model.trim="searchCondition.version"></oms-input>
           </oms-form-row>
         </el-col>
-        <el-col :span="8">
-          <oms-form-row label="状态" :span="5">
-            <el-radio-group v-model="searchCondition.status" size="small">
-              <el-radio-button label="1">启用</el-radio-button>
-              <el-radio-button label="0">停用</el-radio-button>
-            </el-radio-group>
-          </oms-form-row>
-        </el-col>
       </el-form>
     </template>
   </search-template>
@@ -54,8 +46,7 @@
           no: null,
           devName: null,
           devType: null,
-          version: null,
-          status: null
+          version: null
         },
         showSearch: false,
         list: [],
@@ -71,8 +62,7 @@
           no: null,
           devName: null,
           devType: null,
-          version: null,
-          status
+          version: null
         };
         this.$emit('search', this.searchCondition);
       },

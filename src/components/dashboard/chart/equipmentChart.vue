@@ -7,7 +7,9 @@
 </template>
 
 <script>
+  import TimeMixins from '@/mixins/timeMixin';
   export default {
+    mixins: [TimeMixins],
     name: 'equipmentChart',
     data() {
       return {
@@ -60,14 +62,17 @@
         return item.label;
       },
       queryData() {
-        this.$http('/ccsIndex/gainDevComposition').then(res => {
-          let data = res.data.data;
-          this.options.series[0].data = Object.keys(data).map(m => ({
-            value: data[m],
-            name: this.getLabel(m)
-          }));
-          if (!this.cycle) return;
-          this.$parent.setTimes(setTimeout(this.queryData, this.cycle));
+        this.$http('/index/gainFreezerDevComposition').then(res => {
+          if(res.data.code === 200) {
+            let data = res.data.data;
+            this.options.series[0].data = Object.keys(data).map(m => ({
+              value: data[m],
+              name: this.getLabel(m)
+            }));
+            console.log(this.options.series[0].data);
+            if (!this.cycle) return;
+            this.setTimes(setTimeout(this.queryData, this.cycle));
+          }
         });
       }
     }

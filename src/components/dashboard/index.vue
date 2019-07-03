@@ -156,8 +156,8 @@
         </div>
         <div class="warning-item-body">
           <div>当前监控</div>
-          <div>{{focusTotalCount.curMonitorCnt}}</div>
-          <div>已有设备: <span>{{focusTotalCount.totalMonitorCnt}}</span></div>
+          <div>{{focusTotalCount.currentMonitorDevCount}}</div>
+          <div>已有设备: <span>{{focusTotalCount.totalMonitorDevCount}}</span></div>
         </div>
       </div>
       <div class="waring-statistics-2">
@@ -167,8 +167,8 @@
         </div>
         <div class="warning-item-body">
           <div>正在发生告警</div>
-          <div>{{focusTotalCount.unConfirmWarnRecordCnt}}</div>
-          <div>今日累计告警: <span>{{focusTotalCount.dayWarnRecordCnt}}</span></div>
+          <div>{{focusTotalCount.unconfirmWarnEventCount}}</div>
+          <div>今日累计告警: <span>{{focusTotalCount.dayWarnEventCount}}</span></div>
         </div>
       </div>
       <div class="waring-statistics-3">
@@ -178,8 +178,8 @@
         </div>
         <div class="warning-item-body">
           <div>今日通知</div>
-          <div>{{focusTotalCount.dayNotifyCnt}}</div>
-          <div>累计通知: <span>{{focusTotalCount.totalNotifyCnt}}</span></div>
+          <div>{{focusTotalCount.dayNotifyCount}}</div>
+          <div>累计通知: <span>{{focusTotalCount.totalNotifyCount}}</span></div>
         </div>
       </div>
       <div class="waring-statistics-4">
@@ -189,8 +189,8 @@
         </div>
         <div class="warning-item-body">
           <div>累计接入</div>
-          <div>{{focusTotalCount.totalDevCnt}}</div>
-          <div>已有探头: <span>{{focusTotalCount.totalDevCnt}}</span></div>
+          <div>{{focusTotalCount.sensorCount}}</div>
+          <div>已有探头: <span>{{focusTotalCount.totalSensorCount}}</span></div>
         </div>
       </div>
     </div>
@@ -301,14 +301,14 @@
         form: {},
         cycle: 0,
         focusTotalCount: {
-          curMonitorCnt: 0,
-          totalMonitorCnt: 0,
-          unConfirmWarnRecordCnt: 0,
-          dayWarnRecordCnt: 0,
-          dayNotifyCnt: 0,
-          totalNotifyCnt: 0,
-          devException: 0,
-          totalDevCnt: 0
+          currentMonitorDevCount: 0,
+          dayNotifyCount: 0,
+          dayWarnEventCount: 0,
+          sensorCount: 0,
+          totalMonitorDevCount: 0,
+          totalNotifyCount	: 0,
+          totalSensorCount: 0,
+          unconfirmWarnEventCount: 0
         },
         DevIcon
       };
@@ -365,11 +365,8 @@
         });
       },
       queryFocusTotalCount() {
-        this.$http('/ccsIndex/gainTopCounts').then(res => {
-          this.focusTotalCount = res.data;
-          // 去掉实时刷新统计数量
-          // if (!this.cycle) return;
-          // this.setTimes(setTimeout(this.queryReports, this.cycle));
+        this.$http('/index/gainTopCounts').then(res => {
+          this.focusTotalCount = res.data.data;
         });
       },
       resetRightBox() {

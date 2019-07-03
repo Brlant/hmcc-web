@@ -93,6 +93,7 @@
       return {
         statusType: JSON.parse(JSON.stringify(utils.coolType)),
         filters: {
+          status: '1',
           type: '',
           no: ''
         },
