@@ -15,10 +15,13 @@
           </el-col>
           <el-col :span="8">
             <oms-form-row :span="8" label="类型">
-              <el-radio-group @change="search" size="small" v-model="searchCondition.monitordevType">
-                <el-radio-button :key="item.key" :label="item.key" v-for="item in coolDevType">{{item.label}}
-                </el-radio-button>
-              </el-radio-group>
+              <!--<el-radio-group @change="search" size="small" v-model="searchCondition.monitordevType">-->
+                <!--<el-radio-button :key="item.key" :label="item.key" v-for="item in coolDevType">{{item.label}}-->
+                <!--</el-radio-button>-->
+              <!--</el-radio-group>-->
+              <el-select @change="search" v-model="searchCondition.monitordevType" clearable>
+                <el-option :key="item.key" :value="item.key" :label="item.label" v-for="item in coolDevType"></el-option>
+              </el-select>
             </oms-form-row>
           </el-col>
           <el-col :span="8">

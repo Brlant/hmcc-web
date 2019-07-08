@@ -114,11 +114,11 @@
     },
     methods: {
       queryData() {
-        this.$http('/index/gainWarnEventStatus').then(res => {
+        this.$http('/index/gainAlarmEventStatus').then(res => {
           if(res.data.code === 200) {
             let {series} = this.options;
-            series[1].data = res.data.data.dayList.map(m => [m.statTime, m.statVal]);
-            series[0].data = res.data.data.monthList.map(m => [m.statTime, m.statVal]);
+            series[1].data = res.data.data.dayList.map(m => [m.statusTime, m.statusVal]);
+            series[0].data = res.data.data.monthList.map(m => [m.statusTime, m.statusVal]);
             if (!this.cycle) return;
             this.setTimes(setTimeout(this.queryData, this.cycle));
           }
