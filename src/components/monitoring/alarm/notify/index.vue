@@ -65,7 +65,7 @@
     data() {
       return {
         filters: {
-          status: '0'
+          status: ''
         },
         checkList: [
           {label: '短信', key: '1', placeholder: '请输入手机号', validator: this.checkPhone},
