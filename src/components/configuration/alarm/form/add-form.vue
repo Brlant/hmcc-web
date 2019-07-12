@@ -183,7 +183,7 @@
         this.$refs['tempForm'].clearValidate();
         if (this.formItem.id) {
           this.probeList = [
-            {name: this.formItem.sensorName, id: this.formItem.sensorId}
+            {name: this.formItem.sensorName, id: this.formItem.sensorId,  no: this.formItem.sensorNo}
           ];
           this.notifyList = [
             {
@@ -232,7 +232,6 @@
       save(formName) {
         this.$refs[formName].validate((valid) => {
           if (valid && this.doing === false) {
-
             this.probeList.forEach(i => {
               if (i.id === this.form.sensorId) {
                 this.form.sensorName = i.name;
