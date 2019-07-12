@@ -359,6 +359,7 @@
         let details = [].concat(this.form.levelOneAlarmObjectList,
           this.form.levelTwoAlarmObjectList, this.form.levelThreeAlarmObjectList);
         details.forEach(i => {
+          if(i.alarmNoticeType === '1') return;
           this.checkContactWay(i);
         });
         return details.some(s => s.noPass);
