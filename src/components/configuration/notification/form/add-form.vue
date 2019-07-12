@@ -223,13 +223,13 @@
         item.remark = '';
         item.alarmNoticeUserName = '';
         this.userList.forEach(i => {
-          if(i.id === item.alarmNoticeUserId) {
+          if (i.id === item.alarmNoticeUserId) {
             item.alarmNoticeUserName = i.name;
           }
-        })
+        });
       },
       checkChange(item) {
-        if(!item.alarmNoticeUserId) return;
+        if (!item.alarmNoticeUserId) return;
         item.alarmNoticeTarget = '';
         if (item.alarmNoticeType === '0') {
           this.checkContactWay(item);
@@ -305,6 +305,8 @@
       queryDetail() {
         AlarmNotifyGroup.get(this.formItem.id).then(res => {
           res.data.data.levelOneAlarmObjectList.forEach(i => {
+            let isHas = this.userList.some(s => s.id === i.alarmNoticeUserId);
+            if (isHas) return;
             this.userList.push({
               id: i.alarmNoticeUserId,
               name: i.alarmNoticeUserName,
@@ -312,6 +314,8 @@
             });
           });
           res.data.data.levelTwoAlarmObjectList.forEach(i => {
+            let isHas = this.userList.some(s => s.id === i.alarmNoticeUserId);
+            if (isHas) return;
             this.userList.push({
               id: i.alarmNoticeUserId,
               name: i.alarmNoticeUserName,
@@ -319,6 +323,8 @@
             });
           });
           res.data.data.levelThreeAlarmObjectList.forEach(i => {
+            let isHas = this.userList.some(s => s.id === i.alarmNoticeUserId);
+            if (isHas) return;
             this.userList.push({
               id: i.alarmNoticeUserId,
               name: i.alarmNoticeUserName,
@@ -359,7 +365,7 @@
         let details = [].concat(this.form.levelOneAlarmObjectList,
           this.form.levelTwoAlarmObjectList, this.form.levelThreeAlarmObjectList);
         details.forEach(i => {
-          if(i.alarmNoticeType === '1') return;
+          if (i.alarmNoticeType === '1') return;
           this.checkContactWay(i);
         });
         return details.some(s => s.noPass);
@@ -400,7 +406,7 @@
             });
 
             this.orgList.forEach(i => {
-              if(i.id === form.orgId) {
+              if (i.id === form.orgId) {
                 form.orgName = i.name;
               }
             });
