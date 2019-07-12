@@ -27,8 +27,8 @@
              v-for="item in dataList">
           <el-row>
             <el-col :span="6">{{item.sensorName}}</el-col>
-            <el-col :span="4">{{item.way === '0' ? '告警' : '恢复'}}</el-col>
-            <el-col :span="4">{{item.type === '0' ? '短信' : '微信'}}</el-col>
+            <el-col :span="4">{{item.type === '0' ? '告警' : '恢复'}}</el-col>
+            <el-col :span="4">{{item.way === '0' ? '短信' : '微信'}}</el-col>
             <el-col :span="6">{{item.time | time}}</el-col>
             <el-col :span="4">
               {{item.status === '1' ? '成功' : '失败'}}
