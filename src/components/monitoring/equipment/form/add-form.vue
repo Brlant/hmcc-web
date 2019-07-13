@@ -122,11 +122,12 @@
               name: this.formItem.monitorTargetName
             }
           ];
-          this.form = JSON.parse(JSON.stringify(this.formItem));
-          this.form.sensorList = this.formItem.sensorDataList.map(i => ({
+          let formData = JSON.parse(JSON.stringify(this.formItem));
+          formData.sensorList = this.formItem.sensorDataList.map(i => ({
             sensorId: i.id,
             temperatureType: i.temperatureType
           }));
+          this.form = formData;
         } else {
           this.resetForm();
           this.actionType = '添加';
