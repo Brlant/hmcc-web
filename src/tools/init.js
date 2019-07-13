@@ -168,7 +168,7 @@ export function init(Vue) {
         success(res);
       }
     }).catch(e => {
-      this.$notify.error({
+      errorTitle && this.$notify.error({
         duration: 2000,
         message: e.response && e.response.data && e.response.data.msg || errorTitle || '操作失败'
       });

@@ -251,11 +251,7 @@
             freezeTemperature: item.sensorDataList.filter(f => f.temperatureType === '1').map(m => m.temperature).join('/')
           };
           this.$httpRequestOpera(temperatureRecord.add(obj), {
-            successTitle: '记录完成',
-            errorTitle: '记录失败',
-            success: res => {
-
-            }
+            successTitle: '记录完成'
           });
         });
       }
