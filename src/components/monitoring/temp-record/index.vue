@@ -172,7 +172,7 @@
           if (res.data.code === 200) {
             res.data.data.forEach(i => {
               i.dayOfMonth = this.$moment(i.recordDate).format('D');
-              i.recordDate = this.$moment(i.recordDate).format('hh::mm');
+              i.recordDate = this.$moment(i.recordDate).format('hh:mm');
             });
             let ary = [];
             let i = 1;
