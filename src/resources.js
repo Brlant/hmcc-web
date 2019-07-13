@@ -107,10 +107,10 @@ export const monitorRelation = resource('/monitor-relation', http, {
     return http.post('/monitor-relation/page', params);
   },
   stop(id) {
-    return http.put(`/gateway/disable/${id}`);
+    return http.put(`/monitor-relation/disable/${id}`);
   },
   start(id) {
-    return http.put(`/gateway/active/${id}`);
+    return http.put(`/monitor-relation/active/${id}`);
   }
 });
 
@@ -175,7 +175,7 @@ export const gateway = resource('/gateway', http, {
     return http.post('/gateway/page', params);
   },
   update(obj) {
-    return http.put('//gateway', obj);
+    return http.put('/gateway', obj);
   },
   queryStateNum(params) {
     return http.post('/gateway/count', params);
