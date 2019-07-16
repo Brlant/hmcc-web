@@ -23,7 +23,7 @@
 </style>
 <template>
   <el-row class="dev-list">
-    <el-col class="item" :span="12" v-for="item in devItem.sensorDataList">
+    <el-col class="item" :span="12" :key="item.id" v-for="item in devItem.sensorDataList">
       <div class="content">
         <el-row >
           <el-col :span="12">
