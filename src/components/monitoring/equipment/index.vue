@@ -72,7 +72,7 @@
                        v-show="item.monitorStatus==='0'">开启监控
               </des-btn>
               <des-btn @click="cancelMonitorTemp(item)"
-                       icon="forbidden" v-has="'ccs-monitordev-switch'" v-show="item.monitorStatus==='1'">取消监控
+                       icon="forbidden" v-has="'ccs-monitordev-switch'" v-show="item.monitorStatus==='1' || item.monitorStatus==='2'">取消监控
               </des-btn>
               <des-btn @click="edit(item)" icon="edit" v-has="'ccs-monitordev-edit'">编辑</des-btn>
               <des-btn @click="deleteItem(item)" icon="delete" v-has="'ccs-monitordev-del'">删除</des-btn>
@@ -196,11 +196,7 @@
       },
       monitorTemp(item) {
         this.$confirmOpera(`是否开启监控设备"${item.monitorTargetName}"`, () => {
-          let obj = {
-            activeFlag: '1',
-            targetId: item.id
-          };
-          this.$httpRequestOpera(monitorRelation.start(obj), {
+          this.$httpRequestOpera(monitorRelation.start(item.monitorTargetId), {
             successTitle: '开启监控完成',
             errorTitle: '开启监控失败',
             success: () => {
@@ -210,14 +206,10 @@
         });
       },
       cancelMonitorTemp(item) {
-        this.$confirmOpera(`是否关闭对设备"${item.monitorTargetName}"的监控`, () => {
-          let obj = {
-            activeFlag: '0',
-            targetId: item.id
-          };
-          this.$httpRequestOpera(monitorRelation.stop(obj), {
-            successTitle: '关闭监控成功',
-            errorTitle: '关闭监控失败',
+        this.$confirmOpera(`是否取消对设备"${item.monitorTargetName}"的监控`, () => {
+          this.$httpRequestOpera(monitorRelation.stop(item.monitorTargetId), {
+            successTitle: '取消监控成功',
+            errorTitle: '取消监控失败',
             success: res => {
               item.monitorFlag = '0';
             }
