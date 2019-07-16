@@ -63,7 +63,7 @@
               </el-tooltip>
               </span>
             </el-col>
-            <el-col :span="10" class="opera-btn" align="right">
+            <el-col :span="10" class="opera-btn" >
               <des-btn @click="record(item)" icon="report" v-has="'ccs-monitordev-switch'">
                 记录温度
               </des-btn>

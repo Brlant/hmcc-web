@@ -40,7 +40,9 @@
               <div class="f-grey">{{item.noticeTarget}}</div>
             </el-col>
             <el-col :span="6" class="R">{{item.time|time}}</el-col>
-            <el-col :span="4" class="R">{{item.result}}</el-col>
+            <el-col :span="4" class="R">
+              {{item.result === '0' ? '发送失败' : '发送成功'}}
+            </el-col>
             <el-col :span="2">
               {{item.artificialConfirm === '0' ?  '未确认' : '已确认'}}
             </el-col>

@@ -28,7 +28,7 @@
             <oms-form-row :span="9" label="通知方式">
               <el-radio-group @change="search" size="small" v-model="searchCondition.way">
                 <el-radio-button label="0">短信</el-radio-button>
-                <el-radio-button label="1">邮箱</el-radio-button>
+                <el-radio-button label="1">微信</el-radio-button>
               </el-radio-group>
             </oms-form-row>
           </el-col>

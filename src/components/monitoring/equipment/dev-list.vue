@@ -34,8 +34,8 @@
             </oms-row>
           </el-col>
           <el-col :span="12">
-            <oms-row label="温度类型" :span="8">
-              {{devItem.temperatureType === '0' ? '冷藏' : '冷冻'}}
+            <oms-row label="温度类型" :span="12">
+              {{item.temperatureType === '0' ? '冷藏' : '冷冻'}}
             </oms-row>
           </el-col>
         </el-row>

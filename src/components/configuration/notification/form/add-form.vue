@@ -304,32 +304,11 @@
       },
       queryDetail() {
         AlarmNotifyGroup.get(this.formItem.id).then(res => {
-          res.data.data.levelOneAlarmObjectList.forEach(i => {
-            let isHas = this.userList.some(s => s.id === i.alarmNoticeUserId);
-            if (isHas) return;
-            this.userList.push({
-              id: i.alarmNoticeUserId,
-              name: i.alarmNoticeUserName,
-              phone: i.alarmNoticeTarget
-            });
-          });
-          res.data.data.levelTwoAlarmObjectList.forEach(i => {
-            let isHas = this.userList.some(s => s.id === i.alarmNoticeUserId);
-            if (isHas) return;
-            this.userList.push({
-              id: i.alarmNoticeUserId,
-              name: i.alarmNoticeUserName,
-              phone: i.alarmNoticeTarget
-            });
-          });
-          res.data.data.levelThreeAlarmObjectList.forEach(i => {
-            let isHas = this.userList.some(s => s.id === i.alarmNoticeUserId);
-            if (isHas) return;
-            this.userList.push({
-              id: i.alarmNoticeUserId,
-              name: i.alarmNoticeUserName,
-              phone: i.alarmNoticeTarget
-            });
+
+          let list = [].concat(res.data.data.levelOneAlarmObjectList,
+            res.data.data.levelTwoAlarmObjectList, res.data.data.levelThreeAlarmObjectList);
+          list.forEach(i => {
+            this.formatContactWay(i)
           });
           this.orgList = [
             {
@@ -341,7 +320,6 @@
         });
       },
       formatContactWay(item) {
-        if (item.alarmNoticeType === '1') return;
         User.get(item.alarmNoticeUserId).then(res => {
           let isHas = this.userList.some(s => s.id === item.alarmNoticeUserId);
           if (!isHas) {
@@ -389,12 +367,13 @@
       save(formName) {
         this.$refs[formName].validate((valid) => {
           if (valid && this.doing === false) {
+            console.log(JSON.parse(JSON.stringify(this.form)));
             if (this.checkContactWayWhenSave()) return;
             // // 微信模式的校验
             if (this.checkWeChatWay()) return;
             // 拼装给后台的数据
             const form = JSON.parse(JSON.stringify(this.form));
-
+            console.log(form);
             form.levelOneAlarmObjectList.forEach(i => {
               i.alarmLevel = '1';
             });
