@@ -8,28 +8,25 @@
       <el-form class="advanced-query-form" onsubmit="return false">
         <el-row>
           <el-col :span="8">
-            <oms-form-row :span="5" label="编码">
+            <oms-form-row :span="5" label="设备名称">
               <oms-input @keyup.native.enter="search" placeholder="请输入名称"
-                         v-model.trim="searchCondition.monitordevCode"></oms-input>
+                         v-model.trim="searchCondition.monitorTargetName"></oms-input>
             </oms-form-row>
           </el-col>
           <el-col :span="8">
-            <oms-form-row :span="8" label="类型">
-              <!--<el-radio-group @change="search" size="small" v-model="searchCondition.monitordevType">-->
-                <!--<el-radio-button :key="item.key" :label="item.key" v-for="item in coolDevType">{{item.label}}-->
-                <!--</el-radio-button>-->
-              <!--</el-radio-group>-->
-              <el-select @change="search" v-model="searchCondition.monitordevType" clearable>
-                <el-option :key="item.key" :value="item.key" :label="item.label" v-for="item in coolDevType"></el-option>
+            <oms-form-row :span="8" label="设备类型">
+              <el-select @change="search" v-model="searchCondition.monitorTargetType" clearable>
+                <el-option :key="item.key" :value="item.key" :label="item.label"
+                           v-for="item in coolDevType"></el-option>
               </el-select>
             </oms-form-row>
           </el-col>
           <el-col :span="8">
             <oms-form-row :span="8" label="监控状态">
-              <el-radio-group @change="search" size="small" v-model="searchCondition.monitorFlag">
+              <el-radio-group @change="search" size="small" v-model="searchCondition.monitorStatus">
                 <el-radio-button label="1">正常</el-radio-button>
-                <el-radio-button label="0">告警</el-radio-button>
-                <el-radio-button label="2">未监控</el-radio-button>
+                <el-radio-button label="2">告警</el-radio-button>
+                <el-radio-button label="0">未监控</el-radio-button>
               </el-radio-group>
             </oms-form-row>
           </el-col>
@@ -49,14 +46,14 @@
 </template>
 <script>
   import {BaseInfo} from '@/resources';
+
   export default {
     data: function () {
       return {
         searchCondition: {
-          monitordevCode: '',
-          monitordevType: '',
-          monitorFlag: '',
-          warnStatus: ''
+          monitorTargetName: '',
+          monitorTargetType: '',
+          monitorStatus: ''
         },
         showSearch: false,
         typeList: this.$parent.typeList,
@@ -66,14 +63,14 @@
       };
     },
     mounted() {
-      this.initSearchParams();
+
     },
     computed: {
       coolDevType() {
-        return this.$getDict('coolDevType')
+        return this.$getDict('coolDevType');
       },
-      type () {
-        return this.$route.meta.type
+      type() {
+        return this.$route.meta.type;
       }
     },
     methods: {
@@ -88,21 +85,14 @@
           this.orgList = res.data;
         });
       },
-      initSearchParams() {
-        let query = this.$route.query;
-        if (!query.code) return;
-        this.searchCondition.monitordevCode = query.code;
-        this.search();
-      },
       search() {
         this.$emit('search', this.searchCondition);
       },
       reset() {
         this.searchCondition = {
-          monitordevCode: '',
-          monitordevType: '',
-          monitorFlag: '',
-          warnStatus: ''
+          monitorTargetName: '',
+          monitorTargetType: '',
+          monitorStatus: ''
         };
         this.$emit('search', this.searchCondition);
       },
