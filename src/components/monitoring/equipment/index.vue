@@ -200,7 +200,7 @@
             successTitle: '开启监控完成',
             errorTitle: '开启监控失败',
             success: () => {
-              item.monitorFlag = '1';
+              item.monitorStatus = '1';
             }
           });
         });
@@ -211,7 +211,7 @@
             successTitle: '取消监控成功',
             errorTitle: '取消监控失败',
             success: res => {
-              item.monitorFlag = '0';
+              item.monitorStatus = '0';
             }
           });
         });
