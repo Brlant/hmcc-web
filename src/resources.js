@@ -566,7 +566,7 @@ export const BaseInfo = resource('/orgs', http, {
   },
   // 根据业务关系查询相关的单位
   queryOrgByValidReation: (orgId, obj) => {
-    return http.get('/orgs/' + orgId + '/valid-relation-with/', {params: obj});
+    return http.get('/orgs/' + orgId + '/valid-relation/', {params: obj});
   },
   // 校验邮箱
   checkEmail: (email, userId) => {
