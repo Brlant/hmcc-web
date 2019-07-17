@@ -62,7 +62,8 @@
           no: null,
           name: null,
           type: null,
-          status: null
+          status: null,
+          orgId: ''
         },
         showSearch: false,
         list: [],
@@ -91,7 +92,8 @@
           no: null,
           name: null,
           type: null,
-          status: null
+          status: null,
+          orgId: ''
         };
         this.$emit('search', this.searchCondition);
       },
