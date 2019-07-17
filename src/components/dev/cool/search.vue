@@ -27,7 +27,7 @@
         </el-col>
         <el-col :span="8">
           <oms-form-row label="类型" :span="5">
-            <el-select placeholder="请选择类型" v-model="searchCondition.version" clearable popper-class="selects--custom">
+            <el-select placeholder="请选择类型" v-model="searchCondition.type" clearable popper-class="selects--custom">
               <el-option :key="item.key" :label="item.label" :value="item.key"
                          v-for="(item, index) in coolDevType">
               </el-option>
@@ -49,7 +49,7 @@
           no: null,
           devName: null,
           devType: null,
-          version: null,
+          type: null,
           orgId: ''
         },
         showSearch: false,
@@ -71,7 +71,7 @@
           no: null,
           devName: null,
           devType: null,
-          version: null,
+          type: null,
           orgId: ''
         };
         this.$emit('search', this.searchCondition);

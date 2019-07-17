@@ -28,13 +28,13 @@
         <el-col :span="8">
           <oms-form-row label="品牌" :span="5">
             <oms-input placeholder="请输入品牌" @keyup.native.enter="search"
-                       v-model.trim="searchCondition.grand"></oms-input>
+                       v-model.trim="searchCondition.brand"></oms-input>
           </oms-form-row>
         </el-col>
         <el-col :span="8">
           <oms-form-row label="型号" :span="5">
             <oms-input placeholder="请输入型号" @keyup.native.enter="search"
-                       v-model.trim="searchCondition.type"></oms-input>
+                       v-model.trim="searchCondition.version"></oms-input>
           </oms-form-row>
         </el-col>
         <el-col :span="8">
@@ -58,8 +58,8 @@
       return {
         searchCondition: {
           no: null,
-          type: null,
-          grand: null,
+          version: null,
+          brand: null,
           status: null,
           orgId: ''
         },
@@ -81,8 +81,8 @@
       reset() {
         this.searchCondition = {
           no: null,
-          type: null,
-          grand: null,
+          version: null,
+          brand: null,
           status: null,
           orgId: ''
         };
