@@ -53,7 +53,8 @@
         searchCondition: {
           monitorTargetName: '',
           monitorTargetType: '',
-          monitorStatus: ''
+          monitorStatus: '',
+          orgId: ''
         },
         showSearch: false,
         typeList: this.$parent.typeList,
@@ -92,7 +93,8 @@
         this.searchCondition = {
           monitorTargetName: '',
           monitorTargetType: '',
-          monitorStatus: ''
+          monitorStatus: '',
+          orgId: ''
         };
         this.$emit('search', this.searchCondition);
       },

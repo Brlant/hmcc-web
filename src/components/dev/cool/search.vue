@@ -27,8 +27,11 @@
         </el-col>
         <el-col :span="8">
           <oms-form-row label="类型" :span="5">
-            <oms-input placeholder="请输入型号" @keyup.native.enter="search"
-                       v-model.trim="searchCondition.version"></oms-input>
+            <el-select placeholder="请选择类型" v-model="searchCondition.version" clearable popper-class="selects--custom">
+              <el-option :key="item.key" :label="item.label" :value="item.key"
+                         v-for="(item, index) in coolDevType">
+              </el-option>
+            </el-select>
           </oms-form-row>
         </el-col>
       </el-form>
@@ -46,12 +49,18 @@
           no: null,
           devName: null,
           devType: null,
-          version: null
+          version: null,
+          orgId: ''
         },
         showSearch: false,
         list: [],
         times: []
       };
+    },
+    computed: {
+      coolDevType() {
+        return this.$getDict('coolDevType')
+      }
     },
     methods: {
       search() {
@@ -62,7 +71,8 @@
           no: null,
           devName: null,
           devType: null,
-          version: null
+          version: null,
+          orgId: ''
         };
         this.$emit('search', this.searchCondition);
       },

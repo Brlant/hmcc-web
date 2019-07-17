@@ -60,7 +60,8 @@
           no: null,
           type: null,
           grand: null,
-          status: null
+          status: null,
+          orgId: ''
         },
         showSearch: false,
         list: [],
@@ -82,7 +83,8 @@
           no: null,
           type: null,
           grand: null,
-          status: null
+          status: null,
+          orgId: ''
         };
         this.$emit('search', this.searchCondition);
       },

@@ -158,13 +158,13 @@
             {required: true, message: '请输入电压最低值', trigger: 'blur'}
           ],
           levelOneAlarmDelayTime: [
-            {required: true, message: '请输入1级告警延迟时间', trigger: 'blur'}
+            {required: true, message: '请输入1级告警延迟时间', trigger: 'change'}
           ],
           levelTwoAlarmDelayTime: [
-            {required: true, message: '请输入2级告警延迟时间', trigger: 'blur'}
+            {required: true, message: '请输入2级告警延迟时间', trigger: 'change'}
           ],
           levelThreeAlarmDelayTime: [
-            {required: true, message: '请输入3级告警延迟时间', trigger: 'blur'}
+            {required: true, message: '请输入3级告警延迟时间', trigger: 'change'}
           ],
           alarmNoticeGroupId: [
             {required: true, message: '请选择告警通知组', trigger: 'change'}
