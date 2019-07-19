@@ -47,7 +47,7 @@
               {{item.artificialConfirm === '0' ?  '未确认' : '已确认'}}
             </el-col>
             <el-col :span="4" class="opera-btn">
-              <des-btn @click="edit(item)" icon="edit" v-has="perms[1]">编辑</des-btn>
+              <!--<des-btn @click="edit(item)" icon="edit" v-has="perms[1]">编辑</des-btn>-->
               <des-btn @click="confirmItem(item)" icon="edit" v-has="perms[2]"
                        v-show="item.artificialConfirm === '0'">确认</des-btn>
             </el-col>
