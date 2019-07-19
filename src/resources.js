@@ -9,8 +9,15 @@ export const http = axios.create({
   withCredentials: true
 });
 
+
+function isNewReturnType(data) {
+  let keys = Object.keys(data);
+  if (keys.length !== 3) return false;
+  return ['code', 'data', 'msg'].every(e => keys.includes(e));
+}
+
 http.interceptors.response.use(response => {
-  if (response.data.code) {
+  if (isNewReturnType(response.data)) {
     switch (response.data.code) {
       case 200 :
         return response;
