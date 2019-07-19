@@ -107,12 +107,14 @@
       exportSearchFile: function () {
         this.$store.commit('initPrint', {
           isPrinting: true,
-          moduleId: '/alarm/record',
+          moduleId: this.$route.path,
           text: '正在导出'
         });
         let params = Object.assign({}, this.searchCondition);
-        http.get('/ccsWarnRecord/export', {params}).then(res => {
-          utils.download(res.data.path, '告警记录表');
+        http.post('/alarm-event/export', params).then(res => {
+          if(res.data.code === 200) {
+            utils.download(res.data.data.path, '告警记录表');
+          }
           this.$store.commit('initPrint', {
             isPrinting: false,
             moduleId: '/alarm/record'
@@ -121,7 +123,7 @@
         }).catch(error => {
           this.$store.commit('initPrint', {
             isPrinting: false,
-            moduleId: '/alarm/record'
+            moduleId: this.$route.path
           });
           this.$notify.error({
             message: error.response.data && error.response.data.msg || '导出失败'
