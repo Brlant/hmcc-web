@@ -1,24 +1,13 @@
 <template>
   <div class="order-page">
-    <search-part @search="searchResult">
-      <template slot="btn">
-        <el-button  plain size="small" v-has="perms[0]">
-          <f-a class="icon-small" name="plus"></f-a>
-          添加
-        </el-button>
-      </template>
-    </search-part>
     <!--<status-list :activeStatus="activeStatus" :checkStatus="checkStatus" :statusList="statusType"/>-->
     <div class="order-list" style="margin-top: 20px">
       <el-row class="order-list-header">
-        <el-col :span="3">设备名称</el-col>
-        <el-col :span="4">设备编号</el-col>
-        <el-col :span="4">所属单位</el-col>
-        <el-col :span="3">型号</el-col>
-        <el-col :span="2">温度</el-col>
-        <el-col :span="2">湿度</el-col>
-        <el-col :span="2">电压</el-col>
-        <el-col :span="4">校准期</el-col>
+        <el-col :span="8">设备编码</el-col>
+        <el-col :span="7">设备名称</el-col>
+        <el-col :span="3">温度</el-col>
+        <el-col :span="3">湿度</el-col>
+        <el-col :span="3">电压</el-col>
       </el-row>
       <el-row v-if="loadingData">
         <el-col :span="24">
@@ -33,18 +22,14 @@
         </el-col>
       </el-row>
       <div class="order-list-body flex-list-dom" v-else="">
-        <div :class="[{'active':currentItemId===item.id}]"
-             @click="showItemDetail(item)" class="order-list-item order-list-item-bg"
-             v-for="item in dataList">
+        <div class="order-list-item order-list-item-bg"
+             v-for="item in dataList" @click="showItem(item)">
           <el-row>
-            <el-col :span="3" class="R">{{item.name}}</el-col>
-            <el-col :span="4" class="R">{{item.no}}</el-col>
-            <el-col :span="4" class="R">{{item.orgName}}</el-col>
-            <el-col :span="3" class="R">{{item.type}}</el-col>
-            <el-col :span="2" class="R">{{item.type}}</el-col>
-            <el-col :span="2" class="R">{{item.type}}</el-col>
-            <el-col :span="2" class="R">{{item.type}}</el-col>
-            <el-col :span="4" class="R">{{item.type}}</el-col>
+            <el-col :span="8" class="R">{{item.devCode}}</el-col>
+            <el-col :span="7" class="R">{{item.devName}}</el-col>
+            <el-col :span="3" class="R">{{item.temperature}}</el-col>
+            <el-col :span="3" class="R">{{item.humidity}}</el-col>
+            <el-col :span="3" class="R">{{item.voltage}}</el-col>
           </el-row>
         </div>
       </div>
@@ -63,7 +48,6 @@
 <script>
   import SearchPart from './search';
   import CommonMixin from '@/mixins/commonMixin';
-  import {probe} from '@/resources';
 
   export default {
     components: {
@@ -104,9 +88,27 @@
         this.filters = Object.assign({}, this.filters, search);
       },
       queryList(pageNo) {
-        const http = probe.query;
-        const params = this.queryUtil(http, pageNo);
-      }
+        this.pager.currentPage = pageNo;
+        let params = Object.assign({}, {
+          pageNo: pageNo,
+          pageSize: this.pager.pageSize
+        }, this.filters);
+        this.loadingData = true;
+        let nowTime = new Date();
+        this.nowTime = nowTime;
+        this.$http.get('/ccsMonitorRelation', {params}).then(res => {
+          if (this.nowTime > nowTime) return;
+          if (res.data.code) res.data = res.data.data;
+          this.dataList = res.data.currentList || [];
+          this.pager.count = res.data.count;
+          this.loadingData = false;
+        });
+      },
+      showItem(item) {
+        let type = item.devType === '4' ? '2' : '1';
+        let id = item.ccsDevId;
+        this.$router.push({path: '/monitoring/store/temp', query: {id, type}});
+      },
     }
   };
 </script>

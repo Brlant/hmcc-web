@@ -382,7 +382,7 @@
         return this.$store.state.orgName;
       },
       currentPath() {
-        if(this.$route.path.includes('/monitoring/store/')) return '/monitoring/store/list';
+        if(this.$route.path.includes('/monitoring/store')) return '/monitoring/store';
         return this.$route.path;
       }
     },

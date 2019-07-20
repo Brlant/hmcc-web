@@ -1,4 +1,4 @@
-<style scoped>
+<style scoped="">
   .chart-Line {
     height: 400px;
     width: 1200px;
@@ -17,7 +17,7 @@
   </div>
 </template>
 <script>
-  const unitAry = ['', '°C', '%', '%'];
+  const unitAry = ['', '°C', '%', 'V'];
   const titleAry = ['', '温度', '湿度', '电压'];
   import {TempDev} from '@/resources';
   import axios from 'axios';
@@ -167,7 +167,7 @@
             collectTime = formatTime(params[0].value[0]);
             insertTime = formatTime(params[0].value[2]);
           }
-          let str = `采集时间: ${collectTime}<br/>数据库存储时间: ${insertTime}<br/>`;
+          let str = `采集时间: ${collectTime}<br/>插入时间: ${insertTime}<br/>`;
           params.forEach(i => {
             str += `${i.marker}${i.seriesName}: ${i.value[1]}<br/>`;
           });

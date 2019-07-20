@@ -31,10 +31,24 @@ export const routes = [
             meta: {moduleId: 'monitoring', title: '接种单位设备监控', perm: 'ccs-hotmonitor-scan', type: 2}
           },
           {
-            path: '/monitoring/store/:id',
-            component: () => import('./components/monitoring/store/index.vue'),
+            path: '/monitoring/store',
+            component: () => import('./components/common/parent-route'),
             meta: {moduleId: 'monitoring', title: '委托仓库监控', perm: 'ccs-warehouse-scan', subMenuId: 'store',
-            perms: ['ccs-wired-dev-add', 'ccs-wired-dev-edit']}
+            perms: ['ccs-wired-dev-add', 'ccs-wired-dev-edit']},
+            children: [
+              {
+                path: '',
+                component: () => import('./components/monitoring/store/index.vue'),
+                meta: {moduleId: 'monitoring', title: '委托仓库监控', perm: 'ccs-warehouse-scan', subMenuId: 'store',
+                  perms: ['ccs-wired-dev-add', 'ccs-wired-dev-edit']}
+              },
+              {
+                path: '/monitoring/store/temp',
+                component: () => import('./components/monitoring/store/dev-temp/index.vue'),
+                meta: {moduleId: 'monitoring', title: '委托仓库监控', perm: 'ccs-warehouse-scan', subMenuId: 'store',
+                  perms: ['ccs-wired-dev-add', 'ccs-wired-dev-edit']}
+              },
+            ]
           },
           {
             path: '/monitoring/temp',
