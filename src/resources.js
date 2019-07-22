@@ -300,7 +300,7 @@ export const TempDev = resource('/ccsDevice', http, {
     return http.get('/ccsDevice/countDeviceGroup', {params});
   },
   queryTempData(params) {
-    return http.get('/ccsDevice/gainDeviceReportDatas', {params});
+    return http.post('/ccsDevice/gainDeviceReportDatas', params);
   },
   queryALLTempByLike(params) {
     return http.get('/ccsDevice/queryDevListFuzzy', {params});
