@@ -222,7 +222,7 @@
       getCheckedMenu: function (data, menuList) {
         for (let i = 0; i < data.length; i++) {
           if (data[i].indeterminate || data[i].checked) {
-            menuList.push(data[i].key);
+            menuList.push(data[i].data);
           }
           if (data[i].childNodes) {
             this.getCheckedMenu(data[i].childNodes, menuList);
@@ -240,7 +240,7 @@
           let menuList = [];
           this.getCheckedMenu(this.$refs['tree'].root.childNodes, menuList);
           menuList.forEach(val => {
-            rolelist.push({name: val});
+            rolelist.push({name: val.id, title: val.label});
           });
           this.form.permissionList = rolelist;
           if (this.action === 'add') {
