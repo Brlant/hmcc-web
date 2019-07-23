@@ -185,7 +185,7 @@
         this.currentItem = item;
         this.currentItemId = item.id;
         this.$confirmOpera(`是否删除监控设备"${item.monitorTargetName}"`, () => {
-          this.$httpRequestOpera(monitorRelation.delete(item.monitorTargetId), {
+          this.$httpRequestOpera(monitorRelation.delete(item.id), {
             successTitle: '删除成功',
             errorTitle: '删除失败',
             success: () => {

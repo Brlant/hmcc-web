@@ -14,7 +14,7 @@ module.exports = {
     disableHostCheck: true,
     proxy: {
       '/api': {
-        target: 'http://192.168.2.152:8083',
+        target: 'https://hmcc.cnvss.net/',
         changOrigin: true
       }
     }
