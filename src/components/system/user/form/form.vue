@@ -81,8 +81,7 @@
           if (!re.test(value)) {
             callback(new Error('请输入正确的手机号码'));
           }
-          let orgId = this.$store.state.user.userCompanyAddress;
-          User.checkPhone(value, this.form.id, orgId).then(function (res) {
+          User.checkPhone(value, this.form.id).then(function (res) {
             if (res.data.valid) {
               callback();
             } else {
