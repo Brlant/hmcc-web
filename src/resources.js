@@ -20,10 +20,10 @@ http.interceptors.response.use(response => {
   if (isNewReturnType(response.data)) {
     switch (response.data.code) {
       case 200 :
-        return response;
+        return response.data;
       case 401:
         window.location.href = '#/login';
-        return response;
+        return Promise.reject({response});
       case 403:
         Notification.error({
           message: '您没有权限请求信息，请联系管理员。',
@@ -31,12 +31,11 @@ http.interceptors.response.use(response => {
             window.localStorage.removeItem('noticeError');
           }
         });
-        return response;
+        return Promise.reject({response});
       case 400:
-        Notification.error({
-          message: response.data.msg,
-        });
-        return response;
+        return Promise.reject({response});
+      default:
+        return Promise.reject({response});
     }
   } else {
     return response;
