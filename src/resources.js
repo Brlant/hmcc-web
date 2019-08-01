@@ -20,7 +20,7 @@ http.interceptors.response.use(response => {
   if (isNewReturnType(response.data)) {
     switch (response.data.code) {
       case 200 :
-        return response.data;
+        return response;
       case 401:
         window.location.href = '#/login';
         return Promise.reject({response});

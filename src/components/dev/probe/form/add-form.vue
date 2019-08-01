@@ -14,7 +14,7 @@
                       :remoteMethod="queryAllOrg"
                       placeholder="请输入名称搜索单位" v-model="form.orgId"></org-select>
         </el-form-item>
-        <el-form-item label="编号">
+        <el-form-item label="编号" prop="no">
           <oms-input placeholder="请输入设备编号" type="input" v-model="form.no"/>
         </el-form-item>
         <el-form-item label="型号" prop="type">
@@ -55,7 +55,7 @@
             {required: true, message: '请选择校准期', trigger: 'change'}
           ],
           no: [
-            {required: true, message: '请输入设备编号', trigger: 'blur'}
+            {required: true, message: '请输入编号', trigger: 'blur'}
           ]
         },
         actionType: '添加',
