@@ -17,7 +17,7 @@
         <el-form-item label="编号">
           <oms-input placeholder="请输入设备编号" type="input" v-model="form.no"/>
         </el-form-item>
-        <el-form-item label="型号">
+        <el-form-item label="型号" prop="type">
           <oms-input placeholder="请输入型号" type="textarea" v-model="form.type"/>
         </el-form-item>
         <el-form-item label="校准期" prop="calibrationTime">
@@ -44,6 +44,9 @@
           ],
           name: [
             {required: true, message: '请输入名称', trigger: 'blur'}
+          ],
+          type: [
+            {required: true, message: '请输入型号', trigger: 'blur'}
           ],
           orgId: [
             {required: true, message: '请选择所属单位', trigger: 'change'}
