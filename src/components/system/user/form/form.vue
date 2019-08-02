@@ -17,7 +17,7 @@
       <el-form-item label="Email">
         <oms-input type="text" v-model="form.email" placeholder="请输入邮箱"></oms-input>
       </el-form-item>
-      <el-form-item label="用户角色" v-if="!form.adminFlag">
+      <el-form-item label="用户角色">
         <el-select placeholder="请选择用户角色" v-model="form.list" multiple filterable clearable>
           <el-option :label="item.title" :value="item.id" :key="item.id" v-for="item in roleSelect"></el-option>
         </el-select>
@@ -31,7 +31,7 @@
 </template>
 
 <script>
-  import {OrgUser, User, Access} from '../../../../resources';
+  import {OrgUser, User} from '../../../../resources';
 
   export default {
     name: 'editForm',
@@ -81,7 +81,8 @@
           if (!re.test(value)) {
             callback(new Error('请输入正确的手机号码'));
           }
-          User.checkPhone(value, this.form.id).then(function (res) {
+          let orgId = this.$store.state.user.userCompanyAddress;
+          User.checkPhone(value, this.form.id, orgId).then(function (res) {
             if (res.data.valid) {
               callback();
             } else {
@@ -121,6 +122,14 @@
         doing: false
       };
     },
+    computed: {
+      user() {
+        return this.$store.state.user;
+      }
+    },
+    mounted() {
+      this.getRoleSelect();
+    },
     watch: {
       formItem: function (val) {
         this.$refs['accountform'].clearValidate();
@@ -140,21 +149,21 @@
         if (!val) {
           this.$refs['accountform'].resetFields();
         }
+      },
+      user(val) {
+        this.getRoleSelect();
       }
-    },
-    mounted() {
-      this.getRoleSelect();
     },
     methods: {
       getRoleSelect: function () {
-        let param = {
-          usableStatus: 1,
-          objectId: 'hmcc-system',
-          pageNo: 1,
-          pageSize: 100
-        };
-        Access.query(param).then(res => {
-          this.roleSelect = res.data.list;
+        let orgId = this.user.userCompanyAddress;
+        if (!orgId) {
+          this.roleSelect = [];
+          return;
+        }
+        let params = {objectId: 'hmcc-system'};
+        this.$http.get(`/erp-access/orgs/${orgId}/self`, {params}).then(res => {
+          this.roleSelect = res.data;
         });
       },
       onSubmit: function (formName) {
@@ -173,7 +182,8 @@
               roleId: m
             };
           });
-          formData.objectId = 'hmcc-system';
+          formData.orgId = this.user.userCompanyAddress;
+          formData.systemObjectId = 'hmcc-system';
           if (this.action === 'add') {
             OrgUser.save(formData).then(() => {
               this.doing = false;

@@ -18,6 +18,7 @@
       line-height: 24px;
       font-weight: normal;
     }
+
     ul {
       margin: 10px 0;
 
@@ -30,6 +31,7 @@
         font-size: 12px;
       }
     }
+
     .group-list {
 
       border: 1px solid #eee;
@@ -43,7 +45,7 @@
   }
 </style>
 <template>
-  <div>
+  <div class="container">
     <div>
 
       <status-list :activeStatus="filters.usableStatus" :statusList="orgType"
@@ -54,10 +56,10 @@
           <div :style="'height:'+bodyHeight">
             <h2 class="header">
                 <span class="pull-right">
-                    <a v-has="'ccs-access-role-add'" href="#" class="btn-circle" @click.stop.prevent="addType"><i
-                      class="el-icon-t-plus"></i> </a>
-                    <a href="#" class="btn-circle" @click.prevent="searchType"><i
-                      class="el-icon-t-search"></i> </a>
+                   <des-btn v-has="'system-setting-role-manager-export'" icon="export"
+                            @click="exportRoleInfo"></des-btn>
+                  <des-btn v-has="'system-setting-role-manager-add'" icon="plus" @click="addType"></des-btn>
+                  <des-btn icon="search" @click="searchType"></des-btn>
                 </span>
               角色管理
             </h2>
@@ -72,7 +74,7 @@
                 <ul class="show-list">
                   <li v-for="item in showTypeList" class="list-item" @click="showType(item)"
                       :class="{'active':item.id===currentItem.id}">
-                    <oms-remove v-has="'ccs-access-role-delete'" :item="item" @removed="removeType"
+                    <oms-remove v-has="'system-setting-role-manager-delete'" :item="item" @removed="removeType"
                                 :tips='"确认删除角色\""+item.title +"\"?"'
                                 class="hover-show"><i
                       class="el-icon-t-delete"></i></oms-remove>
@@ -97,18 +99,20 @@
               <h2 class="clearfix">
               <span class="pull-right">
                <el-button-group>
-                   <el-button v-has="'ccs-access-role-edit'" @click="edit()">
+                   <el-button v-has="'system-setting-role-manager-edit'" @click="edit()">
                      <i class="el-icon-t-edit"></i>
                      编辑
                    </el-button>
-                  <el-button v-has="'ccs-access-role-stop'" @click="forbid()" v-show="resData.usableStatus == 1">
+                  <el-button v-has="'system-setting-role-manager-edit'" @click="forbid()"
+                             v-show="resData.usableStatus == 1">
                     <i class="el-icon-t-forbidden"></i>
                     停用
                   </el-button>
-                   <el-button v-has="'ccs-access-role-start'" @click="useNormal()" v-show="resData.usableStatus == 0">
+                   <el-button v-has="'system-setting-role-manager-edit'" @click="useNormal()"
+                              v-show="resData.usableStatus == 0">
                      <i class="el-icon-t-start"></i>启用
                    </el-button>
-                   <el-button v-has="'ccs-access-role-delete'" @click="remove()"><i
+                   <el-button v-has="'system-setting-role-manager-delete'" @click="remove()"><i
                      class="el-icon-t-delete"></i>删除</el-button>
                 </el-button-group>
               </span>
@@ -172,6 +176,7 @@
   import {Access} from '@/resources';
   import roleForm from './form/form.vue';
   import roleMixin from '@/mixins/roleMixin';
+  import utils from '@/tools/utils';
 
   export default {
     components: {roleForm},
@@ -245,6 +250,38 @@
       }
     },
     methods: {
+      exportRoleInfo() {
+        this.$store.commit('initPrint', {
+          isPrinting: true,
+          moduleId: this.$route.path,
+          text: '拼命导出中'
+        });
+        let params = Object.assign({}, {
+          deleteFlag: false,
+          systemObjectId: 'hmcc-system',
+          objectId: 'hmcc-system'
+        }, this.filters);
+        this.$http.get('/access/statement/permission/export', {params}).then(res => {
+          utils.download(res.data.path);
+          this.$store.commit('initPrint', {
+            isPrinting: false,
+            moduleId: this.$route.path,
+            text: '拼命导出中'
+          });
+        }).catch(error => {
+          this.$store.commit('initPrint', {
+            isPrinting: false,
+            moduleId: this.$route.path,
+            text: '拼命导出中'
+          });
+          this.$notify({
+            duration: 2000,
+            title: '导出失败',
+            message: error.response.data.msg,
+            type: 'error'
+          });
+        });
+      },
       changeType(item, key) {
         this.filters.usableStatus = item.usableStatus;
       },
@@ -281,9 +318,9 @@
       getPageList: function () {// 查询角色列表
         let param = Object.assign({}, {
           deleteFlag: false,
-          objectId: 'hmcc-system'
+          systemObjectId: 'hmcc-system'
         }, this.filters);
-        Access.query(param).then(res => {
+        Access.querySystemAccess(param).then(res => {
           if (param.keyWord !== this.filters.keyWord) return;
           this.showTypeList = res.data.list;
           this.typeList = res.data.list;
@@ -293,6 +330,7 @@
         this.queryStatusNum(param);
       },
       queryStatusNum: function (params) {
+        params.objectId = params.systemObjectId;
         Access.queryStateNum(params).then(res => {
           let data = res.data;
           this.orgType[0].num = data['all'];

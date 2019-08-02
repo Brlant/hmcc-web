@@ -1,4 +1,4 @@
-import menuTree from '@/components/system/role/menu';
+import menuTree from '@/components/system/org-account/menu';
 
 export default {
   mounted() {

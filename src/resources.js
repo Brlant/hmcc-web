@@ -234,11 +234,7 @@ export const warehouseDevImage = resource('/warehouseDevImage', http, {});
 
 export const DevBackUp = resource('/ccsDevBackup', http, {});
 
-export const OrgUser = resource('/oms/user/org', http, {
-  queryOrgInfo: (id, params) => {
-    return http.get('/oms/user/org/' + id, {params});
-  }
-});
+
 
 // 绑定规则信息
 export const BindRule = resource('/ccsNotifyPlan', http, {
@@ -404,9 +400,80 @@ export const OmsAttachment = resource('/omsAttachment', http, {
     return http.get('/omsAttachment/' + objectType + '/' + objectId, {});
   }
 });
+// 单位用户权限对象
+export const OrgUser = resource('/oms/user/org', http, {
+  queryOrgInfo: (id, params) => {
+    return http.get('/oms/user/org/' + id, {params});
+  },
+  queryUsers: (id, params) => {
+    return http.get(`/erp-org/${id}/users`, {params});
+  }
+});
+
+// 角色管理对象
+export const Access = resource('/oms/access', http, {
+  getRoleMenus: (orgId) => {
+    return http.get(`/erp-access/org/${orgId}/admin/menus/tree`);
+  },
+  getOmsRoleMenus: () => {
+    return http.get('oms/access/menus/tree');
+  },
+  getOrgRoleMenus: (orgId) => {
+    return http.get('/oms/access/org/' + orgId + '/admin/menus/tree');
+  },
+  getOrgRole: (orgId, params) => {
+    params.objectId = 'cerp-system';
+    return http.get('/oms/access/orgs/' + orgId, {params});
+  },
+  getRoleDetail: (roleId) => {
+    return http.get('/oms/access/' + roleId);
+  },
+  queryERPAccess: (params) => {
+    return http.get('/erp-access/orgs/self/', {params});
+  },
+  save: (obj) => {
+    return http.post('/erp-access', obj);
+  },
+  saveSystem: (obj) => {
+    return http.post(`/erp-access/system?systemObjectId=${obj.systemObjectId}`, obj);
+  },
+  queryStateNum: (params) => {
+    return http.get('/erp-access/system/platform/count', {params});
+  },
+  queryErpStateNum: (params) => {
+    return http.get('/erp-access/platform/count', {params});
+  },
+  querySystemAccess: (params) => {
+    return http.get('/erp-access/', {params});
+  }
+});
+
+
+// 角色管理对象
+export const omsAccess = resource('/oms/access', http, {
+  getRoleMenus: () => {
+    return http.get('/oms/access/menus/tree', {params: {objectId: 'oms-system'}});
+  },
+  getOrgRoleMenus: (orgId) => {
+    return http.get('/oms/access/org/' + orgId + '/admin/menus/tree');
+  },
+  getOrgRole: (orgId, params) => {
+    return http.get('/oms/access/orgs/' + orgId, {params});
+  },
+  getRoleDetail: (roleId) => {
+    return http.get('/oms/access/' + roleId);
+  },
+  queryStateNum: (params) => {
+    return http.get('/oms/access/platform/count', {params});
+  }
+});
 
 // 平台用户权限对象
 export const User = resource('/oms/user', http, {
+  queryAllUser: (params) => {
+    return http.get('/oms/user/all', {params}
+    );
+  },
   checkEmail: (email, userId, orgId) => {
     return http.get('/oms/user/email', {
       params: {email: email, userId: userId, orgId: orgId}
@@ -431,25 +498,6 @@ export const User = resource('/oms/user', http, {
   }
 });
 
-// 角色管理对象
-export const Access = resource('/oms/access', http, {
-  getRoleMenus: () => {
-    return http.get('/oms/access/menus/tree', {params: {objectId: 'hmcc-system'}});
-  },
-  getOrgRoleMenus: (orgId) => {
-    return http.get('/oms/access/org/' + orgId + '/admin/menus/tree');
-  },
-  getOrgRole: (orgId, params) => {
-    return http.get('/oms/access/orgs/' + orgId, {params});
-  },
-  getRoleDetail: (roleId) => {
-    return http.get('/oms/access/' + roleId);
-  },
-  queryStateNum: (params) => {
-    return http.get('/oms/access/platform/count', {params});
-  }
-});
-
 export const Auth = {
   checkLogin: () => {
     return http.get('/userinfo');
@@ -468,7 +516,7 @@ export const Auth = {
     }
   },
   permission: () => {
-    return http.get('/oms/access/permissions', {params: {objectId: 'ccs-system'}}); //
+    return http.get('/oms/access/permissions', {params: {objectId: 'hmcc-system'}}); //
   }
 };
 

@@ -155,11 +155,11 @@ export const routes = [
       {
         path: '/permission',
         component: () => import('./components/system/index.vue'),
-        meta: {moduleId: 'permission', title: '系统设置', icon: 'setting', perm: 'ccs-system-config'}, // ccs-system-config
+        meta: {moduleId: 'permission', title: '系统设置', icon: 'setting', perm: 'hmcc-system-config'}, // hmcc-system-config
         children: [
           {
             path: '/permission/user',
-            component: () => import('./components/system/user/user.vue'),
+            component: () => import('./components/system/user/list.vue'),
             meta: {moduleId: 'permission', title: '用户管理', perm: 'ccs-platform-user-watch'} // ccs-platform-user-watch
           },
           {
@@ -168,9 +168,15 @@ export const routes = [
             meta: {moduleId: 'permission', title: '角色管理', perm: 'ccs-access-role-watch'} // ccs-access-role-watch
           },
           {
+            path: '/setting/org/account',
+            component: () => import('./components/system/org-account/list.vue'),
+            meta: {moduleId: 'public', title: '各单位账号管理', perm: 'system-setting-org-account-manager-query'},
+            children: []
+          },
+          {
             path: '/permission/log',
             component: () => import('./components/common/log/list.vue'),
-            meta: {moduleId: 'permission', title: '系统日志', perm: 'ccs-system-log'}
+            meta: {moduleId: 'permission', title: '系统日志', perm: 'hmcc-system-log'}
           }
         ]
       }

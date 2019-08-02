@@ -243,9 +243,9 @@
             rolelist.push({name: val.id, title: val.label});
           });
           this.form.permissionList = rolelist;
+          this.form.systemObjectId = 'hmcc-system';
           if (this.action === 'add') {
-            this.form.objectId = 'ccs-system';
-            Access.save(this.form).then(() => {
+            Access.saveSystem(this.form).then(() => {
               this.doing = false;
               this.$notify.success({
                 duration: 2000,
