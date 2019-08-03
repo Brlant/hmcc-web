@@ -13,7 +13,7 @@
   <div class="order-page">
     <search-part @search="searchResult">
       <template slot="btn">
-        <el-button @click="add" plain size="small" v-has="'ccs-monitordev-add'">
+        <el-button @click="add" plain size="small" v-has="permPage.add">
           <f-a class="icon-small" name="plus"></f-a>
           添加
         </el-button>
@@ -64,18 +64,19 @@
               </span>
             </el-col>
             <el-col :span="10" class="opera-btn" >
-              <des-btn @click="record(item)" icon="report" v-has="'ccs-monitordev-switch'">
+              <des-btn @click="record(item)" icon="report" v-has="permPage.record">
                 记录温度
               </des-btn>
-              <des-btn @click="showHistoryData(item)" icon="chaxun" v-has="'ccs-monitordev-switch'">查看历史数据</des-btn>
-              <des-btn @click="monitorTemp(item)" icon="start" v-has="'ccs-monitordev-switch'"
+              <des-btn @click="showHistoryData(item)" icon="chaxun" v-has="permPage.query">查看历史数据</des-btn>
+              <des-btn @click="monitorTemp(item)" icon="start" v-has="permPage.start"
                        v-show="item.monitorStatus==='0'">开启监控
               </des-btn>
               <des-btn @click="cancelMonitorTemp(item)"
-                       icon="forbidden" v-has="'ccs-monitordev-switch'" v-show="item.monitorStatus==='1' || item.monitorStatus==='2'">取消监控
+                       icon="forbidden" v-has="permPage.stop"
+                       v-show="item.monitorStatus==='1' || item.monitorStatus==='2'">取消监控
               </des-btn>
-              <des-btn @click="edit(item)" icon="edit" v-has="'ccs-monitordev-edit'">编辑</des-btn>
-              <des-btn @click="deleteItem(item)" icon="delete" v-has="'ccs-monitordev-del'">删除</des-btn>
+              <des-btn @click="edit(item)" icon="edit" v-has="permPage.edit">编辑</des-btn>
+              <des-btn @click="deleteItem(item)" icon="delete" v-has="permPage.delete">删除</des-btn>
             </el-col>
           </el-row>
           <dev-list :dev-item="item"/>

@@ -17,6 +17,11 @@ export default {
       nowTime: ''
     };
   },
+  computed: {
+    permPage() {
+      return this.$store.state.permPage;
+    }
+  },
   methods: {
 
     queryUtil(http, pageNo, beforeRequest, success) {
@@ -31,7 +36,7 @@ export default {
       this.nowTime = nowTime;
       http(params).then(res => {
         if (this.nowTime > nowTime) return;
-        if(res.data.code) res.data = res.data.data;
+        if (res.data.code) res.data = res.data.data;
         this.dataList = res.data.list || [];
         this.pager.count = res.data.count;
         this.loadingData = false;

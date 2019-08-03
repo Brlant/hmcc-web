@@ -1,429 +1,428 @@
 export default [
   {
-    id: 'org-info-manager',
-    label: '业务单位主档管理',
-    children: [
+    'id': 'hmcc-index-scan',
+    'label': '首页',
+    'parentId': 'hmcc-system',
+    'sort': '1',
+    'children': []
+  },
+  {
+    'id': 'monitoring-center-manager',
+    'label': '监控中心',
+    'parentId': 'hmcc-system',
+    'sort': '2',
+    'children': [
       {
-        id: 'base-info-manager',
-        label: '基础信息管理',
-        children: [
+        'id': 'own-dev-monitoring',
+        'label': '本单位设备监控',
+        'parentId': 'hmcc-system',
+        'sort': '1',
+        'children': [
           {
-            id: 'base-info-manager-query',
-            label: '查看单位'
+            'id': 'own-dev-monitoring-scan',
+            'label': '查看本单位设备监控',
+            'parentId': 'hmcc-system'
           },
           {
-            id: 'base-info-manager-add',
-            label: '添加单位'
+            'id': 'own-dev-monitoring-add',
+            'label': '添加本单位设备监控',
+            'parentId': 'hmcc-system'
           },
           {
-            id: 'base-info-manager-edit',
-            label: '编辑单位'
+            'id': 'own-dev-monitoring-edit',
+            'label': '修改本单位设备监控',
+            'parentId': 'hmcc-system'
           },
           {
-            id: 'base-info-manager-audit',
-            label: '审核单位'
+            'id': 'own-dev-monitoring-delete',
+            'label': '删除本单位设备监控',
+            'parentId': 'hmcc-system'
+          },
+          {
+            'id': 'own-dev-monitoring-active',
+            'label': '激活本单位设备监控',
+            'parentId': 'hmcc-system'
+          },
+          {
+            'id': 'own-dev-monitoring-dev-switch',
+            'label': '停止本单位设备监控',
+            'parentId': 'hmcc-system'
+          },
+          {
+            'id': 'own-dev-monitoring-record',
+            'label': '记录温度',
+            'parentId': 'hmcc-system'
           }
         ]
       },
       {
-        id: 'licences-manager',
-        label: '单位证照管理',
-        children: [
+        'id': 'pov-dev-monitoring',
+        'label': '接种单位设备监控',
+        'parentId': 'hmcc-system',
+        'sort': '2',
+        'children': [
           {
-            id: 'licences-manager-query',
-            label: '查看单位证照'
+            'id': 'pov-dev-monitoring-scan',
+            'label': '查看接种单位设备监控',
+            'parentId': 'hmcc-system'
           },
           {
-            id: 'licences-manager-add',
-            label: '添加单位证照'
+            'id': 'pov-dev-monitoring-add',
+            'label': '添加接种单位设备监控',
+            'parentId': 'hmcc-system'
           },
           {
-            id: 'licences-manager-edit',
-            label: '编辑单位证照'
+            'id': 'pov-dev-monitoring-edit',
+            'label': '修改接种单位设备监控',
+            'parentId': 'hmcc-system'
           },
           {
-            id: 'licences-manager-delete',
-            label: '删除单位证照'
+            'id': 'pov-dev-monitoring-delete',
+            'label': '删除接种单位设备监控',
+            'parentId': 'hmcc-system'
+          },
+          {
+            'id': 'pov-dev-monitoring-active',
+            'label': '激活接种单位设备监控',
+            'parentId': 'hmcc-system'
+          },
+          {
+            'id': 'pov-dev-monitoring-dev-switch',
+            'label': '停止接种单位设备监控',
+            'parentId': 'hmcc-system'
           }
         ]
       },
       {
-        id: 'address-manager',
-        label: '仓库地址管理',
-        children: [
+        'id': 'entrust-store-monitoring',
+        'label': '委托仓库监控',
+        'parentId': 'hmcc-system',
+        'sort': '3',
+        'children': {
+          'id': 'pov-dev-monitoring-scan',
+          'label': '查看委托仓库监控',
+          'parentId': 'hmcc-system'
+        }
+      },
+      {
+        'id': 'history-data-manager',
+        'label': '历史数据查询',
+        'parentId': 'hmcc-system',
+        'sort': '4',
+        'children': {
+          'id': 'history-data-manager-scan',
+          'label': '查看历史数据',
+          'parentId': 'hmcc-system'
+        }
+      },
+      {
+        'id': 'freezer-dev-temperature-record-manager',
+        'label': '冷链设备温度记录',
+        'parentId': 'hmcc-system',
+        'sort': '5',
+        'children': {
+          'id': 'freezer-dev-temperature-record-manager-scan',
+          'label': '查看冷链设备温度记录',
+          'parentId': 'hmcc-system'
+        }
+      }
+    ]
+  },
+  {
+    'id': 'dev-manager',
+    'label': '设备管理',
+    'parentId': 'dev-manager',
+    'sort': '3',
+    'children': [
+      {
+        'id': 'sensor-manager',
+        'label': '探头管理',
+        'parentId': 'hmcc-system',
+        'sort': '1',
+        'children': [
           {
-            id: 'address-manager-query',
-            label: '查看单位仓库地址'
+            'id': 'sensor-scan',
+            'label': '查看探头管理',
+            'parentId': 'hmcc-system'
           },
           {
-            id: 'address-manager-add',
-            label: '添加单位仓库地址'
+            'id': 'sensor-add',
+            'label': '新增探头',
+            'parentId': 'hmcc-system'
           },
           {
-            id: 'address-manager-edit',
-            label: '编辑单位仓库地址'
+            'id': 'sensor-edit',
+            'label': '编辑探头',
+            'parentId': 'hmcc-system'
           },
           {
-            id: 'address-manager-stop',
-            label: '停用单位仓库地址'
+            'id': 'sensor-active',
+            'label': '启用探头',
+            'parentId': 'hmcc-system'
           },
           {
-            id: 'address-manager-start',
-            label: '启用单位仓库地址'
+            'id': 'sensor-disable',
+            'label': '停用探头',
+            'parentId': 'hmcc-system'
+          }
+        ]
+      },
+      {
+        'id': 'freezer-dev-manager',
+        'label': '冷链设备管理',
+        'parentId': 'hmcc-system',
+        'sort': '2',
+        'children': [
+          {
+            'id': 'freezer-dev-scan',
+            'label': '查看冷链设备管理',
+            'parentId': 'hmcc-system'
           },
           {
-            id: 'address-manager-audit',
-            label: '审核单位仓库地址'
+            'id': 'freezer-dev-add',
+            'label': '新增冷链设备',
+            'parentId': 'hmcc-system'
+          },
+          {
+            'id': 'freezer-dev-edit',
+            'label': '编辑冷链设备',
+            'parentId': 'hmcc-system'
+          },
+          {
+            'id': 'freezer-dev-delete',
+            'label': '删除冷链设备',
+            'parentId': 'hmcc-system'
+          }
+        ]
+      },
+      {
+        'id': 'gateway-dev-manager',
+        'label': '网关管理',
+        'parentId': 'hmcc-system',
+        'sort': '2',
+        'children': [
+          {
+            'id': 'gateway-dev-scan',
+            'label': '查看网关管理',
+            'parentId': 'hmcc-system'
+          },
+          {
+            'id': 'gateway-dev-add',
+            'label': '新增网关',
+            'parentId': 'hmcc-system'
+          },
+          {
+            'id': 'gateway-dev-edit',
+            'label': '编辑网关',
+            'parentId': 'hmcc-system'
+          },
+          {
+            'id': 'gateway-dev-active',
+            'label': '启用网关',
+            'parentId': 'hmcc-system'
+          },
+          {
+            'id': 'gateway-dev-disable',
+            'label': '停用网关',
+            'parentId': 'hmcc-system'
           }
         ]
       }
     ]
   },
   {
-    id: 'vaccine-info-manager',
-    label: '疫苗主档管理',
-    children: [
+    'id': 'config-center-manager',
+    'label': '配置中心',
+    'parentId': 'hmcc-system',
+    'sort': '4',
+    'children': [
       {
-        id: 'vaccine-info-manager-query',
-        label: '查看疫苗主档'
-      },
-      {
-        id: 'vaccine-info-manager-add',
-        label: '添加疫苗主档'
-      },
-      {
-        id: 'vaccine-info-manager-excel-template',
-        label: '货品Excel模板'
-      },
-      {
-        id: 'vaccine-info-manager-excel-package-export',
-        label: '导出货品包装Excel'
-      },
-      {
-        id: 'vaccine-info-manager-excel-goods-export',
-        label: '导出货品Excel'
-      },
-      {
-        id: 'vaccine-info-manager-excel-goods-import',
-        label: '导入Excel新增货品'
-      },
-      {
-        id: 'vaccine-info-manager-edit',
-        label: '编辑疫苗主档'
-      },
-      {
-        id: 'vaccine-info-manager-audit',
-        label: '审核疫苗主档'
-      }
-    ]
-  },
-  {
-    id: 'query-all-org-regulation',
-    label: '监管所有单位'
-  },
-  {
-    id: 'vaccine-group-manager',
-    label: '授权模板管理',
-    children: [
-      {
-        id: 'vaccine-group-purchase-manager',
-        label: '采购授权模板',
-        children: [
+        'id': 'alarm-rule-manager',
+        'label': '告警规则',
+        'parentId': 'hmcc-system',
+        'sort': '1',
+        'children': [
           {
-            id: 'vaccine-group-purchase-manager-query',
-            label: '查看采购授权模板'
+            'id': 'alarm-rule-scan',
+            'label': '查看告警规则',
+            'parentId': 'hmcc-system'
           },
           {
-            id: 'vaccine-group-purchase-manager-add',
-            label: '添加采购授权模板'
+            'id': 'alarm-rule-add',
+            'label': '新增告警规则',
+            'parentId': 'hmcc-system'
           },
           {
-            id: 'vaccine-group-purchase-manager-edit',
-            label: '编辑采购授权模板'
+            'id': 'alarm-rule-edit',
+            'label': '编辑告警规则',
+            'parentId': 'hmcc-system'
+          },
+          {
+            'id': 'alarm-rule-delete',
+            'label': '删除告警规则',
+            'parentId': 'hmcc-system'
           }
         ]
       },
       {
-        id: 'vaccine-group-sale-manager',
-        label: '销售授权模板',
-        children: [
+        'id': 'alarm-notice-group-manager',
+        'label': '告警通知组',
+        'parentId': 'hmcc-system',
+        'sort': '2',
+        'children': [
           {
-            id: 'vaccine-group-sale-manager-query',
-            label: '查看销售授权模板'
+            'id': 'alarm-notice-group-scan',
+            'label': '查看告警通知组',
+            'parentId': 'hmcc-system'
           },
           {
-            id: 'vaccine-group-sale-manager-add',
-            label: '添加销售授权模板'
+            'id': 'alarm-notice-group-add',
+            'label': '新增告警通知组',
+            'parentId': 'hmcc-system'
           },
           {
-            id: 'vaccine-group-sale-manager-edit',
-            label: '编辑销售授权模板'
-          }
-        ]
-      }
-    ]
-  },
-  {
-    id: 'vaccine-auth-manager',
-    label: '疫苗授权',
-    children: [
-      {
-        id: 'vaccine-auth-purchase-manager',
-        label: '采购授权',
-        children: [
-          {
-            id: 'vaccine-auth-purchase-manager-query',
-            label: '查看采购授权'
+            'id': 'alarm-notice-group-edit',
+            'label': '编辑告警通知组',
+            'parentId': 'hmcc-system'
           },
           {
-            id: 'vaccine-auth-purchase-manager-add',
-            label: '添加采购授权'
-          },
-          {
-            id: 'vaccine-auth-purchase-manager-cancel',
-            label: '取消采购授权'
+            'id': 'alarm-notice-group-delete',
+            'label': '删除告警通知组',
+            'parentId': 'hmcc-system'
           }
         ]
       },
       {
-        id: 'vaccine-auth-sale-manager',
-        label: '销售授权',
-        children: [
+        'id': 'alarm-test-log-manager',
+        'label': '告警测试',
+        'parentId': 'hmcc-system',
+        'sort': '3',
+        'children': [
           {
-            id: 'vaccine-auth-sale-manager-query',
-            label: '查看销售授权'
+            'id': 'alarm-test-log-scan',
+            'label': '查看告警测试',
+            'parentId': 'hmcc-system'
           },
           {
-            id: 'vaccine-auth-sale-manager-add',
-            label: '添加销售授权'
+            'id': 'alarm-test-log-add',
+            'label': '新增告警测试',
+            'parentId': 'hmcc-system'
           },
           {
-            id: 'vaccine-auth-sale-manager-cancel',
-            label: '取消销售授权'
+            'id': 'alarm-test-log-confirm',
+            'label': '确认告警测试',
+            'parentId': 'hmcc-system'
+          },
+          {
+            'id': 'alarm-test-log-delete',
+            'label': '删除告警测试',
+            'parentId': 'hmcc-system'
           }
         ]
       }
     ]
   },
   {
-    id: 'org-relation-manager',
-    label: '单位关系管理',
-    children: [
+    'id': 'alarm-center-manager',
+    'label': '告警中心',
+    'parentId': 'hmcc-system',
+    'sort': '5',
+    'children': [
       {
-        id: 'org-relation-manager-query',
-        label: '查看单位关系'
+        'id': 'alarm-event-manager',
+        'label': '告警事件',
+        'parentId': 'hmcc-system',
+        'sort': '1',
+        'children': [
+          {
+            'id': 'alarm-event-scan',
+            'label': '查看告警事件',
+            'parentId': 'hmcc-system'
+          },
+          {
+            'id': 'alarm-event-handle',
+            'label': '处理告警事件',
+            'parentId': 'hmcc-system'
+          },
+          {
+            'id': 'alarm-event-export',
+            'label': '导出告警事件',
+            'parentId': 'hmcc-system'
+          }
+        ]
       },
       {
-        id: 'org-relation-manager-add',
-        label: '添加单位关系'
-      },
-      {
-        id: 'org-relation-manager-delete',
-        label: '删除单位关系'
+        'id': 'alarm-notice-record-manager',
+        'label': '告警通知',
+        'parentId': 'hmcc-system',
+        'sort': '1',
+        'children': {
+          'id': 'alarm-notice-record-scan',
+          'label': '查看告警通知',
+          'parentId': 'hmcc-system'
+        }
       }
     ]
   },
   {
-    id: 'biz-regulation',
-    label: '业务监管',
-    children: [
+    'id': 'dev-patrol-manager',
+    'label': '设备巡检',
+    'parentId': 'hmcc-system',
+    'sort': '6',
+    'children': [
       {
-        id: 'biz-regulation-out-order-manager',
-        label: '出库订单监管',
-        children: [
+        'id': 'patrol-project-manager',
+        'label': '巡检计划',
+        'parentId': 'hmcc-system',
+        'sort': '1',
+        'children': [
           {
-            id: 'biz-regulation-out-order-manager-query',
-            label: '查看出库订单'
+            'id': 'patrol-project-scan',
+            'label': '查看巡检计划',
+            'parentId': 'hmcc-system'
           },
           {
-            id: 'biz-regulation-out-order-manager-push-data',
-            label: '推送数据'
+            'id': 'patrol-project-add',
+            'label': '新增巡检计划',
+            'parentId': 'hmcc-system'
+          },
+          {
+            'id': 'patrol-project-edit',
+            'label': '编辑巡检计划',
+            'parentId': 'hmcc-system'
+          },
+          {
+            'id': 'patrol-project-delete',
+            'label': '删除巡检计划',
+            'parentId': 'hmcc-system'
           }
         ]
       },
       {
-        id: 'biz-regulation-in-order-manager',
-        label: '入库订单监管',
-        children: [
+        'id': 'patrol-record-manager',
+        'label': '巡检记录',
+        'parentId': 'hmcc-system',
+        'sort': '2',
+        'children': [
           {
-            id: 'biz-regulation-in-order-manager-query',
-            label: '查看入库订单'
-          }
-        ]
-      },
-      {
-        id: 'erp-order-document-watch',
-        label: '查看订单附件'
-      },
-      {
-        id: 'biz-regulation-address-manager',
-        label: '即时库存监管',
-        children: [
-          {
-            id: 'biz-regulation-address-manager-query',
-            label: '查看即时库存'
+            'id': 'patrol-record-scan',
+            'label': '查看巡检记录',
+            'parentId': 'hmcc-system'
           },
           {
-            id: 'biz-regulation-address-manager-export-excel',
-            label: '导出excel'
-          }
-        ]
-      }
-    ]
-  },
-  {
-    id: 'info-public-manager',
-    label: '信息发布管理',
-    children: [
-      {
-        id: 'info-public-manager-query',
-        label: '查看信息发布'
-      },
-      {
-        id: 'info-public-manager-add',
-        label: '添加信息发布'
-      },
-      {
-        id: 'info-public-manager-edit',
-        label: '编辑信息发布'
-      },
-      {
-        id: 'info-public-manager-stop',
-        label: '撤回信息发布'
-      },
-      {
-        id: 'info-public-manager-assign',
-        label: '授权单位'
-      },
-      {
-        id: 'info-public-manager-issue',
-        label: '授权发布'
-      },
-      {
-        id: 'info-public-manager-stick',
-        label: '置顶'
-      },
-      {
-        id: 'info-public-manager-cancel-stick',
-        label: '取消置顶'
-      },
-      {
-        id: 'info-public-manager-delete',
-        label: '删除'
-      }
-    ]
-  },
-  {
-    id: 'role-manager',
-    label: '角色管理',
-    children: [
-      {
-        id: 'role-all-manager',
-        label: '全系统角色管理',
-        children: [
-          {
-            id: 'role-all-manager-query',
-            label: '查看系统角色'
+            'id': 'patrol-record-add',
+            'label': '新增巡检记录',
+            'parentId': 'hmcc-system'
           },
           {
-            id: 'role-all-manager-add',
-            label: '添加系统角色'
+            'id': 'patrol-record-edit',
+            'label': '编辑巡检记录',
+            'parentId': 'hmcc-system'
           },
           {
-            id: 'role-all-manager-edit',
-            label: '编辑系统角色'
-          },
-          {
-            id: 'role-all-manager-delete',
-            label: '删除系统角色'
-          },
-          {
-            id: 'role-all-manager-export',
-            label: '导出系统角色Excel'
-          }
-        ]
-      },
-      {
-        id: 'role-org-manager',
-        label: '各单位角色管理',
-        children: [
-          {
-            id: 'role-org-manager-query',
-            label: '查看单位角色'
-          },
-          {
-            id: 'role-org-manager-add',
-            label: '添加单位角色'
-          },
-          {
-            id: 'role-org-manager-edit',
-            label: '编辑单位角色'
-          },
-          {
-            id: 'role-org-manager-delete',
-            label: '删除单位角色'
-          },
-          {
-            id: 'role-org-manager-export',
-            label: '导出单位角色Excel'
-          }
-        ]
-      }
-    ]
-  },
-  {
-    id: 'account-manager',
-    label: '账号管理',
-    children: [
-      {
-        id: 'account-all-manager',
-        label: '全系统账号管理',
-        children: [
-          {
-            id: 'account-all-manager-query',
-            label: '查看系统账号'
-          },
-          {
-            id: 'account-all-manager-add',
-            label: '添加系统账号'
-          },
-          {
-            id: 'account-all-manager-edit',
-            label: '编辑系统账号'
-          },
-          {
-            id: 'account-all-manager-start',
-            label: '启用系统账号'
-          },
-          {
-            id: 'account-all-manager-stop',
-            label: '停用系统账号'
-          }
-        ]
-      },
-      {
-        id: 'account-org-manager',
-        label: '各单位系统账号管理',
-        children: [
-          {
-            id: 'account-org-manager-query',
-            label: '查看单位系统账号'
-          },
-          {
-            id: 'account-org-manager-add',
-            label: '添加单位系统账号'
-          },
-          {
-            id: 'account-org-manager-edit',
-            label: '编辑单位系统账号'
-          },
-          {
-            id: 'account-org-manager-start',
-            label: '启用单位系统账号'
-          },
-          {
-            id: 'account-org-manager-stop',
-            label: '停用单位系统账号'
+            'id': 'patrol-record-delete',
+            'label': '删除巡检记录',
+            'parentId': 'hmcc-system'
           }
         ]
       }
@@ -482,44 +481,6 @@ export default [
           {
             id: 'system-setting-role-manager-export',
             label: '导出角色Excel'
-          }
-        ]
-      },
-      {
-        'id': 'dict-manager',
-        'label': '数据字典',
-        'children': [
-          {
-            'id': 'voss-dict-group-query',
-            'label': '查询数据字典组',
-          },
-          {
-            'id': 'voss-dict-group-add',
-            'label': '新增数据字典组',
-          },
-          {
-            'id': 'voss-dict-group-update',
-            'label': '编辑数据字典组',
-          },
-          {
-            'id': 'voss-dict-group-softDelete',
-            'label': '删除数据字典组',
-          },
-          {
-            'id': 'voss-dict-item-query',
-            'label': '查询数据字典项',
-          },
-          {
-            'id': 'voss-dict-item-add',
-            'label': '新增数据字典项',
-          },
-          {
-            'id': 'voss-dict-item-update',
-            'label': '编辑数据字典项',
-          },
-          {
-            'id': 'voss-dict-item-softDelete',
-            'label': '删除数据字典项',
           }
         ]
       },
