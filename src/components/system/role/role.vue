@@ -58,7 +58,7 @@
                 <span class="pull-right">
                    <des-btn v-has="'system-setting-role-manager-export'" icon="export"
                             @click="exportRoleInfo"></des-btn>
-                  <des-btn v-has="'system-setting-role-manager-add'" icon="plus" @click="addType"></des-btn>
+                  <des-btn v-has="'access-role-add'" icon="plus" @click="addType"></des-btn>
                   <des-btn icon="search" @click="searchType"></des-btn>
                 </span>
               角色管理
@@ -99,7 +99,7 @@
               <h2 class="clearfix">
               <span class="pull-right">
                <el-button-group>
-                   <el-button v-has="'system-setting-role-manager-edit'" @click="edit()">
+                   <el-button v-has="'access-role-edit'" @click="edit()">
                      <i class="el-icon-t-edit"></i>
                      编辑
                    </el-button>

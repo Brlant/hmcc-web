@@ -167,7 +167,7 @@ export const routes = [
       {
         path: '/permission',
         component: () => import('./components/system/index.vue'),
-        meta: {moduleId: 'permission', title: '系统设置', icon: 'setting', perm: 'system-setting'}, // hmcc-system-config
+        meta: {moduleId: 'permission', title: '系统设置', icon: 'setting', perm: 'system-config'}, // hmcc-system-config
         children: [
           {
             path: '/permission/user',
@@ -177,7 +177,7 @@ export const routes = [
           {
             path: '/permission/role',
             component: () => import('./components/system/role/role.vue'),
-            meta: {moduleId: 'permission', title: '角色管理', perm: 'system-setting-role-manager-query'} // ccs-access-role-watch
+            meta: {moduleId: 'permission', title: '角色管理', perm: 'access-role-watch'} // ccs-access-role-watch
           },
           {
             path: '/setting/org/account',
