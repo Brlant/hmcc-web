@@ -429,7 +429,7 @@ export default [
     ]
   },
   {
-    id: 'system-setting',
+    id: 'system-config',
     label: '系统设置',
     children: [
       {
@@ -459,19 +459,19 @@ export default [
         ]
       },
       {
-        id: 'system-setting-role-manager',
+        id: 'access-role-manager',
         label: '角色管理',
         children: [
           {
-            id: 'system-setting-role-manager-query',
+            id: 'access-role-watch',
             label: '查看角色'
           },
           {
-            id: 'system-setting-role-manager-add',
+            id: 'access-role-add',
             label: '添加角色'
           },
           {
-            id: 'system-setting-role-manager-edit',
+            id: 'access-role-edit',
             label: '编辑角色'
           },
           {
