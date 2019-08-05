@@ -2,6 +2,7 @@ import Notification from 'element-ui/lib/notification';
 import axios from 'axios';
 import Vue from 'vue';
 import WholeErrorSignHandle from '@/tools/whole-error-sign-handle';
+import qs from 'qs';
 
 export const http = axios.create({
   baseURL: process.env.VUE_APP_API,
@@ -15,6 +16,16 @@ function isNewReturnType(data) {
   if (keys.length !== 3) return false;
   return ['code', 'data', 'msg'].every(e => keys.includes(e));
 }
+
+// 添加请求拦截器
+http.interceptors.request.use(function (config) {
+  if(config.method === 'get') {
+    config.paramsSerializer = params => {
+      return qs.stringify(params, {indices: false});
+    }
+  }
+  return config;
+});
 
 http.interceptors.response.use(response => {
   if (isNewReturnType(response.data)) {
