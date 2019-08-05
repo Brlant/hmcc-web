@@ -2,7 +2,7 @@
   <div class="order-page">
     <search-part @search="searchResult">
       <template slot="btn">
-        <el-button @click="add" plain size="small" v-has="'ccs-notify-add'">
+        <el-button @click="add" plain size="small" v-has="permPage.add">
           <f-a class="icon-small" name="plus"></f-a>
           添加
         </el-button>
@@ -34,8 +34,8 @@
             <el-col :span="8">{{item.name}}</el-col>
             <el-col :span="8">{{item.orgName}}</el-col>
             <el-col :span="4" class="opera-btn">
-              <des-btn @click="edit(item)" icon="edit" v-has="'ccs-notify-edit'">编辑</des-btn>
-              <des-btn @click="deleteItem(item)" icon="delete" v-has="'ccs-notify-del'">
+              <des-btn @click="edit(item)" icon="edit" v-has="permPage.edit">编辑</des-btn>
+              <des-btn @click="deleteItem(item)" icon="delete" v-has="permPage.delete">
                 删除
               </des-btn>
             </el-col>

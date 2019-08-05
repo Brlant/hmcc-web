@@ -3,7 +3,7 @@
     <template slot="title">告警事件查询</template>
     <template slot="btn">
       <slot name="btn">
-        <el-button @click="exportSearchFile" plain size="small">
+        <el-button @click="exportSearchFile" plain size="small" v-has="permPage.handle">
           <f-a class="icon-small" name="export"></f-a>
           导出Excel
         </el-button>
@@ -84,6 +84,11 @@
       alarmTypeList: Array
     },
     mixins: [methodsMixin],
+    computed: {
+      permPage() {
+        return this.$route.meta.permPage;
+      }
+    },
     data: function () {
       return {
         searchCondition: {
@@ -112,7 +117,7 @@
         });
         let params = Object.assign({}, this.searchCondition);
         http.post('/alarm-event/export', params).then(res => {
-          if(res.data.code === 200) {
+          if (res.data.code === 200) {
             utils.download(res.data.data.path, '告警记录表');
           }
           this.$store.commit('initPrint', {

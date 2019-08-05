@@ -58,7 +58,7 @@
             <el-col :span="2">{{item.recoveryStatus === '0' ? '告警' : '恢复'}}</el-col>
             <el-col :span="2">{{item.handlingCondition}}</el-col>
             <el-col :span="3">
-              <des-btn @click="confirmItem(item)" icon="affirm" v-has="'ccs-warn-record-process'"
+              <des-btn @click="confirmItem(item)" icon="affirm" v-has="permPage.handle"
                        v-show="item.handlingStatus === '0'">处理
               </des-btn>
               <des-btn @click="showItemDetail(item)" icon="detail" v-has="'show'">详情</des-btn>

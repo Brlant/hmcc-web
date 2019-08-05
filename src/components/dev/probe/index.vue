@@ -2,7 +2,7 @@
   <div class="order-page">
     <search-part @search="searchResult">
       <template slot="btn">
-        <el-button @click="add" plain size="small" v-has="perms[0]">
+        <el-button @click="add" plain size="small" v-has="permPage.add">
           <f-a class="icon-small" name="plus"></f-a>
           添加
         </el-button>
@@ -45,9 +45,9 @@
             </el-col>
             <el-col :span="4">{{item.calibrationTime | date}}</el-col>
             <el-col :span="3" class="opera-btn">
-              <des-btn @click="edit(item)" icon="edit" v-has="perms[1]">编辑</des-btn>
-              <des-btn icon="forbidden" v-show="item.status === '1'" v-has="perms[1]" @click="stop(item)">停用</des-btn>
-              <des-btn icon="start" v-has="perms[1]" v-show="item.status === '0'" @click="start(item)">启用</des-btn>
+              <des-btn @click="edit(item)" icon="edit" v-has="permPage.edit">编辑</des-btn>
+              <des-btn icon="forbidden" v-show="item.status === '1'" v-has="permPage.stop" @click="stop(item)">停用</des-btn>
+              <des-btn icon="start" v-has="permPage.start" v-show="item.status === '0'" @click="start(item)">启用</des-btn>
             </el-col>
           </el-row>
         </div>

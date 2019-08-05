@@ -2,7 +2,7 @@
   <div class="order-page">
     <search-part @search="searchResult">
       <template slot="btn">
-        <el-button @click="add" plain size="small" v-has="perms[0]">
+        <el-button @click="add" plain size="small" v-has="permPage.add">
           <f-a class="icon-small" name="plus"></f-a>
           添加
         </el-button>
@@ -59,8 +59,8 @@
                 {{item.offLineFlag === '1' ? '开启' : '关闭'}}</el-tag>
             </el-col>
             <el-col :span="4" class="opera-btn">
-              <des-btn @click="edit(item)" icon="edit" v-has="perms[1]">编辑</des-btn>
-              <des-btn @click="removeItem(item)" icon="edit" v-has="perms[2]">删除</des-btn>
+              <des-btn @click="edit(item)" icon="edit" v-has="permPage.edit">编辑</des-btn>
+              <des-btn @click="removeItem(item)" icon="edit" v-has="permPage.delete">删除</des-btn>
             </el-col>
           </el-row>
         </div>

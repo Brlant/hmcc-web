@@ -19,7 +19,7 @@ export default {
   },
   computed: {
     permPage() {
-      return this.$store.state.permPage;
+      return this.$route.meta.permPage || {};
     }
   },
   methods: {

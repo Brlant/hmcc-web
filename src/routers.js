@@ -18,7 +18,7 @@ export const routes = [
       {
         path: '/monitoring',
         component: () => import('./components/common/parent-route.vue'),
-        meta: {moduleId: 'monitoring', title: '监控中心', icon: 'xitongjiankong', perm: 'ccs-monitor-center'},
+        meta: {moduleId: 'monitoring', title: '监控中心', icon: 'xitongjiankong', perm: 'monitoring-center-manager'},
         children: [
           {
             path: '/monitoring/equipment',
@@ -26,30 +26,31 @@ export const routes = [
             meta: {moduleId: 'monitoring', title: '本单位设备监控', perm: 'own-dev-monitoring-scan', type: 1,
               permPage: {add: 'own-dev-monitoring-add', edit: 'own-dev-monitoring-edit',
                 delete: 'own-dev-monitoring-delete', start: 'own-dev-monitoring-active', stop: 'own-dev-monitoring-dev-switch',
-                record: ''}}
+                record: 'own-dev-monitoring-record'}}
           },
           {
             path: '/monitoring/pov/equipment',
             component: () => import('./components/monitoring/equipment/index.vue'),
             meta: {moduleId: 'monitoring', title: '接种单位设备监控', perm: 'pov-dev-monitoring-scan', type: 2,
-              permPage: {add: 'hmcc-system', edit: '', delete: '', start: '', stop: ''}}
+              permPage: {add: 'pov-dev-monitoring-add', edit: 'pov-dev-monitoring-edit',
+                delete: 'pov-dev-monitoring-delete', start: 'pov-dev-monitoring-active',
+                stop: 'pov-dev-monitoring-dev-switch', record: 'pov-dev-monitoring-record'}}
           },
           {
             path: '/monitoring/store',
             component: () => import('./components/common/parent-route'),
-            meta: {moduleId: 'monitoring', title: '委托仓库监控', perm: 'pov-dev-monitoring-scan', subMenuId: 'store',
-              permPage: {add: 'hmcc-system', edit: '', delete: '', start: '', stop: ''}},
+            meta: {moduleId: 'monitoring', title: '委托仓库监控', perm: 'pov-dev-monitoring-scan', subMenuId: 'store'},
             children: [
               {
                 path: '',
                 component: () => import('./components/monitoring/store/index.vue'),
-                meta: {moduleId: 'monitoring', title: '委托仓库监控', perm: 'ccs-warehouse-scan', subMenuId: 'store',
+                meta: {moduleId: 'monitoring', subMenuId: 'store',
                   permPage: {add: 'hmcc-system', edit: '', delete: '', start: '', stop: ''}}
               },
               {
                 path: '/monitoring/store/temp',
                 component: () => import('./components/monitoring/store/dev-temp/index.vue'),
-                meta: {moduleId: 'monitoring', title: '委托仓库监控', perm: 'ccs-warehouse-scan', subMenuId: 'store',
+                meta: {moduleId: 'monitoring', subMenuId: 'store',
                   permPage: {add: 'hmcc-system', edit: '', delete: '', start: '', stop: ''}}
               },
             ]
@@ -78,7 +79,7 @@ export const routes = [
             meta: {
               moduleId: 'dev', title: '探头管理', perm: 'sensor-scan',
               type: 1,
-              permPage: {add: 'hmcc-system', edit: '', delete: '', start: '', stop: ''}
+              permPage: {add: 'sensor-add', edit: 'sensor-edit',start: 'sensor-active', stop: 'sensor-disable'}
             }
           },
           {
@@ -87,7 +88,7 @@ export const routes = [
             meta: {
               moduleId: 'dev', title: '冷链设备管理', perm: 'freezer-dev-scan',
               type: 1,
-              permPage: {add: 'hmcc-system', edit: '', delete: '', start: '', stop: ''}
+              permPage: {add: 'freezer-dev-add', edit: 'freezer-dev-edit'}
             }
           },
           {
@@ -96,7 +97,7 @@ export const routes = [
             meta: {
               moduleId: 'dev', title: '网关管理', perm: 'gateway-dev-scan',
               type: 1,
-              permPage: {add: 'hmcc-system', edit: '', delete: '', start: '', stop: ''}
+              permPage: {add: 'gateway-dev-add', edit: 'gateway-dev-edit', start: 'gateway-dev-active', stop: 'gateway-dev-disable'}
             }
           }
         ]
@@ -110,19 +111,20 @@ export const routes = [
             path: '/configuration/alarm',
             component: () => import('./components/configuration/alarm/index.vue'),
             meta: {moduleId: 'configuration', title: '告警规则', perm: 'alarm-rule-scan',
-              permPage: {add: 'hmcc-system', edit: '', delete: '', start: '', stop: ''}}
+              permPage: {add: 'alarm-rule-add', edit: 'alarm-rule-edit', delete: 'alarm-rule-delete'}}
           },
           {
             path: '/configuration/notification',
             component: () => import('./components/configuration/notification/index.vue'),
             meta: {moduleId: 'configuration', title: '告警通知组', perm: 'alarm-notice-group-scan',
-              permPage: {add: 'hmcc-system', edit: '', delete: '', start: '', stop: ''}}
+              permPage: {add: 'alarm-notice-group-add', edit: 'alarm-notice-group-edit',
+                delete: 'alarm-notice-group-delete'}}
           },
           {
             path: '/configuration/test',
             component: () => import('./components/configuration/alarm-test/index.vue'),
             meta: {moduleId: 'configuration', title: '告警测试', perm: 'alarm-test-log-scan',
-              permPage: {add: 'hmcc-system', edit: '', delete: '', start: '', stop: ''}}
+              permPage: {add: 'alarm-test-log-add', confirm: 'alarm-test-log-confirm'}}
           }
         ]
       },
@@ -135,13 +137,12 @@ export const routes = [
             path: '/alarm/record',
             component: () => import('./components/monitoring/alarm/event/index.vue'),
             meta: {moduleId: 'alarm', title: '告警事件', perm: 'alarm-event-scan',
-              permPage: {add: 'hmcc-system', edit: '', delete: '', start: '', stop: ''}}
+              permPage: {add: 'hmcc-system', handle: 'alarm-event-handle', export: 'alarm-event-export'}}
           },
           {
             path: '/alarm/send',
             component: () => import('./components/monitoring/alarm/notify/index.vue'),
-            meta: {moduleId: 'alarm', title: '告警通知', perm: 'alarm-notice-record-scan',
-              permPage: {add: 'hmcc-system', edit: '', delete: '', start: '', stop: ''}}
+            meta: {moduleId: 'alarm', title: '告警通知', perm: 'alarm-notice-record-scan'}
           }
         ]
       },
@@ -154,13 +155,13 @@ export const routes = [
             path: '/dev/check/plan',
             component: () => import('./components/test.vue'),
             meta: {moduleId: 'alarm', title: '巡检计划', perm: 'patrol-project-scan',
-              permPage: {add: 'hmcc-system', edit: '', delete: '', start: '', stop: ''}}
+              permPage: {add: 'patrol-project-add', edit: 'patrol-project-edit', delete: 'patrol-project-delete'}}
           },
           {
             path: '/dev/check/record',
             component: () => import('./components/test.vue'),
             meta: {moduleId: 'alarm', title: '巡检记录', perm: 'patrol-record-scan',
-              permPage: {add: 'hmcc-system', edit: '', delete: '', start: '', stop: ''}}
+              permPage: {add: 'patrol-record-add', edit: 'patrol-record-edit', delete: 'patrol-record-delete'}}
           }
         ]
       },

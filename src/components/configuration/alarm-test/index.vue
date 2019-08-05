@@ -2,7 +2,7 @@
   <div class="order-page">
     <search-part @search="searchResult">
       <template slot="btn">
-        <el-button @click="add" plain size="small" v-has="perms[0]">
+        <el-button @click="add" plain size="small" v-has="permPage.add">
           <f-a class="icon-small" name="plus"></f-a>
           添加
         </el-button>
@@ -47,8 +47,7 @@
               {{item.artificialConfirm === '0' ?  '未确认' : '已确认'}}
             </el-col>
             <el-col :span="4" class="opera-btn">
-              <!--<des-btn @click="edit(item)" icon="edit" v-has="perms[1]">编辑</des-btn>-->
-              <des-btn @click="confirmItem(item)" icon="edit" v-has="perms[2]"
+              <des-btn @click="confirmItem(item)" icon="edit" v-has="permPage.confirm"
                        v-show="item.artificialConfirm === '0'">确认</des-btn>
             </el-col>
           </el-row>
