@@ -19,10 +19,10 @@ function isNewReturnType(data) {
 
 // 添加请求拦截器
 http.interceptors.request.use(function (config) {
-  if(config.method === 'get') {
+  if (config.method === 'get') {
     config.paramsSerializer = params => {
       return qs.stringify(params, {indices: false});
-    }
+    };
   }
   return config;
 });
@@ -109,6 +109,17 @@ http.interceptors.response.use(response => {
 Vue.prototype.$http = http;
 
 
+//巡检计划
+export const checkPlan = resource('/patrol-project', http, {
+  query(params) {
+    return http.post('/patrol-project/page', params);
+  },
+  update(obj) {
+    return http.post('/patrol-project', obj);
+  }
+});
+
+// 温度记录
 export const temperatureRecord = {
   add(obj) {
     return http.post('/temperature-measurement-record', obj);
@@ -244,7 +255,6 @@ export const probe = resource('/sensor', http, {
 export const warehouseDevImage = resource('/warehouseDevImage', http, {});
 
 export const DevBackUp = resource('/ccsDevBackup', http, {});
-
 
 
 // 绑定规则信息

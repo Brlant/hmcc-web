@@ -32,6 +32,7 @@
 
   export default {
     mixins: [methodsMixin],
+
     data() {
       return {
         form: {},
@@ -58,6 +59,7 @@
     },
     watch: {
       index: function (val) {
+        this.$refs['tempForm'].clearValidate();
         if (this.formItem.id) {
           this.orgList = [
             {name: this.formItem.patrolOrgName, id: this.formItem.patrolOrgId}
@@ -69,16 +71,14 @@
           this.actionType = '编辑';
         } else {
           this.form = {
-            patrolUserId: '',
+            name: '',
             status: '0',
-            patrolOrgId: '',
-            patrolProjectDate: ''
+            type: '',
+            calibrationTime: '',
+            no: ''
           };
           this.actionType = '添加';
         }
-        this.$nextTick(() => {
-          this.$refs['tempForm'].clearValidate();
-        });
       }
     },
     methods: {
@@ -90,8 +90,7 @@
         let params = {
           keyWord: query
         };
-        let orgId = this.$store.state.user.userCompanyAddress;
-        this.$http.get(`/erp-org/${orgId}/users`, params).then(res => {
+        this.$http.get(`/erp-org/${this.form.patrolOrgId}/users`, params).then(res => {
           this.userList = res.data.list;
         });
       },
@@ -116,7 +115,7 @@
               this.$httpRequestOpera(checkPlan.save(this.form), {
                 errorTitle: '添加失败',
                 success: res => {
-                  if (res.code === 200) {
+                  if (res.data.code === 200) {
                     this.$notify.success({message: '添加成功'});
                     this.doing = false;
                     this.$emit('change', res.data);
@@ -132,7 +131,7 @@
               this.$httpRequestOpera(checkPlan.update(this.form), {
                 errorTitle: '修改失败',
                 success: res => {
-                  if (res.code === 200) {
+                  if (res.data.code === 200) {
                     this.$notify.success({message: '修改成功'});
                     this.doing = false;
                     this.$emit('change', res.data);
