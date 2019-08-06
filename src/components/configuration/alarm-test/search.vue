@@ -76,7 +76,7 @@
       queryUserList(query) {
         let params = {keyWord: query};
         let orgId = this.$store.state.user.userCompanyAddress;
-        OrgUser.queryOrgInfo(orgId, params).then(res => {
+        OrgUser.queryUsers(orgId, params).then(res => {
           this.userList = res.data.list;
         });
       },

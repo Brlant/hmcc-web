@@ -335,7 +335,7 @@
       },
       queryUserList(query) {
         let params = {keyWord: query};
-        OrgUser.queryOrgInfo(this.form.orgId, params).then(res => {
+        OrgUser.queryUsers(this.form.orgId, params).then(res => {
           this.userList = res.data.list;
         });
       },

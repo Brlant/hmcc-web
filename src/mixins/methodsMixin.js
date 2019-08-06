@@ -1,4 +1,4 @@
-import {AlarmNotifyGroup, cool, probe, BaseInfo} from '@/resources';
+import {AlarmNotifyGroup, BaseInfo, cool, gateway, probe} from '@/resources';
 
 
 export default {
@@ -8,14 +8,21 @@ export default {
       orgList: [],
       notifyList: [],
       coolList: [],
-      povList: []
+      povList: [],
+      gatewayList: []
     };
   },
   methods: {
     queryProbeList(query) {
-      let params = {keyWord: query};
-      probe.query(params).then(res => {
+      let params = typeof query === 'object' ? query : {keyWord: query};
+      return probe.query(params).then(res => {
         this.probeList = res.data.data.list;
+      });
+    },
+    queryGateway(query) {
+      let params = typeof query === 'object' ? query : {keyWord: query};
+      return gateway.query(params).then(res => {
+        this.gatewayList = res.data.data.list;
       });
     },
     queryAllOrg: function (query) {// 查询货主

@@ -1,6 +1,6 @@
 <template>
   <dialog-template :pageSets="pageSets" @selectTab="selectTab">
-    <template slot="title">设备信息</template>
+    <template slot="title">巡检计划</template>
     <template slot="btn">
       <el-button @click="close" plain>关闭</el-button>
     </template>

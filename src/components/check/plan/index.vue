@@ -11,13 +11,12 @@
     <!--    <status-list :activeStatus="activeStatus" :checkStatus="checkStatus" :statusList="statusType"/>-->
     <div class="order-list" style="margin-top: 20px">
       <el-row class="order-list-header">
-        <el-col :span="5">巡检单位</el-col>
-        <el-col :span="2">巡检人</el-col>
-        <el-col :span="5">所属单位</el-col>
+        <el-col :span="6">巡检单位</el-col>
+        <el-col :span="4">巡检人</el-col>
         <el-col :span="3">计划巡检时间</el-col>
         <el-col :span="3">实际巡检时间</el-col>
         <el-col :span="2">状态</el-col>
-        <el-col :span="3">操作</el-col>
+        <el-col :span="6">操作</el-col>
       </el-row>
       <el-row v-if="loadingData">
         <el-col :span="24">
@@ -32,21 +31,20 @@
         </el-col>
       </el-row>
       <div class="order-list-body flex-list-dom" v-else="">
-        <div :class="[{'active':currentItemId===item.id}]" class="order-list-item order-list-item-bg no-pointer"
-             v-for="item in dataList">
+        <div :class="[{'active':currentItemId===item.id}]" class="order-list-item order-list-item-bg"
+             v-for="item in dataList" @click="showItemDetail">
           <el-row>
-            <el-col :span="5" class="R">{{item.patrolOrgName}}</el-col>
-            <el-col :span="2" class="R">{{item.patrolUserName}}</el-col>
-            <el-col :span="5">{{item.orgName}}</el-col>
+            <el-col :span="6" class="R">{{item.patrolOrgName}}</el-col>
+            <el-col :span="4" class="R">{{item.patrolUserName}}</el-col>
             <el-col :span="3" class="R">{{item.patrolProjectDate | date}}</el-col>
             <el-col :span="3" class="R">{{item.patrolTime | date}}</el-col>
             <el-col :span="2">
               {{statusType[item.status].title}}
             </el-col>
-            <el-col :span="3" class="opera-btn">
-              <des-btn @click="edit(item)" icon="edit" v-has="permPage.edit" v-show="item.status === '0'">编辑</des-btn>
-              <des-btn @click="cancel(item)" icon="remove" v-has="permPage.delete" v-show="item.status === '0'">取消
-              </des-btn>
+            <el-col :span="6" class="opera-btn">
+              <des-btn @click="addRecord(item)" icon="plus" v-has="permPage.delete" v-show="item.status === '0'">添加巡检记录</des-btn>
+<!--              <des-btn @click="edit(item)" icon="edit" v-has="permPage.edit" v-show="item.status === '0'">编辑</des-btn>-->
+              <des-btn @click="cancel(item)" icon="remove" v-has="permPage.delete" v-show="item.status === '0'">取消</des-btn>
             </el-col>
           </el-row>
         </div>
@@ -75,7 +73,7 @@
   import showForm from './form/show-form';
   import CommonMixin from '@/mixins/commonMixin';
   import {checkPlan} from '@/resources';
-
+  import recordForm from './form/record-form';
   export default {
     components: {
       SearchPart
@@ -93,7 +91,8 @@
         },
         dialogComponents: {
           0: addForm,
-          1: showForm
+          1: showForm,
+          2: recordForm
         },
         defaultPageRight: {'width': '700px', 'padding': 0}
       };
@@ -148,6 +147,12 @@
         const http = checkPlan.queryStateNum;
         const res = {};
         this.queryStatusNumUtil(http, pm, this.statusType, res);
+      },
+      addRecord(item) {
+        this.currentItem = item;
+        this.currentItemId = item.id;
+        this.form = item;
+        this.showPart(2);
       },
       add() {
         this.form = {};

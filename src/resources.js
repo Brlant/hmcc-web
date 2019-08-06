@@ -109,6 +109,16 @@ http.interceptors.response.use(response => {
 Vue.prototype.$http = http;
 
 
+//巡检记录
+export const checkRecord = resource('/patrol-record', http, {
+  query(id) {
+    return http.post(`/patrol-record/${id}/page`);
+  },
+  update(obj) {
+    return http.post('/patrol-record', obj);
+  }
+});
+
 //巡检计划
 export const checkPlan = resource('/patrol-project', http, {
   query(params) {

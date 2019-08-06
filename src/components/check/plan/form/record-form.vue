@@ -8,13 +8,13 @@
       <el-form :model="form" :rules="rules" label-width="120px" ref="tempForm">
         <el-form-item label="设备类型" prop="devType">
           <el-radio-group v-model="form.devType">
-            <el-radio-button label="0">冷链标签</el-radio-button>
+            <el-radio-button label="0">探头</el-radio-button>
             <el-radio-button label="1">网关</el-radio-button>
           </el-radio-group>
         </el-form-item>
-        <el-form-item label="冷链标签" prop="devId" v-if="form.devType === '0'"
-                      :rules="[{required: true, message: '请选择冷链标签', trigger: 'change'}]">
-          <el-select placeholder="请选择冷链标签" v-model="form.devId"
+        <el-form-item label="探头" prop="devId" v-if="form.devType === '0'"
+                      :rules="[{required: true, message: '请选择探头', trigger: 'change'}]">
+          <el-select placeholder="请选择" v-model="form.devId"
                      filterable clearable remote :remote-method="queryDevNew">
             <el-option :label="item.name" :value="item.id" :key="item.id"
                        v-for="item in probeList"></el-option>
@@ -41,7 +41,7 @@
         </el-form-item>
         <el-table :data="devList" border class="clearfix" ref="orderDetail">
           <el-table-column prop="operationTime" label="设备类型" width="100">
-            <template slot-scope="scope">{{scope.row.devType === '0' ? '冷链标签' : '网关'}}</template>
+            <template slot-scope="scope">{{scope.row.devType === '0' ? '探头' : '网关'}}</template>
           </el-table-column>
           <el-table-column prop="actionType" label="设备">
             <template slot-scope="scope">
@@ -168,7 +168,7 @@
         this.$httpRequestOpera(checkRecord.save(data), {
           errorTitle: '添加失败',
           success: res => {
-            if (res.code === 200) {
+            if (res.data.code === 200) {
               this.$notify.success({message: '添加成功'});
               this.doing = false;
               this.$emit('change', res.data);

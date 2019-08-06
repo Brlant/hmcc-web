@@ -32,7 +32,6 @@
 
   export default {
     mixins: [methodsMixin],
-
     data() {
       return {
         form: {},
@@ -71,11 +70,10 @@
           this.actionType = '编辑';
         } else {
           this.form = {
-            name: '',
+            patrolUserId: '',
             status: '0',
-            type: '',
-            calibrationTime: '',
-            no: ''
+            patrolOrgId: '',
+            patrolProjectDate: ''
           };
           this.actionType = '添加';
         }
@@ -90,7 +88,8 @@
         let params = {
           keyWord: query
         };
-        this.$http.get(`/erp-org/${this.form.patrolOrgId}/users`, params).then(res => {
+        let orgId = this.$store.state.user.userCompanyAddress;
+        this.$http.get(`/erp-org/${orgId}/users`, params).then(res => {
           this.userList = res.data.list;
         });
       },
