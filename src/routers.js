@@ -58,7 +58,8 @@ export const routes = [
           {
             path: '/monitoring/temp',
             component: () => import('./components/monitoring/temp-new/index.vue'),
-            meta: {moduleId: 'monitoring', title: '历史数据查询', perm: 'history-data-manager-scan', subMenuId: 'temp', showDev: true}
+            meta: {moduleId: 'monitoring', title: '历史数据查询', perm: 'history-data-manager-scan',
+              subMenuId: 'temp', showDev: true}
           },
           {
             path: '/monitoring/temp/records',

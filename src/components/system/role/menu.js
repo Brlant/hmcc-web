@@ -125,11 +125,11 @@ export default [
         'label': '冷链设备温度记录',
         'parentId': 'hmcc-system',
         'sort': '5',
-        'children': {
+        'children': [{
           'id': 'freezer-dev-temperature-record-manager-scan',
           'label': '查看冷链设备温度记录',
           'parentId': 'hmcc-system'
-        }
+        }]
       }
     ]
   },
