@@ -28,7 +28,7 @@ export default {
     queryAllOrg: function (query) {// 查询货主
       let params = {keyWord: query};
       this.$http.get('/subordinate-org/info/permission', {params: params}).then(res => {
-        this.orgList = res.data.list;
+        this.orgList = res.data.data;
       });
     },
     queryNotifyList(query) {
@@ -58,7 +58,7 @@ export default {
         keyWord: query
       };
       this.$http.get('/subordinate-org/info/permission', {params: params}).then(res => {
-        this.povList = res.data.list;
+        this.povList = res.data.data;
       });
     }
   }
