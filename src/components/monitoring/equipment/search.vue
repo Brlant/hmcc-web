@@ -34,7 +34,7 @@
         <el-row v-show="type === 2">
           <el-col :span="8">
             <oms-form-row :span="5" label="单位">
-              <org-select :list="orgList"
+              <org-select :list="povList"
                           :remoteMethod="filterPOV"
                           placeholder="请输入名称搜索单位" v-model="searchCondition.orgId"></org-select>
             </oms-form-row>
@@ -46,8 +46,9 @@
 </template>
 <script>
   import {BaseInfo} from '@/resources';
-
+  import methodsMixin from '@/mixins/methodsMixin';
   export default {
+    mixins: [methodsMixin],
     data: function () {
       return {
         searchCondition: {
@@ -75,17 +76,6 @@
       }
     },
     methods: {
-      filterPOV: function (query) {// 过滤POV
-        let orgId = this.$store.state.user.userCompanyAddress;
-        if (!orgId) return;
-        let params = {
-          keyWord: query,
-          relation: '0'
-        };
-        BaseInfo.queryOrgByValidReation(orgId, params).then(res => {
-          this.orgList = res.data;
-        });
-      },
       search() {
         this.$emit('search', this.searchCondition);
       },

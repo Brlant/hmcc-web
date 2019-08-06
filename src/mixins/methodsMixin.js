@@ -27,7 +27,7 @@ export default {
     },
     queryAllOrg: function (query) {// 查询货主
       let params = {keyWord: query};
-      this.$http.get('/orgs/pager', {params: params}).then(res => {
+      this.$http.get('/subordinate-org/info/permission', {params: params}).then(res => {
         this.orgList = res.data.list;
       });
     },
@@ -54,14 +54,11 @@ export default {
       });
     },
     filterPOV: function (query) {// 过滤POV
-      let orgId = this.$store.state.user.userCompanyAddress;
-      if (!orgId) return;
       let params = {
-        keyWord: query,
-        relation: '0'
+        keyWord: query
       };
-      BaseInfo.queryOrgByValidReation(orgId, params).then(res => {
-        this.povList = res.data;
+      this.$http.get('/subordinate-org/info/permission', {params: params}).then(res => {
+        this.povList = res.data.list;
       });
     }
   }

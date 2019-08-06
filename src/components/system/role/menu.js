@@ -490,6 +490,11 @@ export default [
       {
         id: 'system-setting-log',
         label: '系统日志'
+      },
+      {
+        id: 'query-all-org-regulation',
+        label: '查看所有单位',
+        children: []
       }
     ]
   }
