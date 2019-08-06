@@ -32,7 +32,7 @@
       </el-row>
       <div class="order-list-body flex-list-dom" v-else="">
         <div :class="[{'active':currentItemId===item.id}]" class="order-list-item order-list-item-bg"
-             v-for="item in dataList" @click="showItemDetail">
+             v-for="item in dataList" @click="showItemDetail(item)">
           <el-row>
             <el-col :span="6" class="R">{{item.patrolOrgName}}</el-col>
             <el-col :span="4" class="R">{{item.patrolUserName}}</el-col>

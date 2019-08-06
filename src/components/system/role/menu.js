@@ -289,7 +289,12 @@ export default [
             'id': 'alarm-notice-group-delete',
             'label': '删除告警通知组',
             'parentId': 'hmcc-system'
-          }
+          },
+          {
+            'id': 'ccs-wachart-qr-code',
+            'label': '绑定微信',
+            'parentId': 'hmcc-system'
+          },
         ]
       },
       {
