@@ -103,22 +103,22 @@ export default [
         'label': '委托仓库监控',
         'parentId': 'hmcc-system',
         'sort': '3',
-        'children': {
+        'children': [{
           'id': 'pov-dev-monitoring-scan',
           'label': '查看委托仓库监控',
           'parentId': 'hmcc-system'
-        }
+        }]
       },
       {
         'id': 'history-data-manager',
         'label': '历史数据查询',
         'parentId': 'hmcc-system',
         'sort': '4',
-        'children': {
+        'children': [{
           'id': 'history-data-manager-scan',
           'label': '查看历史数据',
           'parentId': 'hmcc-system'
-        }
+        }]
       },
       {
         'id': 'freezer-dev-temperature-record-manager',
