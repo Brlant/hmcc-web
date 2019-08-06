@@ -138,6 +138,7 @@
       height: 300px;
       width: 100%
     }
+
     .refresh-cycle-dropdown {
       position: absolute;
       top: 10px;
@@ -224,7 +225,7 @@
         </el-table-column>
         <el-table-column label="告警类型/等级" align="center" header-align="center" prop="warnTypes" min-width="100">
           <template slot-scope="props">
-            <div  v-if="props.row.id">
+            <div v-if="props.row.id">
               {{alarmTypeList[props.row.type]}}
               <div>{{alarmLevelList[props.row.level]}}告警</div>
             </div>
@@ -306,7 +307,7 @@
           dayWarnEventCount: 0,
           sensorCount: 0,
           totalMonitorDevCount: 0,
-          totalNotifyCount	: 0,
+          totalNotifyCount: 0,
           totalSensorCount: 0,
           unconfirmWarnEventCount: 0
         },
@@ -314,6 +315,7 @@
       };
     },
     mounted() {
+      this.$getDict('coolDevType');
       this.clearAllTimes();
       this.queryReports();
       this.queryFocusTotalCount();
@@ -357,7 +359,7 @@
           handlingStatus: '0'
         };
         alarmEvent.query(params).then(res => {
-          if(res.data.code === 200) {
+          if (res.data.code === 200) {
             this.reportList = this.formatReportListByDay(res.data.data);
             if (!this.cycle) return;
             this.setTimes(setTimeout(this.queryReports, this.cycle));
@@ -392,9 +394,9 @@
         this.$refs['alarmChart'].cycle = cycle;
       },
       change() {
-        const params = { handlingStatus: '0'};
+        const params = {handlingStatus: '0'};
         alarmEvent.query(params).then(res => {
-          if(res.data.code === 200) {
+          if (res.data.code === 200) {
             this.reportList = this.formatReportListByDay(res.data.data);
           }
         });
