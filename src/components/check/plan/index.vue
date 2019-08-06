@@ -43,7 +43,7 @@
             </el-col>
             <el-col :span="6" class="opera-btn">
               <des-btn @click="addRecord(item)" icon="plus" v-has="permPage.devCheck"
-                       v-show="item.status === '0'">添加设备巡检记录</des-btn>
+                       v-show="item.status !== '2'">添加设备巡检记录</des-btn>
 <!--              <des-btn @click="edit(item)" icon="edit" v-has="permPage.edit" v-show="item.status === '0'">编辑</des-btn>-->
               <des-btn @click="cancel(item)" icon="remove" v-has="permPage.delete" v-show="item.status === '0'">取消</des-btn>
             </el-col>
