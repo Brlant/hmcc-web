@@ -155,7 +155,8 @@ export const routes = [
             path: '/dev/check/plan',
             component: () => import('./components/check/plan/index.vue'),
             meta: {moduleId: 'alarm', title: '巡检计划', perm: 'patrol-project-scan',
-              permPage: {add: 'patrol-project-add', edit: 'patrol-project-edit', delete: 'patrol-project-delete'}}
+              permPage: {add: 'patrol-project-add', edit: 'patrol-project-edit',
+                delete: 'patrol-project-delete', devCheck: 'patrol-record-add'}}
           }
         ]
       },

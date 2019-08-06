@@ -395,35 +395,12 @@ export default [
             'id': 'patrol-project-delete',
             'label': '删除巡检计划',
             'parentId': 'hmcc-system'
-          }
-        ]
-      },
-      {
-        'id': 'patrol-record-manager',
-        'label': '巡检记录',
-        'parentId': 'hmcc-system',
-        'sort': '2',
-        'children': [
-          {
-            'id': 'patrol-record-scan',
-            'label': '查看巡检记录',
-            'parentId': 'hmcc-system'
           },
           {
             'id': 'patrol-record-add',
-            'label': '新增巡检记录',
+            'label': '新增设备巡检记录',
             'parentId': 'hmcc-system'
           },
-          {
-            'id': 'patrol-record-edit',
-            'label': '编辑巡检记录',
-            'parentId': 'hmcc-system'
-          },
-          {
-            'id': 'patrol-record-delete',
-            'label': '删除巡检记录',
-            'parentId': 'hmcc-system'
-          }
         ]
       }
     ]
