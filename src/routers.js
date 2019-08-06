@@ -149,7 +149,7 @@ export const routes = [
       {
         path: '/dev/check',
         component: () => import('./components/common/parent-route'),
-        meta: {moduleId: 'alarm', title: '设备巡检', icon: 'alarm', perm: 'patrol-project-manager'},
+        meta: {moduleId: 'alarm', title: '设备巡检', icon: 'verify', perm: 'patrol-project-manager'},
         children: [
           {
             path: '/dev/check/plan',
