@@ -356,11 +356,11 @@ export default [
         'label': '告警通知',
         'parentId': 'hmcc-system',
         'sort': '1',
-        'children': {
+        'children': [{
           'id': 'alarm-notice-record-scan',
           'label': '查看告警通知',
           'parentId': 'hmcc-system'
-        }
+        }]
       }
     ]
   },
