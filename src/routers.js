@@ -6,7 +6,6 @@ Vue.use(VueRouter);
 export const routes = [
   {
     path: '/',
-    redirect: '/dashboard',
     component: () => import('./components/layout/index.vue'),
     children: [
       {
