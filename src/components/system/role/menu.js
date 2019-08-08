@@ -44,7 +44,7 @@ export default [
             'parentId': 'hmcc-system'
           },
           {
-            'id': 'own-dev-monitoring-dev-switch',
+            'id': 'own-dev-monitoring-disable',
             'label': '停止本单位设备监控',
             'parentId': 'hmcc-system'
           },
@@ -87,7 +87,7 @@ export default [
             'parentId': 'hmcc-system'
           },
           {
-            'id': 'pov-dev-monitoring-dev-switch',
+            'id': 'pov-own-dev-monitoring-disable',
             'label': '停止接种单位设备监控',
             'parentId': 'hmcc-system'
           },
