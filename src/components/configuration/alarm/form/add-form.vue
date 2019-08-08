@@ -180,10 +180,11 @@
     },
     watch: {
       index: function (val) {
+        this.probeList = [];
         this.$refs['tempForm'].clearValidate();
         if (this.formItem.id) {
           this.probeList = [
-            {name: this.formItem.sensorName, id: this.formItem.sensorId,  no: this.formItem.sensorNo}
+            {name: this.formItem.sensorName, id: this.formItem.sensorId, no: this.formItem.sensorNo}
           ];
           this.notifyList = [
             {
