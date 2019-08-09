@@ -28,8 +28,8 @@
                       placeholder="请输入名称搜索单位" v-model="form.orgId"></org-select>
         </el-form-item>
         <el-form-item label="冷链设备" prop="monitorTargetId">
-          <el-select :remote-method="queryCoolListCondition" filterable placeholder="请输入名称搜索冷链设备" remote
-                     v-model="form.monitorTargetId">
+          <el-select :remote-method="queryCoolListCondition" clearable filterable placeholder="请输入名称搜索冷链设备" remote
+                     v-model="form.monitorTargetId" @change="monitorTargetIdChange">
             <el-option :key="item.id" :label="item.name" :value="item.id"
                        v-for="item in coolList"></el-option>
           </el-select>
@@ -66,7 +66,7 @@
 </template>
 <script>
   import methodsMixin from '@/mixins/methodsMixin';
-  import {monitorRelation, probe} from '@/resources';
+  import {monitorRelation} from '@/resources';
   import TwoColumn from '@dtop/dtop-web-common/packages/two-column';
 
   export default {
@@ -144,13 +144,21 @@
         };
         this.queryCoolList(params);
       },
+      monitorTargetIdChange(val) {
+        this.form.sensorList = [];
+        this.addSensor();
+      },
       queryProbeList(query) {
         if (this.type === 2 && !this.form.orgId) return;
+        if (!this.form.monitorTargetId) {
+          return this.$notify.info({message: '请选择冷链设备'});
+        }
         let params = {
           keyWord: query,
-          orgId: this.form.orgId || this.$store.state.user.userCompanyAddress
+          orgId: this.form.orgId || this.$store.state.user.userCompanyAddress,
+          freezerDevId: this.form.monitorTargetId
         };
-        probe.query(params).then(res => {
+        this.$http.post('/sensor/page-without-monitor', params).then(res => {
           this.probeList = res.data.data.list;
         });
       },
