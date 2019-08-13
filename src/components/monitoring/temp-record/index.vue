@@ -27,19 +27,26 @@
     border-collapse: collapse;
   }
   .table td {
-    padding: 8px;
+    line-height: 34px;
+    height: 34px;
     border: 1px solid #ddd;
     text-align: center;
   }
   .table .header {
     font-weight: bold;
   }
+  .sign-img {
+    width: 28px;
+    height: 24px;
+    line-height: 24px;
+    vertical-align: middle;
+  }
 </style>
 <template>
   <div class="order-page">
     <search-part @search="searchResult">
       <template slot="btn">
-        <el-button plain size="small" v-has="'ccs-monitordev-add'" @click="print">
+        <el-button plain size="small"  @click="print">
           <f-a class="icon-small" name="plus"></f-a>
           打印
         </el-button>
@@ -81,14 +88,20 @@
                   <td>{{item[0].recordDate || '-'}}</td>
                   <td>{{item[0].refrigerationTemperature || '-'}}</td>
                   <td>{{item[0].freezeTemperature || '-'}}</td>
-                  <td class="R">{{item[0].recordUserId || '未记录'}}</td>
+                  <td class="R">
+                    <img v-if="item[0].recordUserSignUrl" :src="item[1].recordUserSignUrl" class="sign-img">
+                    <span v-else>未记录</span>
+                  </td>
                 </tr>
                 <tr>
                   <td>下午</td>
                   <td>{{item[1].recordDate || '-'}}</td>
                   <td>{{item[1].refrigerationTemperature || '-'}}</td>
                   <td>{{item[1].freezeTemperature || '-'}}</td>
-                  <td class="R">{{item[1].recordUserId || '未记录'}}</td>
+                  <td class="R">
+                    <img v-if="item[1].recordUserSignUrl" :src="item[1].recordUserSignUrl" class="sign-img">
+                    <span v-else>未记录</span>
+                  </td>
                 </tr>
               </template>
             </table>
@@ -112,14 +125,20 @@
                   <td>{{item[0].recordDate || '-'}}</td>
                   <td>{{item[0].refrigerationTemperature || '-'}}</td>
                   <td>{{item[0].freezeTemperature || '-'}}</td>
-                  <td class="R">{{item[0].recordUserId || '未记录'}}</td>
+                  <td class="R">
+                    <img v-if="item[0].recordUserSignUrl" :src="item[1].recordUserSignUrl" class="sign-img">
+                    <span v-else>未记录</span>
+                  </td>
                 </tr>
                 <tr>
                   <td>下午</td>
                   <td>{{item[1].recordDate || '-'}}</td>
                   <td>{{item[1].refrigerationTemperature || '-'}}</td>
                   <td>{{item[1].freezeTemperature || '-'}}</td>
-                  <td class="R">{{item[1].recordUserId || '未记录'}}</td>
+                  <td class="R">
+                    <img v-if="item[1].recordUserSignUrl" :src="item[1].recordUserSignUrl" class="sign-img">
+                    <span v-else>未记录</span>
+                  </td>
                 </tr>
               </template>
             </table>
