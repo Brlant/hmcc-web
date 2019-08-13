@@ -89,7 +89,7 @@
                   <td>{{item[0].refrigerationTemperature || '-'}}</td>
                   <td>{{item[0].freezeTemperature || '-'}}</td>
                   <td class="R">
-                    <img v-if="item[0].recordUserSignUrl" :src="item[1].recordUserSignUrl" class="sign-img">
+                    <img v-if="item[0].recordUserSignUrl" :src="item[0].recordUserSignUrl" class="sign-img">
                     <span v-else>未记录</span>
                   </td>
                 </tr>
@@ -126,7 +126,7 @@
                   <td>{{item[0].refrigerationTemperature || '-'}}</td>
                   <td>{{item[0].freezeTemperature || '-'}}</td>
                   <td class="R">
-                    <img v-if="item[0].recordUserSignUrl" :src="item[1].recordUserSignUrl" class="sign-img">
+                    <img v-if="item[0].recordUserSignUrl" :src="item[0].recordUserSignUrl" class="sign-img">
                     <span v-else>未记录</span>
                   </td>
                 </tr>
