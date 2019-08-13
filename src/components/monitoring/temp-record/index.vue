@@ -3,38 +3,46 @@
     background: #fff;
     padding-top: 20px;
   }
+
   .record-title {
     font-weight: bold;
     font-size: 18px;
     text-align: center;
   }
+
   .m-border {
     border-bottom: 1px solid #333;
     display: inline-block;
     padding: 0 10px;
     min-width: 50px;
   }
+
   .record-label {
     text-align: center;
     margin-top: 15px;
   }
+
   .record-table {
     padding: 0 50px;
     margin-top: 15px;
   }
+
   .table {
     width: 100%;
     border-collapse: collapse;
   }
+
   .table td {
     line-height: 24px;
     height: 24px;
     border: 1px solid #ddd;
     text-align: center;
   }
+
   .table .header {
     font-weight: bold;
   }
+
   .sign-img {
     width: auto;
     height: 24px;
@@ -46,7 +54,7 @@
   <div class="order-page">
     <search-part @search="searchResult">
       <template slot="btn">
-        <el-button plain size="small"  @click="print">
+        <el-button plain size="small" @click="print">
           <f-a class="icon-small" name="plus"></f-a>
           打印
         </el-button>
@@ -233,9 +241,14 @@
         str += '</body>';
         str += '</html>';
         oPop.document.write(str);
+        let button = document.createElement('button');
+        button.innerText = '打印';
+        button.addEventListener('click', function () {
+          oPop.print();
+          oPop.close();
+        });
+        oPop.document.body.append(button);
         oPop.document.body.append(content.cloneNode(true));
-        oPop.print();
-        oPop.close();
       }
     }
   };
