@@ -226,7 +226,7 @@
         return this.$moment(time).format(str);
       },
       print() {
-        var oPop = window.open('', 'oPop');
+        var oPop = window.open('', '_blank');
         let content = this.$el.querySelector('.record-content');
         var str = '<!DOCTYPE html>';
         str += '<html>';
@@ -234,7 +234,7 @@
         str += '<meta charset="utf-8">';
         str += '<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">';
         str += '<style>';
-        str += '.record-content {background: #fff; font-size: 9pt;} .record-title {font-weight: bold;  font-size: 18px;  text-align: center;} .m-border {border-bottom: 1px solid #000;  display: inline-block;  padding: 0 10px;  min-width: 50px;} .record-label {text-align: center; margin-top: 10px;}.record-table { margin-top: 10px;}.table {  width: 100%;  border-collapse: collapse;}.table td {  line-height: 24px; height: 24px;  border: 1px solid #000;  text-align: center;}.table .header {  font-weight: bold;}.el-col {width: 50%; float: left} .sign-img{width: 36px;height: 24px;line-height: 24px; vertical-align: middle;}';
+        str += '.record-content {background: #fff; font-size: 9pt;} .record-title {font-weight: bold;  font-size: 18px;  text-align: center;} .m-border {border-bottom: 1px solid #000;  display: inline-block;  padding: 0 10px;  min-width: 50px;} .record-label {text-align: center; margin-top: 10px;}.record-table { margin-top: 10px;}.table {  width: 100%;  border-collapse: collapse;}.table td {  line-height: 24px; height: 24px;  border: 1px solid #000;  text-align: center;}.table .header {  font-weight: bold;}.el-col {width: 50%; float: left} .sign-img{width: 36px;height: 24px;line-height: 24px; vertical-align: middle;} .print-btn {background: #fff;border-radius: 4px;cursor: pointer}';
         str += '</style>';
         str += '</head>';
         str += '<body>';
@@ -243,7 +243,9 @@
         oPop.document.write(str);
         let button = document.createElement('button');
         button.innerText = '打印';
+        button.classList.add('print-btn');
         button.addEventListener('click', function () {
+          button.style.display = 'none';
           oPop.print();
           oPop.close();
         });
