@@ -3,8 +3,7 @@ export default [
     'id': 'hmcc-index-scan',
     'label': '首页',
     'parentId': 'hmcc-system',
-    'sort': '1',
-    'children': []
+    'sort': '1'
   },
   {
     'id': 'monitoring-center-manager',
@@ -291,7 +290,7 @@ export default [
             'parentId': 'hmcc-system'
           },
           {
-            'id': 'ccs-wachart-qr-code',
+            'id': 'ccs-wachat-qr-code',
             'label': '获取微信码',
             'parentId': 'hmcc-system'
           }, {
@@ -497,8 +496,7 @@ export default [
       },
       {
         id: 'query-all-org-regulation',
-        label: '查看所有单位',
-        children: []
+        label: '查看所有单位'
       }
     ]
   }
