@@ -288,15 +288,6 @@ export default [
             'id': 'alarm-notice-group-delete',
             'label': '删除告警通知组',
             'parentId': 'hmcc-system'
-          },
-          {
-            'id': 'ccs-wachat-qr-code',
-            'label': '获取微信码',
-            'parentId': 'hmcc-system'
-          }, {
-            'id': 'ccs-wachart-ticket',
-            'parentId': 'hmcc-system',
-            'label': '绑定微信',
           }
         ]
       },
