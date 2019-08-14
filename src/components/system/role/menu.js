@@ -294,7 +294,21 @@ export default [
             'id': 'ccs-wachart-qr-code',
             'label': '绑定微信',
             'parentId': 'hmcc-system'
-          },
+          }, {
+            'id': 'ccs-wachat-qr-code',
+            'parentId': 'ccs-notify-manager',
+            'label': '获取微信码',
+            'sort': null,
+            'children': null,
+            'leaf': true
+          }, {
+            'id': 'ccs-wachart-ticket',
+            'parentId': 'ccs-notify-manager',
+            'label': '绑定微信',
+            'sort': null,
+            'children': null,
+            'leaf': true
+          }
         ]
       },
       {
