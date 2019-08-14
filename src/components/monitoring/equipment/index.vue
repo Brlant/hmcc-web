@@ -64,9 +64,9 @@
               </span>
             </el-col>
             <el-col :span="10" class="opera-btn" >
-              <des-btn @click="record(item)" icon="report" v-has="permPage.record">
-                记录温度
-              </des-btn>
+<!--              <des-btn @click="record(item)" icon="report" v-has="permPage.record">-->
+<!--                记录温度-->
+<!--              </des-btn>-->
               <des-btn @click="showHistoryData(item)" icon="chaxun" v-has="permPage.query">查看历史数据</des-btn>
               <des-btn @click="monitorTemp(item)" icon="start" v-has="permPage.start"
                        v-show="item.monitorStatus==='0'">开启监控

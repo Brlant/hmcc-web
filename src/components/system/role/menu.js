@@ -89,11 +89,6 @@ export default [
             'id': 'pov-own-dev-monitoring-disable',
             'label': '停止接种单位设备监控',
             'parentId': 'hmcc-system'
-          },
-          {
-            'id': 'pov-dev-monitoring-record',
-            'label': '记录温度',
-            'parentId': 'hmcc-system'
           }
         ]
       },
