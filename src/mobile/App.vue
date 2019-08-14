@@ -19,7 +19,6 @@
       };
     },
     mounted: function () {
-      debugger;
       this.getProp();
       this.login();
     },
@@ -54,7 +53,6 @@
         });
       },
       login() {
-      debugger;
         let loading = this.$loading({fullscreen: true});
         Auth.checkLogin().then(res => {
           this.$router.push(`/alarm/${this.prop.id}`);

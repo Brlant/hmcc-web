@@ -95,8 +95,8 @@
         }
         window.localStorage.setItem('alarmId', id);
         this.loading = true;
-        this.$http.get(`/detail/${id}`).then(res => {
-          this.detail = res.data;
+        this.$http.post(`/alarm-event/${id}`).then(res => {
+          this.detail = res.data.data;
           this.loading = false;
           this.$nextTick(() => {
             this.queryTempData();
@@ -113,7 +113,7 @@
         return time ? this.$moment(time).format(str) : '';
       },
       queryTempData() {
-        let {occurrenceTime, recoveryTime, sensorId} = this.formItem;
+        let {occurrenceTime, recoveryTime, sensorId} = this.detail;
         this.filters = {
           startDate: new Date(occurrenceTime - halfDay),
           endDate: new Date(recoveryTime ? recoveryTime + halfDay : Date.now()),

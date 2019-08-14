@@ -193,7 +193,6 @@
         this.$http.post('/sensor/data', this.filter).then(res => {
           this.loadingData = false;
           if (res.data.code === 200) {
-            debugger;
             typeList.forEach((i, index) => {
               const data = res.data.data && res.data.data.map(m => {
                 m.value = i === '1' ? m.temperature : i === '2' ? m.humidity : m.voltage;
