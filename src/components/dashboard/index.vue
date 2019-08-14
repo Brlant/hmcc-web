@@ -215,12 +215,12 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column label="恢复时间" align="center" header-align="center" prop="restoreTime" min-width="150">
-          <template slot-scope="props">{{props.row.restoreTime | time}}</template>
+        <el-table-column label="恢复时间" align="center" header-align="center" prop="recoveryTime" min-width="150">
+          <template slot-scope="props">{{props.row.recoveryTime | time}}</template>
         </el-table-column>
         <el-table-column label="持续时间" align="center" header-align="center" min-width="150">
-          <template slot-scope="props">{{props.row.id ? formatMsToTime(props.row.restoreTime ?
-            props.row.restoreTime : Date.now(), props.row.createTime) : '' }}
+          <template slot-scope="props">{{props.row.id ? formatMsToTime(props.row.recoveryTime ?
+            props.row.recoveryTime : Date.now(), props.row.occurrenceTime) : '' }}
           </template>
         </el-table-column>
         <el-table-column label="告警类型/等级" align="center" header-align="center" prop="warnTypes" min-width="100">
@@ -321,11 +321,11 @@
       this.queryFocusTotalCount();
     },
     methods: {
-      formatMsToTime(restoreTime, createTime) {
-        if (!createTime || !restoreTime) {
+      formatMsToTime(recoveryTime, occurrenceTime) {
+        if (!occurrenceTime || !recoveryTime) {
           return '--';
         }
-        return utils.formatMsToTime(restoreTime - createTime);
+        return utils.formatMsToTime(recoveryTime - occurrenceTime);
       },
       formatModifyTime(item) {
         if (item.isIntegralDate) {
@@ -339,10 +339,10 @@
       formatReportListByDay(data) {
         const dateList = [];
         data.list.forEach(i => {
-          let date = this.$moment(i.createTime).format('YYYY-MM-DD');
+          let date = this.$moment(i.occurrenceTime).format('YYYY-MM-DD');
           !dateList.includes(date) && dateList.push(date);
-          i.modifyTime = i.createTime;
-          i.modifyTimeType = this.$moment(i.createTime).format('YYYY-MM-DD HH:mm:ss');
+          i.modifyTime = i.occurrenceTime;
+          i.modifyTimeType = this.$moment(i.occurrenceTime).format('YYYY-MM-DD HH:mm:ss');
           i.isIntegralDate = false;
         });
         let totalList = [].concat(data.list, dateList.map(d => {
