@@ -1,54 +1,46 @@
 <template>
-  <dialog-template :pageSets="pageSets" @selectTab="selectTab">
-    <template slot="title">告警事件</template>
-    <template slot="btn">
-      <el-button @click="close" plain>关闭</el-button>
-    </template>
-    <template slot="content">
-      <div v-if="loading">
-        <oms-loading :loading="loading"></oms-loading>
-      </div>
-      <div class="empty-info" v-else-if="!detail.id">暂无数据</div>
-      <div v-else>
-        <div class="form-header-part">
-          <div class="header">
-            <div class="sign f-dib"></div>
-            <h3 class="tit f-dib index-tit">
-              {{pageSets[0].name}}</h3>
-          </div>
-          <div class="content" style="overflow: hidden">
-            <oms-col :isShow="true" :rowSpan="rowSpan" label="发生时间">{{detail.occurrenceTime | time}}</oms-col>
-            <oms-col :isShow="true" :rowSpan="rowSpan" label="恢复时间">{{detail.recoveryTime | time}}</oms-col>
-            <oms-col :isShow="true" :rowSpan="rowSpan" label="告警类型">{{alarmTypeList[detail.type]}}</oms-col>
-            <oms-col :isShow="true" :rowSpan="rowSpan" label="告警等级">{{alarmLevelList[detail.level]}}</oms-col>
-            <oms-col :isShow="true" :rowSpan="rowSpan" label="所属单位">{{detail.orgName}}</oms-col>
-            <oms-col :isShow="true" :rowSpan="rowSpan" label="冷链设备">{{detail.freezerDevName}}</oms-col>
-            <oms-col :isShow="true" :rowSpan="rowSpan" label="探头">{{detail.sensorName}}</oms-col>
-            <oms-col :isShow="true" :rowSpan="rowSpan" label="告警值">{{detail.value}}</oms-col>
-            <oms-col :isShow="true" :rowSpan="rowSpan" label="恢复值">{{detail.recoveryValue}}</oms-col>
-            <oms-col :isShow="true" :rowSpan="rowSpan" label="处理时间">{{detail.handlingTime | time}}</oms-col>
-            <oms-col :isShow="true" :rowSpan="rowSpan" label="处理人">{{detail.confirmerId}}</oms-col>
-            <oms-col :isShow="true" :rowSpan="rowSpan" label="处理情况">{{detail.handlingCondition}}</oms-col>
-          </div>
+  <div>
+    <div class="empty-info" v-if="!detail.id">暂无数据</div>
+    <div v-else>
+      <div class="form-header-part">
+        <div class="header">
+          <div class="sign f-dib"></div>
+          <h3 class="tit f-dib index-tit">
+            {{pageSets[0].name}}</h3>
         </div>
-        <div class="form-header-part">
-          <div class="header">
-            <div class="sign f-dib"></div>
-            <h3 class="tit f-dib index-tit">
-              {{pageSets[1].name}}</h3>
-          </div>
-          <div class="content" style="overflow: hidden">
-            <chart-line :detail="detail" :filter="filters" :isRecord="true" chartWidth="100%"/>
-          </div>
+        <div class="content" style="overflow: hidden">
+          <tn-ceil :rowSpan="rowSpan" label="发生时间">{{detail.occurrenceTime | time}}</tn-ceil>
+          <tn-ceil :rowSpan="rowSpan" label="恢复时间">{{detail.recoveryTime | time}}</tn-ceil>
+          <tn-ceil :rowSpan="rowSpan" label="告警类型">{{alarmTypeList[detail.type]}}</tn-ceil>
+          <tn-ceil :rowSpan="rowSpan" label="告警等级">{{alarmLevelList[detail.level]}}</tn-ceil>
+          <tn-ceil :rowSpan="rowSpan" label="所属单位">{{detail.orgName}}</tn-ceil>
+          <tn-ceil :rowSpan="rowSpan" label="冷链设备">{{detail.freezerDevName}}</tn-ceil>
+          <tn-ceil :rowSpan="rowSpan" label="探头">{{detail.sensorName}}</tn-ceil>
+          <tn-ceil :rowSpan="rowSpan" label="告警值" v-show="detail.value">{{detail.value}}</tn-ceil>
+          <tn-ceil :rowSpan="rowSpan" label="恢复值" v-show="detail.recoveryValue">{{detail.recoveryValue}}</tn-ceil>
+          <tn-ceil :rowSpan="rowSpan" label="处理时间" v-show="detail.handlingTime">{{detail.handlingTime | time}}</tn-ceil>
+          <tn-ceil :rowSpan="rowSpan" label="处理人" v-show="detail.handlingUserName">{{detail.handlingUserName}}</tn-ceil>
+          <tn-ceil :rowSpan="rowSpan" label="处理情况" v-show="detail.handlingCondition">{{detail.handlingCondition}}</tn-ceil>
         </div>
       </div>
-    </template>
-  </dialog-template>
+      <div class="form-header-part">
+        <div class="header">
+          <div class="sign f-dib"></div>
+          <h3 class="tit f-dib index-tit">
+            {{pageSets[1].name}}</h3>
+        </div>
+        <div class="content" style="overflow: hidden">
+          <chart-line :detail="detail" :filter="filters" :isRecord="true" chartWidth="100%"/>
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
 <script>
   import ChartLine from '@/components/monitoring/temp-new/chart-line-new';
   import AlarmMixin from '@/mixins/alarmMixin';
   import AlarmEventMixin from '@/mixins/alarmEventMixin';
+  import TnCeil from './tn-cell';
 
   const halfDay = 60 * 60 * 1000;
   export default {
@@ -56,14 +48,14 @@
       index: Number,
       formItem: Object
     },
-    components: {ChartLine},
+    components: {ChartLine, TnCeil},
     mixins: [AlarmMixin, AlarmEventMixin],
     data() {
       return {
         rowSpan: 8,
         loading: false,
         pageSets: [
-          {name: '详细信息', key: 0},
+          {name: '基本信息', key: 0},
           {name: '历史数据', key: 1}
         ],
         currentTab: {},

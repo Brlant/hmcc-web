@@ -24,11 +24,16 @@
             <oms-col :isShow="true" :rowSpan="rowSpan" label="所属单位">{{detail.orgName}}</oms-col>
             <oms-col :isShow="true" :rowSpan="rowSpan" label="冷链设备">{{detail.freezerDevName}}</oms-col>
             <oms-col :isShow="true" :rowSpan="rowSpan" label="探头">{{detail.sensorName}}</oms-col>
-            <oms-col :isShow="true" :rowSpan="rowSpan" label="告警值">{{detail.value}}</oms-col>
-            <oms-col :isShow="true" :rowSpan="rowSpan" label="恢复值">{{detail.recoveryValue}}</oms-col>
-            <oms-col :isShow="true" :rowSpan="rowSpan" label="处理时间">{{detail.handlingTime | time}}</oms-col>
-            <oms-col :isShow="true" :rowSpan="rowSpan" label="处理人">{{detail.confirmerId}}</oms-col>
-            <oms-col :isShow="true" :rowSpan="rowSpan" label="处理情况">{{detail.handlingCondition}}</oms-col>
+            <oms-col :isShow="true" :rowSpan="rowSpan" label="告警值" v-show="detail.value">
+              {{detail.value}}</oms-col>
+            <oms-col :isShow="true" :rowSpan="rowSpan" label="恢复值" v-show="detail.recoveryValue">
+              {{detail.recoveryValue}}</oms-col>
+            <oms-col :isShow="true" :rowSpan="rowSpan" label="处理时间" v-show="detail.handlingTime"
+            >{{detail.handlingTime | time}}</oms-col>
+            <oms-col :isShow="true" :rowSpan="rowSpan" label="处理人" v-show="detail.handlingUserName">
+              {{detail.handlingUserName}}</oms-col>
+            <oms-col :isShow="true" :rowSpan="rowSpan" label="处理情况" v-show="detail.handlingCondition">
+              {{detail.handlingCondition}}</oms-col>
           </div>
         </div>
         <div class="form-header-part">
