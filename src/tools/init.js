@@ -178,7 +178,7 @@ export function init(Vue) {
 
   //格式化历史数据方法
   Vue.prototype.$formatDevData = function (item, type) {
-    let unit = ['', '℃', '%', 'V'];
+    let unit = ['', '℃', '%', '%'];
     let prop = ['', 'temperature', 'humidity', 'voltage'];
     if (!item[prop[type]]) return '';
     return item[prop[type]].toFixed(2) + unit[type];
@@ -186,7 +186,7 @@ export function init(Vue) {
 
   // 格式化设备首页数据
   Vue.prototype.$formatDevIndexData = function (item, devType) {
-    let unit = ['', '℃', '%', 'V'];
+    let unit = ['', '℃', '%', '%'];
     let prop = ['', 'temperature', 'humidity', 'voltage'];
     if (devType && devType === '4') {
       if (!item[prop[2]]) return '';

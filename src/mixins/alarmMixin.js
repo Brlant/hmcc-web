@@ -4,7 +4,7 @@ export default {
       checkList: [
         {label: '温度值', key: '1', unit: '℃', show: true},
         {label: '湿度值', key: '2', unit: '%', show: true},
-        {label: '电压值', key: '3', unit: 'V', show: true},
+        {label: '电压值', key: '3', unit: '%', show: true},
         {label: '离线时间', key: '4', unit: 'min', show: true}
       ],
       conditions: [

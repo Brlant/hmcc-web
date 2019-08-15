@@ -50,7 +50,7 @@
                 {{item.humidityAlarmFlag === '1' ? '开启' : '关闭'}}</el-tag>
             </el-col>
             <el-col :span="4" class="R">
-              <span v-if="item.voltageAlarmFlag === '1'"> 高：{{item.voltageMax}}V 低：{{item.voltageMin}}V</span>
+              <span v-if="item.voltageAlarmFlag === '1'"> 高：{{item.voltageMax}}% 低：{{item.voltageMin}}%</span>
               <el-tag type="primary" :type="item.voltageAlarmFlag === '1' ? 'success' : 'warning'">
                 {{item.voltageAlarmFlag === '1' ? '开启' : '关闭'}}</el-tag>
             </el-col>

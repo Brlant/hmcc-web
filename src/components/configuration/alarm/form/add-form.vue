@@ -61,14 +61,14 @@
           <el-col :span="12">
             <el-form-item label="电压最低值" prop="voltageMin">
               <oms-input placeholder="请输入电压最低值" type="input" v-model.number="form.voltageMin">
-                <template slot="append">V</template>
+                <template slot="append">%</template>
               </oms-input>
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="电压最高值" prop="voltageMax">
               <oms-input placeholder="请输入电压最高值" type="input" v-model="form.voltageMax">
-                <template slot="append">V</template>
+                <template slot="append">%</template>
               </oms-input>
             </el-form-item>
           </el-col>

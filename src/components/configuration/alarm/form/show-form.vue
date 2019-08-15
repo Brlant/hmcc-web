@@ -37,9 +37,9 @@
                   <el-tag type="primary" :type="formItem.voltageAlarmFlag === '1' ? 'success' : 'warning'">
                     {{formItem.voltageAlarmFlag === '1' ? '开启' : '关闭'}}</el-tag>
                 </oms-row>
-                <oms-row v-show="formItem.voltageAlarmFlag === '1'"  label="电压最高值">{{formItem.voltageMax}}V
+                <oms-row v-show="formItem.voltageAlarmFlag === '1'"  label="电压最高值">{{formItem.voltageMax}}%
                 </oms-row>
-                <oms-row v-show="formItem.voltageAlarmFlag === '1'"  label="电压最低值">{{formItem.voltageMin}}V
+                <oms-row v-show="formItem.voltageAlarmFlag === '1'"  label="电压最低值">{{formItem.voltageMin}}%
                 </oms-row>
                 <oms-row  label="告警通知组">{{formItem.alarmNoticeGroupName}}</oms-row>
               </el-col>

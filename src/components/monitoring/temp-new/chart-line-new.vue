@@ -17,7 +17,7 @@
   </div>
 </template>
 <script>
-  const unitAry = ['', '°C', '%', 'V'];
+  const unitAry = ['', '°C', '%', '%'];
   const titleAry = ['', '温度', '湿度', '电压'];
   import Echarts from 'echarts/lib/echarts';
   import moment from 'moment';

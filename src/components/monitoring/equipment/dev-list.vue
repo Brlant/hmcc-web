@@ -73,8 +73,8 @@
           <el-col :span="8">
             <oms-row label="电压" :span="12">
               <template v-if="item.voltage !== null">
-                <span class="fl">{{item.voltage}} V</span>
-                <el-tooltip effect="dark" placement="top" :content="`电压范围：${item.voltageMin}~${item.voltageMax}V`">
+                <span class="fl">{{item.voltage}} %</span>
+                <el-tooltip effect="dark" placement="top" :content="`电压范围：${item.voltageMin}~${item.voltageMax}%`">
                   <i class="el-icon-warning-outline ml-10"/>
                 </el-tooltip>
               </template>
