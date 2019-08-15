@@ -158,8 +158,7 @@
             {required: true, message: '请输入角色名称', trigger: 'blur'}
           ],
           name: [
-            {required: true, message: '请输入角色英文名称', trigger: 'blur'},
-            {type: 'name', message: '请输入正确的角色英文名称', validator: checkName, trigger: 'blur'}
+            {required: true, message: '请输入角色英文名称', trigger: 'blur'}
           ],
           remark: [
             {required: true, message: '请输入角色描述', trigger: 'blur'}
