@@ -170,7 +170,7 @@
             {required: true, message: '请选择告警通知组', trigger: 'change'}
           ]
         },
-        timeList: [5, 10, 30],
+        timeList: [1, 2, 3, 5, 10, 30],
         actionType: '添加'
       };
     },
