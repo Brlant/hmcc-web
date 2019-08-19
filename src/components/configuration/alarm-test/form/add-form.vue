@@ -54,7 +54,8 @@
     },
     props: {
       formItem: Object,
-      index: Number
+      index: Number,
+      getQCodeInfo: Function
     },
     watch: {
       index: function (val) {
