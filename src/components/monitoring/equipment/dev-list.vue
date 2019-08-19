@@ -49,8 +49,8 @@
             <oms-row label="温度" :span="12">
               <template v-if="item.temperature !== null">
                 <span class="fl">{{item.temperature}} ℃</span>
-                <el-tooltip effect="dark" placement="top"
-                            :content="`温度范围：${item.temperatureMin}~${item.temperatureMax}℃`">
+                <el-tooltip v-if="item.temperatureMin !== null && item.temperatureMax !== null"
+                            effect="dark" placement="top" :content="`温度范围：${item.temperatureMin}~${item.temperatureMax}℃`">
                   <i class="el-icon-warning-outline ml-10"/>
                 </el-tooltip>
               </template>
@@ -63,7 +63,8 @@
             <oms-row label="湿度" :span="12">
               <template v-if="item.humidity !== null">
                 <span class="fl">{{item.humidity}} %</span>
-                <el-tooltip effect="dark" placement="top" :content="`湿度范围：${item.humidityMin}~${item.humidityMax}%`">
+                <el-tooltip v-if="item.humidityMin !== null && item.humidityMax !== null"
+                            effect="dark" placement="top" :content="`湿度范围：${item.humidityMin}~${item.humidityMax}%`">
                   <i class="el-icon-warning-outline ml-10"/>
                 </el-tooltip>
               </template>
@@ -74,7 +75,8 @@
             <oms-row label="电压" :span="12">
               <template v-if="item.voltage !== null">
                 <span class="fl">{{item.voltage}} %</span>
-                <el-tooltip effect="dark" placement="top" :content="`电压范围：${item.voltageMin}~${item.voltageMax}%`">
+                <el-tooltip v-if="item.voltageMin !== null && item.voltageMax !== null"
+                            effect="dark" placement="top" :content="`电压范围：${item.voltageMin}~${item.voltageMax}%`">
                   <i class="el-icon-warning-outline ml-10"/>
                 </el-tooltip>
               </template>
