@@ -42,7 +42,7 @@
   .table .header {
     font-weight: bold;
     td {
-      background: #eee;
+      background: #F5F5F6;
     }
   }
 

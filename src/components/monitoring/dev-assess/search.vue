@@ -14,14 +14,15 @@
                           placeholder="请输入名称搜索单位" v-model="searchCondition.orgId"></org-select>
             </oms-form-row>
           </el-col>
-<!--          <el-col :span="8">-->
-<!--            <oms-form-row :span="5" label="" >-->
-<!--              <el-radio-group v-model="searchCondition.status" size="small">-->
-<!--                <el-radio-button label="0">未计算</el-radio-button>-->
-<!--                <el-radio-button label="1">已计算</el-radio-button>-->
-<!--              </el-radio-group>-->
-<!--            </oms-form-row>-->
-<!--          </el-col>-->
+          <el-col :span="8">
+            <oms-form-row :span="5" label="冷链设备">
+              <el-select :remote-method="queryCoolListCondition" filterable placeholder="请输入名称搜索冷链设备" remote
+                         v-model="searchCondition.freezerDevId" @change="monitorTargetIdChange">
+                <el-option :key="item.id" :label="item.name" :value="item.id"
+                           v-for="item in coolList"></el-option>
+              </el-select>
+            </oms-form-row>
+          </el-col>
           <el-col :span="8">
             <oms-form-row :span="5" label="日期">
               <el-date-picker class="el-date-picker--mini" placeholder="请选择" type="month"
@@ -41,7 +42,11 @@
     data: function () {
       return {
         searchCondition: {
+          orgName: '',
           orgId: '',
+          freezerDevName: '',
+          freezerDevId: '',
+          freezerDevNo: '',
           monthDate: ''
         },
         showSearch: false,
@@ -52,7 +57,7 @@
       };
     },
     mounted() {
-      this.searchCondition.monthDate = this.$moment().subtract(1, 'month').toDate();
+      this.searchCondition.monthDate = new Date();
     },
     computed: {
       coolDevType() {
@@ -68,8 +73,12 @@
       },
       reset() {
         this.searchCondition = {
+          orgName: '',
           orgId: '',
-          monthDate: this.$moment().subtract(1, 'month').toDate()
+          freezerDevName: '',
+          freezerDevId: '',
+          freezerDevNo: '',
+          monthDate: new Date()
         };
         this.$emit('search', this.searchCondition);
       },

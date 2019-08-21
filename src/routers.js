@@ -74,7 +74,7 @@ export const routes = [
           },
           {
             path: '/monitoring/dev/assess',
-            component: () => import('./components/monitoring/manager-assess/index.vue'),
+            component: () => import('./components/monitoring/dev-assess/index.vue'),
             meta: {moduleId: 'monitoring', title: '冷链设备评估表', perm: 'freezer-dev-temperature-record-manager-scan',
               subMenuId: 'temp', showDev: true}
           }

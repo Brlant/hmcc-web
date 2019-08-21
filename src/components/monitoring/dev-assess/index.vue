@@ -41,7 +41,6 @@
 
   .table .header {
     font-weight: bold;
-
     td {
       background: #F5F5F6;
     }
@@ -51,11 +50,6 @@
     width: auto;
     height: 24px;
     vertical-align: middle;
-  }
-
-  .refresh-btn {
-    cursor: pointer;
-    margin-left: 10px;
   }
 </style>
 <template>
@@ -70,7 +64,7 @@
     </search-part>
     <div class="record-content">
       <div class="record-table">
-        <table class="table" v-loading="loading">
+        <table class="table">
           <tr class="header">
             <td rowspan="2">ID</td>
             <td rowspan="2">单位名称</td>
@@ -93,24 +87,18 @@
           <template v-for="(item, index) in dataList">
             <tr>
               <td>{{index + 1}}</td>
-              <td>{{item.orgName}}</td>
-
-              <td>{{item.freezerDevName}}</td>
-              <td>{{formatDictLabel(item.freezerDevType, coolDevType)}}</td>
-              <td>{{item.freezerDevBrand}}</td>
-              <td>{{item.freezerDevVolume}}</td>
-              <td>{{item.freezerDevUsingDate | date}}</td>
-
-              <td>{{item.averageTemperature}}</td>
-              <td>{{item.maximumTemperature}}</td>
-              <td>{{item.minimumTemperature}}</td>
-
-              <td>{{item.overTemperatureAlarmCount}}</td>
-              <td>{{item.devMalfunctionCount}}</td>
-              <td>
-                {{item.freezerDevAssessedValue}}
-                <i class="el-icon-refresh-right refresh-btn" @click="refreshItem(item)"></i>
-              </td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
             </tr>
           </template>
         </table>
@@ -120,8 +108,7 @@
 </template>
 <script>
   import SearchPart from './search';
-  import {devAssess} from '@/resources';
-  import utils, {formatDictLabel} from '@/tools/utils';
+  import {temperatureRecord} from '@/resources';
 
   export default {
     components: {
@@ -137,18 +124,8 @@
           freezerDevNo: '',
           monthDate: new Date(),
         },
-        loading: false,
-        formatDictLabel,
         dataList: []
       };
-    },
-    computed: {
-      perms() {
-        return this.$route.meta.perms;
-      },
-      coolDevType() {
-        return this.$getDict('coolDevType');
-      }
     },
     methods: {
       searchResult: function (search) {
@@ -159,19 +136,18 @@
         this.showIndex = -1;
       },
       queryList() {
-        let {orgId, status, monthDate} = this.filter;
-        let evaluationDate = new Date(this.$moment(monthDate).startOf('month'));
-
+        let {orgId, freezerDevId, monthDate} = this.filter;
+        let startDate = new Date(this.$moment(monthDate).startOf('month'));
+        let endDate = new Date(this.$moment(monthDate).endOf('month'));
         let params = {
           orgId,
-          status,
-          evaluationDate
+          freezerDevId,
+          startDate,
+          endDate
         };
-        this.loading = true;
-        devAssess.query(params).then(res => {
-          this.loading = false;
-          if (res.code === 200) {
-            this.dataList = res.data;
+        temperatureRecord.query(params).then(res => {
+          if (res.data.code === 200) {
+            this.dataList = res.data.data;
           }
         });
       },
@@ -179,35 +155,7 @@
         return this.$moment(time).format(str);
       },
       exportExcel() {
-        let {orgId, status, monthDate} = this.filter;
-        let evaluationDate = new Date(this.$moment(monthDate).startOf('month'));
 
-        let params = {
-          orgId,
-          status,
-          evaluationDate
-        };
-        this.$store.commit('initPrint', {isPrinting: true, moduleId: this.$route.path, text: '拼命导出中'});
-        devAssess.export(params).then(res => {
-          utils.download(res.data.path);
-          this.$store.commit('initPrint', {isPrinting: false, moduleId: this.$route.path, text: '拼命导出中'});
-        }).catch(error => {
-          this.$store.commit('initPrint', {isPrinting: false, moduleId: this.$route.path, text: '拼命导出中'});
-          this.$notify({
-            duration: 2000,
-            title: '导出失败',
-            message: error.response.data.msg,
-            type: 'error'
-          });
-        });
-      },
-      refreshItem(item) {
-        devAssess.refreshItem(item.id, item).then(res => {
-          this.$notify.success('计算完成');
-          Object.keys(item).forEach(k => {
-            item[k] = res.data[k];
-          });
-        });
       }
     }
   };
