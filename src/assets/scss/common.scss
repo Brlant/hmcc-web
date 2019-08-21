@@ -24,8 +24,13 @@
       margin-bottom: 16px;
     }
   }
+
 }
 
+// 提示文字最大宽度
+.el-tooltip__popper {
+  max-width: 200px;
+}
 
 .sub-menu {
   background: #eee;
