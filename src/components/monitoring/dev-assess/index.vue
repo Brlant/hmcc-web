@@ -56,6 +56,12 @@
   <div class="order-page">
     <search-part @search="searchResult">
       <template slot="btn">
+
+        <el-button plain size="small" @click="calculate">
+          <f-a class="icon-small" name="start"></f-a>
+          开始计算
+        </el-button>
+
         <el-button plain size="small" @click="exportExcel">
           <f-a class="icon-small" name="export"></f-a>
           导出Excel
@@ -155,6 +161,9 @@
         return this.$moment(time).format(str);
       },
       exportExcel() {
+
+      },
+      calculate() {
 
       }
     }
