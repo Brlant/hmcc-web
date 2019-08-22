@@ -93,18 +93,21 @@
           <template v-for="(item, index) in dataList">
             <tr>
               <td>{{index + 1}}</td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
+              <td>{{item.orgName}}</td>
+
+              <td>{{item.freezerDevName}}</td>
+              <td>{{formatDictLabel(item.freezerDevType, coolDevType)}}</td>
+              <td>{{item.freezerDevBrand}}</td>
+              <td>{{item.freezerDevVolume}}</td>
+              <td>{{item.freezerDevUsingDate}}</td>
+
+              <td>{{item.averageTemperature}}</td>
+              <td>{{item.maximumTemperature}}</td>
+              <td>{{item.minimumTemperature}}</td>
+
+              <td>{{item.overtemperatureAlarmCount}}</td>
+              <td>{{item.devMalfunctionCount}}</td>
+              <td>{{item.freezerDevAssessedValue}}</td>
             </tr>
           </template>
         </table>
@@ -114,7 +117,8 @@
 </template>
 <script>
   import SearchPart from './search';
-  import {temperatureRecord} from '@/resources';
+  import {devAssess} from '@/resources';
+  import {formatDictLabel} from '@/tools/utils'
 
   export default {
     components: {
@@ -130,8 +134,17 @@
           freezerDevNo: '',
           monthDate: new Date(),
         },
+        formatDictLabel,
         dataList: []
       };
+    },
+    computed: {
+      perms() {
+        return this.$route.meta.perms;
+      },
+      coolDevType() {
+        return this.$getDict('coolDevType')
+      }
     },
     methods: {
       searchResult: function (search) {
@@ -143,15 +156,14 @@
       },
       queryList() {
         let {orgId, freezerDevId, monthDate} = this.filter;
-        let startDate = new Date(this.$moment(monthDate).startOf('month'));
-        let endDate = new Date(this.$moment(monthDate).endOf('month'));
+        let evaluationDate = new Date(this.$moment(monthDate).startOf('month'));
+
         let params = {
           orgId,
           freezerDevId,
-          startDate,
-          endDate
+          evaluationDate
         };
-        temperatureRecord.query(params).then(res => {
+        devAssess.query(params).then(res => {
           if (res.data.code === 200) {
             this.dataList = res.data.data;
           }

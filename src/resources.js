@@ -129,6 +129,14 @@ export const checkPlan = resource('/patrol-project', http, {
   }
 });
 
+
+// 温度记录
+export const devAssess = {
+  query(params) {
+    return http.post('/freezer-dev-evaluation/page', params);
+  }
+};
+
 // 温度记录
 export const temperatureRecord = {
   add(obj) {
