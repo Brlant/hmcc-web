@@ -99,7 +99,7 @@
               <td>{{formatDictLabel(item.freezerDevType, coolDevType)}}</td>
               <td>{{item.freezerDevBrand}}</td>
               <td>{{item.freezerDevVolume}}</td>
-              <td>{{item.freezerDevUsingDate}}</td>
+              <td>{{item.freezerDevUsingDate | date}}</td>
 
               <td>{{item.averageTemperature}}</td>
               <td>{{item.maximumTemperature}}</td>
@@ -119,6 +119,7 @@
   import SearchPart from './search';
   import {devAssess} from '@/resources';
   import {formatDictLabel} from '@/tools/utils'
+  import utils from '@/tools/utils'
 
   export default {
     components: {
@@ -176,7 +177,27 @@
         return this.$moment(time).format(str);
       },
       exportExcel() {
+        let {orgId, status, monthDate} = this.filter;
+        let evaluationDate = new Date(this.$moment(monthDate).startOf('month'));
 
+        let params = {
+          orgId,
+          status,
+          evaluationDate
+        };
+        this.$store.commit('initPrint', {isPrinting: true, moduleId: this.$route.path, text: '拼命导出中'});
+        devAssess.export(params).then(res => {
+          utils.download(res.data.data.path);
+          this.$store.commit('initPrint', {isPrinting: false, moduleId: this.$route.path, text: '拼命导出中'});
+        }).catch(error => {
+          this.$store.commit('initPrint', {isPrinting: false, moduleId: this.$route.path, text: '拼命导出中'});
+          this.$notify({
+            duration: 2000,
+            title: '导出失败',
+            message: error.response.data.msg,
+            type: 'error'
+          });
+        });
       },
       calculate() {
 

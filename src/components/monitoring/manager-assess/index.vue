@@ -85,12 +85,12 @@
               <el-tooltip effect="dark" placement="bottom" content="每天登录2次平台，没有合规的天数"><i
                 class="el-icon-warning-outline ml-10"/></el-tooltip>
             </td>
-<!--            <td>-->
-<!--              冷链管理评估值-->
-<!--              <el-tooltip effect="dark" placement="bottom"-->
-<!--                          content="冷链管理评估的因素包括：冷链设备总数、报警总数、人为造成次数、未及时处理次数和未按规定登录次数，根据数学模型：冷链管理评估值=ε*冷链设备总数/(ε*冷链设备总数+η*报警总数+θ*人为造成次数+φ*未及时处理次数+β*未按规定登录平台次数)*100；">-->
-<!--                <i class="el-icon-warning-outline ml-10"/></el-tooltip>-->
-<!--            </td>-->
+            <td>
+              冷链管理评估值
+              <el-tooltip effect="dark" placement="bottom"
+                          content="冷链管理评估的因素包括：冷链设备总数、报警总数、人为造成次数、未及时处理次数和未按规定登录次数，根据数学模型：冷链管理评估值=ε*冷链设备总数/(ε*冷链设备总数+η*报警总数+θ*人为造成次数+φ*未及时处理次数+β*未按规定登录平台次数)*100；">
+                <i class="el-icon-warning-outline ml-10"/></el-tooltip>
+            </td>
           </tr>
           <template v-for="(item, index) in dataList">
             <tr>
@@ -102,7 +102,7 @@
               <td>{{item.manMistakeCount}}</td>
               <td>{{item.notTimelyHandlerCount}}</td>
               <td>{{item.notLoginCount}}</td>
-<!--              <td></td>-->
+              <td>{{item.evaluationValue}}</td>
             </tr>
           </template>
         </table>
@@ -113,7 +113,7 @@
 <script>
   import SearchPart from './search';
   import {managerAssess} from '@/resources';
-
+  import utils from '@/tools/utils'
   export default {
     components: {
       SearchPart
@@ -159,7 +159,25 @@
         return this.$moment(time).format(str);
       },
       exportExcel() {
-
+        this.$store.commit('initPrint', {isPrinting: true, moduleId: this.$route.path, text: '拼命导出中'});
+        let {orgId, monthDate} = this.filter;
+        let date = new Date(this.$moment(monthDate).startOf('month'));
+        let params = {
+          orgId,
+          date
+        };
+        managerAssess.export(params).then(res => {
+          utils.download(res.data.data.path);
+          this.$store.commit('initPrint', {isPrinting: false, moduleId: this.$route.path, text: '拼命导出中'});
+        }).catch(error => {
+          this.$store.commit('initPrint', {isPrinting: false, moduleId: this.$route.path, text: '拼命导出中'});
+          this.$notify({
+            duration: 2000,
+            title: '导出失败',
+            message: error.response.data.msg,
+            type: 'error'
+          });
+        });
       }
     }
   };

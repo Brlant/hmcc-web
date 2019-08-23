@@ -133,6 +133,9 @@ export const checkPlan = resource('/patrol-project', http, {
 export const managerAssess = {
   query(params) {
     return http.post('/freezer-management-evaluation/page', params);
+  },
+  export(params) {
+    return http.post('/freezer-management-evaluation/export', params);
   }
 };
 
@@ -141,6 +144,9 @@ export const managerAssess = {
 export const devAssess = {
   query(params) {
     return http.post('/freezer-dev-evaluation/page', params);
+  },
+  export(params) {
+    return http.post('/freezer-dev-evaluation/export', params);
   }
 };
 
