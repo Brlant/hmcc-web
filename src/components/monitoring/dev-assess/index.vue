@@ -70,7 +70,7 @@
     </search-part>
     <div class="record-content">
       <div class="record-table">
-        <table class="table">
+        <table class="table" v-loading="loading">
           <tr class="header">
             <td rowspan="2">ID</td>
             <td rowspan="2">单位名称</td>
@@ -134,6 +134,7 @@
           freezerDevNo: '',
           monthDate: new Date(),
         },
+        loading: false,
         formatDictLabel,
         dataList: []
       };
@@ -163,7 +164,9 @@
           freezerDevId,
           evaluationDate
         };
+        this.loading = true;
         devAssess.query(params).then(res => {
+          this.loading = false;
           if (res.data.code === 200) {
             this.dataList = res.data.data;
           }

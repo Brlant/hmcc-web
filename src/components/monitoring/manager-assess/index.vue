@@ -41,6 +41,7 @@
 
   .table .header {
     font-weight: bold;
+
     td {
       background: #F5F5F6;
     }
@@ -64,7 +65,7 @@
     </search-part>
     <div class="record-content">
       <div class="record-table">
-        <table class="table">
+        <table class="table" v-loading="loading">
           <tr class="header">
             <td>序号</td>
             <td>类别</td>
@@ -72,29 +73,36 @@
             <td>冷链设备总数</td>
             <td>报警总数</td>
             <td>人为造成次数
-              <el-tooltip effect="dark" placement="bottom" content="报警原因：冰箱门没有关好"><i class="el-icon-warning-outline ml-10"/></el-tooltip></td>
+              <el-tooltip effect="dark" placement="bottom" content="报警原因：冰箱门没有关好"><i
+                class="el-icon-warning-outline ml-10"/></el-tooltip>
+            </td>
             <td>未及时处理次数
-              <el-tooltip effect="dark" placement="bottom" content="报警未及时处理，升级为2、3级报警"><i class="el-icon-warning-outline ml-10"/></el-tooltip></td>
+              <el-tooltip effect="dark" placement="bottom" content="报警未及时处理，升级为2、3级报警"><i
+                class="el-icon-warning-outline ml-10"/></el-tooltip>
+            </td>
             <td>
               未按规定登录平台次数
-              <el-tooltip effect="dark" placement="bottom" content="每天登录2次平台，没有合规的天数"><i class="el-icon-warning-outline ml-10"/></el-tooltip>
+              <el-tooltip effect="dark" placement="bottom" content="每天登录2次平台，没有合规的天数"><i
+                class="el-icon-warning-outline ml-10"/></el-tooltip>
             </td>
-            <td>
-              冷链管理评估值
-              <el-tooltip effect="dark" placement="bottom" content="冷链管理评估的因素包括：冷链设备总数、报警总数、人为造成次数、未及时处理次数和未按规定登录次数，根据数学模型：冷链管理评估值=ε*冷链设备总数/(ε*冷链设备总数+η*报警总数+θ*人为造成次数+φ*未及时处理次数+β*未按规定登录平台次数)*100；"><i class="el-icon-warning-outline ml-10"/></el-tooltip>
-            </td>
+<!--            <td>-->
+<!--              冷链管理评估值-->
+<!--              <el-tooltip effect="dark" placement="bottom"-->
+<!--                          content="冷链管理评估的因素包括：冷链设备总数、报警总数、人为造成次数、未及时处理次数和未按规定登录次数，根据数学模型：冷链管理评估值=ε*冷链设备总数/(ε*冷链设备总数+η*报警总数+θ*人为造成次数+φ*未及时处理次数+β*未按规定登录平台次数)*100；">-->
+<!--                <i class="el-icon-warning-outline ml-10"/></el-tooltip>-->
+<!--            </td>-->
           </tr>
           <template v-for="(item, index) in dataList">
             <tr>
               <td>{{index + 1}}</td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
+              <td>{{item.orgType}}</td>
+              <td>{{item.orgName}}</td>
+              <td>{{item.freezerDevCount}}</td>
+              <td>{{item.alarmTotalCount}}</td>
+              <td>{{item.manMistakeCount}}</td>
+              <td>{{item.notTimelyHandlerCount}}</td>
+              <td>{{item.notLoginCount}}</td>
+<!--              <td></td>-->
             </tr>
           </template>
         </table>
@@ -104,7 +112,7 @@
 </template>
 <script>
   import SearchPart from './search';
-  import {temperatureRecord} from '@/resources';
+  import {managerAssess} from '@/resources';
 
   export default {
     components: {
@@ -120,6 +128,7 @@
           freezerDevNo: '',
           monthDate: new Date(),
         },
+        loading: false,
         dataList: []
       };
     },
@@ -132,16 +141,15 @@
         this.showIndex = -1;
       },
       queryList() {
-        let {orgId, freezerDevId, monthDate} = this.filter;
-        let startDate = new Date(this.$moment(monthDate).startOf('month'));
-        let endDate = new Date(this.$moment(monthDate).endOf('month'));
+        let {orgId, monthDate} = this.filter;
+        let date = new Date(this.$moment(monthDate).startOf('month'));
         let params = {
           orgId,
-          freezerDevId,
-          startDate,
-          endDate
+          date
         };
-        temperatureRecord.query(params).then(res => {
+        this.loading = true;
+        managerAssess.query(params).then(res => {
+          this.loading = false;
           if (res.data.code === 200) {
             this.dataList = res.data.data;
           }

@@ -129,8 +129,15 @@ export const checkPlan = resource('/patrol-project', http, {
   }
 });
 
+// 管理评估
+export const managerAssess = {
+  query(params) {
+    return http.post('/freezer-management-evaluation/page', params);
+  }
+};
 
-// 温度记录
+
+// 设备评估
 export const devAssess = {
   query(params) {
     return http.post('/freezer-dev-evaluation/page', params);
