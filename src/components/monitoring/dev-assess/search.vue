@@ -15,12 +15,11 @@
             </oms-form-row>
           </el-col>
           <el-col :span="8">
-            <oms-form-row :span="5" label="冷链设备">
-              <el-select :remote-method="queryCoolListCondition" filterable placeholder="请输入名称搜索冷链设备" remote
-                         v-model="searchCondition.freezerDevId" @change="monitorTargetIdChange">
-                <el-option :key="item.id" :label="item.name" :value="item.id"
-                           v-for="item in coolList"></el-option>
-              </el-select>
+            <oms-form-row :span="5" label="" >
+              <el-radio-group v-model="searchCondition.status" size="small">
+                <el-radio-button label="-1">未计算</el-radio-button>
+                <el-radio-button label="1">已计算</el-radio-button>
+              </el-radio-group>
             </oms-form-row>
           </el-col>
           <el-col :span="8">
@@ -42,11 +41,8 @@
     data: function () {
       return {
         searchCondition: {
-          orgName: '',
           orgId: '',
-          freezerDevName: '',
-          freezerDevId: '',
-          freezerDevNo: '',
+          status: '',
           monthDate: ''
         },
         showSearch: false,
@@ -73,11 +69,8 @@
       },
       reset() {
         this.searchCondition = {
-          orgName: '',
           orgId: '',
-          freezerDevName: '',
-          freezerDevId: '',
-          freezerDevNo: '',
+          status: '',
           monthDate: new Date()
         };
         this.$emit('search', this.searchCondition);

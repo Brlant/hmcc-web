@@ -156,12 +156,12 @@
         this.showIndex = -1;
       },
       queryList() {
-        let {orgId, freezerDevId, monthDate} = this.filter;
+        let {orgId, status, monthDate} = this.filter;
         let evaluationDate = new Date(this.$moment(monthDate).startOf('month'));
 
         let params = {
           orgId,
-          freezerDevId,
+          status,
           evaluationDate
         };
         this.loading = true;
