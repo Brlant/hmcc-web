@@ -147,6 +147,9 @@ export const devAssess = {
   },
   export(params) {
     return http.post('/freezer-dev-evaluation/export', params);
+  },
+  refreshItem(id) {
+    return http.put(`/freezer-dev-evaluation/${id}`)
   }
 };
 

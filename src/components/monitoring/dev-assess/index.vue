@@ -41,6 +41,7 @@
 
   .table .header {
     font-weight: bold;
+
     td {
       background: #F5F5F6;
     }
@@ -51,17 +52,16 @@
     height: 24px;
     vertical-align: middle;
   }
+
+  .refresh-btn {
+    cursor: pointer;
+    margin-left: 10px;
+  }
 </style>
 <template>
   <div class="order-page">
     <search-part @search="searchResult">
       <template slot="btn">
-
-        <el-button plain size="small" @click="calculate">
-          <f-a class="icon-small" name="start"></f-a>
-          开始计算
-        </el-button>
-
         <el-button plain size="small" @click="exportExcel">
           <f-a class="icon-small" name="export"></f-a>
           导出Excel
@@ -107,7 +107,10 @@
 
               <td>{{item.overtemperatureAlarmCount}}</td>
               <td>{{item.devMalfunctionCount}}</td>
-              <td>{{item.freezerDevAssessedValue}}</td>
+              <td>
+                {{item.freezerDevAssessedValue}}
+                <i class="el-icon-refresh-right refresh-btn" @click="refreshItem(item)"></i>
+              </td>
             </tr>
           </template>
         </table>
@@ -118,8 +121,7 @@
 <script>
   import SearchPart from './search';
   import {devAssess} from '@/resources';
-  import {formatDictLabel} from '@/tools/utils'
-  import utils from '@/tools/utils'
+  import utils, {formatDictLabel} from '@/tools/utils';
 
   export default {
     components: {
@@ -145,7 +147,7 @@
         return this.$route.meta.perms;
       },
       coolDevType() {
-        return this.$getDict('coolDevType')
+        return this.$getDict('coolDevType');
       }
     },
     methods: {
@@ -199,8 +201,12 @@
           });
         });
       },
-      calculate() {
-
+      refreshItem(item) {
+        devAssess.refreshItem(item.id).then(res => {
+          Object.keys(item).forEach(k => {
+            item[k] = res.data.data[k];
+          });
+        });
       }
     }
   };
