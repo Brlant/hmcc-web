@@ -124,6 +124,28 @@ export default [
           'label': '查看冷链设备温度记录',
           'parentId': 'hmcc-system'
         }]
+      },
+      {
+        'id': 'freezer-manager-evaluation',
+        'label': '冷链管理评估表',
+        'parentId': 'hmcc-system',
+        'sort': '5',
+        'children': [{
+          'id': 'freezer-manager-evaluation-scan',
+          'label': '查看冷链管理评估表',
+          'parentId': 'hmcc-system'
+        }]
+      },
+      {
+        'id': 'freezer-dev-evaluation',
+        'label': '冷链设备评估表',
+        'parentId': 'hmcc-system',
+        'sort': '5',
+        'children': [{
+          'id': 'freezer-dev-evaluation-scan',
+          'label': '查看冷链设备评估表',
+          'parentId': 'hmcc-system'
+        }]
       }
     ]
   },

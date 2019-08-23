@@ -69,13 +69,13 @@ export const routes = [
           {
             path: '/monitoring/manager/assess',
             component: () => import('./components/monitoring/manager-assess/index.vue'),
-            meta: {moduleId: 'monitoring', title: '冷链管理评估表', perm: 'freezer-dev-temperature-record-manager-scan',
+            meta: {moduleId: 'monitoring', title: '冷链管理评估表', perm: 'freezer-manager-evaluation-scan',
               subMenuId: 'temp', showDev: true}
           },
           {
             path: '/monitoring/dev/assess',
             component: () => import('./components/monitoring/dev-assess/index.vue'),
-            meta: {moduleId: 'monitoring', title: '冷链设备评估表', perm: 'freezer-dev-temperature-record-manager-scan',
+            meta: {moduleId: 'monitoring', title: '冷链设备评估表', perm: 'freezer-dev-evaluation-scan',
               subMenuId: 'temp', showDev: true}
           }
         ]
