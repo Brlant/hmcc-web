@@ -2,7 +2,9 @@
   <search-template :isShow="showSearch" :isShowAdvance="false" :midSpan="0" :titleSpan="16" @isShow="isShow"
                    @reset="reset" @search="search">
     <template slot="title">{{$route.meta.title}}</template>
-    <template slot="btn"></template>
+    <template slot="btn">
+      <slot name="btn"></slot>
+    </template>
     <template slot="content">
       <el-form class="advanced-query-form" onsubmit="return false">
         <el-row>
