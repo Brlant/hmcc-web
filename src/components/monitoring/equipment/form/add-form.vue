@@ -122,6 +122,11 @@
               name: this.formItem.monitorTargetName
             }
           ];
+          if (this.type === 2) {
+            this.povList = [
+              {id: this.formItem.orgId, name: this.formItem.orgName}
+            ];
+          }
           let formData = JSON.parse(JSON.stringify(this.formItem));
           formData.sensorList = this.formItem.sensorDataList.map(i => ({
             sensorId: i.id,
