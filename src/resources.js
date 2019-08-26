@@ -125,7 +125,7 @@ export const checkPlan = resource('/patrol-project', http, {
     return http.post('/patrol-project/page', params);
   },
   update(obj) {
-    return http.post('/patrol-project', obj);
+    return http.put('/patrol-project', obj);
   }
 });
 

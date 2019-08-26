@@ -39,7 +39,7 @@
             <el-col :span="3" class="R">{{item.patrolProjectDate | date}}</el-col>
             <el-col :span="3" class="R">{{item.patrolTime | date}}</el-col>
             <el-col :span="2">
-              {{statusType[item.status].title}}
+              {{statusType[item.status] && statusType[item.status].title}}
             </el-col>
             <el-col :span="6" class="opera-btn">
               <des-btn @click="addRecord(item)" icon="plus" v-has="permPage.devCheck"
@@ -85,7 +85,7 @@
         statusType: {
           0: {'title': '未巡检', status: '0', num: ''},
           1: {'title': '已巡检', status: '1', num: ''},
-          2: {'title': '取消', status: '2', num: ''}
+          2: {'title': '已取消', status: '2', num: ''}
         },
         filters: {
           status: ''
@@ -179,7 +179,7 @@
         this.currentItemId = item.id;
         this.$confirmOpera(`是否取消此巡检计划`, () => {
           let newItem = JSON.parse(JSON.stringify(item));
-          newItem.status = '3';
+          newItem.status = '2';
           this.$httpRequestOpera(checkPlan.update(newItem), {
             successTitle: '取消成功',
             errorTitle: '取消失败',
