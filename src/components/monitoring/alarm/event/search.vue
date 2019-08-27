@@ -120,6 +120,10 @@
           if (res.data.code === 200) {
             utils.download(res.data.data.path, '告警记录表');
           }
+          this.$notify.success({
+            message: '导出成功'
+          });
+
           this.$store.commit('initPrint', {
             isPrinting: false,
             moduleId: '/alarm/record'

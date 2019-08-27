@@ -17,7 +17,7 @@
           <el-col :span="8">
             <oms-form-row :span="5" label="" >
               <el-radio-group v-model="searchCondition.status" size="small">
-                <el-radio-button label="-1">未计算</el-radio-button>
+                <el-radio-button label="0">未计算</el-radio-button>
                 <el-radio-button label="1">已计算</el-radio-button>
               </el-radio-group>
             </oms-form-row>
