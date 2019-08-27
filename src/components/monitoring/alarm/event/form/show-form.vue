@@ -13,7 +13,7 @@
         <div class="form-header-part">
           <div class="header">
             <div class="sign f-dib"></div>
-            <h3  class="tit f-dib index-tit">
+            <h3 class="tit f-dib index-tit">
               {{pageSets[0].name}}</h3>
           </div>
           <div class="content" style="overflow: hidden">
@@ -25,21 +25,29 @@
             <oms-col :isShow="true" :rowSpan="rowSpan" label="冷链设备">{{detail.freezerDevName}}</oms-col>
             <oms-col :isShow="true" :rowSpan="rowSpan" label="探头">{{detail.sensorName}}</oms-col>
             <oms-col :isShow="true" :rowSpan="rowSpan" label="告警值" v-show="detail.value">
-              {{detail.value}}</oms-col>
+              {{detail.value}}
+            </oms-col>
             <oms-col :isShow="true" :rowSpan="rowSpan" label="恢复值" v-show="detail.recoveryValue">
-              {{detail.recoveryValue}}</oms-col>
+              {{detail.recoveryValue}}
+            </oms-col>
             <oms-col :isShow="true" :rowSpan="rowSpan" label="处理时间" v-show="detail.handlingTime"
-            >{{detail.handlingTime | time}}</oms-col>
+            >{{detail.handlingTime | time}}
+            </oms-col>
             <oms-col :isShow="true" :rowSpan="rowSpan" label="处理人" v-show="detail.handlingUserName">
-              {{detail.handlingUserName}}</oms-col>
+              {{detail.handlingUserName}}
+            </oms-col>
             <oms-col :isShow="true" :rowSpan="rowSpan" label="处理情况" v-show="detail.handlingCondition">
-              {{detail.handlingCondition}}</oms-col>
+              {{formatHandlingCondition(detail.handlingCondition)}}
+            </oms-col>
+            <oms-col :isShow="true" :rowSpan="rowSpan" label="处理备注" v-show="detail.handlingRemark">
+              {{detail.handlingRemark}}
+            </oms-col>
           </div>
         </div>
         <div class="form-header-part">
           <div class="header">
             <div class="sign f-dib"></div>
-            <h3  class="tit f-dib index-tit">
+            <h3 class="tit f-dib index-tit">
               {{pageSets[1].name}}</h3>
           </div>
           <div class="content" style="overflow: hidden">
@@ -51,11 +59,10 @@
   </dialog-template>
 </template>
 <script>
-  import {alarmEvent} from '@/resources';
-  import utils from '@/tools/utils';
   import ChartLine from '@/components/monitoring/temp-new/chart-line-new';
   import AlarmMixin from '@/mixins/alarmMixin';
   import AlarmEventMixin from '@/mixins/alarmEventMixin';
+
   const halfDay = 60 * 60 * 1000;
   export default {
     props: {
@@ -91,12 +98,22 @@
         this.queryDetail();
       }
     },
+    computed: {
+      handleTypeList() {
+        return this.$store.state.handleTypeList;
+      }
+    },
     methods: {
       selectTab(item) {
         this.currentTab = item;
       },
       close() {
         this.$emit('right-close');
+      },
+      formatHandlingCondition(val) {
+        let item = this.handleTypeList.find(f => f.key === val);
+        if (!item) return '';
+        return item.label;
       },
       queryDetail() {
         this.detail = this.formItem;

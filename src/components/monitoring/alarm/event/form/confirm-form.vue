@@ -6,28 +6,64 @@
     </template>
     <template slot="content">
       <el-form :model="form" :rules="rules" label-width="100px" ref="tempForm">
-        <el-form-item label="情况说明" prop="handlingCondition">
-          <oms-input placeholder="请输入情况说明" type="textarea" v-model="form.handlingCondition"/>
+        <el-form-item label="处理人" prop="userId">
+          <el-select placeholder="请选择处理人" v-model="form.userId"
+                     filterable clearable remote :remote-method="queryUserList">
+            <el-option :label="item.name" :value="item.id" :key="item.id"
+                       v-for="item in userList"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="处理方式" prop="handlingWay"
+                      :rules="[{required: true, message: '请选择处理方式', trigger: 'change'}]" v-if="formItem.type === '6'" >
+          <el-radio-group v-model="form.handlingWay">
+            <el-radio label="0">现场</el-radio>
+            <el-radio label="1">远程</el-radio>
+          </el-radio-group>
+        </el-form-item>
+        <el-form-item label="处理情况" prop="handlingCondition">
+          <el-radio-group v-model="form.handlingCondition" class="is-vertical">
+            <el-radio :label="item.key" v-for="item in handleTypeList">{{item.label}}</el-radio>
+          </el-radio-group>
+        </el-form-item>
+        <el-form-item label="处理备注" prop="handlingRemark"
+                      :rules="[{required: true, message: '请输入处理备注', trigger: 'blur'}]" v-if="form.handlingCondition === '7'" >
+          <el-input v-model="form.handlingRemark"></el-input>
+        </el-form-item>
+        <el-form-item label="相同报警" v-show="isShow">
+          <el-checkbox v-model="form.handleSameAlarmFlag">本设备下的该监控探头还有1次相同情况的未处理的报警，是否一同处理？</el-checkbox>
+        </el-form-item>
+        <el-form-item label="处理时间">
+          {{form.handlerTime | time}}
         </el-form-item>
       </el-form>
     </template>
   </dialog-template>
 </template>
 <script>
-  import {alarmEvent} from '@/resources';
+  import {alarmEvent, OrgUser} from '@/resources';
 
   export default {
     data() {
       return {
         form: {
-          handlingCondition: ''
+          userId: '',
+          handlingCondition: '',
+          handleSameAlarmFlag: false,
+          handlerTime: '',
+          handlingWay: '',
+          handlingRemark: ''
         },
         rules: {
+          userId: [
+            {required: true, message: '请选择处理人', trigger: 'change'}
+          ],
           handlingCondition: [
-            {required: true, message: '请输入情况说明', trigger: 'blur'}
+            {required: true, message: '请选择处理情况', trigger: 'change'}
           ]
         },
-        doing: false
+        doing: false,
+        userList: [],
+        isShow: false
       };
     },
     props: {
@@ -41,16 +77,39 @@
           2: '取消',
           0: '未确认'
         };
+      },
+      handleTypeList () {
+        return this.$store.state.handleTypeList
       }
     },
     watch: {
       index: function (val) {
         this.form = {
-          handlingCondition: ''
+          userId: '',
+          handlingCondition: '',
+          handleSameAlarmFlag: false,
+          handlerTime: new Date(),
+          handlingWay: '',
+          handlingRemark: ''
         };
+        this.queryLotsAlarm();
       }
     },
     methods: {
+      queryLotsAlarm() {
+        if (!this.formItem.id) return;
+        alarmEvent.queryLotsAlarm(this.formItem.id).then(res => {
+          if (res.data.code === 200) {
+            this.isShow = res.data.data > 0;
+          }
+        });
+      },
+      queryUserList(query) {
+        let params = {keyWord: query};
+        OrgUser.queryUsers(this.$store.state.user.userCompanyAddress, params).then(res => {
+          this.userList = res.data.list;
+        });
+      },
       save(formName) {
         this.$refs[formName].validate((valid) => {
           if (valid && this.doing === false) {

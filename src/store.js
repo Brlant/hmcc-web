@@ -39,6 +39,21 @@ const state = {
     {key: '0', label: '未知'},
     {key: '1', label: '玻璃门'},
     {key: '2', label: '避光门'}
+  ],
+  handleTypeList: [
+    {key: '0', label: '整理疫苗'},
+    {key: '1', label: '冷链设备故障'},
+    {key: '2', label: '监控设备故障(探头)'},
+    {key: '3', label: '电源接电故障（冷链设备'},
+    {key: '4', label: ' 冷链设备门没关'},
+    {key: '5', label: '报警敏感（处置时已恢复正常）'},
+    {key: '6', label: '误报警'},
+    {key: '8', label: '市电断电'},
+    {key: '9', label: '单位内部断电'},
+    {key: '10', label: '冷链室电器故障'},
+    {key: '11', label: '电源接电故障(监控设备)'},
+    {key: '12', label: '设备维修未及时关闭报警'},
+    {key: '7', label: '其他'}
   ]
 };
 

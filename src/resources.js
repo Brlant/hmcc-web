@@ -192,6 +192,9 @@ export const alarmEvent = resource('/alarm-event', http, {
   },
   batchConfirmItem(obj) {
     return http.put('/alarm-event/handle', obj);
+  },
+  queryLotsAlarm(id) {
+    return http.post(`/alarm-event/${id}/alarm-type-count`)
   }
 });
 

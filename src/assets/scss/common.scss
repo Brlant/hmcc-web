@@ -275,3 +275,13 @@
   white-space: nowrap;
   text-overflow: ellipsis;
 }
+
+.el-radio-group {
+  &.is-vertical {
+    .el-radio {
+      display: inline-block;
+      width: 50%;
+      margin: 10px 0;
+    }
+  }
+}

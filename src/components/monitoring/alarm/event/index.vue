@@ -21,7 +21,7 @@
         <el-col :span="3">所属单位</el-col>
         <el-col :span="3">冷链设备/探头</el-col>
         <el-col :span="2">状态</el-col>
-        <el-col :span="2">处理情况</el-col>
+        <el-col :span="2">处理人</el-col>
         <el-col :span="3">操作</el-col>
       </el-row>
       <el-row v-if="loadingData">
@@ -56,7 +56,7 @@
               <div>{{item.sensorName}}</div>
             </el-col>
             <el-col :span="2">{{item.recoveryStatus === '0' ? '告警' : '恢复'}}</el-col>
-            <el-col :span="2">{{item.handlingCondition}}</el-col>
+            <el-col :span="2">{{item.handlingUserName}}</el-col>
             <el-col :span="3">
               <des-btn @click="confirmItem(item)" icon="affirm" v-has="permPage.handle"
                        v-show="item.handlingStatus === '0'">处理
