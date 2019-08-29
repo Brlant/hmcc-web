@@ -14,7 +14,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="处理方式" prop="handlingWay"
-                      :rules="[{required: true, message: '请选择处理方式', trigger: 'change'}]" v-if="formItem.type === '6'" >
+                      :rules="[{required: true, message: '请选择处理方式', trigger: 'change'}]" v-if="formItem.type === '6'">
           <el-radio-group v-model="form.handlingWay">
             <el-radio label="0">现场</el-radio>
             <el-radio label="1">远程</el-radio>
@@ -22,11 +22,12 @@
         </el-form-item>
         <el-form-item label="处理情况" prop="handlingCondition">
           <el-radio-group v-model="form.handlingCondition" class="is-vertical">
-            <el-radio :label="item.key" v-for="item in handleTypeList">{{item.label}}</el-radio>
+            <el-radio :label="item.key" :key="item.key" v-for="item in handleTypeList">{{item.label}}</el-radio>
           </el-radio-group>
         </el-form-item>
         <el-form-item label="处理备注" prop="handlingRemark"
-                      :rules="[{required: true, message: '请输入处理备注', trigger: 'blur'}]" v-if="form.handlingCondition === '7'" >
+                      :rules="[{required: true, message: '请输入处理备注', trigger: 'blur'}]"
+                      v-if="form.handlingCondition === '7'">
           <el-input v-model="form.handlingRemark"></el-input>
         </el-form-item>
         <el-form-item label="相同报警" v-show="isShow">
@@ -78,8 +79,11 @@
           0: '未确认'
         };
       },
-      handleTypeList () {
-        return this.$store.state.handleTypeList
+      handleTypeList() {
+        if (this.formItem.type === '6') {
+          return this.$store.state.handleTypeList.filter(f => ['8', '9', '10', '11', '12', '7'].includes(f.key));
+        }
+        return this.$store.state.handleTypeList.filter(f => ['1', '2', '3', '4', '5', '6', '7'].includes(f.key));
       }
     },
     watch: {
@@ -93,6 +97,9 @@
           handlingRemark: ''
         };
         this.queryLotsAlarm();
+        this.$nextTick(() => {
+          this.$refs.tempForm && this.$refs.tempForm.clearValidate();
+        });
       }
     },
     methods: {
