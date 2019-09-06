@@ -202,7 +202,7 @@
         });
       },
       refreshItem(item) {
-        devAssess.refreshItem(item.id).then(res => {
+        devAssess.refreshItem(item.id, item).then(res => {
           Object.keys(item).forEach(k => {
             item[k] = res.data.data[k];
           });
