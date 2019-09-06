@@ -17,7 +17,7 @@
           <el-col :span="8">
             <oms-form-row :span="5" label="日期">
               <el-date-picker class="el-date-picker--mini" placeholder="请选择" type="month"
-                              v-model="searchCondition.monthDate" :clearable="false"/>
+                              v-model="searchCondition.monthDate" :clearable="false" :pickerOptions="pickerOptions"/>
             </oms-form-row>
           </el-col>
         </el-row>
@@ -31,6 +31,7 @@
   export default {
     mixins: [methodsMixin],
     data: function () {
+      let self = this;
       return {
         searchCondition: {
           orgId: '',
@@ -40,11 +41,16 @@
         typeList: this.$parent.typeList,
         list: [],
         times: [],
-        orgList: []
+        orgList: [],
+        pickerOptions: {
+          disabledDate(time) {
+            return time.getTime() > self.$moment().subtract(1, 'month').toDate().getTime();
+          }
+        }
       };
     },
     mounted() {
-      this.searchCondition.monthDate = new Date();
+      this.searchCondition.monthDate = this.$moment().subtract(1, 'month').toDate();
     },
     computed: {
       coolDevType() {

@@ -53,7 +53,7 @@
       };
     },
     mounted() {
-      this.searchCondition.monthDate = new Date();
+      this.searchCondition.monthDate = this.$moment().subtract(1, 'month').toDate();
     },
     computed: {
       coolDevType() {
