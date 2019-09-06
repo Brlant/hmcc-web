@@ -30,8 +30,8 @@
                       v-if="form.handlingCondition === '7'">
           <el-input v-model="form.handlingRemark"></el-input>
         </el-form-item>
-        <el-form-item label="相同报警" v-show="isShow">
-          <el-checkbox v-model="form.handleSameAlarmFlag">本设备下的该监控探头还有1次相同情况的未处理的报警，是否一同处理？</el-checkbox>
+        <el-form-item label="相同报警" v-show="sameData">
+          <el-checkbox v-model="form.handleSameAlarmFlag">本设备下的该监控探头还有{{sameData}}次相同情况的未处理的报警，是否一同处理？</el-checkbox>
         </el-form-item>
         <el-form-item label="处理时间">
           {{form.handlerTime | time}}
@@ -64,7 +64,7 @@
         },
         doing: false,
         userList: [],
-        isShow: false
+        sameData: 0
       };
     },
     props: {
@@ -107,7 +107,7 @@
         if (!this.formItem.id) return;
         alarmEvent.queryLotsAlarm(this.formItem.id).then(res => {
           if (res.data.code === 200) {
-            this.isShow = res.data.data > 0;
+            this.sameData = res.data.data;
           }
         });
       },
