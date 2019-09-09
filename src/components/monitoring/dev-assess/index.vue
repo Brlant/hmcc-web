@@ -203,7 +203,7 @@
       },
       refreshItem(item) {
         devAssess.refreshItem(item.id, item).then(res => {
-          this.$notify.success('刷新完成');
+          this.$notify.success('计算完成');
           Object.keys(item).forEach(k => {
             item[k] = res.data.data[k];
           });
