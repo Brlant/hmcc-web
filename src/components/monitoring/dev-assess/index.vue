@@ -105,7 +105,7 @@
               <td>{{item.maximumTemperature}}</td>
               <td>{{item.minimumTemperature}}</td>
 
-              <td>{{item.overtemperatureAlarmCount}}</td>
+              <td>{{item.overTemperatureAlarmCount}}</td>
               <td>{{item.devMalfunctionCount}}</td>
               <td>
                 {{item.freezerDevAssessedValue}}
