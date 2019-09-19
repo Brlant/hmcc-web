@@ -74,10 +74,10 @@
                 <ul class="show-list">
                   <li v-for="item in showTypeList" class="list-item" @click="showType(item)"
                       :class="{'active':item.id===currentItem.id}">
-                    <oms-remove v-has="'system-setting-role-manager-delete'" :item="item" @removed="removeType"
-                                :tips='"确认删除角色\""+item.title +"\"?"'
-                                class="hover-show"><i
-                      class="el-icon-t-delete"></i></oms-remove>
+<!--                    <oms-remove v-has="'system-setting-role-manager-delete'" :item="item" @removed="removeType"-->
+<!--                                :tips='"确认删除角色\""+item.title +"\"?"'-->
+<!--                                class="hover-show"><i-->
+<!--                      class="el-icon-t-delete"></i></oms-remove>-->
                     <div class="id-part">
                       {{item.name }}
                     </div>
@@ -112,8 +112,8 @@
                               v-show="resData.usableStatus == 0">
                      <i class="el-icon-t-start"></i>启用
                    </el-button>
-                   <el-button v-has="'system-setting-role-manager-delete'" @click="remove()"><i
-                     class="el-icon-t-delete"></i>删除</el-button>
+<!--                   <el-button v-has="'system-setting-role-manager-delete'" @click="remove()"><i-->
+<!--                     class="el-icon-t-delete"></i>删除</el-button>-->
                 </el-button-group>
               </span>
               </h2>

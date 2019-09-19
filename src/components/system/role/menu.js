@@ -463,10 +463,6 @@ export default [
             label: '编辑角色'
           },
           {
-            id: 'system-setting-role-manager-delete',
-            label: '删除角色'
-          },
-          {
             id: 'system-setting-role-manager-export',
             label: '导出角色Excel'
           }
