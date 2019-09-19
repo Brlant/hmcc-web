@@ -117,7 +117,6 @@
     },
     watch: {
       index: function (val) {
-        this.$refs['tempForm'] && this.$refs['tempForm'].clearValidate();
         if (this.formItem.id) {
           this.orgList = [
             {name: this.formItem.orgName, id: this.formItem.orgId}
@@ -128,6 +127,9 @@
           this.form = {};
           this.actionType = '添加';
         }
+        this.$nextTick(() => {
+          this.$refs['tempForm'] && this.$refs['tempForm'].clearValidate();
+        });
       }
     },
     methods: {

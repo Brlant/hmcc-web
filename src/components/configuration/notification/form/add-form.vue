@@ -195,6 +195,9 @@
           this.form = JSON.parse(JSON.stringify(this.formModel));
           this.actionType = '添加';
         }
+        this.$nextTick(() => {
+          this.$refs['tempForm'].clearValidate();
+        });
       }
     },
     methods: {
@@ -308,7 +311,7 @@
           let list = [].concat(res.data.data.levelOneAlarmObjectList,
             res.data.data.levelTwoAlarmObjectList, res.data.data.levelThreeAlarmObjectList);
           list.forEach(i => {
-            this.formatContactWay(i)
+            this.formatContactWay(i);
           });
           this.orgList = [
             {
@@ -317,6 +320,9 @@
             }
           ];
           this.form = res.data.data;
+          this.$nextTick(() => {
+            this.$refs['tempForm'].clearValidate();
+          });
         });
       },
       formatContactWay(item) {

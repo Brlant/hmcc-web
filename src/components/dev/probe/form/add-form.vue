@@ -68,7 +68,6 @@
     },
     watch: {
       index: function (val) {
-        this.$refs['tempForm'].clearValidate();
         if (this.formItem.id) {
           this.orgList = [
             {name: this.formItem.orgName, id: this.formItem.orgId}
@@ -85,6 +84,9 @@
           };
           this.actionType = '添加';
         }
+        this.$nextTick(() => {
+          this.$refs['tempForm'].clearValidate();
+        });
       }
     },
     methods: {
@@ -93,7 +95,7 @@
           if (valid && this.doing === false) {
 
             this.orgList.forEach(i => {
-              if(i.id === this.form.orgId) {
+              if (i.id === this.form.orgId) {
                 this.form.orgName = i.name;
               }
             });
@@ -102,7 +104,7 @@
               this.$httpRequestOpera(probe.save(this.form), {
                 errorTitle: '添加失败',
                 success: res => {
-                  if(res.data.code === 200) {
+                  if (res.data.code === 200) {
                     this.$notify.success({message: '添加成功'});
                     this.doing = false;
                     this.$emit('change', res.data);
@@ -118,7 +120,7 @@
               this.$httpRequestOpera(probe.update(this.form), {
                 errorTitle: '修改失败',
                 success: res => {
-                  if(res.data.code === 200) {
+                  if (res.data.code === 200) {
                     this.$notify.success({message: '修改成功'});
                     this.doing = false;
                     this.$emit('change', res.data);
