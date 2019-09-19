@@ -67,7 +67,7 @@
       reset() {
         this.searchCondition = {
           orgId: '',
-          monthDate: new Date()
+          monthDate: this.$moment().subtract(1, 'month').toDate()
         };
         this.$emit('search', this.searchCondition);
       }
