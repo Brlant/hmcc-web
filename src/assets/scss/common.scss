@@ -285,3 +285,20 @@
     }
   }
 }
+
+.el-month-table td.today .cell {
+  color: inherit;
+  font-weight: normal;
+  &:hover {
+    color: $activeColor;
+  }
+}
+
+.el-month-table td.disabled.today .cell {
+  background-color: #F5F7FA;
+  cursor: not-allowed;
+  color: #C0C4CC;
+  &:hover {
+    color: #C0C4CC;
+  }
+}

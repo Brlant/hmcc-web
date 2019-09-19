@@ -16,7 +16,7 @@
           </el-col>
           <el-col :span="8">
             <oms-form-row :span="5" label="日期">
-              <el-date-picker class="el-date-picker--mini" placeholder="请选择" type="month"
+              <el-date-picker class="el-date-picker--mini" placeholder="请选择" type="month" default-value="''"
                               v-model="searchCondition.monthDate" :clearable="false" :pickerOptions="pickerOptions"/>
             </oms-form-row>
           </el-col>
