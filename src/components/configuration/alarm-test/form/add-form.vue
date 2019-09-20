@@ -85,7 +85,7 @@
         });
       },
       checkChange(item) {
-        if(!item.operationUserId) return;
+        if (!item.operationUserId) return;
         if (item.type === '0') {
           this.checkContactWay(item);
         } else {
@@ -95,7 +95,7 @@
       },
       checkContactWay(item) {
         this.userList.forEach(i => {
-          if (i.id ===  item.operationUserId) {
+          if (i.id === item.operationUserId) {
             item.noPass = false;
             if (!i.phone) {
               item.noPass = true;
@@ -137,6 +137,7 @@
       loopQueryInfo(item) {
         if (item.noticeTarget || this.index !== 0) return;
         let code = this.getQCodeInfo();
+        if (!code || !code.ticket) return;
         this.$http.get(`/ccsWeChat/queryWeChatTicketInfo/${code.ticket}`).then(res => {
           item.loading = false;
           if (res.data.openId === '400') {
@@ -162,7 +163,7 @@
           if (valid && this.doing === false) {
 
             this.userList.forEach(i => {
-              if(i.id === this.form.operationUserId) {
+              if (i.id === this.form.operationUserId) {
                 this.form.operationUserName = i.name;
               }
             });
@@ -171,7 +172,7 @@
               this.$httpRequestOpera(AlarmTest.save(this.form), {
                 errorTitle: '添加失败',
                 success: res => {
-                  if(res.data.code === 200) {
+                  if (res.data.code === 200) {
                     this.$notify.success({message: '添加成功'});
                     this.doing = false;
                     this.$emit('change', res.data);
@@ -187,7 +188,7 @@
               this.$httpRequestOpera(AlarmTest.update(this.form), {
                 errorTitle: '修改失败',
                 success: res => {
-                  if(res.data.code === 200) {
+                  if (res.data.code === 200) {
                     this.$notify.success({message: '修改成功'});
                     this.doing = false;
                     this.$emit('change', res.data);

@@ -285,6 +285,7 @@
       loopQueryInfo(item) {
         if (item.alarmNoticeTarget || this.index !== 0) return;
         let code = this.getQCodeInfo();
+        if (!code || !code.ticket) return;
         this.$http.get(`/ccsWeChat/queryWeChatTicketInfo/${code.ticket}`).then(res => {
           item.loading = false;
           if (res.data.openId === '400') {
