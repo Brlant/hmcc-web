@@ -8,7 +8,7 @@
       <el-form :model="form" :rules="rules" label-width="100px" ref="tempForm">
         <el-form-item label="处理人" prop="userId">
           <el-select placeholder="请选择处理人" v-model="form.userId"
-                     filterable clearable remote :remote-method="queryUserList">
+                     filterable clearable remote :remote-method="queryUserList" @focus="queryUserList()">
             <el-option :label="item.name" :value="item.id" :key="item.id"
                        v-for="item in userList"></el-option>
           </el-select>

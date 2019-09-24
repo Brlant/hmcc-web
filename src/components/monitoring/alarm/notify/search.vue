@@ -9,7 +9,7 @@
         <el-row>
           <el-col :span="9">
             <oms-form-row :span="5" label="探头">
-              <el-select :remote-method="queryProbeList" filterable placeholder="请输入名称搜索探头" remote
+              <el-select :remote-method="queryProbeList" @focus="queryProbeList('')" filterable placeholder="请输入名称搜索探头" remote
                          v-model="searchCondition.sensorId" @change="search">
                 <el-option :key="item.id" :label="item.name" :value="item.id"
                            v-for="item in probeList"></el-option>

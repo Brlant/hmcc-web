@@ -17,7 +17,7 @@
           </el-col>
           <el-col :span="9">
             <oms-form-row :span="4" label="设备">
-              <el-select :remote-method="queryCoolList" filterable placeholder="请输入名称搜索冷链设备" remote
+              <el-select :remote-method="queryCoolList" @focus="queryCoolList()" filterable placeholder="请输入名称搜索冷链设备" remote
                          v-model="searchCondition.freezerDevId" @change="search">
                 <el-option :key="item.id" :label="item.name" :value="item.id"
                            v-for="item in coolList"></el-option>
