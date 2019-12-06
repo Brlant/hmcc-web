@@ -41,14 +41,14 @@
             <span>{{scope.row.value}} {{unitTitle}}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="insertTime" label="插入时间" :sortable="true">
-          <template slot-scope="scope">
-            <span>{{scope.row.insertTime | time}}</span>
-          </template>
-        </el-table-column>
-        <el-table-column prop="createTime" label="创建时间" :sortable="true">
+        <el-table-column prop="insertTime" label="采集时间" :sortable="true">
           <template slot-scope="scope">
             <span>{{scope.row.createTime | time}}</span>
+          </template>
+        </el-table-column>
+        <el-table-column prop="createTime" label="数据库存储时间" :sortable="true">
+          <template slot-scope="scope">
+            <span>{{scope.row.insertTime | time}}</span>
           </template>
         </el-table-column>
       </el-table>
@@ -237,7 +237,7 @@
             collectTime = formatTime(params[0].value[0]);
             insertTime = formatTime(params[0].value[2]);
           }
-          let str = `采集时间: ${collectTime}<br/>插入时间: ${insertTime}<br/>`;
+          let str = `采集时间: ${collectTime}<br/>数据库存储时间: ${insertTime}<br/>`;
           params.forEach(i => {
             str += `${i.marker}${i.seriesName}: ${i.value[1]}<br/>`;
           });

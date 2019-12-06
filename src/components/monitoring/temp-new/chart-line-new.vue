@@ -156,7 +156,7 @@
           if (!params.length) return '';
           let insertTime = '';
           insertTime = moment(params[0].value[2]).format('MM-DD: HH:mm:ss');
-          let str = `插入时间: ${insertTime}`;
+          let str = `数据库存储时间: ${insertTime}`;
           params.forEach(i => {
             str += `${i.marker}${i.seriesName}: ${i.value[1]}<br/>`;
           });
