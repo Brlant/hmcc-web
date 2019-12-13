@@ -209,8 +209,6 @@
   }
 
   .wechat-info {
-    font-size: 12px;
-
     .weChat-img {
       width: 20px;
       height: 20px;
@@ -224,7 +222,7 @@
     }
 
     .btn-wechat {
-      float: left;
+      color: $activeColor;
     }
 
     margin-bottom: 5px;
@@ -255,6 +253,9 @@
         align-items: center;
         justify-content: center;
       }
+    }
+    .we-chat {
+      border-bottom: 1px solid #eee;
     }
   }
 </style>
@@ -288,6 +289,20 @@
                   <div>
                     <div class="menu-usr-part-user">{{user.userName}}</div>
                     <div class="menu-usr-part-phone">{{user.userAccount}}</div>
+                  </div>
+                </el-dropdown-item>
+                <el-dropdown-item class="header-user-userinfo" v-if="weChatInfo.nickname">
+                  <div>
+                    <i class="el-icon-t-wx_icon" style="color: #20b329"></i>
+                  </div>
+                  <div>
+                    <div class="menu-usr-part-user wechat-info">
+                      <span v-if="weChatInfo.nickname">
+                         {{weChatInfo.nickname ? weChatInfo.nickname.substr(0, 3) : ''}}
+                         <span v-if="weChatInfo.nickname && weChatInfo.nickname.length > 3">...</span>
+                        <a class="btn-wechat" href="#" @click.stop.prevent="unbind">(解绑)</a>
+                       </span>
+                    </div>
                   </div>
                 </el-dropdown-item>
                 <el-dropdown-item @click.stop.native="$router.push('/resetpsw')">
@@ -384,6 +399,9 @@
       currentPath() {
         if(this.$route.path.includes('/monitoring/store')) return '/monitoring/store';
         return this.$route.path;
+      },
+      weChatInfo() {
+        return this.$store.state.weChatInfo;
       }
     },
     watch: {
@@ -422,6 +440,25 @@
         this.isCollapse = !this.isCollapse;
         this.$store.commit('changeBodyLeft', this.isCollapse);
         window.localStorage.setItem('collapse', this.isCollapse ? 1 : 0);
+      },
+      unbind() {
+        this.$confirm('是否解除绑定的微信？', '', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          Auth.unBindWeChat().then(() => {
+            this.$notify.success({
+              message: '解绑微信成功'
+            });
+            this.$store.commit('initWeChatInfo', {});
+            window.localStorage.removeItem('weChatInfo');
+          }).catch(error => {
+            this.$notify.error({
+              message: error.response.data && error.response.data.msg || '解绑微信失败'
+            });
+          });
+        });
       }
     },
     mounted: function () {

@@ -54,7 +54,8 @@ const state = {
     {key: '11', label: '电源接电故障(监控设备)'},
     {key: '12', label: '设备维修未及时关闭报警'},
     {key: '7', label: '其他'}
-  ]
+  ],
+  weChatInfo: {}
 };
 
 const mutations = {
@@ -141,6 +142,16 @@ const mutations = {
   },
   initShowTemp(state, data) {
     state.isShowTemp = data;
+  },
+  initWeChatInfo(state, data) {
+    try {
+      if (typeof data === 'object') {
+        window.localStorage.setItem('weChatInfo', JSON.stringify(data));
+        state.weChatInfo = data;
+      }
+    } catch (e) {
+
+    }
   }
 };
 
