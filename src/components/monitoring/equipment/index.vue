@@ -47,13 +47,18 @@
               <span>
                 设备：
                 <el-tooltip effect="dark" placement="top" :content="item.monitorTargetName">
-                <span>{{item.monitorTargetName}}</span>
+                <span>
+                  {{item.monitorTargetName}}
+                  <span v-show="item.monitorTargetNo">（{{item.monitorTargetNo}}）</span>
+                </span>
               </el-tooltip>
               </span>
-              <span class="ml-15" v-show="item.monitorTargetVersion">
-                型号：
-              <el-tooltip effect="dark" placement="top" :content="item.monitorTargetVersion">
-                <span>{{item.monitorTargetVersion}}</span>
+              <span class="ml-15" v-show="item.monitorTargetType">
+                类型：
+              <el-tooltip effect="dark" placement="top" :content="item.monitorTargetType">
+                <span>
+                   {{formatDictLabel(item.monitorTargetType, coolDevType)}}
+                </span>
               </el-tooltip>
               </span>
               <span class="ml-15">
@@ -108,7 +113,7 @@
   import CommonMixin from '@/mixins/commonMixin';
   import {monitorRelation, temperatureRecord} from '@/resources';
   import DevList from './dev-list';
-
+  import {formatDictLabel} from '@/tools/utils'
   export default {
     components: {
       SearchPart, DevList
@@ -125,7 +130,8 @@
         typeList: [
           {title: '车辆', id: '1'},
           {title: '冷柜', id: '2'}
-        ]
+        ],
+        formatDictLabel
       };
     },
     computed: {

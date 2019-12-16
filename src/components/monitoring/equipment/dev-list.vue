@@ -32,14 +32,14 @@
       <div class="content">
         <el-row>
           <el-col :span="16">
-            <oms-row label="设备" :span="6">
+            <oms-row label="探头" :span="6">
               <el-tooltip effect="dark" placement="top">
                 <div slot="content">
                   <div>名称：{{item.name}} </div>
                   <div>编号：{{item.no}} </div>
                   <div>型号：{{item.type}}</div>
                 </div>
-                <div class="text-overflow">名称：{{item.name}} 编号：{{item.no}} 型号：{{item.type}}</div>
+                <div class="text-overflow">{{item.name}}（{{item.no}}）</div>
               </el-tooltip>
             </oms-row>
           </el-col>

@@ -25,7 +25,7 @@ export const routes = [
             meta: {moduleId: 'monitoring', title: '本单位设备监控', perm: 'own-dev-monitoring-scan', type: 1,
               permPage: {add: 'own-dev-monitoring-add', edit: 'own-dev-monitoring-edit',
                 delete: 'own-dev-monitoring-delete', start: 'own-dev-monitoring-active', stop: 'own-dev-monitoring-disable',
-                record: 'own-dev-monitoring-record'}}
+                record: 'own-dev-monitoring-record', query: 'history-data-manager-scan'}}
           },
           {
             path: '/monitoring/pov/equipment',
@@ -33,7 +33,7 @@ export const routes = [
             meta: {moduleId: 'monitoring', title: '接种单位设备监控', perm: 'pov-dev-monitoring-scan', type: 2,
               permPage: {add: 'pov-dev-monitoring-add', edit: 'pov-dev-monitoring-edit',
                 delete: 'pov-dev-monitoring-delete', start: 'pov-dev-monitoring-active',
-                stop: 'pov-own-dev-monitoring-disable', record: 'pov-dev-monitoring-record'}}
+                stop: 'pov-own-dev-monitoring-disable', record: 'pov-dev-monitoring-record', query: 'history-data-manager-scan'}}
           },
           {
             path: '/monitoring/store',
