@@ -28,7 +28,8 @@
                       placeholder="请输入名称搜索单位" v-model="form.orgId"></org-select>
         </el-form-item>
         <el-form-item label="冷链设备" prop="monitorTargetId">
-          <el-select :remote-method="queryCoolListCondition" @focus="queryCoolListCondition()" clearable filterable placeholder="请输入名称搜索冷链设备" remote
+          <el-select :remote-method="queryCoolListCondition" @focus="queryCoolListCondition()" clearable filterable
+                     placeholder="请输入名称搜索冷链设备" remote
                      v-model="form.monitorTargetId" @change="monitorTargetIdChange">
             <el-option :key="item.id" :label="item.name" :value="item.id"
                        v-for="item in coolList"></el-option>
@@ -38,7 +39,7 @@
           <el-col :span="10">
             <el-form-item label="探头" :prop="`sensorList.${index}.sensorId`"
                           :rules="[{ required: true, message: '请选择探头', trigger: 'change' }]">
-              <el-select :remote-method="queryProbeList" @focus="queryProbeList('')"  filterable
+              <el-select :remote-method="queryProbeList" @focus="queryProbeList('')" filterable
                          placeholder="请输入名称搜索探头" remote v-model="sensor.sensorId">
                 <el-option :key="item.id" :label="item.name" :value="item.id"
                            v-for="item in probeList"></el-option>
@@ -95,7 +96,8 @@
         },
         actionType: '添加',
         coolList: [],
-        probeList: []
+        probeList: [],
+        editProbeList: []
       };
     },
     computed: {
@@ -110,9 +112,14 @@
         if (val !== 0) return;
         this.$refs['tempForm'].resetFields();
         this.form.devIds = [];
+        this.editProbeList = [];
         if (this.formItem.id) {
           this.actionType = '编辑';
           this.probeList = this.formItem.sensorDataList.map(i => ({
+            id: i.id,
+            name: i.name
+          }));
+          this.editProbeList = this.formItem.sensorDataList.map(i => ({
             id: i.id,
             name: i.name
           }));
@@ -164,6 +171,13 @@
           freezerDevId: this.form.monitorTargetId
         };
         this.$http.post('/sensor/page-without-monitor', params).then(res => {
+          this.editProbeList.forEach(i => {
+            if (i.id && !res.data.data.list.find(f => f.id === i.id)) {
+              let item = this.editProbeList.find(f => f.id === i.id);
+              if (!item) return;
+              res.data.data.list.push(item);
+            }
+          });
           this.probeList = res.data.data.list;
         });
       },
