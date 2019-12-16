@@ -4,10 +4,11 @@
 
     <div class="order-list" style="margin-top: 20px">
       <el-row class="order-list-header">
-        <el-col :span="6">探头</el-col>
-        <el-col :span="4">通知类型</el-col>
-        <el-col :span="4">通知方式</el-col>
-        <el-col :span="6">通知时间</el-col>
+        <el-col :span="5">探头</el-col>
+        <el-col :span="3">通知类型</el-col>
+        <el-col :span="3">通知方式</el-col>
+        <el-col :span="4">通知对象</el-col>
+        <el-col :span="5">通知时间</el-col>
         <el-col :span="4">发送状态</el-col>
       </el-row>
       <el-row v-if="loadingData">
@@ -26,10 +27,11 @@
         <div :class="[{'active':currentItemId===item.id}]" class="order-list-item order-list-item-bg no-pointer"
              v-for="item in dataList">
           <el-row>
-            <el-col :span="6">{{item.sensorName}}</el-col>
-            <el-col :span="4">{{item.type === '0' ? '告警' : '恢复'}}</el-col>
-            <el-col :span="4">{{item.way === '0' ? '短信' : '微信'}}</el-col>
-            <el-col :span="6">{{item.time | time}}</el-col>
+            <el-col :span="5">{{item.sensorName}}</el-col>
+            <el-col :span="3">{{item.type === '0' ? '告警' : '恢复'}}</el-col>
+            <el-col :span="3">{{item.way === '0' ? '短信' : '微信'}}</el-col>
+            <el-col :span="4" class="R">{{item.noticeUserTarget}}</el-col>
+            <el-col :span="5">{{item.time | time}}</el-col>
             <el-col :span="4">
               {{item.status === '1' ? '成功' : '失败'}}
             </el-col>
