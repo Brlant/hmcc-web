@@ -154,9 +154,9 @@
         let _this = this;
         obj.tooltip.formatter = function (params) {
           if (!params.length) return '';
-          let insertTime = '';
-          insertTime = moment(params[0].value[2]).format('MM-DD: HH:mm:ss');
-          let str = `数据库存储时间: ${insertTime}`;
+          let collectTime = moment(params[0].value[0]).format('MM-DD: HH:mm:ss');
+          let insertTime = moment(params[0].value[2]).format('MM-DD: HH:mm:ss');
+          let str = `采集时间: ${collectTime}<br/>数据库存储时间: ${insertTime}<br/>`;
           params.forEach(i => {
             str += `${i.marker}${i.seriesName}: ${i.value[1]}<br/>`;
           });
