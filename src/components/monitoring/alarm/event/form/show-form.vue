@@ -24,12 +24,15 @@
             <oms-col :isShow="true" :rowSpan="rowSpan" label="所属单位">{{detail.orgName}}</oms-col>
             <oms-col :isShow="true" :rowSpan="rowSpan" label="冷链设备">{{detail.freezerDevName}}</oms-col>
             <oms-col :isShow="true" :rowSpan="rowSpan" label="探头">{{detail.sensorName}}</oms-col>
+            <oms-col :isShow="true" :rowSpan="rowSpan" label="探头">{{detail.sensorName}}</oms-col>
+            <oms-col :isShow="true" :rowSpan="rowSpan" label="触发条件">{{detail.alarmRuleInfo}}</oms-col>
             <oms-col :isShow="true" :rowSpan="rowSpan" label="告警值" v-show="detail.value">
               {{detail.value}}
             </oms-col>
             <oms-col :isShow="true" :rowSpan="rowSpan" label="恢复值" v-show="detail.recoveryValue">
               {{detail.recoveryValue}}
             </oms-col>
+
             <oms-col :isShow="true" :rowSpan="rowSpan" label="处理时间" v-show="detail.handlingTime"
             >{{detail.handlingTime | time}}
             </oms-col>

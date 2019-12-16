@@ -16,10 +16,16 @@
           </el-col>
           <el-col :span="8">
             <oms-form-row :span="5" label="冷链设备">
-              <el-select :remote-method="queryCoolListCondition" @focus="queryCoolListCondition()" filterable placeholder="请输入名称搜索冷链设备" remote
+              <el-select :remote-method="queryCoolListCondition" @focus="queryCoolListCondition()"
+                         filterable placeholder="请输入名称搜索冷链设备" remote popper-class="selects--custom"
                          v-model="searchCondition.freezerDevId" @change="monitorTargetIdChange">
                 <el-option :key="item.id" :label="item.name" :value="item.id"
-                           v-for="item in coolList"></el-option>
+                           v-for="item in coolList">
+                  {{item.name}}
+                  <div class="select-other-info">
+                    编号：{{item.no}}
+                  </div>
+                </el-option>
               </el-select>
             </oms-form-row>
           </el-col>

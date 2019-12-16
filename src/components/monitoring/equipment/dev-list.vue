@@ -31,20 +31,23 @@
     <el-col class="item" :span="12" :key="item.id" v-for="item in devItem.sensorDataList">
       <div class="content">
         <el-row>
-          <el-col :span="12">
-            <oms-row label="设备" :span="8">
-              <el-tooltip effect="dark" placement="top" :content="item.name + ' ' + item.no + ' ' + item.type ">
-                <div class="text-overflow">{{item.name}} {{item.no}} {{item.type}}</div>
+          <el-col :span="16">
+            <oms-row label="设备" :span="6">
+              <el-tooltip effect="dark" placement="top">
+                <span slot="content">
+                  名称：{{item.name}} 编号：{{item.no}} 类型：{{item.type}}
+                </span>
+                <div class="text-overflow">名称：{{item.name}} 编号：{{item.no}} 类型：{{item.type}}</div>
               </el-tooltip>
             </oms-row>
           </el-col>
-          <el-col :span="12">
+          <el-col :span="8">
             <oms-row label="温度类型" :span="12">
               {{item.temperatureType === '0' ? '冷藏' : '冷冻'}}
             </oms-row>
           </el-col>
         </el-row>
-        <el-row>
+        <el-row style="padding-left: 2px">
           <el-col :span="8">
             <oms-row label="温度" :span="12">
               <template v-if="item.temperature !== null">

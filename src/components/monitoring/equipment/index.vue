@@ -50,7 +50,7 @@
                 <span>{{item.monitorTargetName}}</span>
               </el-tooltip>
               </span>
-              <span class="ml-15">
+              <span class="ml-15" v-show="item.monitorTargetVersion">
                 型号：
               <el-tooltip effect="dark" placement="top" :content="item.monitorTargetVersion">
                 <span>{{item.monitorTargetVersion}}</span>
