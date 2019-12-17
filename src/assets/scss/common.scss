@@ -302,3 +302,11 @@
     color: #C0C4CC;
   }
 }
+
+.order-list .order-list-body .order-list-item {
+  .dev-list {
+    .el-row .el-col {
+      padding-right: 0;
+    }
+  }
+}

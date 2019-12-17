@@ -58,13 +58,13 @@
             </oms-row>
           </el-col>
         </el-row>
-        <el-row style="padding-left: 2px">
+        <el-row>
           <el-col :span="8">
             <oms-row label="温度" :span="10">
               <template v-if="item.temperature !== null">
+                <span>{{item.temperature}} ℃</span>
                 <i class="el-icon-bottom low-color" v-if="item.alarmTypeSet.includes('0')"/>
                 <i class="el-icon-top high-color" v-if="item.alarmTypeSet.includes('1')"/>
-                <span>{{item.temperature}} ℃</span>
                 <el-tooltip v-if="item.temperatureMin !== null && item.temperatureMax !== null"
                             effect="dark" placement="top" :content="`温度范围：${item.temperatureMin}~${item.temperatureMax}℃`">
                   <i class="el-icon-t-question ml-10"/>
@@ -78,9 +78,9 @@
           <el-col :span="8">
             <oms-row label="湿度" :span="10">
               <template v-if="item.humidity !== null">
+                <span>{{item.humidity}} %</span>
                 <i class="el-icon-bottom low-color" v-if="item.alarmTypeSet.includes('2')"/>
                 <i class="el-icon-top high-color" v-if="item.alarmTypeSet.includes('3')"/>
-                <span>{{item.humidity}} %</span>
                 <el-tooltip v-if="item.humidityMin !== null && item.humidityMax !== null"
                             effect="dark" placement="top" :content="`湿度范围：${item.humidityMin}~${item.humidityMax}%`">
                   <i class="el-icon-t-question ml-10"/>
@@ -92,9 +92,9 @@
           <el-col :span="8">
             <oms-row label="电压" :span="10">
               <template v-if="item.voltage !== null">
+                <span>{{item.voltage}} %</span>
                 <i class="el-icon-bottom low-color" v-if="item.alarmTypeSet.includes('4')"/>
                 <i class="el-icon-top high-color" v-if="item.alarmTypeSet.includes('5')"/>
-                <span>{{item.voltage}} %</span>
                 <el-tooltip v-if="item.voltageMin !== null && item.voltageMax !== null"
                             effect="dark" placement="top" :content="`电压范围：${item.voltageMin}~${item.voltageMax}%`">
                   <i class="el-icon-t-question ml-10"/>
