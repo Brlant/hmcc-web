@@ -55,7 +55,7 @@
           </el-col>
           <el-col :span="4">
             <oms-form-row :span="11" label="是否恢复">
-              <el-radio-group @change="search" size="small" v-model="searchCondition.handleStatus">
+              <el-radio-group @change="search" size="small" v-model="searchCondition.recoveryStatus">
                 <el-radio-button :label="1">是</el-radio-button>
                 <el-radio-button :label="0">否</el-radio-button>
               </el-radio-group>
@@ -100,7 +100,7 @@
           recoveryStartDate: '',
           recoveryEndDate: '',
           handlingStatus: '',
-          handleStatus: ''
+          recoveryStatus: ''
         },
         showSearch: false,
         list: [],
@@ -157,7 +157,7 @@
           recoveryStartDate: '',
           recoveryEndDate: '',
           handlingStatus: '',
-          handleStatus: ''
+          recoveryStatus: ''
         };
         this.times1 = [];
         this.times2 = [];
