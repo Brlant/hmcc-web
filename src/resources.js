@@ -577,10 +577,10 @@ export const Auth = {
     return http.get('/oms/access/permissions', {params: {objectId: 'hmcc-system'}}); //
   },
   queryWeChatInfo() {
-    return http.get('/erp-org/user/wechat');
+    return http.get('/wechat/user/wechat');
   },
   unBindWeChat() {
-    return http.put('/erp-org/unbind/wechat');
+    return http.put('/wechat/unbind/wechat');
   }
 };
 
