@@ -291,19 +291,9 @@
                     <div class="menu-usr-part-phone">{{user.userAccount}}</div>
                   </div>
                 </el-dropdown-item>
-                <el-dropdown-item class="header-user-userinfo" v-if="weChatInfo.nickname">
-                  <div>
-                    <i class="el-icon-t-wx_icon" style="color: #20b329"></i>
-                  </div>
-                  <div>
-                    <div class="menu-usr-part-user wechat-info">
-                      <span v-if="weChatInfo.nickname">
-                         {{weChatInfo.nickname ? weChatInfo.nickname.substr(0, 3) : ''}}
-                         <span v-if="weChatInfo.nickname && weChatInfo.nickname.length > 3">...</span>
-                        <a class="btn-wechat" href="#" @click.stop.prevent="unbind">(解绑)</a>
-                       </span>
-                    </div>
-                  </div>
+                <el-dropdown-item class="header-user-userinfo" v-if="weChatInfo.nickname" @click.stop.native="unbind">
+                  <i class="el-icon-t-wx_icon" style="color: #20b329"></i>
+                  <span>解绑</span>
                 </el-dropdown-item>
                 <el-dropdown-item @click.stop.native="$router.push('/resetpsw')">
                   <i class="el-icon-t-password"></i>

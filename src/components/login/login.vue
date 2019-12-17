@@ -139,6 +139,7 @@
               //   this.$router.replace('/');
               // });
               this.$emit('login');
+              this.queryWeChat();
             }, error => {
               let data = error.response.data;
               this.$notify.error({
@@ -176,6 +177,13 @@
       },
       trim: function (str) {
         return str.replace(/(^\s*)|(\s*$)/g, '');
+      },
+      queryWeChat() {
+        Auth.queryWeChatInfo().then(res => {
+          this.$store.commit('initWeChatInfo', res.data);
+        }).catch(() => {
+          this.$store.commit('initWeChatInfo', {});
+        });
       }
     },
     mounted: function () {
