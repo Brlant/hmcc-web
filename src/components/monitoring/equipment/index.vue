@@ -55,7 +55,7 @@
               </span>
               <span class="ml-15" v-show="item.monitorTargetType">
                 类型：
-              <el-tooltip effect="dark" placement="top" :content="item.monitorTargetType">
+              <el-tooltip effect="dark" placement="top" :content="formatDictLabel(item.monitorTargetType, coolDevType)">
                 <span>
                    {{formatDictLabel(item.monitorTargetType, coolDevType)}}
                 </span>
