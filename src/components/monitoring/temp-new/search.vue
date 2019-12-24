@@ -1,5 +1,5 @@
 <template>
-  <search-template :isShow="showSearch" :isShowAdvance="false" :midSpan="0" :titleSpan="8" @isShow="isShow"
+  <search-template :isShow="showSearch" :isShowAdvance="false" :midSpan="0" :titleSpan="6" @isShow="isShow"
                    @reset="reset" @search="search">
     <template slot="title">{{$route.meta.title}}</template>
     <template slot="btn">
@@ -8,15 +8,15 @@
     <template slot="content">
       <el-form class="advanced-query-form" onsubmit="return false">
         <el-row>
-          <el-col :span="9">
-            <oms-form-row :required="true" :span="5" label="上报时间">
+          <el-col :span="12">
+            <oms-form-row :required="true" :span="4" label="采集时间">
               <el-date-picker :default-time="['00:00:00', '23:59:59']" :clearable="false" @change="search"
                               placeholder="请选择"
                               type="datetimerange" v-model="times1"/>
             </oms-form-row>
           </el-col>
-          <el-col :span="9">
-            <oms-form-row :span="4" label="设备">
+          <el-col :span="12">
+            <oms-form-row :span="5" label="设备">
               <el-select :remote-method="queryCoolList" @focus="queryCoolList()" filterable placeholder="请输入名称搜索冷链设备" remote
                          v-model="searchCondition.freezerDevId" @change="search" popper-class="selects--custom">
                 <el-option :key="item.id" :label="item.name" :value="item.id"
@@ -29,22 +29,22 @@
               </el-select>
             </oms-form-row>
           </el-col>
-          <el-col :span="6">
-            <oms-form-row :span="6" label="数据类型">
+        </el-row>
+        <el-row>
+          <el-col :span="12">
+            <oms-form-row :span="4" label="时间间隔">
+              <el-input type="number" v-model.number="searchCondition.statPiece">
+                <span slot="append">分钟</span>
+              </el-input>
+            </oms-form-row>
+          </el-col>
+          <el-col :span="12">
+            <oms-form-row :span="5" label="数据类型">
               <el-radio-group @change="search" size="small" v-model="searchCondition.type">
                 <el-radio-button label="1">温度</el-radio-button>
                 <el-radio-button label="2">湿度</el-radio-button>
                 <el-radio-button label="3">电压</el-radio-button>
               </el-radio-group>
-            </oms-form-row>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="9">
-            <oms-form-row :span="5" label="时间间隔">
-              <el-input type="number" v-model.number="searchCondition.statPiece">
-                <span slot="append">分钟</span>
-              </el-input>
             </oms-form-row>
           </el-col>
         </el-row>
