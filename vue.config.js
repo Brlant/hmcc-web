@@ -14,7 +14,7 @@ module.exports = {
     disableHostCheck: true,
     proxy: {
       '/api': {
-        target: 'https://un-hmcc.cdcerp.cn/',
+        target: 'https://hmcc.cdcerp.cn/',
         changOrigin: true
       }
     }

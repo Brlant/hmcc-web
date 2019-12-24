@@ -1,5 +1,5 @@
 <template>
-  <search-template :isShow="showSearch" :isShowAdvance="false" :midSpan="0" :titleSpan="16" @isShow="isShow"
+  <search-template :isShow="showSearch" :isShowAdvance="false" :midSpan="0" :titleSpan="8" @isShow="isShow"
                    @reset="reset" @search="search">
     <template slot="title">{{$route.meta.title}}</template>
     <template slot="btn">
@@ -39,6 +39,15 @@
             </oms-form-row>
           </el-col>
         </el-row>
+        <el-row>
+          <el-col :span="9">
+            <oms-form-row :span="5" label="时间间隔">
+              <el-input type="number" v-model.number="searchCondition.statPiece">
+                <span slot="append">分钟</span>
+              </el-input>
+            </oms-form-row>
+          </el-col>
+        </el-row>
       </el-form>
     </template>
   </search-template>
@@ -55,6 +64,7 @@
           endTime: '',
           freezerDevId: '',
           type: '1',
+          statPiece: ''
         },
         showSearch: false,
         doing: false,
@@ -77,9 +87,12 @@
     },
     methods: {
       search() {
+        this.setSearchCondition();
+        this.$emit('search', this.searchCondition);
+      },
+      setSearchCondition() {
         this.searchCondition.startTime = this.formatTimeAry(this.times1, 0);
         this.searchCondition.endTime = this.formatTimeAry(this.times1, 1);
-        this.$emit('search', this.searchCondition);
       },
       reset() {
         this.searchCondition = {
@@ -87,6 +100,7 @@
           endTime: '',
           freezerDevId: '',
           type: '1',
+          statPiece: ''
         };
         this.times1 = [this.$moment(this.$moment().format('YYYY-MM-DD')), this.$moment()];
         this.search();
