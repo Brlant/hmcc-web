@@ -53,8 +53,8 @@
         this.$store.commit('initPrint', {isPrinting: true, moduleId: this.$route.path, text: '拼命导出中'});
         this.$refs.search.setSearchCondition();
         let filter = JSON.parse(JSON.stringify(this.$refs.search.searchCondition));
-        filter.statPiece = 30;
-        this.$http.post('historical-data/export',filter).then(res => {
+        delete filter.statPiece;
+        this.$http.post('/historical-data/export-thirty-minutes',filter).then(res => {
           utils.download(res.data.data.path);
           this.$store.commit('initPrint', {isPrinting: false, moduleId: this.$route.path, text: '拼命导出中'});
         }).catch(error => {
