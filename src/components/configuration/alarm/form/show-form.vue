@@ -47,9 +47,12 @@
                 <div v-show="formItem.voltageAlarmFlag === '1'">
                   <oms-row  label="电压最高值">{{formItem.voltageMax}}%</oms-row>
                   <oms-row  label="电压最低值">{{formItem.voltageMin}}%</oms-row>
-                  <oms-row  label="电压1级告警延迟时间">{{formItem.voltageLevelOneAlarmDelayTime}}分钟</oms-row>
-                  <oms-row  label="电压2级告警延迟时间">{{formItem.voltageLevelTwoAlarmDelayTime}}分钟</oms-row>
-                  <oms-row  label="电压3级告警延迟时间">{{formItem.voltageLevelThreeAlarmDelayTime}}分钟</oms-row>
+                  <oms-row  label="电压1级告警延迟时间" v-show="formItem.voltageLevelOneAlarmDelayTime">
+                    {{formItem.voltageLevelOneAlarmDelayTime}}分钟</oms-row>
+                  <oms-row  label="电压2级告警延迟时间" v-show="formItem.voltageLevelTwoAlarmDelayTime">
+                    {{formItem.voltageLevelTwoAlarmDelayTime}}分钟</oms-row>
+                  <oms-row  label="电压3级告警延迟时间" v-show="formItem.voltageLevelThreeAlarmDelayTime">
+                    {{formItem.voltageLevelThreeAlarmDelayTime}}分钟</oms-row>
                 </div>
               </el-col>
               <el-col :span="12">
@@ -61,9 +64,12 @@
                 <div v-show="formItem.temperatureAlarmFlag === '1'">
                   <oms-row   label="温度最高值">{{formItem.temperatureMax}}℃</oms-row>
                   <oms-row  label="温度最低值">{{formItem.temperatureMin}}℃</oms-row>
-                  <oms-row  label="温度1级告警延迟时间">{{formItem.temperatureLevelOneAlarmDelayTime}}分钟</oms-row>
-                  <oms-row  label="温度2级告警延迟时间">{{formItem.temperatureLevelTwoAlarmDelayTime}}分钟</oms-row>
-                  <oms-row  label="温度3级告警延迟时间">{{formItem.temperatureLevelThreeAlarmDelayTime}}分钟</oms-row>
+                  <oms-row  label="温度1级告警延迟时间" v-show="formItem.temperatureLevelOneAlarmDelayTime">
+                    {{formItem.temperatureLevelOneAlarmDelayTime}}分钟</oms-row>
+                  <oms-row  label="温度2级告警延迟时间" v-show="formItem.temperatureLevelTwoAlarmDelayTime">
+                    {{formItem.temperatureLevelTwoAlarmDelayTime}}分钟</oms-row>
+                  <oms-row  label="温度3级告警延迟时间" v-show="formItem.temperatureLevelThreeAlarmDelayTime">
+                    {{formItem.temperatureLevelThreeAlarmDelayTime}}分钟</oms-row>
                 </div>
 
                 <oms-row  label="离线告警开关">
@@ -71,9 +77,12 @@
                     {{formItem.offLineFlag === '1' ? '开启' : '关闭'}}</el-tag>
                 </oms-row>
                 <div v-show="formItem.offLineFlag === '1'">
-                  <oms-row  label="离线1级告警延迟时间">{{formItem.offLineLevelOneAlarmDelayTime}}分钟</oms-row>
-                  <oms-row  label="离线2级告警延迟时间">{{formItem.offLineLevelTwoAlarmDelayTime}}分钟</oms-row>
-                  <oms-row  label="离线3级告警延迟时间">{{formItem.offLineLevelThreeAlarmDelayTime}}分钟</oms-row>
+                  <oms-row  label="离线1级告警延迟时间" v-show="formItem.offLineLevelOneAlarmDelayTime">
+                    {{formItem.offLineLevelOneAlarmDelayTime}}分钟</oms-row>
+                  <oms-row  label="离线2级告警延迟时间" v-show="formItem.offLineLevelTwoAlarmDelayTime">
+                    {{formItem.offLineLevelTwoAlarmDelayTime}}分钟</oms-row>
+                  <oms-row  label="离线3级告警延迟时间" v-show="formItem.offLineLevelThreeAlarmDelayTime">
+                    {{formItem.offLineLevelThreeAlarmDelayTime}}分钟</oms-row>
                 </div>
               </el-col>
             </el-row>
