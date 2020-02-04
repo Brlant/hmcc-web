@@ -21,7 +21,7 @@
                        v-for="item in notifyList"></el-option>
           </el-select>
         </el-form-item>
-        <el-divider></el-divider>
+        <div class="border-left-color" style="margin-left: 20px">温度告警 </div>
         <el-form-item label="温度告警开关">
           <el-switch @change="temperatureAlarmFlagChange" v-model="form.temperatureAlarmFlag" active-value="1" inactive-value="0"></el-switch>
         </el-form-item>
@@ -61,7 +61,7 @@
             </el-select>
           </el-form-item>
         </div>
-        <el-divider></el-divider>
+        <div class="border-left-color" style="margin-left: 20px">湿度告警 </div>
 
         <el-form-item label="湿度告警开关">
           <el-switch @change="humidityAlarmFlagChange" v-model="form.humidityAlarmFlag" active-value="1" inactive-value="0"></el-switch>
@@ -103,7 +103,7 @@
           </el-form-item>
         </div>
 
-        <el-divider></el-divider>
+        <div class="border-left-color" style="margin-left: 20px">电压告警</div>
 
         <el-form-item label="电压告警开关">
           <el-switch @change="voltageAlarmFlagChange" v-model="form.voltageAlarmFlag" active-value="1" inactive-value="0"></el-switch>
@@ -144,9 +144,7 @@
             </el-select>
           </el-form-item>
         </div>
-
-        <el-divider></el-divider>
-
+        <div class="border-left-color" style="margin-left: 20px">离线告警</div>
         <el-form-item label="离线告警开关">
           <el-switch @change="offLineFlagChange" v-model="form.offLineFlag" active-value="1" inactive-value="0"></el-switch>
         </el-form-item>
@@ -170,9 +168,6 @@
             </el-select>
           </el-form-item>
         </div>
-
-        <el-divider></el-divider>
-
       </el-form>
     </template>
   </dialog-template>
