@@ -5,7 +5,7 @@
       <el-button :disabled="doing" @click="save('tempForm')" plain type="primary" style="margin-bottom: 20px">保存</el-button>
     </template>
     <template slot="content">
-      <el-form :model="form" :rules="rules" label-width="150px" ref="tempForm">
+      <el-form :model="form" :rules="rules" label-width="160px" ref="tempForm">
         <el-form-item label="探头" prop="sensorId">
           <el-select :remote-method="queryProbeList" filterable placeholder="请输入名称搜索探头"
                      remote v-model="form.sensorId" @change="sensorIdChange">
@@ -42,19 +42,19 @@
               </el-form-item>
             </el-col>
           </el-row>
-          <el-form-item label="温度1级告警延迟时间" prop="levelOneAlarmDelayTime">
+          <el-form-item label="温度1级告警延迟时间" prop="temperatureLevelOneAlarmDelayTime">
             <el-select clearable placeholder="请选择" v-model="form.temperatureLevelOneAlarmDelayTime">
               <el-option :key="item" :label="item + '分钟'" :value="item"
                          v-for="item in timeList"></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="温度2级告警延迟时间" prop="levelTwoAlarmDelayTime">
+          <el-form-item label="温度2级告警延迟时间" prop="temperatureLevelTwoAlarmDelayTime">
             <el-select clearable placeholder="请选择" v-model="form.temperatureLevelTwoAlarmDelayTime">
               <el-option :key="item" :label="item + '分钟'" :value="item"
                          v-for="item in timeList"></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="温度3级告警延迟时间" prop="levelThreeAlarmDelayTime">
+          <el-form-item label="温度3级告警延迟时间" prop="temperatureLevelThreeAlarmDelayTime">
             <el-select clearable placeholder="请选择" v-model="form.temperatureLevelThreeAlarmDelayTime">
               <el-option :key="item" :label="item + '分钟'" :value="item"
                          v-for="item in timeList"></el-option>
@@ -83,19 +83,19 @@
               </el-form-item>
             </el-col>
           </el-row>
-          <el-form-item label="湿度1级告警延迟时间" prop="levelOneAlarmDelayTime">
+          <el-form-item label="湿度1级告警延迟时间" prop="humidityLevelOneAlarmDelayTime">
             <el-select clearable placeholder="请选择" v-model="form.humidityLevelOneAlarmDelayTime">
               <el-option :key="item" :label="item + '分钟'" :value="item"
                          v-for="item in timeList"></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="湿度2级告警延迟时间" prop="levelTwoAlarmDelayTime">
+          <el-form-item label="湿度2级告警延迟时间" prop="humidityLevelTwoAlarmDelayTime">
             <el-select clearable placeholder="请选择" v-model="form.humidityLevelTwoAlarmDelayTime">
               <el-option :key="item" :label="item + '分钟'" :value="item"
                          v-for="item in timeList"></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="湿度3级告警延迟时间" prop="levelThreeAlarmDelayTime">
+          <el-form-item label="湿度3级告警延迟时间" prop="humidityLevelThreeAlarmDelayTime">
             <el-select clearable placeholder="请选择" v-model="form.humidityLevelThreeAlarmDelayTime">
               <el-option :key="item" :label="item + '分钟'" :value="item"
                          v-for="item in timeList"></el-option>
@@ -125,19 +125,19 @@
               </el-form-item>
             </el-col>
           </el-row>
-          <el-form-item label="电压1级告警延迟时间" prop="levelOneAlarmDelayTime">
+          <el-form-item label="电压1级告警延迟时间" prop="voltageLevelOneAlarmDelayTime">
             <el-select clearable placeholder="请选择" v-model="form.voltageLevelOneAlarmDelayTime">
               <el-option :key="item" :label="item + '分钟'" :value="item"
                          v-for="item in timeList"></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="电压2级告警延迟时间" prop="levelTwoAlarmDelayTime">
+          <el-form-item label="电压2级告警延迟时间" prop="voltageLevelTwoAlarmDelayTime">
             <el-select clearable placeholder="请选择" v-model="form.voltageLevelTwoAlarmDelayTime">
               <el-option :key="item" :label="item + '分钟'" :value="item"
                          v-for="item in timeList"></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="电压3级告警延迟时间" prop="levelThreeAlarmDelayTime">
+          <el-form-item label="电压3级告警延迟时间" prop="voltageLevelThreeAlarmDelayTime">
             <el-select clearable placeholder="请选择" v-model="form.voltageLevelThreeAlarmDelayTime">
               <el-option :key="item" :label="item + '分钟'" :value="item"
                          v-for="item in timeList"></el-option>
@@ -151,19 +151,19 @@
           <el-switch @change="offLineFlagChange" v-model="form.offLineFlag" active-value="1" inactive-value="0"></el-switch>
         </el-form-item>
         <div v-if="form.offLineFlag === '1'">
-          <el-form-item label="离线1级告警延迟时间" prop="levelOneAlarmDelayTime">
+          <el-form-item label="离线1级告警延迟时间" prop="offLineLevelOneAlarmDelayTime">
             <el-select clearable placeholder="请选择" v-model="form.offLineLevelOneAlarmDelayTime">
               <el-option :key="item" :label="item + '分钟'" :value="item"
                          v-for="item in timeList"></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="离线2级告警延迟时间" prop="levelTwoAlarmDelayTime">
+          <el-form-item label="离线2级告警延迟时间" prop="offLineLevelTwoAlarmDelayTime">
             <el-select clearable placeholder="请选择" v-model="form.offLineLevelTwoAlarmDelayTime">
               <el-option :key="item" :label="item + '分钟'" :value="item"
                          v-for="item in timeList"></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="离线3级告警延迟时间" prop="levelThreeAlarmDelayTime">
+          <el-form-item label="离线3级告警延迟时间" prop="offLineLevelThreeAlarmDelayTime">
             <el-select clearable placeholder="请选择" v-model="form.offLineLevelThreeAlarmDelayTime">
               <el-option :key="item" :label="item + '分钟'" :value="item"
                          v-for="item in timeList"></el-option>
@@ -335,7 +335,7 @@
           };
           this.$nextTick(() => {
             this.$refs.tempForm && this.$refs.tempForm.clearValidate();
-          })
+          });
           this.actionType = '添加';
         }
       }
