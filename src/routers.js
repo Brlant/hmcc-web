@@ -38,7 +38,7 @@ export const routes = [
           {
             path: '/monitoring/store',
             component: () => import('./components/common/parent-route'),
-            meta: {moduleId: 'monitoring', title: '委托仓库监控', perm: 'pov-dev-monitoring-scan', subMenuId: 'store'},
+            meta: {moduleId: 'monitoring', title: '委托仓库监控', perm: 'query-monitor-relations', subMenuId: 'store'},
             children: [
               {
                 path: '',

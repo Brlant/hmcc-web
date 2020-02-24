@@ -98,7 +98,7 @@ export default [
         'parentId': 'hmcc-system',
         'sort': '3',
         'children': [{
-          'id': 'pov-dev-monitoring-scan',
+          'id': 'query-monitor-relations',
           'label': '查看委托仓库监控',
           'parentId': 'hmcc-system'
         }]
