@@ -48,7 +48,7 @@
         <el-form class="advanced-query-form" onsubmit="return false">
           <el-row>
             <el-col :span="8">
-              <oms-form-row label="日志操作人" :span="6">
+              <oms-form-row label="日志操作人" :span="5">
                 <el-select filterable remote placeholder="请输入名称/拼音首字母缩写搜索" :remote-method="filterUser"
                            :clearable="true"
                            v-model="searchWord.operatorId" popperClass="good-selects">
@@ -58,29 +58,35 @@
                       <span class="pull-right">
                         {{user.companyDepartmentName}}
                       </span>
+                      <div class="font-gray clearfix">所属单位：{{user.orgName}}</div>
                     </div>
                   </el-option>
                 </el-select>
               </oms-form-row>
             </el-col>
             <el-col :span="9">
-              <oms-form-row label="日志操作时间" :span="6">
+              <oms-form-row label="日志操作时间" :span="7">
                 <el-col :span="24">
                   <el-date-picker
                     v-model="expectedTime"
-                    type="daterange"
-                    placeholder="请选择" format="yyyy-MM-dd">
+                    type="datetimerange"
+                    :default-time="['00:00:00', '23:59:59']">
                   </el-date-picker>
                 </el-col>
               </oms-form-row>
             </el-col>
-            <el-col :span="8">
-              <oms-form-row label="操作类型" :span="5">
+            <el-col :span="7">
+              <oms-form-row label="操作类型" :span="6">
                 <oms-input v-model="searchWord.actionType" placeholder="请输入操作类型"/>
               </oms-form-row>
             </el-col>
           </el-row>
           <el-row>
+            <el-col :span="8">
+              <oms-form-row label="请求体" :span="5">
+                <oms-input type="text" v-model="searchWord.body" placeholder="请输入请求体"></oms-input>
+              </oms-form-row>
+            </el-col>
             <el-col :span="8">
               <oms-form-row label="" :span="5">
                 <el-button type="primary" native-type="submit" @click="searchInOrder">查询</el-button>
@@ -106,16 +112,23 @@
             {{ showActionType(scope.row.actionType)}}
           </template>
         </el-table-column>
-        <el-table-column prop="logRemarks" label="日志内容" :sortable="true"></el-table-column>
+        <el-table-column prop="logRemarks" label="日志内容" :sortable="true" min-width="200"></el-table-column>
+        <el-table-column prop="body" label="请求体" :sortable="true" min-width="200">
+          <div style="max-height: 150px;overflow: auto">
+            <template slot-scope="scope">
+              {{ scope.row.body}}
+            </template>
+          </div>
+        </el-table-column>
         <el-table-column prop="ip" label="IP" :sortable="true" width="150"></el-table-column>
       </el-table>
       <div class="text-center" v-show="(logList.length || pager.currentPage !== 1) && !loadingData">
-        <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange"
-                       :current-page="pager.currentPage"
-                       :page-sizes="[10,20,50,100]" :page-size="pager.pageSize"
-                       layout="total, sizes, prev, pager, next, jumper"
-                       :total="pager.count">
-        </el-pagination>
+        <el-cu-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange"
+                          :current-page="pager.currentPage"
+                          :page-sizes="[10,20,50,100]" :page-size="pager.pageSize"
+                          layout="sizes, prev, pager, next, jumper"
+                          :total="pager.count">
+        </el-cu-pagination>
       </div>
     </div>
 
@@ -127,6 +140,7 @@
 <script>
   import {BaseInfo, User} from '@/resources';
   //  import detail from './detail.vue';
+  import Util from '@/tools/utils';
 
   export default {
 //    components: {detail},
@@ -139,13 +153,15 @@
           operatorId: '',
           startTime: '',
           endTime: '',
-          actionType: ''
+          actionType: '',
+          body: ''
         },
         searchWord: {
           operatorId: '',
           startTime: '',
           endTime: '',
-          actionType: ''
+          actionType: '',
+          body: ''
         },
         pager: {
           currentPage: 1,
@@ -179,11 +195,9 @@
         let data = Object.assign({}, {
           pageNo: 1,
           pageSize: 20,
-          objectId: 'css-system',
-          keyWord: query,
-          status: 1
+          keyWord: query
         });
-        User.query(data).then(res => {
+        User.queryAllUser(data).then(res => {
           this.userList = res.data.list;
         });
       },
@@ -222,22 +236,17 @@
         this.showDetailPart = false;
       },
       searchInOrder: function () {// 搜索
-        this.searchWord.startTime = this.formatTimeToRangeByFormat(this.$formatAryTime(this.expectedTime, 0));
-        this.searchWord.endTime = this.formatTimeToRangeByFormat(this.$formatAryTime(this.expectedTime, 1), 1);
+        this.searchWord.startTime = this.$formatAryTime(this.expectedTime, 0);
+        this.searchWord.endTime = this.$formatAryTime(this.expectedTime, 1);
         Object.assign(this.filters, this.searchWord);
-      },
-      formatTimeToRangeByFormat(time, type) {
-        if (!time) return '';
-        let str = ' 23:59:59';
-        let date = this.$moment(time).format('YYYY-MM-DD');
-        return this.$moment(date + (type === 1 ? str : '')).format('YYYY-MM-DD HH:mm:ss');
       },
       resetSearchForm: function () {// 重置表单
         this.searchWord = {
           operatorId: '',
           startTime: '',
           endTime: '',
-          actionType: ''
+          actionType: '',
+          body: ''
         };
         this.expectedTime = '';
         Object.assign(this.filters, this.searchWord);
