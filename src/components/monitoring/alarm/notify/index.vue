@@ -33,7 +33,7 @@
             <el-col :span="4" class="R">{{item.noticeUserTarget}}</el-col>
             <el-col :span="5">{{item.time | time}}</el-col>
             <el-col :span="4">
-              {{item.status === '1' ? '成功' : '失败'}}
+              {{item.status === '1' ? '成功' : item.status === '0' ? '失败' : item.status === '2' ? '发送中': item.status}}
             </el-col>
           </el-row>
         </div>
