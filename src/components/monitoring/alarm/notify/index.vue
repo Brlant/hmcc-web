@@ -37,7 +37,7 @@
               {{item.status === '1' ? '成功' : item.status === '0' ? '失败' : item.status === '2' ? '发送中': item.status}}
             </el-col>
             <el-col :span="5">
-              <span v-show="item.status === '2'">{{item.sendResult}}</span>
+              <span v-show="item.status === '0'">{{item.sendResult}}</span>
             </el-col>
           </el-row>
         </div>
