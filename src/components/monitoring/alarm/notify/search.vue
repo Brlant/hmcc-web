@@ -16,7 +16,7 @@
               </el-select>
             </oms-form-row>
           </el-col>
-          <el-col :span="5">
+          <el-col :span="7">
             <oms-form-row :span="9" label="通知类型">
               <el-radio-group @change="search" size="small" v-model="searchCondition.type">
                 <el-radio-button label="0">告警</el-radio-button>
@@ -24,7 +24,7 @@
               </el-radio-group>
             </oms-form-row>
           </el-col>
-          <el-col :span="5">
+          <el-col :span="7">
             <oms-form-row :span="9" label="通知方式">
               <el-radio-group @change="search" size="small" v-model="searchCondition.way">
                 <el-radio-button label="0">短信</el-radio-button>
@@ -32,17 +32,18 @@
               </el-radio-group>
             </oms-form-row>
           </el-col>
-          <el-col :span="5">
-            <oms-form-row :span="9" label="发送状态">
-              <el-radio-group @change="search" size="small" v-model="searchCondition.status">
-                <el-radio-button label="1">成功</el-radio-button>
-                <el-radio-button label="0">失败</el-radio-button>
-              </el-radio-group>
-            </oms-form-row>
-          </el-col>
         </el-row>
         <el-row>
           <el-col :span="9">
+            <oms-form-row :span="5" label="发送状态">
+              <el-radio-group @change="search" size="small" v-model="searchCondition.status">
+                <el-radio-button label="1">成功</el-radio-button>
+                <el-radio-button label="0">失败</el-radio-button>
+                <el-radio-button label="2">发送中</el-radio-button>
+              </el-radio-group>
+            </oms-form-row>
+          </el-col>
+          <el-col :span="10">
             <oms-form-row :span="5" label="通知时间">
               <el-date-picker @change="search" :default-time="['00:00:00', '23:59:59']" class="el-date-picker--mini" placeholder="请选择"
                               type="datetimerange" v-model="times"/>
