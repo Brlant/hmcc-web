@@ -120,6 +120,7 @@
             </template>
           </div>
         </el-table-column>
+        <el-table-column prop="sessionId" label="sessionId" :sortable="true" width="150"></el-table-column>
         <el-table-column prop="ip" label="IP" :sortable="true" width="150"></el-table-column>
       </el-table>
       <div class="text-center" v-show="(logList.length || pager.currentPage !== 1) && !loadingData">
