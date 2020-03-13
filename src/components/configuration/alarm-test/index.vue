@@ -41,7 +41,10 @@
             </el-col>
             <el-col :span="6" class="R">{{item.time|time}}</el-col>
             <el-col :span="4" class="R">
-              {{item.result === '0' ? '发送失败' : '发送成功'}}
+              {{item.result === '0' ? '发送失败' :  item.result === '1' ? '发送成功' : item.result === '2' ? '发送中' : item.result}}
+              <div v-show="item.result === '0'" class="f-grey">
+                失败原因：{{item.sendResult}}
+              </div>
             </el-col>
             <el-col :span="2">
               {{item.artificialConfirm === '0' ?  '未确认' : '已确认'}}
