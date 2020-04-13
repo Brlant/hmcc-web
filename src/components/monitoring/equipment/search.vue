@@ -47,6 +47,7 @@
 <script>
   import {BaseInfo} from '@/resources';
   import methodsMixin from '@/mixins/methodsMixin';
+
   export default {
     mixins: [methodsMixin],
     data: function () {
@@ -59,6 +60,7 @@
         },
         showSearch: false,
         typeList: this.$parent.typeList,
+        metaType: '',
         list: [],
         times: [],
         orgList: []
@@ -72,11 +74,18 @@
         return this.$getDict('coolDevType');
       },
       type() {
-        return this.$route.meta.type;
+        // 如果type变更说明页面切换，则清空子组件的值
+        if (this.metaType !== this.$route.meta.type) {
+          this.reset();
+        }
+        // 存储type值
+        this.metaType = this.$route.meta.type;
+        return this.metaType;
       }
     },
     methods: {
       search() {
+
         this.$emit('search', this.searchCondition);
       },
       reset() {
