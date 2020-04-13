@@ -134,7 +134,6 @@
     .time-line {
       position: relative;
       border-right: 2px solid #e3e8ee;
-      padding-left: 10px;
       text-align: right;
 
       .timeline-item {
@@ -146,21 +145,6 @@
         z-index: 10;
       }
 
-      //.timeline-item-date {
-      //  position: absolute;
-      //  right: -9px;
-      //  width: 16px;
-      //  height: 16px;
-      //  border: 1px solid $activeColor;
-      //  color: $activeColor;
-      //}
-      //.timeline-item-time {
-      //  right: -6px;
-      //  width: 10px;
-      //  height: 10px;
-      //  border: 1px solid #0C6;
-      //  color: grey;
-      //}
       .timeline-item-date {
         right: -6px;
         width: 10px;

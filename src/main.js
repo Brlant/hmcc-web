@@ -10,6 +10,8 @@ import Vuex from 'vuex';
 import store from './store';
 import {init} from './tools/init';
 import App from './App.vue';
+import * as Sentry from '@sentry/browser';
+import * as Integrations from '@sentry/integrations';
 
 import 'echarts/lib/chart/bar';
 import 'echarts/lib/chart/scatter';
@@ -25,9 +27,6 @@ import ECharts from 'vue-echarts/components/ECharts.vue';
 // 引入高德地图vue组件
 import VueAMap, {lazyAMapApiLoaderInstance} from 'vue-amap';
 
-import Raven from 'raven-js';
-import RavenVue from 'raven-js/plugins/vue';
-
 // // 初始化视口宽度
 // initViewPort(router);
 
@@ -38,20 +37,17 @@ Vue.use(Vuex);
 Vue.use(VueAMap);
 
 if (process.env.NODE_ENV === 'production') {
-  // 日志工具
-  Raven
-    .config('https://62f56ceea555483fab3d6238ff4a80d0@f-log.cdcerp.net/3', {
-      serverName: 'ccs',
-      shouldSendCallback: (date) => {// 过滤错误日志
-        let filterArray = ['Request failed with status code 401', 'Request failed with status code 502'];
-        if (date && date.hasOwnProperty('exception') && date.exception.hasOwnProperty('values') && filterArray.indexOf(date.exception.values[0].value) > -1 || date && date.transaction && date.transaction.indexOf('http://requirejs.org/docs/errors.html') > -1) {
-          return false;
-        }
-        return date;
+  Sentry.init({
+    dsn: 'https://eb94ae86f9104780be615d09d50416f2@f-log.sinopharm-bio.com/3',
+    integrations: [new Integrations.Vue({Vue, attachProps: true})],
+    shouldSendCallback: (date) => {// 过滤错误日志
+      let filterArray = ['Request failed with status code 401', 'Request failed with status code 502'];
+      if (date && date.hasOwnProperty('exception') && date.exception.hasOwnProperty('values') && filterArray.indexOf(date.exception.values[0].value) > -1 || date && date.transaction && date.transaction.indexOf('http://requirejs.org/docs/errors.html') > -1) {
+        return false;
       }
-    })
-    .addPlugin(RavenVue, Vue)
-    .install();
+      return date;
+    }
+  });
 }
 
 init(Vue);
@@ -99,7 +95,6 @@ Vue.prototype.$getDict = function (groupName) {
     return [];
   }
 };
-
 new Vue({
   router,
   store,
