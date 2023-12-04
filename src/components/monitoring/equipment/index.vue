@@ -44,7 +44,7 @@
             </span>
             </el-col>
             <el-col :span="14" class="text-overflow" style="padding-left: 5px">
-              <span>
+              <span style="font-size: 18px; font-weight: bold">
                 设备：
                 <el-tooltip effect="dark" placement="top" :content="item.monitorTargetName">
                 <span>

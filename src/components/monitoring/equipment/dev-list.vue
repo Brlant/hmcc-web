@@ -5,7 +5,7 @@
 
   .dev-list {
     display: flex;
-    justify-content: space-between;
+    //justify-content: space-between;
 
     .item {
       padding: 0 10px;
@@ -37,11 +37,11 @@
     <el-col class="item" :span="12" :key="item.id" v-for="item in devItem.sensorDataList">
       <div class="content">
         <el-row>
-          <el-col :span="16">
-            <oms-row label="探头" :span="5">
+          <el-col :span="12">
+            <oms-row label="探头" :span="7">
               <el-tooltip effect="dark" placement="top">
                 <div slot="content">
-                  <div>名称：{{item.name}} </div>
+                  <div>名称：{{item.name}}</div>
                   <div>编号：{{item.no}} </div>
                   <div>型号：{{item.type}}</div>
                 </div>
@@ -52,31 +52,18 @@
               </el-tooltip>
             </oms-row>
           </el-col>
-          <el-col :span="8">
+          <el-col :span="12">
             <oms-row label="温度类型" :span="16">
               {{item.temperatureType === '0' ? '冷藏' : '冷冻'}}
             </oms-row>
           </el-col>
         </el-row>
         <el-row>
-          <el-col :span="8">
-            <oms-row label="温度" :span="10">
-              <template v-if="item.temperature !== null">
-                <span>{{item.temperature}} ℃</span>
-                <i class="el-icon-bottom low-color" v-if="item.alarmTypeSet.includes('0')"/>
-                <i class="el-icon-top high-color" v-if="item.alarmTypeSet.includes('1')"/>
-                <el-tooltip v-if="item.temperatureMin !== null && item.temperatureMax !== null"
-                            effect="dark" placement="top" :content="`温度范围：${item.temperatureMin}~${item.temperatureMax}℃`">
-                  <i class="el-icon-t-question ml-10"/>
-                </el-tooltip>
-              </template>
-              <template v-else>
-                暂无数据
-              </template>
-            </oms-row>
+          <el-col :span="12">
+            <oms-row label="更新" :span="7">{{item.lastUpdateTime | time}}</oms-row>
           </el-col>
-          <el-col :span="8">
-            <oms-row label="湿度" :span="10">
+          <el-col :span="6">
+            <oms-row label="湿度" :span="8">
               <template v-if="item.humidity !== null">
                 <span>{{item.humidity}} %</span>
                 <i class="el-icon-bottom low-color" v-if="item.alarmTypeSet.includes('2')"/>
@@ -89,8 +76,8 @@
               <template v-else>暂无数据</template>
             </oms-row>
           </el-col>
-          <el-col :span="8">
-            <oms-row label="电压" :span="10">
+          <el-col :span="6">
+            <oms-row label="电压" :span="8">
               <template v-if="item.voltage !== null">
                 <span>{{item.voltage}} %</span>
                 <i class="el-icon-bottom low-color" v-if="item.alarmTypeSet.includes('4')"/>
@@ -105,8 +92,21 @@
           </el-col>
         </el-row>
         <el-row v-show="item.lastUpdateTime">
-          <el-col :span="16">
-            <oms-row label="更新" :span="5">{{item.lastUpdateTime | time}}</oms-row>
+          <el-col :span="12">
+            <oms-row label="温度" :span="7">
+              <template v-if="item.temperature !== null">
+                <span style="font-size: 20px; background-color: #66CC99">{{item.temperature}} ℃</span>
+                <i class="el-icon-bottom low-color" v-if="item.alarmTypeSet.includes('0')"/>
+                <i class="el-icon-top high-color" v-if="item.alarmTypeSet.includes('1')"/>
+                <el-tooltip v-if="item.temperatureMin !== null && item.temperatureMax !== null"
+                            effect="dark" placement="top" :content="`温度范围：${item.temperatureMin}~${item.temperatureMax}℃`">
+                  <i class="el-icon-t-question ml-10"/>
+                </el-tooltip>
+              </template>
+              <template v-else>
+                暂无数据
+              </template>
+            </oms-row>
           </el-col>
         </el-row>
       </div>
