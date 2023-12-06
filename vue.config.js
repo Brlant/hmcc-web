@@ -5,6 +5,11 @@ function resolve(dir) {
   return path.join(__dirname, '..', dir);
 }
 
+let proxyTargets = {
+  hmcc: 'http://hmcc.cdcerp.cn',
+  un: 'http://un-hmcc.cdcerp.cn'
+}
+
 module.exports = {
   devServer: {
     open: true,
@@ -14,7 +19,7 @@ module.exports = {
     disableHostCheck: true,
     proxy: {
       '/api': {
-        target: 'https://hw-test-hmcc.cdcerp.cn',
+        target: proxyTargets.un,
         changOrigin: true
       }
     }

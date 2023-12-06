@@ -22,18 +22,34 @@ export const routes = [
           {
             path: '/monitoring/equipment',
             component: () => import('./components/monitoring/equipment/index.vue'),
-            meta: {moduleId: 'monitoring', title: '本单位设备监控', perm: 'own-dev-monitoring-scan', type: 1,
-              permPage: {add: 'own-dev-monitoring-add', edit: 'own-dev-monitoring-edit',
-                delete: 'own-dev-monitoring-delete', start: 'own-dev-monitoring-active', stop: 'own-dev-monitoring-disable',
-                record: 'own-dev-monitoring-record', query: 'history-data-manager-scan'}}
+            meta: {
+              moduleId: 'monitoring', title: '本单位设备监控', perm: 'own-dev-monitoring-scan', type: 1,
+              permPage: {
+                add: 'own-dev-monitoring-add',
+                edit: 'own-dev-monitoring-edit',
+                delete: 'own-dev-monitoring-delete',
+                start: 'own-dev-monitoring-active',
+                stop: 'own-dev-monitoring-disable',
+                record: 'own-dev-monitoring-record',
+                query: 'history-data-manager-scan'
+              }
+            }
           },
           {
             path: '/monitoring/pov/equipment',
             component: () => import('./components/monitoring/equipment/index.vue'),
-            meta: {moduleId: 'monitoring', title: '接种单位设备监控', perm: 'pov-dev-monitoring-scan', type: 2,
-              permPage: {add: 'pov-dev-monitoring-add', edit: 'pov-dev-monitoring-edit',
-                delete: 'pov-dev-monitoring-delete', start: 'pov-dev-monitoring-active',
-                stop: 'pov-own-dev-monitoring-disable', record: 'pov-dev-monitoring-record', query: 'history-data-manager-scan'}}
+            meta: {
+              moduleId: 'monitoring', title: '接种单位设备监控', perm: 'pov-dev-monitoring-scan', type: 2,
+              permPage: {
+                add: 'pov-dev-monitoring-add',
+                edit: 'pov-dev-monitoring-edit',
+                delete: 'pov-dev-monitoring-delete',
+                start: 'pov-dev-monitoring-active',
+                stop: 'pov-own-dev-monitoring-disable',
+                record: 'pov-dev-monitoring-record',
+                query: 'history-data-manager-scan'
+              }
+            }
           },
           {
             path: '/monitoring/store',
@@ -43,40 +59,52 @@ export const routes = [
               {
                 path: '',
                 component: () => import('./components/monitoring/store/index.vue'),
-                meta: {moduleId: 'monitoring', subMenuId: 'store',
-                  permPage: {add: 'hmcc-system', edit: '', delete: '', start: '', stop: ''}}
+                meta: {
+                  moduleId: 'monitoring', subMenuId: 'store',
+                  permPage: {add: 'hmcc-system', edit: '', delete: '', start: '', stop: ''}
+                }
               },
               {
                 path: '/monitoring/store/temp',
                 component: () => import('./components/monitoring/store/dev-temp/index.vue'),
-                meta: {moduleId: 'monitoring', subMenuId: 'store',
-                  permPage: {add: 'hmcc-system', edit: '', delete: '', start: '', stop: ''}}
+                meta: {
+                  moduleId: 'monitoring', subMenuId: 'store',
+                  permPage: {add: 'hmcc-system', edit: '', delete: '', start: '', stop: ''}
+                }
               },
             ]
           },
           {
             path: '/monitoring/temp',
             component: () => import('./components/monitoring/temp-new/index.vue'),
-            meta: {moduleId: 'monitoring', title: '历史数据查询', perm: 'history-data-manager-scan',
-              subMenuId: 'temp', showDev: true}
+            meta: {
+              moduleId: 'monitoring', title: '历史数据查询', perm: 'history-data-manager-scan',
+              subMenuId: 'temp', showDev: true
+            }
           },
           {
             path: '/monitoring/temp/records',
             component: () => import('./components/monitoring/temp-record/index.vue'),
-            meta: {moduleId: 'monitoring', title: '冷链设备温度记录', perm: 'freezer-dev-temperature-record-manager-scan',
-              subMenuId: 'temp', showDev: true}
+            meta: {
+              moduleId: 'monitoring', title: '冷链设备温度记录', perm: 'freezer-dev-temperature-record-manager-scan',
+              subMenuId: 'temp', showDev: true
+            }
           },
           {
             path: '/monitoring/manager/assess',
             component: () => import('./components/monitoring/manager-assess/index.vue'),
-            meta: {moduleId: 'monitoring', title: '冷链管理评估表', perm: 'freezer-manager-evaluation-scan',
-              subMenuId: 'temp', showDev: true}
+            meta: {
+              moduleId: 'monitoring', title: '冷链管理评估表', perm: 'freezer-manager-evaluation-scan',
+              subMenuId: 'temp', showDev: true
+            }
           },
           {
             path: '/monitoring/dev/assess',
             component: () => import('./components/monitoring/dev-assess/index.vue'),
-            meta: {moduleId: 'monitoring', title: '冷链设备评估表', perm: 'freezer-dev-evaluation-scan',
-              subMenuId: 'temp', showDev: true}
+            meta: {
+              moduleId: 'monitoring', title: '冷链设备评估表', perm: 'freezer-dev-evaluation-scan',
+              subMenuId: 'temp', showDev: true
+            }
           }
         ]
       },
@@ -91,7 +119,7 @@ export const routes = [
             meta: {
               moduleId: 'dev', title: '探头管理', perm: 'sensor-scan',
               type: 1,
-              permPage: {add: 'sensor-add', edit: 'sensor-edit',start: 'sensor-active', stop: 'sensor-disable'}
+              permPage: {add: 'sensor-add', edit: 'sensor-edit', start: 'sensor-active', stop: 'sensor-disable'}
             }
           },
           {
@@ -109,7 +137,12 @@ export const routes = [
             meta: {
               moduleId: 'dev', title: '网关管理', perm: 'gateway-dev-scan',
               type: 1,
-              permPage: {add: 'gateway-dev-add', edit: 'gateway-dev-edit', start: 'gateway-dev-active', stop: 'gateway-dev-disable'}
+              permPage: {
+                add: 'gateway-dev-add',
+                edit: 'gateway-dev-edit',
+                start: 'gateway-dev-active',
+                stop: 'gateway-dev-disable'
+              }
             }
           }
         ]
@@ -122,21 +155,29 @@ export const routes = [
           {
             path: '/configuration/alarm',
             component: () => import('./components/configuration/alarm/index.vue'),
-            meta: {moduleId: 'configuration', title: '告警规则', perm: 'alarm-rule-scan',
-              permPage: {add: 'alarm-rule-add', edit: 'alarm-rule-edit', delete: 'alarm-rule-delete'}}
+            meta: {
+              moduleId: 'configuration', title: '告警规则', perm: 'alarm-rule-scan',
+              permPage: {add: 'alarm-rule-add', edit: 'alarm-rule-edit', delete: 'alarm-rule-delete'}
+            }
           },
           {
             path: '/configuration/notification',
             component: () => import('./components/configuration/notification/index.vue'),
-            meta: {moduleId: 'configuration', title: '告警通知组', perm: 'alarm-notice-group-scan',
-              permPage: {add: 'alarm-notice-group-add', edit: 'alarm-notice-group-edit',
-                delete: 'alarm-notice-group-delete'}}
+            meta: {
+              moduleId: 'configuration', title: '告警通知组', perm: 'alarm-notice-group-scan',
+              permPage: {
+                add: 'alarm-notice-group-add', edit: 'alarm-notice-group-edit',
+                delete: 'alarm-notice-group-delete'
+              }
+            }
           },
           {
             path: '/configuration/test',
             component: () => import('./components/configuration/alarm-test/index.vue'),
-            meta: {moduleId: 'configuration', title: '告警测试', perm: 'alarm-test-log-scan',
-              permPage: {add: 'alarm-test-log-add', confirm: 'alarm-test-log-confirm'}}
+            meta: {
+              moduleId: 'configuration', title: '告警测试', perm: 'alarm-test-log-scan',
+              permPage: {add: 'alarm-test-log-add', confirm: 'alarm-test-log-confirm'}
+            }
           }
         ]
       },
@@ -148,8 +189,10 @@ export const routes = [
           {
             path: '/alarm/record',
             component: () => import('./components/monitoring/alarm/event/index.vue'),
-            meta: {moduleId: 'alarm', title: '告警事件', perm: 'alarm-event-scan',
-              permPage: {add: 'hmcc-system', handle: 'alarm-event-handle', export: 'alarm-event-export'}}
+            meta: {
+              moduleId: 'alarm', title: '告警事件', perm: 'alarm-event-scan',
+              permPage: {add: 'hmcc-system', handle: 'alarm-event-handle', export: 'alarm-event-export'}
+            }
           },
           {
             path: '/alarm/send',
@@ -166,9 +209,13 @@ export const routes = [
           {
             path: '/dev/check/plan',
             component: () => import('./components/check/plan/index.vue'),
-            meta: {moduleId: 'alarm', title: '巡检计划', perm: 'patrol-project-scan',
-              permPage: {add: 'patrol-project-add', edit: 'patrol-project-edit',
-                delete: 'patrol-project-delete', devCheck: 'patrol-record-add'}}
+            meta: {
+              moduleId: 'alarm', title: '巡检计划', perm: 'patrol-project-scan',
+              permPage: {
+                add: 'patrol-project-add', edit: 'patrol-project-edit',
+                delete: 'patrol-project-delete', devCheck: 'patrol-record-add'
+              }
+            }
           }
         ]
       },
