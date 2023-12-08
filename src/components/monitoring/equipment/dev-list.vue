@@ -155,9 +155,9 @@ export default {
 
       let len = sensorDataList.length;
       let cols = [];
-      for (let i = 0; i < sensorDataList.length; i++) {
+      for (let i = 0; i < len; i++) {
         cols.push(sensorDataList[i]);
-        let rowFlag = len === 1 || i % 2 === 1;
+        let rowFlag = len === 1 || i % 2 === 1 || i == len -1;
         if (rowFlag) {
           rows.push(cols)
           cols = [];
