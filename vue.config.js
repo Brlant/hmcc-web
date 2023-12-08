@@ -7,7 +7,8 @@ function resolve(dir) {
 
 let proxyTargets = {
   hmcc: 'http://hmcc.cdcerp.cn',
-  un: 'http://un-hmcc.cdcerp.cn'
+  un: 'http://un-hmcc.cdcerp.cn',
+  yj: 'http://192.168.5.13:8083',
 }
 
 module.exports = {

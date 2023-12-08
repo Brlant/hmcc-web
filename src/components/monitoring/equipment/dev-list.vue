@@ -56,13 +56,13 @@
               </oms-row>
             </el-col>
             <el-col :span="8">
-              <oms-row label="温度类型" :span="16">
+              <oms-row label="温度类型" :span="10">
                 {{ item.temperatureType === '0' ? '冷藏' : '冷冻' }}
               </oms-row>
             </el-col>
           </el-row>
           <el-row>
-            <el-col :span="8" >
+            <el-col :span="8">
               <oms-row label="更新" :span="10">
                 <template v-if="item.lastUpdateTime">
                   {{ item.lastUpdateTime | time }}
@@ -164,21 +164,25 @@ export default {
         }
       }
 
-      console.log('处理前的数据：', sensorDataList)
-      console.log('处理后的数据：', rows)
       return rows;
     },
     temperatureStyle(item) {
       let style = {
-        'font-size': '16px',
-        'background-color': 'green'
+        'font-size': '16px'
       }
+
       let temperature = item.temperature;
       let templateMin = item.temperatureMin;
       let templateMax = item.temperatureMax;
-      if (temperature < templateMin || temperature > templateMax) {
-        style['background-color'] = 'red';
+      let alarmType = templateMin != null && templateMax != null;
+      if (alarmType) {
+        if (temperature < templateMin || temperature > templateMax) {
+          style['color'] = 'red';
+        } else {
+          style['color'] = 'green';
+        }
       }
+
       return style;
     }
   }
