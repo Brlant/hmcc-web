@@ -19,6 +19,7 @@ function isNewReturnType(data) {
 
 // 添加请求拦截器
 http.interceptors.request.use(function (config) {
+  config.headers["X-DOMAIN"] = 'hmcc-system'
   if (config.method === 'get') {
     config.paramsSerializer = params => {
       return qs.stringify(params, {indices: false});
@@ -31,7 +32,7 @@ http.interceptors.response.use(response => {
   if (isNewReturnType(response.data)) {
     switch (response.data.code) {
       case 200 :
-        return response;
+        return response.data;
       case 401:
         window.location.href = '#/login';
         return Promise.reject({response});
@@ -616,6 +617,9 @@ export const DictGroup = resource('/dictGroup', http, {
   }
 });
 
+// 数据字典项对象
+export const DictItem = resource('/dictItem', http, {});
+
 // 货品管理
 export const Goods = resource('/goods', http, {
   getGoodsDetail: (id) => {
@@ -674,7 +678,7 @@ export const BaseInfo = resource('/orgs', http, {
   turnToOwner: (orgId) => {
     return http.put('/orgs/transform/consignor/' + orgId, {});
   },
-  // 一键审核组织基础信息(同时审核单位基本信息、经营范围、执照信息,并审核基础信息模块)
+  // 一键审核组织基础信息(同时审核单v位基本信息、经营范围、执照信息,并审核基础信息模块)
   auditBaseInfo: (orgId, obj) => {
     return http.put('/orgs/' + orgId + '/check', obj);
   },
@@ -694,9 +698,7 @@ export const BaseInfo = resource('/orgs', http, {
   },
   // 校验名字
   checkName: (name, orgId) => {
-    return http.get('/orgs/name', {
-      params: {name, orgId}
-    });
+    return http.post('/orgs/name', {name, orgId});
   },
   // 校验身份证
   checkCreditCode: (creditCode, orgId) => {
@@ -748,6 +750,45 @@ export const BaseInfo = resource('/orgs', http, {
   // 删除受控法规
   deleteFg: (id) => {
     return http.delete('/bizLegislation/' + id);
+  }
+});
+
+//被监管单位关系管理
+export const orgRelation = resource('/subordinate-org', http, {
+  query(data) {
+    return http.post('/subordinate-org/pager', data);
+  },
+  queryAll(data) {
+    return http.post('/subordinate-org/list', data);
+  },
+  querySubOrg(params) {
+    return http.get('/subordinate-org/info', {params});
+  },
+  queryAllOrgByPermission(params) {
+    return http.get('/subordinate-org/info/permission', {params});
+  },
+  queryAllOrgByPermissionSelf(params) {
+    return http.get('/subordinate-org/info/permission/self', {params});
+  },
+  save(orgId, obj) {
+    return http.post(`/subordinate-org?orgId=${orgId}`, obj);
+  }
+});
+
+// 货主车牌信息
+export const plateNumber = resource('/org-plate', http, {
+  batchAddPlateNumber(obj) {
+    return http.post('/org-plate/batch', obj);
+  }
+});
+
+// 证照对象
+export const orgLicence = resource('/order-licence', http, {
+  queryPager: (params) => {
+    return http.get('/order-licence/page', {params});
+  },
+  queryStateNum: (params) => {
+    return http.get('/order-licence/count', {params});
   }
 });
 

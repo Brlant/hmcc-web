@@ -117,8 +117,8 @@
         });
         let params = Object.assign({}, this.searchCondition);
         http.post('/alarm-event/export', params).then(res => {
-          if (res.data.code === 200) {
-            utils.download(res.data.data.path, '告警记录表');
+          if (res.code === 200) {
+            utils.download(res.data.path, '告警记录表');
           }
           this.$notify.success({
             message: '导出成功'

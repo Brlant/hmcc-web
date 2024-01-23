@@ -51,29 +51,29 @@ export const routes = [
               }
             }
           },
-          {
-            path: '/monitoring/store',
-            component: () => import('./components/common/parent-route'),
-            meta: {moduleId: 'monitoring', title: '委托仓库监控', perm: 'query-monitor-relations', subMenuId: 'store'},
-            children: [
-              {
-                path: '',
-                component: () => import('./components/monitoring/store/index.vue'),
-                meta: {
-                  moduleId: 'monitoring', subMenuId: 'store',
-                  permPage: {add: 'hmcc-system', edit: '', delete: '', start: '', stop: ''}
-                }
-              },
-              {
-                path: '/monitoring/store/temp',
-                component: () => import('./components/monitoring/store/dev-temp/index.vue'),
-                meta: {
-                  moduleId: 'monitoring', subMenuId: 'store',
-                  permPage: {add: 'hmcc-system', edit: '', delete: '', start: '', stop: ''}
-                }
-              },
-            ]
-          },
+          // {
+          //   path: '/monitoring/store',
+          //   component: () => import('./components/common/parent-route'),
+          //   meta: {moduleId: 'monitoring', title: '委托仓库监控', perm: 'query-monitor-relations', subMenuId: 'store'},
+          //   children: [
+          //     {
+          //       path: '',
+          //       component: () => import('./components/monitoring/store/index.vue'),
+          //       meta: {
+          //         moduleId: 'monitoring', subMenuId: 'store',
+          //         permPage: {add: 'hmcc-system', edit: '', delete: '', start: '', stop: ''}
+          //       }
+          //     },
+          //     {
+          //       path: '/monitoring/store/temp',
+          //       component: () => import('./components/monitoring/store/dev-temp/index.vue'),
+          //       meta: {
+          //         moduleId: 'monitoring', subMenuId: 'store',
+          //         permPage: {add: 'hmcc-system', edit: '', delete: '', start: '', stop: ''}
+          //       }
+          //     },
+          //   ]
+          // },
           {
             path: '/monitoring/temp',
             component: () => import('./components/monitoring/temp-new/index.vue'),
@@ -220,6 +220,38 @@ export const routes = [
         ]
       },
       {
+        path: '/org',
+        redirect: '/org/info',
+        component: () => import('./components/common/parent-route.vue'),
+        meta: {moduleId: 'org', title: '单位管理', icon: 'base', perm: 'org-manager'},
+        children: [
+          {
+            path: '/org/info',
+            component: () => import('./components/org/info/list.vue'),
+            meta: {moduleId: 'org', title: '基础信息管理', perm: 'org-base-manager-query'},
+            children: []
+          },
+          {
+            path: '/org/licences',
+            component: () => import('./components/org/licences/list.vue'),
+            meta: {moduleId: 'org', title: '单位证照管理', perm: 'org-licences-manager-query'},
+            children: []
+          },
+          {
+            path: '/org/relation',
+            component: () => import('./components/org/relation/list.vue'),
+            meta: {moduleId: 'sub', title: '单位关系管理', icon: 'org1', perm: 'org-relation-manager-query'},
+            children: []
+          },
+          // {
+          //   path: '/org/address',
+          //   component: () => import('./components/org/address/index.vue'),
+          //   meta: {moduleId: 'org', title: '仓库地址管理', perm: 'address-manager-query'},
+          //   children: []
+          // }
+        ]
+      },
+      {
         path: '/permission',
         component: () => import('./components/system/index.vue'),
         meta: {moduleId: 'permission', title: '系统设置', icon: 'setting', perm: 'system-config'}, // hmcc-system-config
@@ -241,10 +273,17 @@ export const routes = [
             children: []
           },
           {
+            path: '/setting/dict',
+            component: () => import('./components/system/dict/dict.vue'),
+            meta: {moduleId: 'public', title: '数据字典', perm: 'dict-manager'},
+            children: []
+          },
+          {
             path: '/permission/log',
             component: () => import('./components/common/log/list.vue'),
             meta: {moduleId: 'permission', title: '系统日志', perm: 'system-setting-log'}
-          }
+          },
+
         ]
       }
     ]

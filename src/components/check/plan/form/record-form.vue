@@ -168,7 +168,7 @@
         this.$httpRequestOpera(checkRecord.save(data), {
           errorTitle: '添加失败',
           success: res => {
-            if (res.data.code === 200) {
+            if (res.code === 200) {
               this.$notify.success({message: '添加成功'});
               this.doing = false;
               this.$emit('change', res.data);

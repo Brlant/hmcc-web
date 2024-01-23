@@ -87,7 +87,7 @@
           this.currentIndex = val;
         });
         checkRecord.query(this.formItem.id).then(res => {
-          this.devList = res.data.data.list;
+          this.devList = res.data.list;
         });
       }
     },

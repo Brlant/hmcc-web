@@ -151,7 +151,7 @@
         this.notify = {};
         this.loading = true;
         AlarmNotifyGroup.get(this.formItem.id).then(res => {
-          this.notify = res.data.data;
+          this.notify = res.data;
           this.loading = false;
         });
       }
