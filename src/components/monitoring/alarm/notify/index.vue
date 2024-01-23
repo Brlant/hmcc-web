@@ -24,7 +24,7 @@
           </div>
         </el-col>
       </el-row>
-      <div class="order-list-body flex-list-dom" v-else="">
+      <div class="order-list-body flex-list-dom" v-else>
         <div :class="[{'active':currentItemId===item.id}]" class="order-list-item order-list-item-bg no-pointer"
              v-for="item in dataList">
           <el-row>

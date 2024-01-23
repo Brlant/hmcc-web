@@ -359,8 +359,8 @@
           handlingStatus: '0'
         };
         alarmEvent.query(params).then(res => {
-          if (res.data.code === 200) {
-            this.reportList = this.formatReportListByDay(res.data.data);
+          if (res.code === 200) {
+            this.reportList = this.formatReportListByDay(res.data);
             if (!this.cycle) return;
             this.setTimes(setTimeout(this.queryReports, this.cycle));
           }
@@ -368,7 +368,7 @@
       },
       queryFocusTotalCount() {
         this.$http('/index/gainTopCounts').then(res => {
-          this.focusTotalCount = res.data.data;
+          this.focusTotalCount = res.data;
         });
       },
       resetRightBox() {
@@ -396,8 +396,8 @@
       change() {
         const params = {handlingStatus: '0'};
         alarmEvent.query(params).then(res => {
-          if (res.data.code === 200) {
-            this.reportList = this.formatReportListByDay(res.data.data);
+          if (res.code === 200) {
+            this.reportList = this.formatReportListByDay(res.data);
           }
         });
         this.resetRightBox();

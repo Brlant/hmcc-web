@@ -194,15 +194,15 @@
           endDate
         };
         temperatureRecord.query(params).then(res => {
-          if (res.data.code === 200) {
-            res.data.data.forEach(i => {
+          if (res.code === 200) {
+            res.data.forEach(i => {
               i.dayOfMonth = this.$moment(i.recordDate).format('D');
               i.recordDate = this.$moment(i.recordDate).format('hh:mm');
             });
             let ary = [];
             let i = 1;
             while (i < 33) {
-              let list = res.data.data.filter(f => f.dayOfMonth * 1 === i);
+              let list = res.data.filter(f => f.dayOfMonth * 1 === i);
               if (!list.length) {
                 list.push({id: '', recordDateType: 0});
                 list.push({id: '', recordDateType: 1});

@@ -31,7 +31,7 @@
           </div>
         </el-col>
       </el-row>
-      <div class="order-list-body flex-list-dom" v-else="">
+      <div class="order-list-body flex-list-dom" v-else>
         <div :class="[{'active':currentItemId===item.id}]"
              @click="showItemDetail(item)" class="order-list-item order-list-item-bg"
              v-for="item in dataList">
@@ -173,7 +173,7 @@
             successTitle: '启用成功',
             errorTitle: '启用失败',
             success: (res) => {
-              if(res.data.code === 200) {
+              if(res.code === 200) {
                 item.status = '1';
               } else {
                 this.$notify.error({message: res.data.msg})
@@ -190,7 +190,7 @@
             successTitle: '停用完成',
             errorTitle: '停用失败',
             success: (res) => {
-              if(res.data.code === 200) {
+              if(res.code === 200) {
                 item.status = '0';
               } else {
                 this.$notify.error({message: res.data.msg})

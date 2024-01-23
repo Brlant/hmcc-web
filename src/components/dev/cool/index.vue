@@ -32,7 +32,7 @@
           </div>
         </el-col>
       </el-row>
-      <div class="order-list-body flex-list-dom" v-else="">
+      <div class="order-list-body flex-list-dom" v-else>
         <div :class="[{'active':currentItemId===item.id}]"
              @click="showItemDetail(item)" class="order-list-item order-list-item-bg"
              v-for="item in dataList">

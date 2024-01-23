@@ -27,7 +27,7 @@
           </div>
         </el-col>
       </el-row>
-      <div class="order-list-body flex-list-dom" v-else="">
+      <div class="order-list-body flex-list-dom" v-else>
         <div :class="['status-no', {'active':currentItemId===item.id}]" @click="showItemDetail(item)"
              class="order-list-item order-list-item-bg " v-for="item in dataList">
           <el-row>
@@ -151,7 +151,7 @@
           this.$httpRequestOpera(AlarmNotifyGroup.delete(item.id), {
             errorTitle: '删除失败',
             success: (res) => {
-              if(res.data.code === 200) {
+              if(res.code === 200) {
                 this.queryList(1);
               } else {
                 this.$notify.error({message: res.data.msg})

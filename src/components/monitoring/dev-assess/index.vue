@@ -170,8 +170,8 @@
         this.loading = true;
         devAssess.query(params).then(res => {
           this.loading = false;
-          if (res.data.code === 200) {
-            this.dataList = res.data.data;
+          if (res.code === 200) {
+            this.dataList = res.data;
           }
         });
       },
@@ -189,7 +189,7 @@
         };
         this.$store.commit('initPrint', {isPrinting: true, moduleId: this.$route.path, text: '拼命导出中'});
         devAssess.export(params).then(res => {
-          utils.download(res.data.data.path);
+          utils.download(res.data.path);
           this.$store.commit('initPrint', {isPrinting: false, moduleId: this.$route.path, text: '拼命导出中'});
         }).catch(error => {
           this.$store.commit('initPrint', {isPrinting: false, moduleId: this.$route.path, text: '拼命导出中'});
@@ -205,7 +205,7 @@
         devAssess.refreshItem(item.id, item).then(res => {
           this.$notify.success('计算完成');
           Object.keys(item).forEach(k => {
-            item[k] = res.data.data[k];
+            item[k] = res.data[k];
           });
         });
       }

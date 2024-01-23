@@ -150,8 +150,8 @@
         this.loading = true;
         managerAssess.query(params).then(res => {
           this.loading = false;
-          if (res.data.code === 200) {
-            this.dataList = res.data.data;
+          if (res.code === 200) {
+            this.dataList = res.data;
           }
         });
       },
@@ -167,7 +167,7 @@
           date
         };
         managerAssess.export(params).then(res => {
-          utils.download(res.data.data.path);
+          utils.download(res.data.path);
           this.$store.commit('initPrint', {isPrinting: false, moduleId: this.$route.path, text: '拼命导出中'});
         }).catch(error => {
           this.$store.commit('initPrint', {isPrinting: false, moduleId: this.$route.path, text: '拼命导出中'});

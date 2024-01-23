@@ -21,7 +21,7 @@
           </div>
         </el-col>
       </el-row>
-      <div class="order-list-body flex-list-dom" v-else="">
+      <div class="order-list-body flex-list-dom" v-else>
         <div class="order-list-item order-list-item-bg"
              v-for="item in dataList" @click="showItem(item)">
           <el-row>
@@ -98,7 +98,7 @@
         this.nowTime = nowTime;
         this.$http.get('/ccsMonitorRelation', {params}).then(res => {
           if (this.nowTime > nowTime) return;
-          if (res.data.code) res.data = res.data.data;
+          if (res.code) res.data = res.data;
           this.dataList = res.data.currentList || [];
           this.pager.count = res.data.count;
           this.loadingData = false;
