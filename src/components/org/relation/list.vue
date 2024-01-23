@@ -89,9 +89,9 @@
   width: 90px;
 }
 
-/*.order-list-item {*/
-/*cursor: pointer;*/
-/*}*/
+.order-list-item {
+  cursor: default !important;
+}
 
 .pt10 {
   padding-top: 10px;
@@ -223,7 +223,8 @@
                 <dict :dict-group="'orgRelation'" :dict-key="item.type"></dict>
               </el-col>
               <el-col :span="4" class="opera-btn-bidder">
-                <des-btn v-has="'org-relation-manager-delete'" icon="remove" @click="remove(item)" class="mr-10">删除</des-btn>
+                <des-btn v-has="'org-relation-manager-delete'" icon="remove" @click="remove(item)" class="mr-10">删除
+                </des-btn>
               </el-col>
             </el-row>
           </div>
