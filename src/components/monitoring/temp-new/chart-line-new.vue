@@ -1,4 +1,4 @@
-<style scoped="">
+<style scoped>
   .chart-Line {
     height: 400px;
     width: 1200px;
@@ -192,9 +192,9 @@
         this.isHasData = false;
         this.$http.post('/sensor/data', this.filter).then(res => {
           this.loadingData = false;
-          if (res.data.code === 200) {
+          if (res.code === 200) {
             typeList.forEach((i, index) => {
-              const data = res.data.data && res.data.data.map(m => {
+              const data = res.data && res.data.map(m => {
                 m.value = i === '1' ? m.temperature : i === '2' ? m.humidity : m.voltage;
                 return {
                   name: m.createTime,

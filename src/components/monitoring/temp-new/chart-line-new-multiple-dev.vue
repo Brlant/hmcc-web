@@ -263,12 +263,10 @@
         this.isHasData = false;
         this.$http.post('/historical-data', this.filter).then(res => {
           this.loadingData = false;
-          if (res.data && res.data.code === 200) {
-            this.isHasData = true;
-            this.dataDetail = res.data.data;
-            this.setChart();
-            this.getCurrentList(1);
-          }
+          this.isHasData = true;
+          this.dataDetail = res.data;
+          this.setChart();
+          this.getCurrentList(1);
         }).catch((e) => {
           this.loadingData = false;
           this.$notify.error(e.response && e.response.data && e.response.data.msg || '查询失败');

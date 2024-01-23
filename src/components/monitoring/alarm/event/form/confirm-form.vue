@@ -106,8 +106,8 @@
       queryLotsAlarm() {
         if (!this.formItem.id) return;
         alarmEvent.queryLotsAlarm(this.formItem.id).then(res => {
-          if (res.data.code === 200) {
-            this.sameData = res.data.data;
+          if (res.code === 200) {
+            this.sameData = res.data;
           }
         });
       },
@@ -124,7 +124,7 @@
             this.$httpRequestOpera(alarmEvent.batchConfirmItem(this.form), {
               errorTitle: '处理失败',
               success: res => {
-                if (res.data.code === 200) {
+                if (res.code === 200) {
                   this.doing = false;
                   this.$emit('change', res.data);
                 } else {

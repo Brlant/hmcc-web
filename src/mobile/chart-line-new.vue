@@ -1,4 +1,4 @@
-<style scoped="">
+<style scoped>
   .chart-Line {
     min-height: 300px;
     /*min-width: 375px;*/

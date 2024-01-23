@@ -5,6 +5,7 @@ html, body {
   color: #333;
   background: #f9f9f9;
   font-size: 14px;
+  word-break: break-all;
 }
 
 body {

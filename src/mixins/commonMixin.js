@@ -36,7 +36,7 @@ export default {
       this.nowTime = nowTime;
       http(params).then(res => {
         if (this.nowTime > nowTime) return;
-        if (res.data.code) res.data = res.data.data;
+
         this.dataList = res.data.list || [];
         this.pager.count = res.data.count;
         this.loadingData = false;
@@ -55,7 +55,7 @@ export default {
     queryStatusNumUtil(http, params, statusType, response) {
       http(params).then(res => {
         Object.keys(statusType).forEach(key => {
-          statusType[key].num = res.data.data[statusType[key].status] || 0;
+          statusType[key].num = res.data[statusType[key].status] || 0;
         });
       });
     },
