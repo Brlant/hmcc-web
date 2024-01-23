@@ -172,13 +172,13 @@
         };
         this.$http.post('/sensor/page-without-monitor', params).then(res => {
           this.editProbeList.forEach(i => {
-            if (i.id && !res.data.data.list.find(f => f.id === i.id)) {
+            if (i.id && !res.data.list.find(f => f.id === i.id)) {
               let item = this.editProbeList.find(f => f.id === i.id);
               if (!item) return;
-              res.data.data.list.push(item);
+              res.data.list.push(item);
             }
           });
-          this.probeList = res.data.data.list;
+          this.probeList = res.data.list;
         });
       },
       addSensor() {
@@ -215,9 +215,9 @@
                 errorTitle: '添加失败',
                 success: res => {
                   this.doing = false;
-                  if (res.data.code === 200) {
+                  if (res.code === 200) {
                     this.resetForm();
-                    this.$emit('change', res.data.data);
+                    this.$emit('change', res.data);
                     this.$notify.success({message: '添加成功'});
                   }
                 },
@@ -230,9 +230,9 @@
                 errorTitle: '修改失败',
                 success: res => {
                   this.doing = false;
-                  if (res.data.code === 200) {
+                  if (res.code === 200) {
                     this.resetForm();
-                    this.$emit('change', res.data.data);
+                    this.$emit('change', res.data);
                     this.$notify.success({message: '修改成功'});
                   }
                 },

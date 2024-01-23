@@ -309,18 +309,18 @@
       queryDetail() {
         AlarmNotifyGroup.get(this.formItem.id).then(res => {
 
-          let list = [].concat(res.data.data.levelOneAlarmObjectList,
-            res.data.data.levelTwoAlarmObjectList, res.data.data.levelThreeAlarmObjectList);
+          let list = [].concat(res.data.levelOneAlarmObjectList,
+            res.data.levelTwoAlarmObjectList, res.data.levelThreeAlarmObjectList);
           list.forEach(i => {
             this.formatContactWay(i);
           });
           this.orgList = [
             {
-              id: res.data.data.orgId,
-              name: res.data.data.orgName
+              id: res.data.orgId,
+              name: res.data.orgName
             }
           ];
-          this.form = res.data.data;
+          this.form = res.data;
           this.$nextTick(() => {
             this.$refs['tempForm'].clearValidate();
           });
@@ -402,7 +402,7 @@
               this.$httpRequestOpera(AlarmNotifyGroup.save(form), {
                 errorTitle: '添加失败',
                 success: res => {
-                  if (res.data.code === 200) {
+                  if (res.code === 200) {
                     this.$notify.success({message: '添加成功'});
                     this.doing = false;
                     this.$emit('change', res.data);
@@ -418,7 +418,7 @@
               this.$httpRequestOpera(AlarmNotifyGroup.update(form), {
                 errorTitle: '修改失败',
                 success: res => {
-                  if (res.data.code === 200) {
+                  if (res.code === 200) {
                     this.$notify.success({message: '修改成功'});
                     this.doing = false;
                     this.$emit('change', res.data);

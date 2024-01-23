@@ -153,7 +153,7 @@
               this.$httpRequestOpera(cool.save(this.form), {
                 errorTitle: '添加失败',
                 success: res => {
-                  if(res.data.code === 200) {
+                  if(res.code === 200) {
                     this.$notify.success({message: '添加成功'});
                     this.doing = false;
                     this.$emit('change', res.data);
@@ -169,7 +169,7 @@
               this.$httpRequestOpera(cool.update(this.form), {
                 errorTitle: '修改失败',
                 success: res => {
-                  if(res.data.code === 200) {
+                  if(res.code === 200) {
                     this.$notify.success({message: '修改成功'});
                     this.doing = false;
                     this.$emit('change', res.data);

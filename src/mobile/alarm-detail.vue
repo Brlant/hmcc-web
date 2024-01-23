@@ -88,7 +88,7 @@
         window.localStorage.setItem('alarmId', id);
         this.loading = true;
         this.$http.post(`/alarm-event/${id}`).then(res => {
-          this.detail = res.data.data;
+          this.detail = res.data;
           this.loading = false;
           this.$nextTick(() => {
             this.queryTempData();
