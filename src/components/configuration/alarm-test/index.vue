@@ -29,7 +29,7 @@
           </div>
         </el-col>
       </el-row>
-      <div class="order-list-body flex-list-dom" v-else="">
+      <div class="order-list-body flex-list-dom" v-else>
         <div :class="[{'active':currentItemId===item.id}]"
              class="order-list-item no-pointer order-list-item-bg"
              v-for="item in dataList">
@@ -171,7 +171,7 @@
           this.$httpRequestOpera(AlarmTest.delete(item.id), {
             errorTitle: '删除失败',
             success: (res) => {
-              if (res.data.code === 200) {
+              if (res.code === 200) {
                 this.queryList(1);
               } else {
                 this.$notify.error({message: res.data.msg});
@@ -189,7 +189,7 @@
           this.$httpRequestOpera(AlarmTest.confirm(obj), {
             errorTitle: '确认失败',
             success: (res) => {
-              if (res.data.code === 200) {
+              if (res.code === 200) {
                 item.artificialConfirm = '1';
               } else {
                 this.$notify.error({message: res.data.msg});

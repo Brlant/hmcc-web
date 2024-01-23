@@ -63,13 +63,13 @@
       },
       queryData() {
         this.$http('/index/gainFreezerDevComposition').then(res => {
-          if(res.data.code === 200) {
-            let data = res.data.data;
+          if(res.code === 200) {
+            let data = res.data;
             this.options.series[0].data = Object.keys(data).map(m => ({
               value: data[m],
               name: this.getLabel(m)
             }));
-            console.log(this.options.series[0].data);
+            // console.log(this.options.series[0].data);
             if (!this.cycle) return;
             this.setTimes(setTimeout(this.queryData, this.cycle));
           }
@@ -78,4 +78,3 @@
     }
   };
 </script>
-

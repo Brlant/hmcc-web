@@ -1,4 +1,4 @@
-<style lang="scss" scoped="">
+<style lang="scss" scoped>
   $leftWidth: 200px;
   .content-part {
     .content-left {
