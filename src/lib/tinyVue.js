@@ -99,6 +99,7 @@ import {
 import upload from '../components/common/upload/upload.vue';
 import uploadRelation from '../components/common/upload/upload.relation.vue';
 import ElForm from '../components/common/form/src/form.vue';
+import perm from '../components/common/perm.vue';
 import DialogTemplate from '@/components/common/dialog-template';
 import SearchTemplate from '@/components/common/search-template';
 import refreshCycle from '@/components/common/refresh-cycle';
@@ -167,6 +168,7 @@ const tinyVue = [
   upload,
   uploadRelation,
   ElForm,
+  perm,
   refreshCycle,
   //公用组件
   CuPagination,

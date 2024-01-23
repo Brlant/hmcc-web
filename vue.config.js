@@ -10,7 +10,8 @@ let proxyTargets = {
   un: 'http://un-hmcc.cdcerp.cn',
   yj: 'http://192.168.5.13:8083',
 }
-
+let proxyTarget = process.env.npm_config_url || proxyTargets.yj;
+console.log('当前代理地址：', proxyTarget)
 module.exports = {
   devServer: {
     open: true,
@@ -20,8 +21,11 @@ module.exports = {
     disableHostCheck: true,
     proxy: {
       '/api': {
-        target: proxyTargets.un,
-        changOrigin: true
+        target: proxyTarget,
+        changOrigin: true,
+        pathRewrite: {
+          '/api': ''
+        }
       }
     }
   },

@@ -55,7 +55,8 @@ const state = {
     {key: '12', label: '设备维修未及时关闭报警'},
     {key: '7', label: '其他'}
   ],
-  weChatInfo: {}
+  weChatInfo: {},
+  logisticsCenterList:[]
 };
 
 const mutations = {
@@ -90,6 +91,9 @@ const mutations = {
   },
   initPermList(state, data) {
     state.allMenuList = data;
+  },
+  changeBodyLeft(state,data){
+    state.bodySize.left = data;
   },
   changeAttachment(state, data) {
     let currentId;

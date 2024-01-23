@@ -1,4 +1,4 @@
-import {Address} from '@dtop/dtop-web-common';
+import {Address, formatAddress, formatAddressByType} from '@dtop/dtop-web-common';
 
 export default {
   address: Address.value,
@@ -277,7 +277,8 @@ export default {
     ms = time - d * dT - h * hT - m * mT - s * sT;
     return (d ? `${d}d` : '') + (h ? `${h}h` : '') +
       (m ? `${m}m` : '') + (s ? `${s}s` : '');
-  }
+  },
+  formatAddressByType
 };
 
 //深拷贝

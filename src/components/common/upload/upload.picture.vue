@@ -14,7 +14,7 @@
       :formData="formData"
     >
       <img v-if="imageUrl" :src="imageUrl" slot="trigger" class="avatar">
-      <i v-else="" class="el-icon-plus avatar-uploader-icon" slot="trigger"></i>
+      <i v-else class="el-icon-plus avatar-uploader-icon" slot="trigger"></i>
     </oms-el-upload>
   </div>
 </template>
