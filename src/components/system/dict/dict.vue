@@ -25,12 +25,12 @@
                 </a>
                </el-tooltip>
               </perm>
-              <perm label="voss-dict-group-add">
+              <perm label="dict-group-add">
                 <a class="btn-circle" href="#" @click.stop.prevent="addType">
                   <i class="el-icon-t-plus"></i>
                 </a>
               </perm>
-              <perm label="voss-dict-group-query">
+              <perm label="dict-group-query">
                 <a class="btn-circle" href="#" @click.prevent="searchType">
                   <i class="el-icon-t-search"></i>
                 </a>
@@ -55,12 +55,12 @@
                 <li v-for="item in showTypeList" :class="{'active':item.id==currentItem.id}" class="list-item"
                     @click="showType(item)">
                   <span class="hover-show">
-                      <perm label="voss-dict-group-softDelete">
+                      <perm label="dict-group-softDelete">
                         <a class="pull-right " href="#" @click.prevent="removeType(item)">
                         <i class="el-icon-t-delete"></i>
                         </a>
                       </perm>
-                      <perm label="voss-dict-group-update">
+                      <perm label="dict-group-update">
                         <a class="pull-right " href="#" @click.prevent="editType(item)">
                           <i class="el-icon-t-edit"></i> </a>
                       </perm>
@@ -85,7 +85,7 @@
         <el-scrollbar :style="'height:'+bodyHeight" class="d-table-left_scroll" tag="div">
           <div class="scrollbar-content">
             <span class="pull-right" style="padding-top: 10px;padding-right: 10px">
-                <perm label="voss-dict-item-query">
+                <perm label="dict-item-query">
                   <span v-show="showSearch" :class="{'open':showSearch}" class="btn-search-toggle">
                     <single-input v-model='keyTxt' :showFocus="showSearch" placeholder="请输入关键字搜索"
                                   @click.stop=""></single-input>
@@ -95,7 +95,7 @@
                     <i class="el-icon-t-search"></i>
                   </a>
                 </perm>
-                <perm label="voss-dict-item-add">
+                <perm label="dict-item-add">
                   <a class="btn-circle" href="#" @click.stop.prevent='add'>
                     <i class="el-icon-t-plus"></i>
                   </a>
@@ -140,12 +140,12 @@
                   {{ row.sort }}
                 </td>
                 <td>
-                  <perm class="btn-line-block" label="voss-dict-item-update">
+                  <perm class="btn-line-block" label="dict-item-update">
                     <a href="#" @click.stop.prevent="edit(row)">
                       <i class="el-icon-t-edit"></i> 编辑
                     </a>
                   </perm>
-                  <perm class="btn-line-block" label="voss-dict-item-softDelete">
+                  <perm class="btn-line-block" label="dict-item-softDelete">
                     <a href="#" @click.prevent="remove(row)">
                       <i class="el-icon-t-delete"></i>删除
                     </a>
