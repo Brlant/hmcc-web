@@ -1,4 +1,15 @@
-import {AlarmNotifyGroup, BaseInfo, cool, gateway, probe} from '@/resources';
+import {
+  AlarmNotifyGroup,
+  BaseInfo,
+  cool,
+  gateway,
+  probe,
+  authorizationGroup,
+  Goods,
+  orgRelation,
+  Vaccine,
+  http
+} from '@/resources';
 
 
 export default {
@@ -7,28 +18,33 @@ export default {
       probeList: [],
       orgList: [],
       notifyList: [],
+      objectOrgList: [],
+      groupList: [],
       coolList: [],
       povList: [],
-      gatewayList: []
+      gatewayList: [],
+      subOrgList: [],
+      batchNumberList: [],
+      goodsNameList: [],
     };
   },
   methods: {
     queryProbeList(query) {
       let params = typeof query === 'object' ? query : {keyWord: query};
       return probe.query(params).then(res => {
-        this.probeList = res.data.data.list;
+        this.probeList = res.data.list;
       });
     },
     queryGateway(query) {
       let params = typeof query === 'object' ? query : {keyWord: query};
       return gateway.query(params).then(res => {
-        this.gatewayList = res.data.data.list;
+        this.gatewayList = res.data.list;
       });
     },
     queryAllOrg: function (query) {// 查询货主
       let params = {keyWord: query};
       this.$http.get('/subordinate-org/info/permission/self', {params: params}).then(res => {
-        this.orgList = res.data.data;
+        this.orgList = res.data;
       });
     },
     queryNotifyList(query) {
@@ -39,7 +55,7 @@ export default {
         params = query;
       }
       AlarmNotifyGroup.query(params).then(res => {
-        this.notifyList = res.data.data.list;
+        this.notifyList = res.data.list;
       });
     },
     queryCoolList(query) {
@@ -50,7 +66,7 @@ export default {
         params = query;
       }
       cool.query(params).then(res => {
-        this.coolList = res.data.data.list;
+        this.coolList = res.data.list;
       });
     },
     filterPOV: function (query) {// 过滤POV
@@ -58,8 +74,20 @@ export default {
         keyWord: query
       };
       this.$http.get('/subordinate-org/info/permission/self', {params: params}).then(res => {
-        this.povList = res.data.data;
+        this.povList = res.data;
       });
-    }
+    },
+    querySubOrg(query) { // 被监管单位 //授权主体单位 // 上级单位
+      let params = {keyWord: query};
+      return orgRelation.querySubOrg(params).then(res => {
+        this.subOrgList = res.data;
+      });
+    },
+    queryALLObjectOrg(query) { // 被监管单位 //授权主体单位 // 上级单位
+      let params = {keyWord: query};
+      return orgRelation.querySubOrg(params).then(res => {
+        this.objectOrgList = res.data;
+      });
+    },
   }
 };

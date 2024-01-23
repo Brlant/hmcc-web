@@ -92,17 +92,17 @@ export default [
           }
         ]
       },
-      {
-        'id': 'entrust-store-monitoring',
-        'label': '委托仓库监控',
-        'parentId': 'hmcc-system',
-        'sort': '3',
-        'children': [{
-          'id': 'query-monitor-relations',
-          'label': '查看委托仓库监控',
-          'parentId': 'hmcc-system'
-        }]
-      },
+      // {
+      //   'id': 'entrust-store-monitoring',
+      //   'label': '委托仓库监控',
+      //   'parentId': 'hmcc-system',
+      //   'sort': '3',
+      //   'children': [{
+      //     'id': 'query-monitor-relations',
+      //     'label': '查看委托仓库监控',
+      //     'parentId': 'hmcc-system'
+      //   }]
+      // },
       {
         'id': 'history-data-manager',
         'label': '历史数据查询',
@@ -417,6 +417,112 @@ export default [
     ]
   },
   {
+    id: 'org-manager',
+    label: '单位管理',
+    children: [
+      {
+        id: 'org-base-manager',
+        label: '基础信息管理',
+        children: [
+          {
+            id: 'org-base-manager-query',
+            label: '查看单位'
+          },
+          {
+            id: 'org-base-manager-add',
+            label: '添加单位'
+          },
+          {
+            id: 'org-base-manager-edit',
+            label: '编辑单位'
+          },
+          {
+            id: 'org-base-manager-audit',
+            label: '审核单位'
+          },
+          {
+            id: 'org-base-manager-export',
+            label: '导出单位'
+          }
+        ]
+      },
+      {
+        id: 'org-licences-manager',
+        label: '单位证照管理',
+        children: [
+          {
+            id: 'org-licences-manager-query',
+            label: '查看单位证照'
+          },
+          {
+            id: 'org-licences-manager-add',
+            label: '添加单位证照'
+          },
+          {
+            id: 'org-licences-manager-edit',
+            label: '编辑单位证照'
+          },
+          {
+            id: 'org-licences-manager-delete',
+            label: '删除单位证照'
+          }
+        ]
+      },
+      // {
+      //   id: 'address-manager',
+      //   label: '仓库地址管理',
+      //   children: [
+      //     {
+      //       id: 'address-manager-query',
+      //       label: '查看单位仓库地址'
+      //     },
+      //     {
+      //       id: 'address-manager-add',
+      //       label: '添加单位仓库地址'
+      //     },
+      //     {
+      //       id: 'address-manager-edit',
+      //       label: '编辑单位仓库地址'
+      //     },
+      //     {
+      //       id: 'address-manager-stop',
+      //       label: '停用单位仓库地址'
+      //     },
+      //     {
+      //       id: 'address-manager-start',
+      //       label: '启用单位仓库地址'
+      //     },
+      //     {
+      //       id: 'address-manager-audit',
+      //       label: '审核单位仓库地址'
+      //     },
+      //     {
+      //       id: 'address-manager-export',
+      //       label: '导出单位仓库地址',
+      //     }
+      //   ]
+      // }
+      {
+        id: 'org-relation-manager',
+        label: '单位关系管理',
+        children: [
+          {
+            id: 'org-relation-manager-query',
+            label: '查看单位关系'
+          },
+          {
+            id: 'org-relation-manager-add',
+            label: '添加单位关系'
+          },
+          {
+            id: 'org-relation-manager-delete',
+            label: '删除单位关系'
+          }
+        ]
+      }
+    ]
+  },
+  {
     id: 'system-config',
     label: '系统设置',
     children: [
@@ -491,6 +597,48 @@ export default [
           {
             id: 'system-setting-org-account-manager-stop',
             label: '停用单位账号'
+          }
+        ]
+      },
+      {
+        'id': 'dict-manager',
+        'label': '数据字典',
+        'children': [
+          {
+            'id': 'dict-group-query',
+            'label': '查询数据字典组',
+          },
+          {
+            'id': 'dict-group-add',
+            'label': '新增数据字典组',
+          },
+          {
+            'id': 'dict-group-export',
+            'label': '导出数据字典组',
+          },
+          {
+            'id': 'dict-group-update',
+            'label': '编辑数据字典组',
+          },
+          {
+            'id': 'dict-group-softDelete',
+            'label': '删除数据字典组',
+          },
+          {
+            'id': 'dict-item-query',
+            'label': '查询数据字典项',
+          },
+          {
+            'id': 'dict-item-add',
+            'label': '新增数据字典项',
+          },
+          {
+            'id': 'dict-item-update',
+            'label': '编辑数据字典项',
+          },
+          {
+            'id': 'dict-item-softDelete',
+            'label': '删除数据字典项',
           }
         ]
       },
