@@ -237,7 +237,7 @@
               <span v-show="!showSearch">展开筛选</span>
           </span>
           <span class="pull-right opera-btn" style="margin-left: 10px">
-            <des-btn v-has="'org-licences-manage-add'" icon="plus" @click="add" class="mr-10">添加</des-btn>
+            <des-btn v-has="'org-licences-manager-add'" icon="plus" @click="add" class="mr-10">添加</des-btn>
           </span>
         </div>
         <el-form v-show="showSearch" class="advanced-query-form" onsubmit="return false">
@@ -340,8 +340,8 @@
                 </div>
               </el-col>
               <el-col :span="3">
-                <des-btn v-has="'org-licences-manage-edit'" icon="edit" @click="edit(item)" class="mr-10">编辑</des-btn>
-                <des-btn v-has="'org-licences-manage-delete'" icon="remove" @click="deleteItem(item)" class="mr-10">删除</des-btn>
+                <des-btn v-has="'org-licences-manager-edit'" icon="edit" @click="edit(item)" class="mr-10">编辑</des-btn>
+                <des-btn v-has="'org-licences-manager-delete'" icon="remove" @click="deleteItem(item)" class="mr-10">删除</des-btn>
               </el-col>
             </el-row>
             <div class="order-list-item-bg"></div>
