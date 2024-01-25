@@ -198,7 +198,12 @@ export const routes = [
             path: '/alarm/send',
             component: () => import('./components/monitoring/alarm/notify/index.vue'),
             meta: {moduleId: 'alarm', title: '告警通知', perm: 'alarm-notice-record-scan'}
-          }
+          },
+          {
+            path: '/alarm/waring/label',
+            component: () => import('./components/monitoring/alarm/waring/label/index.vue'),
+            meta: {moduleId: 'alarm', title: '标签异常告警', perm: 'alarm-tag-manager'}
+          },
         ]
       },
       {

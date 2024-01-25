@@ -2,7 +2,7 @@
   <div class="order-page">
     <search-part @search="searchResult" :deviceExceptionList="deviceExceptionList" :deviceTypeList="deviceTypeList"></search-part>
     <div class="order-list" style="margin-top: 20px">
-      <!--标签告警列表-->
+      <!--标签异常告警列表-->
       <el-table v-loading="loadingData" :data="dataList" header-row-class-name="order-list-header" header-cell-class-name="order-list-header">
         <el-table-column label="序号" align="center" type="index"/>
         <el-table-column label="设备编号" prop="devNo" align="center"></el-table-column>
@@ -10,7 +10,7 @@
         <el-table-column label="设备类型" prop="devType" align="center">
           <template v-slot="{row}">
             <div v-for="(item,index) in deviceTypeList" :key="index">
-              <span v-if="Number(row.devType)===item.value">{{ item.label }}</span>
+              <span v-if="Number(row.devType)===item.dictSort">{{ item.dictLabel }}</span>
             </div>
           </template>
         </el-table-column>
@@ -48,10 +48,9 @@
 
 <script>
 
-import {waringApi} from '@/resources'
+import {hmccDictDataType, waringApi} from '@/resources'
 import CommonMixin from '@/mixins/commonMixin';
 import SearchPart from './search';
-import {sinopharmDictDataType} from '@/api/system/dict/data'
 
 export default {
   name: 'WaringLabel',
@@ -100,17 +99,17 @@ export default {
     /* 定位 */
     devicesPosition(row) {
       this.$router.push({
-        path: 'deviceposition/position',
+        name: 'position',
         params: {...row}
       });
     },
     //异常类型
     getDeviceStatusList() {
-      sinopharmDictDataType('alarm_status').then(res => {
+      hmccDictDataType('alarm_status').then(res => {
         this.deviceExceptionList = res.data.map(item => {
           return {
-            label: item.label,
-            value: item.key
+            label: item.dictLabel,
+            value: item.dictValue
           }
         })
       }).catch(err => {
@@ -119,11 +118,11 @@ export default {
     },
     //设备类型
     getDeviceTypeList() {
-      sinopharmDictDataType('device_type').then(res => {
+      hmccDictDataType('device_type').then(res => {
         this.deviceTypeList = res.data.map(item => {
           return {
-            label: item.label,
-            value: item.key
+            dictLabel: item.dictLabel,
+            dictSort: item.dictSort
           }
         })
       }).catch(err => {

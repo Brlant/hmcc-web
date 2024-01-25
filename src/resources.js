@@ -824,3 +824,121 @@ function resource(path, http, actions) {
   };
   return Object.assign(obj, actions);
 }
+
+//接口合集
+const queryList = {
+  //查询列表
+  list: `/device/queryAllByCondition`,
+  //科室
+  department: `/department/queryList`,
+  //楼层
+  floor: `/tFloor/queryTreeSelect`,
+  //设备地址
+  addressPos: `/devicePosition/queryLastPoint`
+}
+
+//设备查询接口合集
+export const hosDevApi = {
+  //设备查询接口
+  queryDevice(data) {
+    return http({
+      url: queryList.list,
+      method: 'POST',
+      data
+    })
+  },
+  //科室
+  queryDepartment(data) {
+    return http({
+      url: queryList.department,
+      method: 'POST',
+      data
+    })
+  },
+  //楼层级联
+  queryFloor() {
+    return http({
+      url: queryList.floor,
+      method: 'POST',
+    })
+  },
+  //设备地址
+  queryAddressPos(params) {
+    return http({
+      url: queryList.addressPos,
+      method: 'get',
+      params
+    })
+  }
+}
+
+//告警管理接口合集
+export const waringApi = {
+  //获取科室列表接口查询
+  getDeptQueryList(data) {
+    return http.post('/department/queryList', data)
+  },
+  //列表
+  getWarningList(data) {
+    return http.post('/tagAlarm/queryTagAlarmList', data)
+  },
+}
+
+// 查询字典数据列表
+export function hmccDictDataList(query) {
+  return http({
+    url: '/system/dict/data/list',
+    method: 'get',
+    params: query
+  })
+}
+
+// 查询字典数据详细
+export function hmccDictDataDetail(id) {
+  return http({
+    url: `/system/dict/data/${id}`,
+    method: 'get',
+  })
+}
+
+// 根据字典类型查询字典数据信息
+export function hmccDictDataType(dictType) {
+  return http({
+    url: `/system/dict/data/type/${dictType}`,
+    method: 'get',
+  })
+}
+
+// 新增字典数据
+export function hmccDictDataAdd(data) {
+  return http({
+    url: '/system/dict/data',
+    method: 'post',
+    data: data
+  })
+}
+
+// 修改字典数据
+export function hmccDictDataEdit(data) {
+  return http({
+    url: '/system/dict/data',
+    method: 'put',
+    data: data
+  })
+}
+
+// 删除字典数据
+export function hmccDictDataDel(dictCodes) {
+  return http({
+    url: `/system/dict/data/${dictCodes}`,
+    method: 'delete',
+  })
+}
+
+// 获取字典选择框列表
+export function hmccDictTypeOptionselect() {
+  return http({
+    url: `/system/dict/type/optionselect`,
+    method: 'get',
+  })
+}

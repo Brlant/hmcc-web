@@ -1,14 +1,14 @@
 <template>
   <search-template :isShow="showSearch" :isShowAdvance="false" @isShow="isShow" @reset="reset" @search="search">
-    <template slot="title">标签告警查询</template>
+    <template slot="title">标签异常警告查询</template>
     <template slot="btn">
       <slot name="btn"></slot>
     </template>
     <template slot="content">
       <el-form class="advanced-query-form" onsubmit="return false">
         <el-row>
-          <el-col :span="7">
-            <oms-form-row :span="6" label="设备编号/名称/标签sn码">
+          <el-col :span="8">
+            <oms-form-row :span="10" label="设备编号/名称/标签sn码">
               <el-input
                 v-model="searchCondition.selectText"
                 placeholder="设备编号/名称/标签sn码"
@@ -16,11 +16,10 @@
               </el-input>
             </oms-form-row>
           </el-col>
-          <el-col :span="7">
-            <oms-form-row :span="6" label="楼层">
+          <el-col :span="8">
+            <oms-form-row :span="10" label="楼层">
               <el-cascader
                 v-model="searchCondition.floorId"
-                style="width: 100%"
                 placeholder="楼层"
                 :options="floorList"
                 :props="{ value: 'id', label: 'floorName', children: 'children',emitPath:false,  }"
@@ -29,22 +28,22 @@
               </el-cascader>
             </oms-form-row>
           </el-col>
-          <el-col :span="7">
-            <oms-form-row :span="6" label="设备类型">
+          <el-col :span="8">
+            <oms-form-row :span="10" label="设备类型">
               <el-select v-model="searchCondition.devType"  placeholder="设备类型" clearable>
                 <el-option
                   v-for="(item,index) in deviceTypeList"
                   :key="index"
-                  :label="item.label"
-                  :value="item.key"
+                  :label="item.dictLabel"
+                  :value="item.dictSort"
                 />
               </el-select>
             </oms-form-row>
           </el-col>
         </el-row>
         <el-row>
-          <el-col :span="7">
-            <oms-form-row :span="6" label="所属科室">
+          <el-col :span="8">
+            <oms-form-row :span="10" label="所属科室">
               <el-select  placeholder="所属科室" v-model="searchCondition.departmentId" clearable>
                 <el-option
                   v-for="(item,index) in deviceDeptList"
@@ -55,8 +54,8 @@
               </el-select>
             </oms-form-row>
           </el-col>
-          <el-col :span="7">
-            <oms-form-row :span="6" label="异常类型">
+          <el-col :span="8">
+            <oms-form-row :span="10" label="异常类型">
               <el-select  placeholder="异常类型" clearable v-model="searchCondition.status">
                 <el-option
                   v-for="(item,index) in deviceExceptionList"

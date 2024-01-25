@@ -342,36 +342,42 @@ export default [
       {
         'id': 'alarm-event-manager',
         'label': '告警事件',
-        'parentId': 'hmcc-system',
+        'parentId': 'alarm-center-manager',
         'sort': '1',
         'children': [
           {
             'id': 'alarm-event-scan',
             'label': '查看告警事件',
-            'parentId': 'hmcc-system'
+            'parentId': 'alarm-center-manager'
           },
           {
             'id': 'alarm-event-handle',
             'label': '处理告警事件',
-            'parentId': 'hmcc-system'
+            'parentId': 'alarm-center-manager'
           },
           {
             'id': 'alarm-event-export',
             'label': '导出告警事件',
-            'parentId': 'hmcc-system'
+            'parentId': 'alarm-center-manager'
           }
         ]
       },
       {
         'id': 'alarm-notice-record-manager',
         'label': '告警通知',
-        'parentId': 'hmcc-system',
-        'sort': '1',
+        'parentId': 'alarm-center-manager',
+        'sort': '2',
         'children': [{
           'id': 'alarm-notice-record-scan',
           'label': '查看告警通知',
-          'parentId': 'hmcc-system'
+          'parentId': 'alarm-notice-record-manager'
         }]
+      },{
+        'id': 'alarm-tag-manager',
+        'label': '标签异常告警',
+        'parentId': 'alarm-center-manager',
+        'sort': '3',
+        'children': []
       }
     ]
   },
