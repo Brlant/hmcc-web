@@ -374,7 +374,7 @@ export default [
         }]
       },{
         'id': 'alarm-tag-manager',
-        'label': '标签异常告警',
+        'label': '标签异常',
         'parentId': 'alarm-center-manager',
         'sort': '3',
         'children': []
