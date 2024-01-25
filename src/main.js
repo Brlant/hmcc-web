@@ -30,7 +30,12 @@ import VueAMap, {lazyAMapApiLoaderInstance} from 'vue-amap';
 // // 初始化视口宽度
 // initViewPort(router);
 
+// 下拉树
+import Treeselect from '@riophae/vue-treeselect'
+import '@riophae/vue-treeselect/dist/vue-treeselect.css'
+
 Vue.component('ECharts', ECharts);
+Vue.component('Treeselect', Treeselect)
 Vue.use(require('vue-moment'), {moment});
 Vue.use(tinyVue);
 Vue.use(Vuex);

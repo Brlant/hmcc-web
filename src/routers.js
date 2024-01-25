@@ -290,6 +290,40 @@ export const routes = [
           },
 
         ]
+      },
+      {
+        path: '/deviceposition',
+        component: () => import('./components/hospital/index.vue'),
+        meta: {moduleId: 'deviceposition', title: '设备定位管理', icon: 'didian', perm: 'device-position'},
+        children: [
+          {
+            path: '/deviceposition/position',
+            component: () => import('./components/hospital/equipment/position/index'),
+            meta: {moduleId: 'permission', title: '设备定位', perm: 'device-position-query'}
+          },
+          {
+            path: '/deviceposition/trajectory',
+            component: () => import('./components/hospital/equipment/trajectory/index'),
+            meta: {moduleId: 'permission', title: '轨迹查询', perm: 'device-position-trajectory'}
+          }
+        ]
+      },
+      {
+        path: '/basicinformation',
+        component: () => import('./components/hospital/index.vue'),
+        meta: {moduleId: 'basicinformation', title: '基础信息管理', icon: 'didian', perm: 'basic-information'},
+        children: [
+          {
+            path: '/basicinformation/structure',
+            component: () => import('./components/hospital/structure/index'),
+            meta: {moduleId: 'permission', title: '院内区域结构管理', perm: 'basic-information-structure'}
+          },
+          {
+            path: '/basicinformation/floormap',
+            component: () => import('./components/hospital/floormap/index'),
+            meta: {moduleId: 'permission', title: '地图管理', perm: 'basic-information-floormap'}
+          }
+        ]
       }
     ]
   }

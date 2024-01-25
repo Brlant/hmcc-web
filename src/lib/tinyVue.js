@@ -46,7 +46,7 @@ import Loading from 'element-ui/lib/loading';
 import Icon from 'element-ui/lib/icon';
 import Row from 'element-ui/lib/row';
 import Col from 'element-ui/lib/col';
-// import Upload from 'element-ui/lib/upload';
+import ElUpload from 'element-ui/lib/upload';
 import Progress from 'element-ui/lib/progress';
 import Spinner from 'element-ui/lib/spinner';
 import Message from 'element-ui/lib/message';
@@ -96,8 +96,8 @@ import {
   TwoColumn
 } from '@dtop/dtop-web-common';
 
-import upload from '../components/common/upload/upload.vue';
-import uploadRelation from '../components/common/upload/upload.relation.vue';
+import Upload from '../components/common/upload/upload.vue';
+import UploadRelation from '../components/common/upload/upload.relation.vue';
 import ElForm from '../components/common/form/src/form.vue';
 import perm from '../components/common/perm.vue';
 import DialogTemplate from '@/components/common/dialog-template';
@@ -165,8 +165,9 @@ const tinyVue = [
   ColorPicker,
   Transfer,
   CollapseTransition,
-  upload,
-  uploadRelation,
+  Upload,
+  ElUpload,
+  UploadRelation,
   ElForm,
   perm,
   refreshCycle,

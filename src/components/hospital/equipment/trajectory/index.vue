@@ -176,34 +176,7 @@
         this.map.edges = [];
         const nodes = new Set();
         const edges = new Set();
-        let prev;
         this.data[val]?.locationPointLocusList?.forEach(item => {
-          if (prev) {
-            let leid = `${prev.nowPoint}-${item.nowPoint}`;
-            let reid = `${item.nowPoint}-${prev.nowPoint}`;
-            if (!edges.has(leid) && !edges.has(reid)) {
-              edges.add(leid);
-              edges.add(reid);
-              this.map.edges.push({
-                source: `${prev.nowPoint}`,
-                target: `${item.nowPoint}`,
-                style: {
-                  stroke: '#d8001b',
-                  lineWidth: 4
-                }
-              })
-            }
-          }
-          // if (!nodes.has(item.beforePoint)) {
-          //   nodes.add(item.beforePoint);
-          //   this.map.points.push({
-          //     id: `${item.beforePoint}`,
-          //     x: item.beforePointX,
-          //     y: item.beforePointY,
-          //     type: 'solidpoint',
-          //     state: 'red'
-          //   });
-          // }
           if (!nodes.has(item.nowPoint)) {
             nodes.add(item.nowPoint);
             this.map.points.push({
@@ -214,7 +187,27 @@
               state: 'red'
             });
           }
-          prev = item;
+          if (!nodes.has(item.beforePoint)) {
+            nodes.add(item.beforePoint);
+            this.map.points.push({
+              id: `${item.beforePoint}`,
+              x: item.beforePointX,
+              y: item.beforePointY,
+              type: 'solidpoint',
+              state: 'red'
+            });
+          }
+          if (!edges.has(`${item.beforePoint}-${item.nowPoint}`)) {
+            edges.add(`${item.beforePoint}-${item.nowPoint}`);
+            this.map.edges.push({
+              source: `${item.beforePoint}`,
+              target: `${item.nowPoint}`,
+              style: {
+                stroke: '#d8001b',
+                lineWidth: 4
+              }
+            })
+          }
         });
       }
     }

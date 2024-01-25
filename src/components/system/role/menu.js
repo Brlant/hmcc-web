@@ -657,5 +657,41 @@ export default [
         label: '查看所有单位'
       }
     ]
+  },
+  {
+    id: 'device-position',
+    label: '设备定位管理',
+    children: [
+      {
+        id: 'device-position-query',
+        label: '设备定位',
+        children: [
+        ]
+      },
+      {
+        id: 'device-position-trajectory',
+        label: '轨迹查询',
+        children: [
+        ]
+      }
+    ]
+  },
+  {
+    id: 'basic-information',
+    label: '基础信息管理',
+    children: [
+      {
+        id: 'basic-information-structure',
+        label: '院内区域结构管理',
+        children: [
+        ]
+      },
+      {
+        id: 'basic-information-floormap',
+        label: '地图管理',
+        children: [
+        ]
+      }
+    ]
   }
 ];
