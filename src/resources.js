@@ -895,44 +895,27 @@ export function hmccDictDataList(query) {
 
 // 查询字典数据详细
 export function hmccDictDataDetail(id) {
-  return http({
-    url: `/system/dict/data/${id}`,
-    method: 'get',
-  })
+  return http.get(`/system/dict/data/${id}`)
 }
 
 // 根据字典类型查询字典数据信息
 export function hmccDictDataType(dictType) {
-  return http({
-    url: `/system/dict/data/type/${dictType}`,
-    method: 'get',
-  })
+  return http.get(`/system/dict/data/type/${dictType}`)
 }
 
 // 新增字典数据
 export function hmccDictDataAdd(data) {
-  return http({
-    url: '/system/dict/data',
-    method: 'post',
-    data: data
-  })
+  return http.post(`/system/dict/data`)
 }
 
 // 修改字典数据
 export function hmccDictDataEdit(data) {
-  return http({
-    url: '/system/dict/data',
-    method: 'put',
-    data: data
-  })
+  return http.put(`/system/dict/data`)
 }
 
 // 删除字典数据
 export function hmccDictDataDel(dictCodes) {
-  return http({
-    url: `/system/dict/data/${dictCodes}`,
-    method: 'delete',
-  })
+  return http.delete('/system/dict/data/${dictCodes}')
 }
 
 // 获取字典选择框列表
@@ -941,4 +924,32 @@ export function hmccDictTypeOptionselect() {
     url: `/system/dict/type/optionselect`,
     method: 'get',
   })
+}
+
+//首页接口合集
+export const indexApi = {
+  //获取科室列表接口查询
+  getDeptQueryList(params) {
+    return http({
+      url: `/department/queryList`,
+      method: 'POST',
+      data: params
+    })
+  },
+  //设备总数
+  getEquipmentTotal(params) {
+    return http({
+      url: `/device/queryCount`,
+      method: 'get',
+      params: params
+    })
+  },
+  //列表
+  getList(params) {
+    return http({
+      url: `/tagAlarm/queryDeviceByAlarm`,
+      method: 'POST',
+      data: params
+    })
+  },
 }

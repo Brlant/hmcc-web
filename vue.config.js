@@ -15,7 +15,7 @@ console.log('当前代理地址：', proxyTarget)
 module.exports = {
   devServer: {
     open: true,
-    port: '8017',
+    port: process.env.npm_config_port || '8017',
     https: false,
     hotOnly: false,
     disableHostCheck: true,
