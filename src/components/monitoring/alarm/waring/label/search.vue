@@ -35,8 +35,8 @@
                 <el-option
                   v-for="(item,index) in deviceTypeList"
                   :key="index"
-                  :label="item.dictLabel"
-                  :value="item.dictSort"
+                  :label="item.label"
+                  :value="item.key"
                 />
               </el-select>
             </oms-form-row>

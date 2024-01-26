@@ -10,7 +10,7 @@
         <el-table-column label="设备类型" prop="devType" align="center">
           <template v-slot="{row}">
             <div v-for="(item,index) in deviceTypeList" :key="index">
-              <span v-if="Number(row.devType)===item.dictSort">{{ item.dictLabel }}</span>
+              <span v-if="Number(row.devType)===item.value">{{ item.label }}</span>
             </div>
           </template>
         </el-table-column>
@@ -48,9 +48,10 @@
 
 <script>
 
-import {hmccDictDataType, waringApi} from '@/resources'
+import {waringApi} from '@/resources'
 import CommonMixin from '@/mixins/commonMixin';
 import SearchPart from './search';
+import {sinopharmDictDataType} from '@/api/system/dict/data'
 
 export default {
   name: 'WaringLabel',
@@ -105,11 +106,11 @@ export default {
     },
     //异常类型
     getDeviceStatusList() {
-      hmccDictDataType('alarm_status').then(res => {
+      sinopharmDictDataType('alarm_status').then(res => {
         this.deviceExceptionList = res.data.map(item => {
           return {
-            label: item.dictLabel,
-            value: item.dictValue
+            label: item.label,
+            value: item.key
           }
         })
       }).catch(err => {
@@ -118,11 +119,11 @@ export default {
     },
     //设备类型
     getDeviceTypeList() {
-      hmccDictDataType('device_type').then(res => {
+      sinopharmDictDataType('device_type').then(res => {
         this.deviceTypeList = res.data.map(item => {
           return {
-            dictLabel: item.dictLabel,
-            dictSort: item.dictSort
+            label: item.label,
+            value: item.key
           }
         })
       }).catch(err => {

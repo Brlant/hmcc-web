@@ -285,7 +285,7 @@
               <el-table-column label="设备类型" align="center" prop="devType">
                 <template v-slot="{row}">
                   <div v-for="(item,index) in deviceTypeList" :key="index">
-                    <span v-if="Number(row.devType)===item.dictSort">{{ item.dictLabel }}</span>
+                    <span v-if="Number(row.devType)===item.dictSort">{{ item.label }}</span>
                   </div>
                 </template>
               </el-table-column>
@@ -296,7 +296,7 @@
                   <div v-for="(item,index) in alarmStatusList" :key="index">
               <span v-if="item.dictSort === row.alarmStatus"
                     :class="item.dictSort === row.alarmStatus ? 'sheBeiShuColor' : ''">
-                {{ item.dictLabel }}
+                {{ item.label }}
               </span>
                   </div>
                 </template>
@@ -578,7 +578,7 @@ export default {
       hmccDictDataType('device_type').then(res => {
         this.deviceTypeList = res.data.map(item => {
           return {
-            dictLabel: item.dictLabel,
+            dictLabel: item.label,
             dictSort: item.dictSort
           }
         })
@@ -591,7 +591,7 @@ export default {
       hmccDictDataType('alarm_status').then(res => {
         this.alarmStatusList = res.data.map(item => {
           return {
-            dictLabel: item.dictLabel,
+            dictLabel: item.label,
             dictSort: item.dictSort
           }
         })

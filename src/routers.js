@@ -123,12 +123,15 @@ export const routes = [
             }
           },
           {
-            path: '/dev/cool',
-            component: () => import('./components/dev/cool/index.vue'),
+            path: '/dev/hos',
+            component: () => import('./components/dev/hos/index.vue'),
             meta: {
-              moduleId: 'dev', title: '冷链设备管理', perm: 'freezer-dev-scan',
+              moduleId: 'dev', title: '院内设备管理', perm: 'hos-dev-manager',
               type: 1,
-              permPage: {add: 'freezer-dev-add', edit: 'freezer-dev-edit'}
+              permPage: {
+                add: 'freezer-dev-add',
+                edit: 'freezer-dev-edit'
+              }
             }
           },
           {

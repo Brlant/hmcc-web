@@ -189,26 +189,41 @@ export default [
         ]
       },
       {
-        'id': 'freezer-dev-manager',
-        'label': '冷链设备管理',
-        'parentId': 'hmcc-system',
+        'id': 'hos-dev-manager',
+        'label': '院内设备管理',
+        'parentId': 'dev-manager',
         'sort': '2',
         'children': [
           {
-            'id': 'freezer-dev-scan',
-            'label': '查看冷链设备管理',
-            'parentId': 'hmcc-system'
+            'id': 'freezer-dev-manager',
+            'label': '冷链设备管理',
+            'parentId': 'hos-dev-manager',
+            'sort': '2',
+            'children': [
+              {
+                'id': 'freezer-dev-scan',
+                'label': '查看冷链设备管理',
+                'parentId': 'hmcc-system'
+              },
+              {
+                'id': 'freezer-dev-add',
+                'label': '新增冷链设备',
+                'parentId': 'hmcc-system'
+              },
+              {
+                'id': 'freezer-dev-edit',
+                'label': '编辑冷链设备',
+                'parentId': 'hmcc-system'
+              }
+            ]
           },
           {
-            'id': 'freezer-dev-add',
-            'label': '新增冷链设备',
-            'parentId': 'hmcc-system'
+            'id': 'healths-dev-manager',
+            'label': '医疗设备管理',
+            'parentId': 'hos-dev-manager',
+            'sort': '2',
+            'children': []
           },
-          {
-            'id': 'freezer-dev-edit',
-            'label': '编辑冷链设备',
-            'parentId': 'hmcc-system'
-          }
         ]
       },
       {
@@ -372,7 +387,7 @@ export default [
           'label': '查看告警通知',
           'parentId': 'alarm-notice-record-manager'
         }]
-      },{
+      }, {
         'id': 'alarm-tag-manager',
         'label': '标签异常',
         'parentId': 'alarm-center-manager',
@@ -665,14 +680,12 @@ export default [
       {
         id: 'device-position-query',
         label: '设备定位',
-        children: [
-        ]
+        children: []
       },
       {
         id: 'device-position-trajectory',
         label: '轨迹查询',
-        children: [
-        ]
+        children: []
       }
     ]
   },
@@ -683,14 +696,12 @@ export default [
       {
         id: 'basic-information-structure',
         label: '院内区域结构管理',
-        children: [
-        ]
+        children: []
       },
       {
         id: 'basic-information-floormap',
         label: '地图管理',
-        children: [
-        ]
+        children: []
       }
     ]
   }

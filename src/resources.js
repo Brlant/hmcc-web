@@ -494,10 +494,10 @@ export const Access = resource('/oms/access', http, {
     return http.post('/erp-access', obj);
   },
   saveSystem: (obj) => {
-    return http.post(`/erp-access/system?systemObjectId=${obj.systemObjectId}`, obj);
+    return http.post(`/erp-access?systemObjectId=${obj.systemObjectId}`, obj);
   },
   queryStateNum: (params) => {
-    return http.get('/erp-access/system/platform/count', {params});
+    return http.get('/erp-access/platform/count', {params});
   },
   queryErpStateNum: (params) => {
     return http.get('/erp-access/platform/count', {params});
@@ -887,7 +887,7 @@ export const waringApi = {
 // 查询字典数据列表
 export function hmccDictDataList(query) {
   return http({
-    url: '/system/dict/data/list',
+    url: '/dict/data/list',
     method: 'get',
     params: query
   })
@@ -895,33 +895,33 @@ export function hmccDictDataList(query) {
 
 // 查询字典数据详细
 export function hmccDictDataDetail(id) {
-  return http.get(`/system/dict/data/${id}`)
+  return http.get(`/dict/data/${id}`)
 }
 
 // 根据字典类型查询字典数据信息
 export function hmccDictDataType(dictType) {
-  return http.get(`/system/dict/data/type/${dictType}`)
+  return http.get(`/dict/data/type/${dictType}`)
 }
 
 // 新增字典数据
 export function hmccDictDataAdd(data) {
-  return http.post(`/system/dict/data`)
+  return http.post(`/dict/data`)
 }
 
 // 修改字典数据
 export function hmccDictDataEdit(data) {
-  return http.put(`/system/dict/data`)
+  return http.put(`/dict/data`)
 }
 
 // 删除字典数据
 export function hmccDictDataDel(dictCodes) {
-  return http.delete('/system/dict/data/${dictCodes}')
+  return http.delete('/dict/data/${dictCodes}')
 }
 
 // 获取字典选择框列表
 export function hmccDictTypeOptionselect() {
   return http({
-    url: `/system/dict/type/optionselect`,
+    url: `/dict/type/optionselect`,
     method: 'get',
   })
 }
