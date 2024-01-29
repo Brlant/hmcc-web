@@ -317,6 +317,11 @@ export const routes = [
         meta: {moduleId: 'basicinformation', title: '基础信息管理', icon: 'didian', perm: 'basic-information'},
         children: [
           {
+            path: '/basicinformation/devicetemp',
+            component: () => import('./components/hospital/devicetemp/index'),
+            meta: {moduleId: 'permission', title: '设备类型模板管理', perm: 'basic-information-devicetemp'}
+          },
+          {
             path: '/basicinformation/structure',
             component: () => import('./components/hospital/structure/index'),
             meta: {moduleId: 'permission', title: '院内区域结构管理', perm: 'basic-information-structure'}

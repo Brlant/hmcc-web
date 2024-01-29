@@ -28,11 +28,11 @@
     color: #00BFFF
   }
 
-  .el-button {
+  .el-button:not(.is-circle) {
     padding: 10px 15px;
   }
 
-  .el-button--mini, .el-button--mini.is-round {
+  .el-button--mini:not(.is-circle), .el-button--mini.is-round:not(.is-circle) {
     padding: 7px 15px;
   }
 

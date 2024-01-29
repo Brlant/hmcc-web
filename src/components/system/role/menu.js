@@ -694,6 +694,12 @@ export default [
     label: '基础信息管理',
     children: [
       {
+        id: 'basic-information-devicetemp',
+        label: '设备类型模板管理',
+        children: [
+        ]
+      },
+      {
         id: 'basic-information-structure',
         label: '院内区域结构管理',
         children: []

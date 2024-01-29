@@ -66,6 +66,7 @@ import Transfer from 'element-ui/lib/transfer';
 import locale from 'element-ui/lib/locale';
 import CollapseTransition from 'element-ui/lib/transitions/collapse-transition';
 import Divider from 'element-ui/lib/divider';
+import ElForm from 'element-ui/lib/form';
 import {
   compressedImg,
   CuPagination,
@@ -98,7 +99,6 @@ import {
 
 import Upload from '../components/common/upload/upload.vue';
 import UploadRelation from '../components/common/upload/upload.relation.vue';
-import ElForm from '../components/common/form/src/form.vue';
 import perm from '../components/common/perm.vue';
 import DialogTemplate from '@/components/common/dialog-template';
 import SearchTemplate from '@/components/common/search-template';
