@@ -420,6 +420,7 @@
     border-radius: 5px;
     background-color: #ffffff00;
     position: relative;
+    overflow: hidden;
 
     ::v-deep {
       canvas {
