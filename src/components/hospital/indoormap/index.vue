@@ -317,7 +317,7 @@
         const nodeId = model.id;
         if (this.marking) {
           if (this.nodeId !== nodeId && !nodeId.startsWith('temp')) {
-            this.relationPoints = this.relationPoints.concat(item);
+            this.relationPoints = this.relationPoints.concat(`${model.form.id}`);
           }
           return;
         }
@@ -370,10 +370,10 @@
         try {
           let res = this.form.id ? await modifyFloorPlatPoint({
             ...this.form,
-            contactPoints: this.relationPoints.map(item => item.get('model').form?.id)
+            contactPoints: [ ...this.relationPoints ]
           }) : await createFloorPlatPoint({
             ...this.form,
-            contactPoints: this.relationPoints.map(item => item.get('model').form?.id)
+            contactPoints: [ ...this.relationPoints ]
           });
           if (res.code !== 200) {
             return this.$message.error(res.msg || '标点保存失败');
