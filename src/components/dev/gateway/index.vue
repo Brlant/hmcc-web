@@ -80,6 +80,7 @@
   import {gateway} from '@/resources';
 
   export default {
+    name: 'Gateway',
     components: {
       SearchPart
     },

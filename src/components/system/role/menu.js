@@ -227,36 +227,51 @@ export default [
         ]
       },
       {
-        'id': 'gateway-dev-manager',
-        'label': '网关管理',
+        'id': 'gateway-basestation-manager',
+        'label': '网关基站管理',
         'parentId': 'hmcc-system',
         'sort': '2',
         'children': [
           {
-            'id': 'gateway-dev-scan',
-            'label': '查看网关管理',
-            'parentId': 'hmcc-system'
+            'id': 'gateway-dev-manager',
+            'label': '网关管理',
+            'parentId': 'gateway-basestation-manager',
+            'sort': '2',
+            'children': [
+              {
+                'id': 'gateway-dev-scan',
+                'label': '查看网关管理',
+                'parentId': 'gateway-dev-manager'
+              },
+              {
+                'id': 'gateway-dev-add',
+                'label': '新增网关',
+                'parentId': 'gateway-dev-manager'
+              },
+              {
+                'id': 'gateway-dev-edit',
+                'label': '编辑网关',
+                'parentId': 'gateway-dev-manager'
+              },
+              {
+                'id': 'gateway-dev-active',
+                'label': '启用网关',
+                'parentId': 'gateway-dev-manager'
+              },
+              {
+                'id': 'gateway-dev-disable',
+                'label': '停用网关',
+                'parentId': 'gateway-dev-manager'
+              }
+            ]
           },
           {
-            'id': 'gateway-dev-add',
-            'label': '新增网关',
-            'parentId': 'hmcc-system'
+            'id': 'basestation-manager',
+            'label': '基站管理',
+            'parentId': 'gateway-basestation-manager',
+            'sort': '2',
+            'children': []
           },
-          {
-            'id': 'gateway-dev-edit',
-            'label': '编辑网关',
-            'parentId': 'hmcc-system'
-          },
-          {
-            'id': 'gateway-dev-active',
-            'label': '启用网关',
-            'parentId': 'hmcc-system'
-          },
-          {
-            'id': 'gateway-dev-disable',
-            'label': '停用网关',
-            'parentId': 'hmcc-system'
-          }
         ]
       }
     ]

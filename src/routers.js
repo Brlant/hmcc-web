@@ -135,10 +135,10 @@ export const routes = [
             }
           },
           {
-            path: '/dev/gateway',
-            component: () => import('./components/dev/gateway/index.vue'),
+            path: '/dev/gateway-base',
+            component: () => import('./components/dev/gateway-base/index.vue'),
             meta: {
-              moduleId: 'dev', title: '网关管理', perm: 'gateway-dev-scan',
+              moduleId: 'dev', title: '网关基站管理', perm: 'gateway-basestation-manager',
               type: 1,
               permPage: {
                 add: 'gateway-dev-add',
