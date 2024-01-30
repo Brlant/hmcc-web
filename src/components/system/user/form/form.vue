@@ -17,6 +17,11 @@
       <el-form-item label="Email">
         <oms-input type="text" v-model="form.email" placeholder="请输入邮箱"></oms-input>
       </el-form-item>
+      <el-form-item label="所属科室">
+        <el-select v-model="form.departmentId" placeholder="请选择所属科室" clearable  class="contact-check">
+          <el-option v-for="(item,index) in departmentList" :key="index" :value="item.departmentId" :label="item.departmentName"/>
+        </el-select>
+      </el-form-item>
       <el-form-item label="用户角色">
         <el-select placeholder="请选择用户角色" v-model="form.list" multiple filterable clearable>
           <el-option :label="item.title" :value="item.id" :key="item.id" v-for="item in roleSelect"></el-option>
@@ -31,7 +36,7 @@
 </template>
 
 <script>
-  import {OrgUser, User} from '../../../../resources';
+import {indexApi, OrgUser, User} from '../../../../resources';
 
   export default {
     name: 'editForm',
@@ -97,6 +102,7 @@
           name: '',
           phone: '',
           email: '',
+          departmentId:'',//科室id
           list: []
         },
         rules: {
@@ -119,6 +125,7 @@
           ]
         },
         roleSelect: [],
+        departmentList:[],//科室列表
         doing: false
       };
     },
@@ -129,6 +136,8 @@
     },
     mounted() {
       this.getRoleSelect();
+      //科室列表
+      this.getDevicesList()
     },
     watch: {
       formItem: function (val) {
@@ -155,6 +164,18 @@
       }
     },
     methods: {
+      /* 科室列表 */
+      getDevicesList() {
+        indexApi.getDeptQueryList({}).then(res => {
+          this.departmentList = res.data.map(item => {
+            return {
+              departmentName: item.departmentName,
+              departmentPosition: item.departmentPosition,
+              departmentId: item.id
+            }
+          })
+        })
+      },
       getRoleSelect: function () {
         let orgId = this.user.userCompanyAddress;
         if (!orgId) {
