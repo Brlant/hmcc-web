@@ -134,7 +134,6 @@ export const routes = [
               permPage: {add: 'sensor-add', edit: 'sensor-edit', start: 'sensor-active', stop: 'sensor-disable'}
             }
           },
-
           {
             path: '/dev/gateway-base',
             component: () => import('./components/dev/gateway-base/index.vue'),
@@ -146,6 +145,17 @@ export const routes = [
                 edit: 'gateway-dev-edit',
                 start: 'gateway-dev-active',
                 stop: 'gateway-dev-disable'
+              }
+            }
+          },
+          {
+            path: '/dev/check/plan',
+            component: () => import('./components/check/plan/index.vue'),
+            meta: {
+              moduleId: 'alarm', title: '设备巡检', perm: 'patrol-project-scan',
+              permPage: {
+                add: 'patrol-project-add', edit: 'patrol-project-edit',
+                delete: 'patrol-project-delete', devCheck: 'patrol-record-add'
               }
             }
           }
@@ -208,24 +218,6 @@ export const routes = [
             component: () => import('./components/monitoring/alarm/waring/label/index.vue'),
             meta: {moduleId: 'alarm', title: '标签异常', perm: 'alarm-tag-manager'}
           },
-        ]
-      },
-      {
-        path: '/dev/check',
-        component: () => import('./components/common/parent-route'),
-        meta: {moduleId: 'alarm', title: '设备巡检', icon: 'verify', perm: 'patrol-project-manager'},
-        children: [
-          {
-            path: '/dev/check/plan',
-            component: () => import('./components/check/plan/index.vue'),
-            meta: {
-              moduleId: 'alarm', title: '巡检计划', perm: 'patrol-project-scan',
-              permPage: {
-                add: 'patrol-project-add', edit: 'patrol-project-edit',
-                delete: 'patrol-project-delete', devCheck: 'patrol-record-add'
-              }
-            }
-          }
         ]
       },
       {
