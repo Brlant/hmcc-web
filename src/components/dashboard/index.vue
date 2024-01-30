@@ -590,7 +590,7 @@ export default {
     /* 定位 */
     devicesPosition(row) {
       this.$router.push({
-        name: 'position',
+        path: 'deviceposition/position',
         params: {...row}
       });
       // queryApi.queryAddressPos({deviceId:row.id}).then(res=>{
