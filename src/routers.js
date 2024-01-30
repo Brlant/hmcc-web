@@ -8,16 +8,207 @@ export const routes = [
     path: '/',
     component: () => import('./components/layout/index.vue'),
     children: [
+      // 首页
       {
         path: '/dashboard',
         component: () => import('./components/dashboard/index.vue'),
         meta: {moduleId: 'home', title: '首页', icon: 'home', perm: 'hmcc-index-scan'},
         children: []
       },
+      // 业务单位管理
+      {
+        path: '/org',
+        redirect: '/org/info',
+        component: () => import('./components/common/parent-route.vue'),
+        meta: {moduleId: 'org', title: '业务单位管理', icon: 'base', perm: 'org-manager'},
+        children: [
+          {
+            path: '/org/info',
+            component: () => import('./components/org/info/list.vue'),
+            meta: {moduleId: 'org', title: '基础信息管理', perm: 'org-base-manager-query'},
+            children: []
+          },
+          {
+            path: '/org/licences',
+            component: () => import('./components/org/licences/list.vue'),
+            meta: {moduleId: 'org', title: '单位证照管理', perm: 'org-licences-manager-query'},
+            children: []
+          },
+          {
+            path: '/org/relation',
+            component: () => import('./components/org/relation/list.vue'),
+            meta: {moduleId: 'sub', title: '单位关系管理', icon: 'org1', perm: 'org-relation-manager-query'},
+            children: []
+          },
+          // {
+          //   path: '/org/address',
+          //   component: () => import('./components/org/address/index.vue'),
+          //   meta: {moduleId: 'org', title: '仓库地址管理', perm: 'address-manager-query'},
+          //   children: []
+          // }
+        ]
+      },
+      // 设备管理
+      {
+        path: '/dev',
+        component: () => import('./components/common/parent-route'),
+        meta: {moduleId: 'dev', title: '设备管理', icon: 'dashboard', perm: 'dev-manager'},
+        children: [
+          {
+            path: '/dev/inhospital',
+            component: () => import('./components/dev/InHospitalEquipmentManagement/index.vue'),
+            meta: {
+              moduleId: 'dev', title: '院内设备管理', perm: 'in-hospital-dev-manager',
+              type: 1,
+              permPage: {
+                add: 'freezer-dev-add',
+                edit: 'freezer-dev-edit'
+              }
+            }
+          },
+          {
+            path: '/dev/iot',
+            component: () => import('./components/dev/IotTagManagement/index.vue'),
+            meta: {
+              moduleId: 'dev', title: '物联网标签管理', perm: 'iot-tag-manager',
+              type: 1,
+              permPage: {add: 'sensor-add', edit: 'sensor-edit', start: 'sensor-active', stop: 'sensor-disable'}
+            }
+          },
+          {
+            path: '/dev/gateway-base',
+            component: () => import('./components/dev/gateway-base/index.vue'),
+            meta: {
+              moduleId: 'dev', title: '网关基站管理', perm: 'gateway-basestation-manager',
+              type: 1,
+              permPage: {
+                add: 'gateway-dev-add',
+                edit: 'gateway-dev-edit',
+                start: 'gateway-dev-active',
+                stop: 'gateway-dev-disable'
+              }
+            }
+          },
+          {
+            path: '/dev/check/plan',
+            component: () => import('./components/check/plan/index.vue'),
+            meta: {
+              moduleId: 'alarm', title: '设备巡检', perm: 'patrol-project-scan',
+              permPage: {
+                add: 'patrol-project-add', edit: 'patrol-project-edit',
+                delete: 'patrol-project-delete', devCheck: 'patrol-record-add'
+              }
+            }
+          }
+        ]
+      },
+      // 基础信息管理
+      {
+        path: '/basicinformation',
+        component: () => import('./components/hospital/index.vue'),
+        meta: {moduleId: 'basicinformation', title: '基础信息管理', icon: 'didian', perm: 'basic-information'},
+        children: [
+          {
+            path: '/basicinformation/devicetemp',
+            component: () => import('./components/hospital/devicetemp/index'),
+            meta: {moduleId: 'permission', title: '设备类型模板管理', perm: 'basic-information-devicetemp'}
+          },
+          {
+            path: '/basicinformation/structure',
+            component: () => import('./components/hospital/structure/index'),
+            meta: {moduleId: 'permission', title: '院内区域结构管理', perm: 'basic-information-structure'}
+          },
+          {
+            path: '/basicinformation/floormap',
+            component: () => import('./components/hospital/floormap/index'),
+            meta: {moduleId: 'permission', title: '地图管理', perm: 'basic-information-floormap'}
+          }
+        ]
+      },
+      // 告警管理
+      {
+        path: '/configuration',
+        component: () => import('./components/common/parent-route.vue'),
+        meta: {moduleId: 'configuration', title: '告警管理', icon: 'peizhi', perm: 'config-center-manager'},
+        children: [
+          {
+            path: '/configuration/alarm',
+            component: () => import('./components/configuration/alarm/index.vue'),
+            meta: {
+              moduleId: 'configuration', title: '告警规则', perm: 'alarm-rule-scan',
+              permPage: {add: 'alarm-rule-add', edit: 'alarm-rule-edit', delete: 'alarm-rule-delete'}
+            }
+          },
+          {
+            path: '/configuration/notification',
+            component: () => import('./components/configuration/notification/index.vue'),
+            meta: {
+              moduleId: 'configuration', title: '告警通知组', perm: 'alarm-notice-group-scan',
+              permPage: {
+                add: 'alarm-notice-group-add', edit: 'alarm-notice-group-edit',
+                delete: 'alarm-notice-group-delete'
+              }
+            }
+          },
+          {
+            path: '/configuration/test',
+            component: () => import('./components/configuration/alarm-test/index.vue'),
+            meta: {
+              moduleId: 'configuration', title: '告警测试', perm: 'alarm-test-log-scan',
+              permPage: {add: 'alarm-test-log-add', confirm: 'alarm-test-log-confirm'}
+            }
+          }
+        ]
+      },
+      // 告警中心
+      {
+        path: '/alarm',
+        component: () => import('./components/common/parent-route'),
+        meta: {moduleId: 'alarm', title: '告警中心', icon: 'alarm', perm: 'alarm-center-manager'},
+        children: [
+          {
+            path: '/alarm/record',
+            component: () => import('./components/monitoring/alarm/event/index.vue'),
+            meta: {
+              moduleId: 'alarm', title: '告警事件', perm: 'alarm-event-scan',
+              permPage: {add: 'hmcc-system', handle: 'alarm-event-handle', export: 'alarm-event-export'}
+            }
+          },
+          {
+            path: '/alarm/send',
+            component: () => import('./components/monitoring/alarm/notify/index.vue'),
+            meta: {moduleId: 'alarm', title: '告警通知', perm: 'alarm-notice-record-scan'}
+          },
+          {
+            path: '/alarm/waring/label',
+            component: () => import('./components/monitoring/alarm/waring/label/index.vue'),
+            meta: {moduleId: 'alarm', title: '标签告警', perm: 'alarm-tag-manager'}
+          },
+        ]
+      },
+      // 设备定位管理
+      {
+        path: '/deviceposition',
+        component: () => import('./components/hospital/index.vue'),
+        meta: {moduleId: 'deviceposition', title: '设备定位管理', icon: 'didian', perm: 'device-position'},
+        children: [
+          {
+            path: '/deviceposition/position',
+            component: () => import('./components/hospital/equipment/position/index'),
+            meta: {moduleId: 'permission', title: '设备定位', perm: 'device-position-query'}
+          },
+          {
+            path: '/deviceposition/trajectory',
+            component: () => import('./components/hospital/equipment/trajectory/index'),
+            meta: {moduleId: 'permission', title: '轨迹查询', perm: 'device-position-trajectory'}
+          }
+        ]
+      },
+      // 无线冷链管理系统
       {
         path: '/monitoring',
         component: () => import('./components/common/parent-route.vue'),
-        meta: {moduleId: 'monitoring', title: '监控中心', icon: 'xitongjiankong', perm: 'monitoring-center-manager'},
+        meta: {moduleId: 'monitoring', title: '无线冷链管理系统', icon: 'xitongjiankong', perm: 'monitoring-center-manager'},
         children: [
           {
             path: '/monitoring/equipment',
@@ -108,150 +299,7 @@ export const routes = [
           }
         ]
       },
-      {
-        path: '/dev',
-        component: () => import('./components/common/parent-route'),
-        meta: {moduleId: 'dev', title: '设备管理', icon: 'dashboard', perm: 'dev-manager'},
-        children: [
-          {
-            path: '/dev/inhospital',
-            component: () => import('./components/dev/InHospitalEquipmentManagement/index.vue'),
-            meta: {
-              moduleId: 'dev', title: '院内设备管理', perm: 'in-hospital-dev-manager',
-              type: 1,
-              permPage: {
-                add: 'freezer-dev-add',
-                edit: 'freezer-dev-edit'
-              }
-            }
-          },
-          {
-            path: '/dev/iot',
-            component: () => import('./components/dev/IotTagManagement/index.vue'),
-            meta: {
-              moduleId: 'dev', title: '物联网标签管理', perm: 'iot-tag-manager',
-              type: 1,
-              permPage: {add: 'sensor-add', edit: 'sensor-edit', start: 'sensor-active', stop: 'sensor-disable'}
-            }
-          },
-          {
-            path: '/dev/gateway-base',
-            component: () => import('./components/dev/gateway-base/index.vue'),
-            meta: {
-              moduleId: 'dev', title: '网关基站管理', perm: 'gateway-basestation-manager',
-              type: 1,
-              permPage: {
-                add: 'gateway-dev-add',
-                edit: 'gateway-dev-edit',
-                start: 'gateway-dev-active',
-                stop: 'gateway-dev-disable'
-              }
-            }
-          },
-          {
-            path: '/dev/check/plan',
-            component: () => import('./components/check/plan/index.vue'),
-            meta: {
-              moduleId: 'alarm', title: '设备巡检', perm: 'patrol-project-scan',
-              permPage: {
-                add: 'patrol-project-add', edit: 'patrol-project-edit',
-                delete: 'patrol-project-delete', devCheck: 'patrol-record-add'
-              }
-            }
-          }
-        ]
-      },
-      {
-        path: '/configuration',
-        component: () => import('./components/common/parent-route.vue'),
-        meta: {moduleId: 'configuration', title: '配置中心', icon: 'peizhi', perm: 'config-center-manager'},
-        children: [
-          {
-            path: '/configuration/alarm',
-            component: () => import('./components/configuration/alarm/index.vue'),
-            meta: {
-              moduleId: 'configuration', title: '告警规则', perm: 'alarm-rule-scan',
-              permPage: {add: 'alarm-rule-add', edit: 'alarm-rule-edit', delete: 'alarm-rule-delete'}
-            }
-          },
-          {
-            path: '/configuration/notification',
-            component: () => import('./components/configuration/notification/index.vue'),
-            meta: {
-              moduleId: 'configuration', title: '告警通知组', perm: 'alarm-notice-group-scan',
-              permPage: {
-                add: 'alarm-notice-group-add', edit: 'alarm-notice-group-edit',
-                delete: 'alarm-notice-group-delete'
-              }
-            }
-          },
-          {
-            path: '/configuration/test',
-            component: () => import('./components/configuration/alarm-test/index.vue'),
-            meta: {
-              moduleId: 'configuration', title: '告警测试', perm: 'alarm-test-log-scan',
-              permPage: {add: 'alarm-test-log-add', confirm: 'alarm-test-log-confirm'}
-            }
-          }
-        ]
-      },
-      {
-        path: '/alarm',
-        component: () => import('./components/common/parent-route'),
-        meta: {moduleId: 'alarm', title: '告警中心', icon: 'alarm', perm: 'alarm-center-manager'},
-        children: [
-          {
-            path: '/alarm/record',
-            component: () => import('./components/monitoring/alarm/event/index.vue'),
-            meta: {
-              moduleId: 'alarm', title: '告警事件', perm: 'alarm-event-scan',
-              permPage: {add: 'hmcc-system', handle: 'alarm-event-handle', export: 'alarm-event-export'}
-            }
-          },
-          {
-            path: '/alarm/send',
-            component: () => import('./components/monitoring/alarm/notify/index.vue'),
-            meta: {moduleId: 'alarm', title: '告警通知', perm: 'alarm-notice-record-scan'}
-          },
-          {
-            path: '/alarm/waring/label',
-            component: () => import('./components/monitoring/alarm/waring/label/index.vue'),
-            meta: {moduleId: 'alarm', title: '标签告警', perm: 'alarm-tag-manager'}
-          },
-        ]
-      },
-      {
-        path: '/org',
-        redirect: '/org/info',
-        component: () => import('./components/common/parent-route.vue'),
-        meta: {moduleId: 'org', title: '单位管理', icon: 'base', perm: 'org-manager'},
-        children: [
-          {
-            path: '/org/info',
-            component: () => import('./components/org/info/list.vue'),
-            meta: {moduleId: 'org', title: '基础信息管理', perm: 'org-base-manager-query'},
-            children: []
-          },
-          {
-            path: '/org/licences',
-            component: () => import('./components/org/licences/list.vue'),
-            meta: {moduleId: 'org', title: '单位证照管理', perm: 'org-licences-manager-query'},
-            children: []
-          },
-          {
-            path: '/org/relation',
-            component: () => import('./components/org/relation/list.vue'),
-            meta: {moduleId: 'sub', title: '单位关系管理', icon: 'org1', perm: 'org-relation-manager-query'},
-            children: []
-          },
-          // {
-          //   path: '/org/address',
-          //   component: () => import('./components/org/address/index.vue'),
-          //   meta: {moduleId: 'org', title: '仓库地址管理', perm: 'address-manager-query'},
-          //   children: []
-          // }
-        ]
-      },
+      // 系统设置
       {
         path: '/permission',
         component: () => import('./components/system/index.vue'),
@@ -287,45 +335,6 @@ export const routes = [
 
         ]
       },
-      {
-        path: '/deviceposition',
-        component: () => import('./components/hospital/index.vue'),
-        meta: {moduleId: 'deviceposition', title: '设备定位管理', icon: 'didian', perm: 'device-position'},
-        children: [
-          {
-            path: '/deviceposition/position',
-            component: () => import('./components/hospital/equipment/position/index'),
-            meta: {moduleId: 'permission', title: '设备定位', perm: 'device-position-query'}
-          },
-          {
-            path: '/deviceposition/trajectory',
-            component: () => import('./components/hospital/equipment/trajectory/index'),
-            meta: {moduleId: 'permission', title: '轨迹查询', perm: 'device-position-trajectory'}
-          }
-        ]
-      },
-      {
-        path: '/basicinformation',
-        component: () => import('./components/hospital/index.vue'),
-        meta: {moduleId: 'basicinformation', title: '基础信息管理', icon: 'didian', perm: 'basic-information'},
-        children: [
-          {
-            path: '/basicinformation/devicetemp',
-            component: () => import('./components/hospital/devicetemp/index'),
-            meta: {moduleId: 'permission', title: '设备类型模板管理', perm: 'basic-information-devicetemp'}
-          },
-          {
-            path: '/basicinformation/structure',
-            component: () => import('./components/hospital/structure/index'),
-            meta: {moduleId: 'permission', title: '院内区域结构管理', perm: 'basic-information-structure'}
-          },
-          {
-            path: '/basicinformation/floormap',
-            component: () => import('./components/hospital/floormap/index'),
-            meta: {moduleId: 'permission', title: '地图管理', perm: 'basic-information-floormap'}
-          }
-        ]
-      }
     ]
   }
 ];

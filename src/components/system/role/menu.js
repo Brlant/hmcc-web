@@ -493,7 +493,7 @@ export default [
   },
   {
     id: 'org-manager',
-    label: '单位管理',
+    label: '业务单位管理',
     children: [
       {
         id: 'org-base-manager',

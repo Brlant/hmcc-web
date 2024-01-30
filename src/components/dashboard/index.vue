@@ -222,7 +222,7 @@
                  style="color: rgb(216, 0, 27)">
               {{ totalNumberDevices.alarmCount }}
             </div>
-            <div>标签告警</div>
+            <div>标签异常</div>
           </el-col>
         </el-row>
       </div>
@@ -276,7 +276,7 @@
 
     <div class="warning-list-part bar-part">
       <el-tabs v-model="activeName" @tab-click="handleClick">
-        <el-tab-pane label="标签告警" name="0">
+        <el-tab-pane label="定位标签告警" name="0">
           <div class="deviceStatus">
             <el-table v-loading="loading" :data="abnormalList">
               <el-table-column label="序号" align="center" type="index"/>
@@ -313,7 +313,7 @@
             </el-table>
           </div>
         </el-tab-pane>
-        <el-tab-pane label="冷链告警" name="1">
+        <el-tab-pane label="冷链设备告警" name="1">
           <el-row class="header">
             <el-col :span="24" align="right">
               <refresh-cycle @change="cycleChange"></refresh-cycle>
@@ -368,7 +368,43 @@
             </el-table-column>
           </el-table>
         </el-tab-pane>
-        <!--<el-tab-pane label="能耗异常" name="2">功能开发中……</el-tab-pane>-->
+        <el-tab-pane label="能耗标签告警" name="2">
+          <div class="deviceStatus">
+            <el-table v-loading="loading" :data="abnormalList">
+              <el-table-column label="序号" align="center" type="index"/>
+              <el-table-column label="设备编号" align="center" prop="devNo"/>
+              <el-table-column label="设备名称" align="center" prop="devName"/>
+              <el-table-column label="设备类型" align="center" prop="devType">
+                <template v-slot="{row}">
+                  <div v-for="(item,index) in deviceTypeList" :key="index">
+                    <span v-if="Number(row.devType)===item.dictSort">{{ item.label }}</span>
+                  </div>
+                </template>
+              </el-table-column>
+              <el-table-column label="所属科室" align="center" prop="departmentName"/>
+              <el-table-column label="标签sn码" align="center" prop="tagSnNumber"/>
+              <el-table-column label="异常类型" align="center" prop="alarmStatus">
+                <template v-slot="{row}">
+                  <div v-for="(item,index) in alarmStatusList" :key="index">
+              <span v-if="item.dictSort === row.alarmStatus"
+                    :class="item.dictSort === row.alarmStatus ? 'sheBeiShuColor' : ''">
+                {{ item.label }}
+              </span>
+                  </div>
+                </template>
+              </el-table-column>
+              <el-table-column label="最后定位时间" align="center" prop="lastPositionTime"/>
+              <el-table-column label="最后位置" align="center" prop="lastPositionStr"/>
+              <el-table-column label="告警发生时间" align="center" prop="alarmTime"/>
+              <el-table-column label="操作" align="center" prop="">
+                <template v-slot="{row}">
+                  <el-button type="primary" size="mini" icon="el-icon-location-outline" circle
+                             @click="devicesPosition(row)"></el-button>
+                </template>
+              </el-table-column>
+            </el-table>
+          </div>
+        </el-tab-pane>
       </el-tabs>
     </div>
 
