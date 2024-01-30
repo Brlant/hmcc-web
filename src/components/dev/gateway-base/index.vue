@@ -10,8 +10,8 @@
 </template>
 
 <script>
-import Gateway from '../gateway';
-import BaseStation from '../basestation';
+import Gateway from './gateway';
+import BaseStation from './basestation';
 
 export default {
   name: 'GatewayBase',

@@ -156,49 +156,16 @@ export default [
     'sort': '3',
     'children': [
       {
-        'id': 'sensor-manager',
-        'label': '探头管理',
-        'parentId': 'hmcc-system',
-        'sort': '1',
-        'children': [
-          {
-            'id': 'sensor-scan',
-            'label': '查看探头管理',
-            'parentId': 'hmcc-system'
-          },
-          {
-            'id': 'sensor-add',
-            'label': '新增探头',
-            'parentId': 'hmcc-system'
-          },
-          {
-            'id': 'sensor-edit',
-            'label': '编辑探头',
-            'parentId': 'hmcc-system'
-          },
-          {
-            'id': 'sensor-active',
-            'label': '启用探头',
-            'parentId': 'hmcc-system'
-          },
-          {
-            'id': 'sensor-disable',
-            'label': '停用探头',
-            'parentId': 'hmcc-system'
-          }
-        ]
-      },
-      {
-        'id': 'hos-dev-manager',
+        'id': 'in-hospital-dev-manager',
         'label': '院内设备管理',
         'parentId': 'dev-manager',
-        'sort': '2',
+        'sort': '1',
         'children': [
           {
             'id': 'freezer-dev-manager',
             'label': '冷链设备管理',
-            'parentId': 'hos-dev-manager',
-            'sort': '2',
+            'parentId': 'in-hospital-dev-manager',
+            'sort': '1',
             'children': [
               {
                 'id': 'freezer-dev-scan',
@@ -220,17 +187,97 @@ export default [
           {
             'id': 'healths-dev-manager',
             'label': '医疗设备管理',
-            'parentId': 'hos-dev-manager',
+            'parentId': 'in-hospital-dev-manager',
             'sort': '2',
             'children': []
           },
         ]
       },
       {
+        'id': 'iot-tag-manager',
+        'label': '物联网标签管理',
+        'parentId': 'dev-manager',
+        'sort': '2',
+        'children': [
+          {
+            'id': 'sensor-manager',
+            'label': '探头管理',
+            'parentId': 'iot-tag-manager',
+            'sort': '1',
+            'children': [
+              {
+                'id': 'sensor-scan',
+                'label': '查看探头管理',
+                'parentId': 'sensor-manager'
+              },
+              {
+                'id': 'sensor-add',
+                'label': '新增探头',
+                'parentId': 'sensor-manager'
+              },
+              {
+                'id': 'sensor-edit',
+                'label': '编辑探头',
+                'parentId': 'sensor-manager'
+              },
+              {
+                'id': 'sensor-active',
+                'label': '启用探头',
+                'parentId': 'sensor-manager'
+              },
+              {
+                'id': 'sensor-disable',
+                'label': '停用探头',
+                'parentId': 'sensor-manager'
+              }
+            ]
+          },
+          {
+            'id': 'locate-label',
+            'label': '定位标签',
+            'parentId': 'iot-tag-manager',
+            'sort': '2',
+          },
+          {
+            'id': 'energy-consumption-label',
+            'label': '能耗标签',
+            'parentId': 'iot-tag-manager',
+            'sort': '3',
+            'children': [
+              {
+                'id': 'energy-consumption-scan',
+                'label': '查看能耗标签',
+                'parentId': 'energy-consumption-label'
+              },
+              {
+                'id': 'energy-consumption-add',
+                'label': '新增能耗标签',
+                'parentId': 'energy-consumption-label'
+              },
+              {
+                'id': 'energy-consumption-edit',
+                'label': '编辑能耗标签',
+                'parentId': 'energy-consumption-label'
+              },
+              {
+                'id': 'energy-consumption-active',
+                'label': '启用能耗标签',
+                'parentId': 'energy-consumption-label'
+              },
+              {
+                'id': 'energy-consumption-disable',
+                'label': '停用能耗标签',
+                'parentId': 'energy-consumption-label'
+              }
+            ]
+          },
+        ]
+      },
+      {
         'id': 'gateway-basestation-manager',
         'label': '网关基站管理',
-        'parentId': 'hmcc-system',
-        'sort': '2',
+        'parentId': 'dev-manager',
+        'sort': '3',
         'children': [
           {
             'id': 'gateway-dev-manager',

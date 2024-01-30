@@ -114,19 +114,10 @@ export const routes = [
         meta: {moduleId: 'dev', title: '设备管理', icon: 'dashboard', perm: 'dev-manager'},
         children: [
           {
-            path: '/dev/probe',
-            component: () => import('./components/dev/probe/index.vue'),
+            path: '/dev/inhospital',
+            component: () => import('./components/dev/InHospitalEquipmentManagement/index.vue'),
             meta: {
-              moduleId: 'dev', title: '探头管理', perm: 'sensor-scan',
-              type: 1,
-              permPage: {add: 'sensor-add', edit: 'sensor-edit', start: 'sensor-active', stop: 'sensor-disable'}
-            }
-          },
-          {
-            path: '/dev/hos',
-            component: () => import('./components/dev/hos/index.vue'),
-            meta: {
-              moduleId: 'dev', title: '院内设备管理', perm: 'hos-dev-manager',
+              moduleId: 'dev', title: '院内设备管理', perm: 'in-hospital-dev-manager',
               type: 1,
               permPage: {
                 add: 'freezer-dev-add',
@@ -134,6 +125,16 @@ export const routes = [
               }
             }
           },
+          {
+            path: '/dev/iot',
+            component: () => import('./components/dev/IotTagManagement/index.vue'),
+            meta: {
+              moduleId: 'dev', title: '物联网标签管理', perm: 'iot-tag-manager',
+              type: 1,
+              permPage: {add: 'sensor-add', edit: 'sensor-edit', start: 'sensor-active', stop: 'sensor-disable'}
+            }
+          },
+
           {
             path: '/dev/gateway-base',
             component: () => import('./components/dev/gateway-base/index.vue'),

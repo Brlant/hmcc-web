@@ -1,8 +1,9 @@
-import Notification from 'element-ui/lib/notification';
+import {Notification,Loading,Message} from 'element-ui';
 import axios from 'axios';
 import Vue from 'vue';
 import WholeErrorSignHandle from '@/tools/whole-error-sign-handle';
 import qs from 'qs';
+import {saveAs} from 'file-saver'
 
 export const http = axios.create({
   baseURL: process.env.VUE_APP_API,
@@ -285,6 +286,9 @@ export const probe = resource('/sensor', http, {
   },
   start(id) {
     return http.put(`/sensor/active/${id}`);
+  },
+  batchImport(formData) {
+    return http.post(`/sensor/import`,formData);
   }
 });
 
@@ -952,4 +956,72 @@ export const indexApi = {
       data: params
     })
   },
+}
+
+
+let downloadLoadingInstance;
+// 通用下载方法
+export function download(url, params, filename) {
+  downloadLoadingInstance = Loading.service({
+    text: "正在下载数据，请稍候",
+    spinner: "el-icon-loading",
+    background: "rgba(0, 0, 0, 0.7)",
+  })
+  return http.post(url, params, {
+    transformRequest: [(params) => {
+      return tansParams(params)
+    }],
+    headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+    responseType: 'blob'
+  }).then(async (res) => {
+    const data = res.data;
+    const isLogin = await blobValidate(data);
+    if (isLogin) {
+      const blob = new Blob([data])
+      saveAs(blob, filename)
+    } else {
+      const resText = await data.text();
+      const rspObj = JSON.parse(resText);
+      const errMsg = rspObj.msg || '下载文件出现错误，请联系管理员！'
+      Message.error(errMsg);
+    }
+    downloadLoadingInstance.close();
+  }).catch((r) => {
+    console.error(r)
+    Message.error('下载文件出现错误，请联系管理员！')
+    downloadLoadingInstance.close();
+  })
+}
+
+export function tansParams(params) {
+  let result = ''
+  for (const propName of Object.keys(params)) {
+    const value = params[propName];
+    var part = encodeURIComponent(propName) + "=";
+    if (value !== null && value !== "" && typeof (value) !== "undefined") {
+      if (typeof value === 'object') {
+        for (const key of Object.keys(value)) {
+          if (value[key] !== null && value[key] !== "" && typeof (value[key]) !== 'undefined') {
+            let params = propName + '[' + key + ']';
+            var subPart = encodeURIComponent(params) + "=";
+            result += subPart + encodeURIComponent(value[key]) + "&";
+          }
+        }
+      } else {
+        result += part + encodeURIComponent(value) + "&";
+      }
+    }
+  }
+  return result
+}
+
+// 验证是否为blob格式
+export async function blobValidate(data) {
+  try {
+    const text = await data.text();
+    JSON.parse(text);
+    return false;
+  } catch (error) {
+    return true;
+  }
 }

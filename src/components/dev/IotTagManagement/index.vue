@@ -1,6 +1,6 @@
 <template>
   <el-tabs v-model="activeName" @tab-click="handleClick">
-    <el-tab-pane label="冷链标签" name="first">
+    <el-tab-pane label="探头标签" name="first">
       <probe-label/>
     </el-tab-pane>
     <el-tab-pane label="定位标签" name="second">

@@ -103,7 +103,7 @@
   import addForm from './form/add-form.vue';
   import showForm from './form/show-form';
   import CommonMixin from '@/mixins/commonMixin';
-  import {ColdChainLabelApi,download} from '@/resources';
+  import {probe,download} from '@/resources';
 
   export default {
     name:'ProbeLabel',
@@ -166,13 +166,13 @@
         });
       },
       queryList(pageNo) {
-        const http = ColdChainLabelApi.query;
+        const http = probe.query;
         const params = this.queryUtil(http, pageNo);
         // this.queryStatusNum(params);
       },
       queryStatusNum(params) {
         const pm = Object.assign({}, params, {status: null});
-        const http = ColdChainLabelApi.queryStateNum;
+        const http = probe.queryStateNum;
         const res = {};
         this.queryStatusNumUtil(http, pm, this.statusType, res);
       },
@@ -201,8 +201,8 @@
       start(item) {
         this.currentItem = item;
         this.currentItemId = item.id;
-        this.$confirmOpera(`是否启用冷链标签"${item.name}"`, () => {
-          this.$httpRequestOpera(ColdChainLabelApi.start(item.id), {
+        this.$confirmOpera(`是否启用探头"${item.name}"`, () => {
+          this.$httpRequestOpera(probe.start(item.id), {
             successTitle: '启用成功',
             errorTitle: '启用失败',
             success: (res) => {
@@ -218,8 +218,8 @@
       stop(item) {
         this.currentItem = item;
         this.currentItemId = item.id;
-        this.$confirmOpera(`是否停用冷链标签"${item.name}"`, () => {
-          this.$httpRequestOpera(ColdChainLabelApi.stop(item.id), {
+        this.$confirmOpera(`是否停用探头"${item.name}"`, () => {
+          this.$httpRequestOpera(probe.stop(item.id), {
             successTitle: '停用完成',
             errorTitle: '停用失败',
             success: (res) => {
@@ -237,12 +237,12 @@
         this.queryList(this.pager.currentPage);
       },
       downloadTemplate() {
-        download(`/tag/downloadTemplate?type=1`, {}, `冷链标签导入模板_${new Date().getTime()}.xlsx`)
+        download(`/tag/downloadTemplate?type=1`, {}, `探头导入模板_${new Date().getTime()}.xlsx`)
       },
       fileChangeHandler(file) {
         let formData = new FormData()
         formData.append('file', file.raw)
-        ColdChainLabelApi.batchImport(formData).then((res) => {
+        probe.batchImport(formData).then((res) => {
           this.$message({
             type: 'success',
             message: '导入成功'
@@ -250,12 +250,12 @@
 
           this.getList()
         }).catch((err) => {
-          console.log({...err},'导入失败')
-          this.$message.error(err.response.data.msg || "导入失败")
+          console.log(err,'导入失败')
+          this.$message.error(err.message || err.response.data.msg || "导入失败")
         })
       },
       importErrorHandler(err, file) {
-        console.log('导入冷链标签失败：', ...err)
+        console.log('导入订单失败：', ...err)
       }
     }
   };

@@ -284,7 +284,7 @@ export default {
       this.msgVisible = false;
       this.queryList(1);
     },
-    //设备状态：故障：FAILURE
+    //设备状态
     getDeviceStatusList() {
       sinopharmDictDataType('device_status').then(res => {
         this.deviceStatusList = res.data.map(item => {

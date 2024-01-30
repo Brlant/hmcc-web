@@ -165,7 +165,7 @@
   font-size: 35px;
   font-weight: bolder;
   margin-bottom: 5px;
-  cursor: pointer;
+  //cursor: pointer;
 }
 </style>
 <template>
@@ -572,6 +572,7 @@ export default {
       //   }
       //
       // }).catch(err=>{})
+      // console.log(row)
     },
     //设备类型
     getDeviceTypeList() {
@@ -646,13 +647,14 @@ export default {
     },
     //设备状态
     deviceWarnStatus(status) {
-      this.$router.push({
-        path: '/device/query',
-        query: {
-          status: status,
-          departmentId: this.departmentId
-        }
-      })
+      // this.$router.push({
+      //   path: '/device/query',
+      //   query: {
+      //     status: status,
+      //     departmentId: this.departmentId
+      //   }
+      // })
+      console.log(status)
     },
     handleClick(tab, event) {
       console.log(tab, event);
