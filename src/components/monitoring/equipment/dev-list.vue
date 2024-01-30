@@ -41,7 +41,7 @@
         <div class="content">
           <el-row>
             <el-col :span="16">
-              <oms-row label="探头" :span="5">
+              <oms-row label="冷链标签" :span="5">
                 <el-tooltip effect="dark" placement="top">
                   <div slot="content">
                     <div>名称：{{ item.name }}</div>

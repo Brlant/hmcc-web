@@ -19,7 +19,7 @@
           <div class="content">
             <el-row>
               <el-col :span="12">
-                <oms-row  label="探头">{{formItem.sensorName}}</oms-row>
+                <oms-row  label="冷链标签">{{formItem.sensorName}}</oms-row>
 
                 <oms-row  label="湿度告警开关">
                   <el-tag type="primary" :type="formItem.humidityAlarmFlag === '1' ? 'success' : 'warning'">

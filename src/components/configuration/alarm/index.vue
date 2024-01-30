@@ -10,7 +10,7 @@
     </search-part>
     <div class="order-list" style="margin-top: 20px">
       <el-row class="order-list-header">
-        <el-col :span="4">探头</el-col>
+        <el-col :span="4">冷链标签</el-col>
         <el-col :span="4">温度告警</el-col>
         <el-col :span="4">湿度告警</el-col>
         <el-col :span="4">电压告警</el-col>
@@ -167,7 +167,7 @@
       removeItem(item) {
         this.currentItem = item;
         this.currentItemId = item.id;
-        this.$confirmOpera(`是否删除探头"${item.sensorName}"的告警规则`, () => {
+        this.$confirmOpera(`是否删除冷链标签"${item.sensorName}"的告警规则`, () => {
           this.$httpRequestOpera(AlarmRule.delete(item.id), {
             errorTitle: '删除失败',
             success: (res) => {

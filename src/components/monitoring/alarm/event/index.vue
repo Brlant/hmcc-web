@@ -19,7 +19,7 @@
         <el-col :span="3">处理时间</el-col>
         <el-col :span="2">告警类型/等级</el-col>
         <el-col :span="3">所属单位</el-col>
-        <el-col :span="3">冷链设备/探头</el-col>
+        <el-col :span="3">冷链设备/冷链标签</el-col>
         <el-col :span="2">状态</el-col>
         <el-col :span="2">处理人</el-col>
         <el-col :span="3">操作</el-col>

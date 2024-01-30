@@ -31,7 +31,7 @@
           <el-input v-model="form.handlingRemark"></el-input>
         </el-form-item>
         <el-form-item label="相同报警" v-show="sameData">
-          <el-checkbox v-model="form.handleSameAlarmFlag">本设备下的该监控探头还有{{sameData}}次相同情况的未处理的报警，是否一同处理？</el-checkbox>
+          <el-checkbox v-model="form.handleSameAlarmFlag">本设备下的该监控冷链标签还有{{sameData}}次相同情况的未处理的报警，是否一同处理？</el-checkbox>
         </el-form-item>
         <el-form-item label="处理时间">
           {{form.handlerTime | time}}

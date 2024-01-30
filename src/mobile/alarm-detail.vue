@@ -15,7 +15,7 @@
           <tn-ceil :rowSpan="rowSpan" label="告警等级">{{alarmLevelList[detail.level]}}</tn-ceil>
           <tn-ceil :rowSpan="rowSpan" label="所属单位">{{detail.orgName}}</tn-ceil>
           <tn-ceil :rowSpan="rowSpan" label="冷链设备">{{detail.freezerDevName}}</tn-ceil>
-          <tn-ceil :rowSpan="rowSpan" label="探头">{{detail.sensorName}}</tn-ceil>
+          <tn-ceil :rowSpan="rowSpan" label="冷链标签">{{detail.sensorName}}</tn-ceil>
           <tn-ceil :rowSpan="rowSpan" label="告警值" v-show="detail.value">{{detail.value}}</tn-ceil>
           <tn-ceil :rowSpan="rowSpan" label="恢复值" v-show="detail.recoveryValue">{{detail.recoveryValue}}</tn-ceil>
           <tn-ceil :rowSpan="rowSpan" label="处理时间" v-show="detail.handlingTime">{{detail.handlingTime | time}}</tn-ceil>

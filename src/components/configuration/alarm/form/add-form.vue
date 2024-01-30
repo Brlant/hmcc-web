@@ -6,8 +6,8 @@
     </template>
     <template slot="content">
       <el-form :model="form" :rules="rules" label-width="160px" ref="tempForm">
-        <el-form-item label="探头" prop="sensorId">
-          <el-select :remote-method="queryProbeList" filterable placeholder="请输入名称搜索探头"
+        <el-form-item label="冷链标签" prop="sensorId">
+          <el-select :remote-method="queryProbeList" filterable placeholder="请输入名称搜索冷链标签"
                      remote v-model="form.sensorId" @change="sensorIdChange">
             <el-option :key="item.id" :label="item.name" :value="item.id"
                        v-for="item in probeList"></el-option>
@@ -214,7 +214,7 @@
         doing: false,
         rules: {
           sensorId: [
-            {required: true, message: '请选择探头', trigger: 'change'}
+            {required: true, message: '请选择冷链标签', trigger: 'change'}
           ],
           temperatureMax: [
             {required: true, message: '请输入温度最高值', trigger: 'blur'}

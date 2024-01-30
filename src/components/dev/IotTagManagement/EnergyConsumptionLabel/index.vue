@@ -201,7 +201,7 @@
       start(item) {
         this.currentItem = item;
         this.currentItemId = item.id;
-        this.$confirmOpera(`是否启用探头"${item.name}"`, () => {
+        this.$confirmOpera(`是否启用冷链标签"${item.name}"`, () => {
           this.$httpRequestOpera(probe.start(item.id), {
             successTitle: '启用成功',
             errorTitle: '启用失败',
@@ -218,7 +218,7 @@
       stop(item) {
         this.currentItem = item;
         this.currentItemId = item.id;
-        this.$confirmOpera(`是否停用探头"${item.name}"`, () => {
+        this.$confirmOpera(`是否停用冷链标签"${item.name}"`, () => {
           this.$httpRequestOpera(probe.stop(item.id), {
             successTitle: '停用完成',
             errorTitle: '停用失败',
@@ -237,7 +237,7 @@
         this.queryList(this.pager.currentPage);
       },
       downloadTemplate() {
-        utils.download(`/tag/downloadTemplate?type=1`, {}, `探头导入模板_${new Date().getTime()}.xlsx`)
+        utils.download(`/tag/downloadTemplate?type=1`, {}, `冷链标签导入模板_${new Date().getTime()}.xlsx`)
       },
       fileChangeHandler(file) {
         let formData = new FormData()
@@ -252,7 +252,7 @@
         })
       },
       importErrorHandler(err, file) {
-        console.log('导入订单失败：', ...err)
+        console.log('导入冷链标签失败：', ...err)
       }
     }
   };

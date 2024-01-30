@@ -35,7 +35,7 @@
           <div class="content">
             <el-table :data="devList" border class="clearfix" ref="orderDetail">
               <el-table-column prop="operationTime" label="设备类型" width="100">
-                <template slot-scope="scope">{{scope.row.devType === '0' ? '探头' : '网关'}}</template>
+                <template slot-scope="scope">{{scope.row.devType === '0' ? '冷链标签' : '网关'}}</template>
               </el-table-column>
               <el-table-column prop="actionType" label="设备">
                 <template slot-scope="scope">

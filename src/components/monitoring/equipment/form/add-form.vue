@@ -37,10 +37,10 @@
         </el-form-item>
         <el-row v-for="(sensor, index) in form.sensorList" :key="index">
           <el-col :span="10">
-            <el-form-item label="探头" :prop="`sensorList.${index}.sensorId`"
-                          :rules="[{ required: true, message: '请选择探头', trigger: 'change' }]">
+            <el-form-item label="冷链标签" :prop="`sensorList.${index}.sensorId`"
+                          :rules="[{ required: true, message: '请选择冷链标签', trigger: 'change' }]">
               <el-select :remote-method="queryProbeList" @focus="queryProbeList('')" filterable
-                         placeholder="请输入名称搜索探头" remote v-model="sensor.sensorId">
+                         placeholder="请输入名称搜索冷链标签" remote v-model="sensor.sensorId">
                 <el-option :key="item.id" :label="item.name" :value="item.id"
                            v-for="item in probeList"></el-option>
               </el-select>
@@ -91,7 +91,7 @@
             {required: true, message: '请选择冷链设备', trigger: 'change'}
           ],
           sensorList: [
-            {required: true, type: 'array', message: '探头', trigger: 'change'}
+            {required: true, type: 'array', message: '冷链标签', trigger: 'change'}
           ]
         },
         actionType: '添加',

@@ -264,12 +264,12 @@
       <div class="waring-statistics-4">
         <div class="warning-item-icon">
           <i class="el-icon-t-temp"></i>
-          接入探头
+          接入冷链标签
         </div>
         <div class="warning-item-body">
           <div>累计接入</div>
           <div>{{ focusTotalCount.sensorCount }}</div>
-          <div>已有探头: <span>{{ focusTotalCount.totalSensorCount }}</span></div>
+          <div>已有冷链标签: <span>{{ focusTotalCount.totalSensorCount }}</span></div>
         </div>
       </div>
     </div>
@@ -348,7 +348,7 @@
                 </div>
               </template>
             </el-table-column>
-            <el-table-column label="冷链设备/探头" align="center" header-align="center" prop="monitorTargetCode"
+            <el-table-column label="冷链设备/冷链标签" align="center" header-align="center" prop="monitorTargetCode"
                              min-width="200">
               <template v-slot="props">
                 <div>{{ props.row.freezerDevName }}</div>

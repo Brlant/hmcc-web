@@ -44,7 +44,7 @@ const state = {
   handleTypeList: [
     {key: '0', label: '整理疫苗'},
     {key: '1', label: '冷链设备故障'},
-    {key: '2', label: '监控设备故障(探头)'},
+    {key: '2', label: '监控设备故障(冷链标签)'},
     {key: '3', label: '电源接电故障（冷链设备）'},
     {key: '4', label: ' 冷链设备门没关'},
     {key: '5', label: '报警敏感（处置时已恢复正常）'},

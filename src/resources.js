@@ -270,7 +270,7 @@ export const cool = resource('/freezer-dev', http, {
 });
 
 
-//探头管理
+//冷链管理
 export const probe = resource('/sensor', http, {
   query(params) {
     return http.post('/sensor/page', params);

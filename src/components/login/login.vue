@@ -33,10 +33,10 @@ body {
       <div style="padding:20px">
         <el-form label-position="top" ref="loginForm" label-width="80px" :model="user" :rules="rules"
                  @submit.prevent="done" onsubmit="return false">
-          <el-form-item label="系统代码" prop="orgCode" v-if="needCode">
-            <!--<oms-input v-model="user.orgCode" :showFocus="isFocus === 1"></oms-input>-->
-            <tn-input-auto-complete :list="orgCodeList" placeholder="请输入业务单位编号" v-model="user.orgCode"/>
-          </el-form-item>
+          <!--<el-form-item label="系统代码" prop="orgCode" v-if="needCode">-->
+          <!--  &lt;!&ndash;<oms-input v-model="user.orgCode" :showFocus="isFocus === 1"></oms-input>&ndash;&gt;-->
+          <!--  <tn-input-auto-complete :list="orgCodeList" placeholder="请输入业务单位编号" v-model="user.orgCode"/>-->
+          <!--</el-form-item>-->
           <el-form-item label="用户名" prop="username">
             <oms-input v-model="user.username" :showFocus="isFocus === 2" placeholder="手机号/邮箱/用户名"
                        @blur="check()"></oms-input>
@@ -84,7 +84,7 @@ export default {
         password: '',
         validateCode: '',
         type: 1,
-        orgCode: window.localStorage.getItem('orgCode') ? JSON.parse(window.localStorage.getItem('orgCode')) : ''
+        // orgCode: window.localStorage.getItem('orgCode') ? JSON.parse(window.localStorage.getItem('orgCode')) : ''
       },
       loading: false,
       codeUrl: '',
@@ -119,7 +119,7 @@ export default {
           this.btnString = '登录中..';
           this.loading = true;
           let userCopy = JSON.parse(JSON.stringify(this.user));
-          userCopy.orgCode = this.needCode ? this.trim(this.user.orgCode) : '';
+          // userCopy.orgCode = this.needCode ? this.trim(this.user.orgCode) : '';
           userCopy.username = this.trim(this.user.username);
           userCopy.encryptionPsw = base64(userCopy.password);
           delete userCopy.password;

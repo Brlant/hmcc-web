@@ -4,7 +4,7 @@
 
     <div class="order-list" style="margin-top: 20px">
       <el-row class="order-list-header">
-        <el-col :span="5">探头</el-col>
+        <el-col :span="5">冷链标签</el-col>
         <el-col :span="2">通知类型</el-col>
         <el-col :span="2">通知方式</el-col>
         <el-col :span="4">通知对象</el-col>

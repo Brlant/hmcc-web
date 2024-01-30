@@ -201,33 +201,33 @@ export default [
         'children': [
           {
             'id': 'sensor-manager',
-            'label': '探头管理',
+            'label': '冷链标签',
             'parentId': 'iot-tag-manager',
             'sort': '1',
             'children': [
               {
                 'id': 'sensor-scan',
-                'label': '查看探头管理',
+                'label': '查看冷链标签',
                 'parentId': 'sensor-manager'
               },
               {
                 'id': 'sensor-add',
-                'label': '新增探头',
+                'label': '新增冷链标签',
                 'parentId': 'sensor-manager'
               },
               {
                 'id': 'sensor-edit',
-                'label': '编辑探头',
+                'label': '编辑冷链标签',
                 'parentId': 'sensor-manager'
               },
               {
                 'id': 'sensor-active',
-                'label': '启用探头',
+                'label': '启用冷链标签',
                 'parentId': 'sensor-manager'
               },
               {
                 'id': 'sensor-disable',
-                'label': '停用探头',
+                'label': '停用冷链标签',
                 'parentId': 'sensor-manager'
               }
             ]
