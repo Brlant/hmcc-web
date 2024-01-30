@@ -1,6 +1,6 @@
 <template>
   <search-template :isShow="showSearch" :isShowAdvance="false" @isShow="isShow" @reset="reset" @search="search">
-    <template slot="title">标签异常查询</template>
+    <template slot="title">标签告警查询</template>
     <template slot="btn">
       <slot name="btn"></slot>
     </template>

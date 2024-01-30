@@ -107,14 +107,13 @@
   .main-nav {
     position: absolute;
     top: $topMenuHeight;
-    background-color: #ffffff;
+    background: #232F49;
     border-right: 1px solid #f1f1f1;
     bottom: 0;
     left: 0;
     z-index: 1;
     width: 200px;
 
-    /*
     .el-menu {
       background: #232F49;
       .el-submenu__title {
@@ -138,7 +137,6 @@
         }
       }
     }
-    */
 
     .horizontal-collapse-transition {
       transition: 0s width ease-in-out, 0s padding-left ease-in-out, 0s padding-right ease-in-out;

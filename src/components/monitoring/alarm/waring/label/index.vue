@@ -2,7 +2,7 @@
   <div class="order-page">
     <search-part @search="searchResult" :deviceExceptionList="deviceExceptionList" :deviceTypeList="deviceTypeList"></search-part>
     <div class="order-list" style="margin-top: 20px">
-      <!--标签异常列表-->
+      <!--标签告警列表-->
       <el-table v-loading="loadingData" :data="dataList" header-row-class-name="order-list-header" header-cell-class-name="order-list-header">
         <el-table-column label="序号" align="center" type="index"/>
         <el-table-column label="设备编号" prop="devNo" align="center"></el-table-column>

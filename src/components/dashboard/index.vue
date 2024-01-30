@@ -222,7 +222,7 @@
                  style="color: rgb(216, 0, 27)">
               {{ totalNumberDevices.alarmCount }}
             </div>
-            <div>标签异常</div>
+            <div>标签告警</div>
           </el-col>
         </el-row>
       </div>
@@ -276,7 +276,7 @@
 
     <div class="warning-list-part bar-part">
       <el-tabs v-model="activeName" @tab-click="handleClick">
-        <el-tab-pane label="标签异常" name="0">
+        <el-tab-pane label="标签告警" name="0">
           <div class="deviceStatus">
             <el-table v-loading="loading" :data="abnormalList">
               <el-table-column label="序号" align="center" type="index"/>

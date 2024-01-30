@@ -216,7 +216,7 @@ export const routes = [
           {
             path: '/alarm/waring/label',
             component: () => import('./components/monitoring/alarm/waring/label/index.vue'),
-            meta: {moduleId: 'alarm', title: '标签异常', perm: 'alarm-tag-manager'}
+            meta: {moduleId: 'alarm', title: '标签告警', perm: 'alarm-tag-manager'}
           },
         ]
       },
