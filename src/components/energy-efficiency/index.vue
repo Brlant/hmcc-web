@@ -54,22 +54,23 @@
       </el-row>
     </div>
 
-    <div class="waring-statistics bar-part">
-      <el-row :gutter="10">
-        <el-col :xs="8" :sm="6" :md="4" :lg="3" :xl="1"
-                v-for="(item,index) in devMonitorList" :key="index"
-        >
-          <el-card class="box-card">
-            <div slot="header" :class="getDevMonitorTitleBgClass(item)">
-              <span>{{ item.devName }}}}</span>
+    <div style="padding: 0 20px">
+      <el-row v-if="devMonitorList.length > 0" :gutter="90">
+        <el-col :xs="24" :sm="12" :md="8" :lg="6" :xl="4" :span="8"
+                v-for="(item,index) in devMonitorList" :key="index" style="min-width: 200px;margin-bottom: 20px">
+          <div :class="getDevMonitorTitleBgClass(item)" style="height: 45px;line-height: 45px;padding: 5px 10px">
+            <span>{{ item.devName }} }}</span>
+          </div>
+          <div style="background: #fff;height: 120px;padding: 5px 10px;">
+            <div style="height: 18px;line-height: 18px">{{ item.deptName|| ''}}</div>
+            <div style="align-items: center;text-align: center;padding-top: 10px">
+              <div style="line-height: 30px">{{ item.electricityCount || '--' }}</div>
+              <div style="line-height: 30px">今日用电量</div>
             </div>
-            <div>{{ item.deptName }}</div>
-            <div>{{ item.electricityCount || '--' }}</div>
-            <div>今日用电量</div>
-          </el-card>
+          </div>
         </el-col>
       </el-row>
-      <el-empty v-show="devMonitorList.length === 0" description="暂无数据"></el-empty>
+      <el-empty v-else description="暂无数据"></el-empty>
     </div>
 
   </div>
@@ -99,13 +100,23 @@ export default {
         electricityAvgCount: '', // 今日设备平均用电量
       },
       devMonitorList: [],
+      // 刷新周期
+      refreshCycle: 10 * 60 * 1000
     };
   },
   mounted() {
-    this.getDetpList()
+    this.getDetpList();
     this.getDevCount();
+    this.refreshDevMonitorList();
   },
   methods: {
+    refreshDevMonitorList() {
+      this.getDevMonitorList();
+      // 每10分钟刷新一次列表
+      setTimeout(() => {
+        this.refreshDevMonitorList();
+      }, this.refreshCycle)
+    },
     /* 科室列表 */
     getDetpList() {
       EnergyEffciencyApi.getDetpList({}).then(res => {
@@ -127,8 +138,9 @@ export default {
       })
     },
     getDevMonitorList() {
-      EnergyEffciencyApi.getDevMonitorList({departmentId: this.departmentId}).then(res => {
-        this.devMonitorList = res.data;
+      EnergyEffciencyApi.getDevMonitorList({departmentId: this.departmentId, pageNo: 1, pageSize: 100}).then(res => {
+        console.log(res, '设备监控列表')
+        this.devMonitorList = res.data.pageInfo.list;
       }).catch(err => {
         console.log('查询设备监控列表接口异常：', {...err})
       })

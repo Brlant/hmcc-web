@@ -994,7 +994,7 @@ export const EnergyEffciencyApi = {
   },
   // 设备监控列表
   getDevMonitorList(data) {
-    return http.post(`/tagAlarm/queryDeviceByAlarm`, data)
+    return http.post(`/deviceEnergy/queryList`, data)
   },
 }
 
