@@ -298,7 +298,7 @@ export const EnergyTagApi = resource('/energyTag', http, {
     return http.post('/energyTag/queryListByPage', params);
   },
   update(obj) {
-    return http.put('/energyTag/editEnergyTag', obj);
+    return http.post('/energyTag/editEnergyTag', obj);
   },
   queryStateNum(params) {
     return http.post('/energyTag/count', params);
