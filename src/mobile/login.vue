@@ -91,7 +91,7 @@
             this.btnString = '登录中..';
             this.loading = true;
             let userCopy = JSON.parse(JSON.stringify(this.user));
-            userCopy.orgCode = this.needCode ? this.trim(this.user.orgCode) : '';
+            // userCopy.orgCode = this.needCode ? this.trim(this.user.orgCode) : '';
             userCopy.username = this.trim(this.user.username);
             userCopy.encryptionPsw = base64(userCopy.password);
             delete userCopy.password;

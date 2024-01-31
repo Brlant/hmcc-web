@@ -270,8 +270,8 @@ export const cool = resource('/freezer-dev', http, {
 });
 
 
-//冷链管理
-export const probe = resource('/sensor', http, {
+// 冷链标签api
+export const ColdChainLabelApi = resource('/sensor', http, {
   query(params) {
     return http.post('/sensor/page', params);
   },
@@ -289,6 +289,28 @@ export const probe = resource('/sensor', http, {
   },
   batchImport(formData) {
     return http.post(`/sensor/import`,formData);
+  }
+});
+
+// 能耗标签接口
+export const EnergyTagApi = resource('/energyTag', http, {
+  query(params) {
+    return http.post('/energyTag/queryListByPage', params);
+  },
+  update(obj) {
+    return http.put('/energyTag/editEnergyTag', obj);
+  },
+  queryStateNum(params) {
+    return http.post('/energyTag/count', params);
+  },
+  stop(id) {
+    return http.put(`/energyTag/disable/${id}`);
+  },
+  start(id) {
+    return http.put(`/energyTag/active/${id}`);
+  },
+  batchImport(formData) {
+    return http.post(`/energyTag/import`,formData);
   }
 });
 

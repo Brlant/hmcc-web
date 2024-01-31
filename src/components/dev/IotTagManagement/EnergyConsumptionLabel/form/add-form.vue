@@ -28,7 +28,7 @@
   </dialog-template>
 </template>
 <script>
-  import {probe} from '@/resources';
+  import {EnergyTagApi} from '@/resources';
   import methodsMixin from '@/mixins/methodsMixin';
 
   export default {
@@ -101,7 +101,7 @@
             });
             if (!this.form.id) {
               this.doing = true;
-              this.$httpRequestOpera(probe.save(this.form), {
+              this.$httpRequestOpera(EnergyTagApi.save(this.form), {
                 errorTitle: '添加失败',
                 success: res => {
                   if (res.code === 200) {
@@ -117,7 +117,7 @@
                 }
               });
             } else {
-              this.$httpRequestOpera(probe.update(this.form), {
+              this.$httpRequestOpera(EnergyTagApi.update(this.form), {
                 errorTitle: '修改失败',
                 success: res => {
                   if (res.code === 200) {

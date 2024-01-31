@@ -103,7 +103,7 @@
   import addForm from './form/add-form.vue';
   import showForm from './form/show-form';
   import CommonMixin from '@/mixins/commonMixin';
-  import {probe,download} from '@/resources';
+  import {ColdChainLabelApi,download} from '@/resources';
 
   export default {
     name:'ProbeLabel',
@@ -166,13 +166,13 @@
         });
       },
       queryList(pageNo) {
-        const http = probe.query;
+        const http = ColdChainLabelApi.query;
         const params = this.queryUtil(http, pageNo);
         // this.queryStatusNum(params);
       },
       queryStatusNum(params) {
         const pm = Object.assign({}, params, {status: null});
-        const http = probe.queryStateNum;
+        const http = ColdChainLabelApi.queryStateNum;
         const res = {};
         this.queryStatusNumUtil(http, pm, this.statusType, res);
       },
@@ -202,7 +202,7 @@
         this.currentItem = item;
         this.currentItemId = item.id;
         this.$confirmOpera(`是否启用冷链标签"${item.name}"`, () => {
-          this.$httpRequestOpera(probe.start(item.id), {
+          this.$httpRequestOpera(ColdChainLabelApi.start(item.id), {
             successTitle: '启用成功',
             errorTitle: '启用失败',
             success: (res) => {
@@ -219,7 +219,7 @@
         this.currentItem = item;
         this.currentItemId = item.id;
         this.$confirmOpera(`是否停用冷链标签"${item.name}"`, () => {
-          this.$httpRequestOpera(probe.stop(item.id), {
+          this.$httpRequestOpera(ColdChainLabelApi.stop(item.id), {
             successTitle: '停用完成',
             errorTitle: '停用失败',
             success: (res) => {
@@ -242,7 +242,7 @@
       fileChangeHandler(file) {
         let formData = new FormData()
         formData.append('file', file.raw)
-        probe.batchImport(formData).then((res) => {
+        ColdChainLabelApi.batchImport(formData).then((res) => {
           this.$message({
             type: 'success',
             message: '导入成功'

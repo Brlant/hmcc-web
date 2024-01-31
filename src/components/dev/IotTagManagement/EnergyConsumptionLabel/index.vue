@@ -106,7 +106,7 @@ import SearchPart from './search';
 import addForm from './form/add-form.vue';
 import showForm from './form/show-form';
 import CommonMixin from '@/mixins/commonMixin';
-import {download, probe} from '@/resources';
+import {download, EnergyTagApi} from '@/resources';
 
 export default {
   name: 'EnergyConsumptionLabel',
@@ -169,13 +169,12 @@ export default {
       });
     },
     queryList(pageNo) {
-      const http = probe.query;
+      const http = EnergyTagApi.query;
       const params = this.queryUtil(http, pageNo);
-      // this.queryStatusNum(params);
     },
     queryStatusNum(params) {
       const pm = Object.assign({}, params, {status: null});
-      const http = probe.queryStateNum;
+      const http = EnergyTagApi.queryStateNum;
       const res = {};
       this.queryStatusNumUtil(http, pm, this.statusType, res);
     },
@@ -205,7 +204,7 @@ export default {
       this.currentItem = item;
       this.currentItemId = item.id;
       this.$confirmOpera(`是否启用冷链标签"${item.name}"`, () => {
-        this.$httpRequestOpera(probe.start(item.id), {
+        this.$httpRequestOpera(EnergyTagApi.start(item.id), {
           successTitle: '启用成功',
           errorTitle: '启用失败',
           success: (res) => {
@@ -222,7 +221,7 @@ export default {
       this.currentItem = item;
       this.currentItemId = item.id;
       this.$confirmOpera(`是否停用冷链标签"${item.name}"`, () => {
-        this.$httpRequestOpera(probe.stop(item.id), {
+        this.$httpRequestOpera(EnergyTagApi.stop(item.id), {
           successTitle: '停用完成',
           errorTitle: '停用失败',
           success: (res) => {
@@ -245,7 +244,7 @@ export default {
     fileChangeHandler(file) {
       let formData = new FormData()
       formData.append('file', file.raw)
-      probe.batchImport(formData).then((res) => {
+      EnergyTagApi.batchImport(formData).then((res) => {
         this.$message({
           type: 'success',
           message: '导入成功'
