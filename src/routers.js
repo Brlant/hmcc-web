@@ -20,30 +20,30 @@ export const routes = [
         path: '/org',
         redirect: '/org/info',
         component: () => import('./components/common/parent-route.vue'),
-        meta: {moduleId: 'org', title: '业务单位管理', icon: 'base', perm: 'org-manager'},
+        meta: {moduleId: 'org', title: '业务单位管理', icon: 'base', perm: 'org-manage'},
         children: [
           {
             path: '/org/info',
             component: () => import('./components/org/info/list.vue'),
-            meta: {moduleId: 'org', title: '基础信息管理', perm: 'org-base-manager-query'},
+            meta: {moduleId: 'org', title: '基础信息管理', perm: 'org-base-manage-query'},
             children: []
           },
           {
             path: '/org/licences',
             component: () => import('./components/org/licences/list.vue'),
-            meta: {moduleId: 'org', title: '单位证照管理', perm: 'org-licences-manager-query'},
+            meta: {moduleId: 'org', title: '单位证照管理', perm: 'org-licences-manage-query'},
             children: []
           },
           {
             path: '/org/relation',
             component: () => import('./components/org/relation/list.vue'),
-            meta: {moduleId: 'sub', title: '单位关系管理', icon: 'org1', perm: 'org-relation-manager-query'},
+            meta: {moduleId: 'sub', title: '单位关系管理', icon: 'org1', perm: 'org-relation-manage-query'},
             children: []
           },
           // {
           //   path: '/org/address',
           //   component: () => import('./components/org/address/index.vue'),
-          //   meta: {moduleId: 'org', title: '仓库地址管理', perm: 'address-manager-query'},
+          //   meta: {moduleId: 'org', title: '仓库地址管理', perm: 'address-manage-query'},
           //   children: []
           // }
         ]
@@ -52,13 +52,13 @@ export const routes = [
       {
         path: '/dev',
         component: () => import('./components/common/parent-route'),
-        meta: {moduleId: 'dev', title: '设备管理', icon: 'dashboard', perm: 'dev-manager'},
+        meta: {moduleId: 'dev', title: '设备管理', icon: 'dashboard', perm: 'dev-manage'},
         children: [
           {
             path: '/dev/inhospital',
             component: () => import('./components/dev/InHospitalEquipmentManagement/index.vue'),
             meta: {
-              moduleId: 'dev', title: '院内设备管理', perm: 'in-hospital-dev-manager',
+              moduleId: 'dev', title: '院内设备管理', perm: 'in-hospital-dev-manage',
               type: 1,
               permPage: {
                 add: 'freezer-dev-add',
@@ -70,7 +70,7 @@ export const routes = [
             path: '/dev/iot',
             component: () => import('./components/dev/IotTagManagement/index.vue'),
             meta: {
-              moduleId: 'dev', title: '物联网标签管理', perm: 'iot-tag-manager',
+              moduleId: 'dev', title: '物联网标签管理', perm: 'iot-tag-manage',
               type: 1,
               permPage: {add: 'sensor-add', edit: 'sensor-edit', start: 'sensor-active', stop: 'sensor-disable'}
             }
@@ -79,7 +79,7 @@ export const routes = [
             path: '/dev/gateway-base',
             component: () => import('./components/dev/gateway-base/index.vue'),
             meta: {
-              moduleId: 'dev', title: '网关基站管理', perm: 'gateway-basestation-manager',
+              moduleId: 'dev', title: '网关基站管理', perm: 'gateway-basestation-manage',
               type: 1,
               permPage: {
                 add: 'gateway-dev-add',
@@ -129,7 +129,7 @@ export const routes = [
       {
         path: '/configuration',
         component: () => import('./components/common/parent-route.vue'),
-        meta: {moduleId: 'configuration', title: '告警管理', icon: 'peizhi', perm: 'config-center-manager'},
+        meta: {moduleId: 'configuration', title: '告警管理', icon: 'peizhi', perm: 'config-center-manage'},
         children: [
           {
             path: '/configuration/alarm',
@@ -164,7 +164,7 @@ export const routes = [
       {
         path: '/alarm',
         component: () => import('./components/common/parent-route'),
-        meta: {moduleId: 'alarm', title: '告警中心', icon: 'alarm', perm: 'alarm-center-manager'},
+        meta: {moduleId: 'alarm', title: '告警中心', icon: 'alarm', perm: 'alarm-center-manage'},
         children: [
           {
             path: '/alarm/record',
@@ -182,7 +182,7 @@ export const routes = [
           {
             path: '/alarm/waring/label',
             component: () => import('./components/monitoring/alarm/waring/label/index.vue'),
-            meta: {moduleId: 'alarm', title: '标签告警', perm: 'alarm-tag-manager'}
+            meta: {moduleId: 'alarm', title: '标签告警', perm: 'alarm-tag-manage'}
           },
         ]
       },
@@ -208,7 +208,7 @@ export const routes = [
       {
         path: '/monitoring',
         component: () => import('./components/common/parent-route.vue'),
-        meta: {moduleId: 'monitoring', title: '无线冷链管理系统', icon: 'xitongjiankong', perm: 'monitoring-center-manager'},
+        meta: {moduleId: 'monitoring', title: '无线冷链管理系统', icon: 'xitongjiankong', perm: 'monitoring-center-manage'},
         children: [
           {
             path: '/monitoring/equipment',
@@ -222,7 +222,7 @@ export const routes = [
                 start: 'own-dev-monitoring-active',
                 stop: 'own-dev-monitoring-disable',
                 record: 'own-dev-monitoring-record',
-                query: 'history-data-manager-scan'
+                query: 'history-data-manage-scan'
               }
             }
           },
@@ -238,7 +238,7 @@ export const routes = [
                 start: 'pov-dev-monitoring-active',
                 stop: 'pov-own-dev-monitoring-disable',
                 record: 'pov-dev-monitoring-record',
-                query: 'history-data-manager-scan'
+                query: 'history-data-manage-scan'
               }
             }
           },
@@ -269,7 +269,7 @@ export const routes = [
             path: '/monitoring/temp',
             component: () => import('./components/monitoring/temp-new/index.vue'),
             meta: {
-              moduleId: 'monitoring', title: '历史数据查询', perm: 'history-data-manager-scan',
+              moduleId: 'monitoring', title: '历史数据查询', perm: 'history-data-manage-scan',
               subMenuId: 'temp', showDev: true
             }
           },
@@ -277,15 +277,15 @@ export const routes = [
             path: '/monitoring/temp/records',
             component: () => import('./components/monitoring/temp-record/index.vue'),
             meta: {
-              moduleId: 'monitoring', title: '冷链设备温度记录', perm: 'freezer-dev-temperature-record-manager-scan',
+              moduleId: 'monitoring', title: '冷链设备温度记录', perm: 'freezer-dev-temperature-record-manage-scan',
               subMenuId: 'temp', showDev: true
             }
           },
           {
-            path: '/monitoring/manager/assess',
-            component: () => import('./components/monitoring/manager-assess/index.vue'),
+            path: '/monitoring/manage/assess',
+            component: () => import('./components/monitoring/manage-assess/index.vue'),
             meta: {
-              moduleId: 'monitoring', title: '冷链管理评估表', perm: 'freezer-manager-evaluation-scan',
+              moduleId: 'monitoring', title: '冷链管理评估表', perm: 'freezer-manage-evaluation-scan',
               subMenuId: 'temp', showDev: true
             }
           },
@@ -299,6 +299,21 @@ export const routes = [
           }
         ]
       },
+      // 设备能效管理系统
+      {
+        path: '/energy-efficiency-manage',
+        component: () => import('./components/common/parent-route.vue'),
+        meta: {moduleId: 'energy-efficiency', title: '设备能效管理系统', icon: 'home', perm: 'energy-efficiency-manage'},
+        children: [
+          {
+            path: '/energy-efficiency-monitor',
+            component: () => import('./components/energy-efficiency/index.vue'),
+            meta: {
+              moduleId: 'monitoring', title: '实时能耗监控', perm: 'energy-efficiency-manage', type: 1,
+            }
+          },
+        ]
+      },
       // 系统设置
       {
         path: '/permission',
@@ -308,7 +323,7 @@ export const routes = [
           {
             path: '/permission/user',
             component: () => import('./components/system/user/list.vue'),
-            meta: {moduleId: 'permission', title: '账号管理', perm: 'system-setting-account-manager-query'} // ccs-platform-user-watch
+            meta: {moduleId: 'permission', title: '账号管理', perm: 'system-setting-account-manage-query'} // ccs-platform-user-watch
           },
           {
             path: '/permission/role',
@@ -318,13 +333,13 @@ export const routes = [
           {
             path: '/setting/org/account',
             component: () => import('./components/system/org-account/list.vue'),
-            meta: {moduleId: 'public', title: '各单位账号管理', perm: 'system-setting-org-account-manager-query'},
+            meta: {moduleId: 'public', title: '各单位账号管理', perm: 'system-setting-org-account-manage-query'},
             children: []
           },
           {
             path: '/setting/dict',
             component: () => import('./components/system/dict/dict.vue'),
-            meta: {moduleId: 'public', title: '数据字典', perm: 'dict-manager'},
+            meta: {moduleId: 'public', title: '数据字典', perm: 'dict-manage'},
             children: []
           },
           {

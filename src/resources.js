@@ -520,10 +520,10 @@ export const Access = resource('/oms/access', http, {
     return http.post('/erp-access', obj);
   },
   saveSystem: (obj) => {
-    return http.post(`/erp-access?systemObjectId=${obj.systemObjectId}`, obj);
+    return http.post(`/erp-access/system?systemObjectId=${obj.systemObjectId}`, obj);
   },
   queryStateNum: (params) => {
-    return http.get('/erp-access/platform/count', {params});
+    return http.get('/erp-access/system/platform/count', {params});
   },
   queryErpStateNum: (params) => {
     return http.get('/erp-access/platform/count', {params});
