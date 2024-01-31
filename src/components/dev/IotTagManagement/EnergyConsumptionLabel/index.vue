@@ -40,18 +40,20 @@
              @click="showItemDetail(item)" class="order-list-item order-list-item-bg"
              v-for="item in dataList">
           <el-row>
-            <el-col :span="3" class="R">{{item.name}}</el-col>
-            <el-col :span="4" class="R">{{item.no}}</el-col>
-            <el-col :span="5" class="R">{{item.orgName}}</el-col>
-            <el-col :span="3" class="R">{{item.type}}</el-col>
+            <el-col :span="3" class="R">{{ item.name }}</el-col>
+            <el-col :span="4" class="R">{{ item.no }}</el-col>
+            <el-col :span="5" class="R">{{ item.orgName }}</el-col>
+            <el-col :span="3" class="R">{{ item.type }}</el-col>
             <el-col :span="2">
-              {{formatStatus(item.status, statusType)}}
+              {{ formatStatus(item.status, statusType) }}
             </el-col>
-            <el-col :span="4">{{item.calibrationTime | date}}</el-col>
+            <el-col :span="4">{{ item.calibrationTime | date }}</el-col>
             <el-col :span="3" class="opera-btn">
               <des-btn @click="edit(item)" icon="edit" v-has="permPage.edit">编辑</des-btn>
-              <des-btn icon="forbidden" v-show="item.status === '1'" v-has="permPage.stop" @click="stop(item)">停用</des-btn>
-              <des-btn icon="start" v-has="permPage.start" v-show="item.status === '0'" @click="start(item)">启用</des-btn>
+              <des-btn icon="forbidden" v-show="item.status === '1'" v-has="permPage.stop" @click="stop(item)">停用
+              </des-btn>
+              <des-btn icon="start" v-has="permPage.start" v-show="item.status === '0'" @click="start(item)">启用
+              </des-btn>
             </el-col>
           </el-row>
         </div>
@@ -68,7 +70,8 @@
     </div>
 
     <page-right :css="defaultPageRight" :show="showIndex !== -1" @right-close="resetRightBox">
-      <component :formItem="form" :index="showIndex" :statusType="statusType" :is="currentPart" @change="change" @right-close="resetRightBox"/>
+      <component :formItem="form" :index="showIndex" :statusType="statusType" :is="currentPart" @change="change"
+                 @right-close="resetRightBox"/>
     </page-right>
 
     <!-- 导入对话框-->
@@ -98,162 +101,165 @@
   </div>
 </template>
 <script>
-  import utils from '@/tools/utils';
-  import SearchPart from './search';
-  import addForm from './form/add-form.vue';
-  import showForm from './form/show-form';
-  import CommonMixin from '@/mixins/commonMixin';
-  import {probe} from '@/resources';
+import utils from '@/tools/utils';
+import SearchPart from './search';
+import addForm from './form/add-form.vue';
+import showForm from './form/show-form';
+import CommonMixin from '@/mixins/commonMixin';
+import {download, probe} from '@/resources';
 
-  export default {
-    name:'EnergyConsumptionLabel',
-    components: {
-      SearchPart
-    },
-    mixins: [CommonMixin],
-    data() {
-      return {
-        statusType: JSON.parse(JSON.stringify(utils.orderType)),
-        filters: {
-          status: '1',
-          devCode: '',
-          devName: ''
-        },
-        dialogComponents: {
-          0: addForm,
-          1: showForm
-        },
-        defaultPageRight: {'width': '700px', 'padding': 0},
-        importOrderDialogShowFlag: false,
-      };
-    },
-    computed: {
-      perms() {
-        return this.$route.meta.perms;
-      }
-    },
-    watch: {
+export default {
+  name: 'EnergyConsumptionLabel',
+  components: {
+    SearchPart
+  },
+  mixins: [CommonMixin],
+  data() {
+    return {
+      statusType: JSON.parse(JSON.stringify(utils.orderType)),
       filters: {
-        handler: function (val) {
-          this.queryList(1);
-        },
-        deep: true
-      }
-    },
-    mounted() {
-      this.queryList(1);
-    },
-    methods: {
-      showRecordDate: function (data) {
-        if (!data) return '';
-        return data ? this.$moment(data).format('YYYY-MM-DD HH:mm:ss') : '';
+        status: '1',
+        devCode: '',
+        devName: ''
       },
-      searchResult: function (search) {
-        this.filters = Object.assign({}, this.filters, search);
+      dialogComponents: {
+        0: addForm,
+        1: showForm
       },
-      checkStatus(item, key) {
-        this.filters.status = item.status;
-        this.activeStatus = key;
-      },
-      resetRightBox() {
-        this.defaultPageRight.width = '700px';
-        this.showIndex = -1;
-      },
-      showPart(index) {
-        this.currentPart = this.dialogComponents[index];
-        this.$nextTick(() => {
-          this.showIndex = index;
-        });
-      },
-      queryList(pageNo) {
-        const http = probe.query;
-        const params = this.queryUtil(http, pageNo);
-        // this.queryStatusNum(params);
-      },
-      queryStatusNum(params) {
-        const pm = Object.assign({}, params, {status: null});
-        const http = probe.queryStateNum;
-        const res = {};
-        this.queryStatusNumUtil(http, pm, this.statusType, res);
-      },
-      add() {
-        this.form = {};
-        this.showPart(0);
-      },
-      batchAdd() {
-        this.importOrderDialogShowFlag = true;
-      },
-      edit(item) {
-        this.currentItem = item;
-        this.currentItemId = item.id;
-        this.form = item;
-        this.showPart(0);
-      },
-      showItemDetail(item) {
-        this.currentItem = item;
-        this.currentItemId = item.id;
-        this.showPart(1);
-        this.defaultPageRight.width = '900px';
-        this.$nextTick(() => {
-          this.form = item;
-        });
-      },
-      start(item) {
-        this.currentItem = item;
-        this.currentItemId = item.id;
-        this.$confirmOpera(`是否启用冷链标签"${item.name}"`, () => {
-          this.$httpRequestOpera(probe.start(item.id), {
-            successTitle: '启用成功',
-            errorTitle: '启用失败',
-            success: (res) => {
-              if(res.code === 200) {
-                item.status = '1';
-              } else {
-                this.$notify.error({message: res.data.msg})
-              }
-            }
-          });
-        });
-      },
-      stop(item) {
-        this.currentItem = item;
-        this.currentItemId = item.id;
-        this.$confirmOpera(`是否停用冷链标签"${item.name}"`, () => {
-          this.$httpRequestOpera(probe.stop(item.id), {
-            successTitle: '停用完成',
-            errorTitle: '停用失败',
-            success: (res) => {
-              if(res.code === 200) {
-                item.status = '0';
-              } else {
-                this.$notify.error({message: res.data.msg})
-              }
-            }
-          });
-        });
-      },
-      change() {
-        this.resetRightBox();
-        this.queryList(this.pager.currentPage);
-      },
-      downloadTemplate() {
-        utils.download(`/tag/downloadTemplate?type=1`, {}, `冷链标签导入模板_${new Date().getTime()}.xlsx`)
-      },
-      fileChangeHandler(file) {
-        let formData = new FormData()
-        formData.append('file', file.raw)
-        probe.batchImport(formData).then((res) => {
-          this.$message({
-            type: 'success',
-            message: '导入成功'
-          })
-
-          this.getList()
-        })
-      },
-      importErrorHandler(err, file) {
-        console.log('导入冷链标签失败：', ...err)
-      }
+      defaultPageRight: {'width': '700px', 'padding': 0},
+      importOrderDialogShowFlag: false,
+    };
+  },
+  computed: {
+    perms() {
+      return this.$route.meta.perms;
     }
-  };
+  },
+  watch: {
+    filters: {
+      handler: function (val) {
+        this.queryList(1);
+      },
+      deep: true
+    }
+  },
+  mounted() {
+    this.queryList(1);
+  },
+  methods: {
+    showRecordDate: function (data) {
+      if (!data) return '';
+      return data ? this.$moment(data).format('YYYY-MM-DD HH:mm:ss') : '';
+    },
+    searchResult: function (search) {
+      this.filters = Object.assign({}, this.filters, search);
+    },
+    checkStatus(item, key) {
+      this.filters.status = item.status;
+      this.activeStatus = key;
+    },
+    resetRightBox() {
+      this.defaultPageRight.width = '700px';
+      this.showIndex = -1;
+    },
+    showPart(index) {
+      this.currentPart = this.dialogComponents[index];
+      this.$nextTick(() => {
+        this.showIndex = index;
+      });
+    },
+    queryList(pageNo) {
+      const http = probe.query;
+      const params = this.queryUtil(http, pageNo);
+      // this.queryStatusNum(params);
+    },
+    queryStatusNum(params) {
+      const pm = Object.assign({}, params, {status: null});
+      const http = probe.queryStateNum;
+      const res = {};
+      this.queryStatusNumUtil(http, pm, this.statusType, res);
+    },
+    add() {
+      this.form = {};
+      this.showPart(0);
+    },
+    batchAdd() {
+      this.importOrderDialogShowFlag = true;
+    },
+    edit(item) {
+      this.currentItem = item;
+      this.currentItemId = item.id;
+      this.form = item;
+      this.showPart(0);
+    },
+    showItemDetail(item) {
+      this.currentItem = item;
+      this.currentItemId = item.id;
+      this.showPart(1);
+      this.defaultPageRight.width = '900px';
+      this.$nextTick(() => {
+        this.form = item;
+      });
+    },
+    start(item) {
+      this.currentItem = item;
+      this.currentItemId = item.id;
+      this.$confirmOpera(`是否启用冷链标签"${item.name}"`, () => {
+        this.$httpRequestOpera(probe.start(item.id), {
+          successTitle: '启用成功',
+          errorTitle: '启用失败',
+          success: (res) => {
+            if (res.code === 200) {
+              item.status = '1';
+            } else {
+              this.$notify.error({message: res.data.msg})
+            }
+          }
+        });
+      });
+    },
+    stop(item) {
+      this.currentItem = item;
+      this.currentItemId = item.id;
+      this.$confirmOpera(`是否停用冷链标签"${item.name}"`, () => {
+        this.$httpRequestOpera(probe.stop(item.id), {
+          successTitle: '停用完成',
+          errorTitle: '停用失败',
+          success: (res) => {
+            if (res.code === 200) {
+              item.status = '0';
+            } else {
+              this.$notify.error({message: res.data.msg})
+            }
+          }
+        });
+      });
+    },
+    change() {
+      this.resetRightBox();
+      this.queryList(this.pager.currentPage);
+    },
+    downloadTemplate() {
+      download(`/tag/downloadTemplate?type=2`, {}, `能耗标签导入模板_${new Date().getTime()}.xlsx`)
+    },
+    fileChangeHandler(file) {
+      let formData = new FormData()
+      formData.append('file', file.raw)
+      probe.batchImport(formData).then((res) => {
+        this.$message({
+          type: 'success',
+          message: '导入成功'
+        })
+
+        this.getList()
+      }).catch((err) => {
+        console.log({...err}, '导入失败')
+        this.$message.error(err.response.data.msg || "导入失败")
+      })
+    },
+    importErrorHandler(err, file) {
+      console.log('导入冷链标签失败：', ...err)
+    }
+  }
+};
 </script>

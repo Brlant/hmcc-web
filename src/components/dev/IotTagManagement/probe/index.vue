@@ -250,8 +250,8 @@
 
           this.getList()
         }).catch((err) => {
-          console.log(err,'导入失败')
-          this.$message.error(err.message || err.response.data.msg || "导入失败")
+          console.log({...err},'导入失败')
+          this.$message.error(err.response.data.msg || "导入失败")
         })
       },
       importErrorHandler(err, file) {
