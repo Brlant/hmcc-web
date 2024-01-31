@@ -1,4 +1,4 @@
-import {Notification,Loading,Message} from 'element-ui';
+import {Loading, Message, Notification} from 'element-ui';
 import axios from 'axios';
 import Vue from 'vue';
 import WholeErrorSignHandle from '@/tools/whole-error-sign-handle';
@@ -288,7 +288,7 @@ export const ColdChainLabelApi = resource('/sensor', http, {
     return http.put(`/sensor/active/${id}`);
   },
   batchImport(formData) {
-    return http.post(`/sensor/import`,formData);
+    return http.post(`/sensor/import`, formData);
   }
 });
 
@@ -310,7 +310,7 @@ export const EnergyTagApi = resource('/energyTag', http, {
     return http.put(`/energyTag/active/${id}`);
   },
   batchImport(formData) {
-    return http.post(`/energyTag/import`,formData);
+    return http.post(`/energyTag/import`, formData);
   }
 });
 
@@ -980,8 +980,26 @@ export const indexApi = {
   },
 }
 
+// 能耗监控接口
+export const EnergyEffciencyApi = {
+  //获取科室列表接口查询
+  getDetpList(data) {
+    return http.post(`/department/queryList`, data)
+  },
+  //设备总数和电量
+  getStatisticInfo(params) {
+    return http.get(`/deviceEnergy/queryCount`, {
+      params
+    })
+  },
+  // 设备监控列表
+  getDevMonitorList(data) {
+    return http.post(`/tagAlarm/queryDeviceByAlarm`, data)
+  },
+}
 
 let downloadLoadingInstance;
+
 // 通用下载方法
 export function download(url, params, filename) {
   downloadLoadingInstance = Loading.service({

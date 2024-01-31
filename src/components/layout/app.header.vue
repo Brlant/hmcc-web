@@ -1,6 +1,7 @@
 <style lang="scss">
   @import "../../assets/scss/mixins";
   $topMenuHeight: 50px;
+  $logo: url('../../assets/img/logo.png');
   .main-header {
     background: linear-gradient(to right, #554FFA, #874CFF); /* 标准的语法 */
     position: absolute;
@@ -25,9 +26,9 @@
       line-height: $topMenuHeight;
       height: $topMenuHeight;
       margin-left: 15px;
-
       img {
         vertical-align: middle;
+        background: $logo no-repeat center top;
       }
     }
 
@@ -89,6 +90,13 @@
       color: $activeColor;
       font-size: 12px;
     }
+  }
+
+  .logo {
+    height: 40px;
+    width: auto;
+    margin-right: 10px;
+    margin-top: -8px;
   }
 
   .logo_pic {
@@ -270,7 +278,8 @@
       <div>
         <div class="top-logo">
           <router-link to='/' class="a-link">
-            <span class="logo-span">冷链监控管理系统</span>
+            <!--<span class="logo-span"></span>-->
+            <img class="logo" src="../../assets/img/logo.png"/>
           </router-link>
         </div>
         <div class="top-right">

@@ -28,7 +28,7 @@ body {
 <template>
   <div>
     <el-card class="box-card main-card-box">
-      <div class="logo-part clearfix">冷链监控管理系统</div>
+      <div class="logo-part clearfix">智慧医院管理系统</div>
 
       <div style="padding:20px">
         <el-form label-position="top" ref="loginForm" label-width="80px" :model="user" :rules="rules"

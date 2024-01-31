@@ -52,7 +52,7 @@
 <template>
   <div>
     <el-card class="box-card main-card-box">
-      <div class="logo-part clearfix">冷链监控管理系统</div>
+      <div class="logo-part clearfix">智慧医院管理系统</div>
 
 
       <div style="padding:0 20px">

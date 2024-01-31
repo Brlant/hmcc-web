@@ -222,7 +222,7 @@
                  style="color: rgb(216, 0, 27)">
               {{ totalNumberDevices.alarmCount }}
             </div>
-            <div>标签异常</div>
+            <div>标签告警</div>
           </el-col>
         </el-row>
       </div>

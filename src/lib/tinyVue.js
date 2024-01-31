@@ -67,6 +67,7 @@ import locale from 'element-ui/lib/locale';
 import CollapseTransition from 'element-ui/lib/transitions/collapse-transition';
 import Divider from 'element-ui/lib/divider';
 import ElForm from 'element-ui/lib/form';
+import ElStatistic from 'element-ui/lib/statistic';
 import {
   compressedImg,
   CuPagination,
@@ -104,6 +105,7 @@ import DialogTemplate from '@/components/common/dialog-template';
 import SearchTemplate from '@/components/common/search-template';
 import refreshCycle from '@/components/common/refresh-cycle';
 import WholeErrorSignHandle from '@/tools/whole-error-sign-handle';
+import ElEmpty from 'element-ui/lib/empty'
 
 const tinyVue = [
   Pagination,
@@ -201,7 +203,9 @@ const tinyVue = [
   Scrollbar,
   compressedImg,
   TnInputAutoComplete,
-  Divider
+  Divider,
+  ElStatistic,
+  ElEmpty
 ];
 
 const install = function (Vue, opts = {}) {

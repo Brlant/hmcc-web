@@ -289,7 +289,7 @@ export default [
       },
       {
         id : 'patrol-project-manage',
-        label : '设备巡检',
+        label : '院内设备巡检',
         parentId : 'dev-manage',
         sort : '4',
         children : [
