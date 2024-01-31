@@ -8,6 +8,9 @@
   .main-card-box {
     width: 550px;
     z-index: 1;
+  left: 75%;
+  top: 48%;
+  padding: 30px;
   }
 
   .logo-part {
@@ -103,9 +106,6 @@
           <el-form key="el-form--login" label-position="top" ref="loginForm" label-width="80px" :model="user"
                    :rules="rules"
                    @submit.prevent="done" onsubmit="return false">
-            <el-form-item label="系统代码" prop="orgCode">
-              <oms-input v-model="user.orgCode"></oms-input>
-            </el-form-item>
             <el-form-item label="账号" prop="account">
               <el-input v-model="user.account" placeholder="手机号/邮箱/用户名"></el-input>
             </el-form-item>
@@ -171,16 +171,12 @@
           account: '',
           code: '',
           type: 1,
-          orgCode: '',
           email: '',
           phoneCode: '',
           phone: ''
         },
         resetUser: {userId: '', code: '', password: '', password2: ''},
         resetUserRules: {
-          orgCode: [
-            {required: true, message: '请输入系统代码', trigger: 'blur'}
-          ],
           code: [
             {required: true, message: '请输入短信验证码', trigger: 'blur'}
           ],
@@ -197,9 +193,6 @@
         showCode: false,
         btnString: '提交',
         rules: {
-          orgCode: [
-            {required: true, message: '请输入系统代码', trigger: 'blur'}
-          ],
           account: [
             {required: true, message: '请输入账号'}
           ],
