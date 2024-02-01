@@ -1,15 +1,4 @@
-import {
-  AlarmNotifyGroup,
-  BaseInfo,
-  cool,
-  gateway,
-  probe,
-  authorizationGroup,
-  Goods,
-  orgRelation,
-  Vaccine,
-  http
-} from '@/resources';
+import {AlarmNotifyGroup, ColdChainLabelApi, cool, gateway, orgRelation} from '@/resources';
 
 
 export default {
@@ -31,7 +20,7 @@ export default {
   methods: {
     queryProbeList(query) {
       let params = typeof query === 'object' ? query : {keyWord: query};
-      return probe.query(params).then(res => {
+      return ColdChainLabelApi.query(params).then(res => {
         this.probeList = res.data.list;
       });
     },
