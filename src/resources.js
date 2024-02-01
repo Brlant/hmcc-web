@@ -132,7 +132,7 @@ export const checkPlan = resource('/patrol-project', http, {
 });
 
 // 管理评估
-export const managerAssess = {
+export const manageAssess = {
   query(params) {
     return http.post('/freezer-management-evaluation/page', params);
   },
@@ -988,9 +988,7 @@ export const EnergyEffciencyApi = {
   },
   //设备总数和电量
   getStatisticInfo(params) {
-    return http.get(`/deviceEnergy/queryCount`, {
-      params
-    })
+    return http.get(`/deviceEnergy/queryCount`, {params})
   },
   // 设备监控列表
   getDevMonitorList(data) {

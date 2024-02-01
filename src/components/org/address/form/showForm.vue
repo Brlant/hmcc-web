@@ -255,26 +255,26 @@ $leftWidth: 220px;
             <perm label="addressInfo-forbid">
 
             </perm>
-            <div v-show="form.status==='0'||form.status==='1'" v-has="'address-manager-stop'"
+            <div v-show="form.status==='0'||form.status==='1'" v-has="'address-manage-stop'"
                  style="margin-bottom: 10px">
               <el-button :plain="true" style="width: 100px" type="danger"
                          @click.prevent.stop="remove()"> 停用
               </el-button>
             </div>
-            <div v-show="form.status==='0'||form.status==='1'" v-has="'address-manager-stop'"
+            <div v-show="form.status==='0'||form.status==='1'" v-has="'address-manage-stop'"
                  style="margin-bottom: 10px">
               <el-button :plain="true" style="width: 100px" type="danger"
                          @click.prevent.stop="bizForbid()"> 业务停用
               </el-button>
             </div>
-            <div v-show="form.status==='2'||form.status==='3'" v-has="'address-manager-start'"
+            <div v-show="form.status==='2'||form.status==='3'" v-has="'address-manage-start'"
                  style="margin-bottom: 10px">
               <el-button :plain="true" style="width: 100px" type="success"
                          @click.prevent.stop="start()">
                 启用
               </el-button>
             </div>
-            <div v-has="'address-manager-audit'">
+            <div v-has="'address-manage-audit'">
               <div v-show="form.status==='0'&&form.auditedStatus==='0'" style="margin-bottom: 10px">
                 <el-button :plain="true" style="width: 100px" type="warning"
                            @click.prevent.stop="audited()">审核通过

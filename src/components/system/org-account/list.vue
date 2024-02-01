@@ -65,7 +65,7 @@
            <a href="#" class="btn-circle" @click.stop.prevent="showSearch=(!showSearch)" v-show="!showSearch">
               <i class="el-icon-t-search"></i>
            </a>
-             <des-btn v-has="'system-setting-org-account-manager-add'" icon="plus" @click="add"></des-btn>
+             <des-btn v-has="'system-setting-org-account-manage-add'" icon="plus" @click="add"></des-btn>
          </span>
           <!--<h2 class="org-name-h2" v-show="orgName">货主名称:{{orgName}}</h2>-->
           <div v-loading="loading1">
@@ -106,14 +106,14 @@
                   <dict :dict-group="'orgUserStatus'" :dict-key="formatStatus(row.status)"></dict>
                 </td>
                 <td class="list-op" style="width: 120px">
-                  <a v-has="'system-setting-org-account-manager-edit'" href="#" @click.stop.prevent="edit(row)"><i
+                  <a v-has="'system-setting-org-account-manage-edit'" href="#" @click.stop.prevent="edit(row)"><i
                     class="el-icon-t-edit"></i>编辑</a>
-                  <oms-forbid v-has="'system-setting-org-account-manager-start'"
+                  <oms-forbid v-has="'system-setting-org-account-manage-start'"
                               :item="row" @forbided="useNormal" :tips='"确认启用单位用户 \""+row.name+"\" ?"'
                               v-show="row.status === '2'"><i
                     class="el-icon-t-start"></i>启用
                   </oms-forbid>
-                  <oms-forbid v-has="'system-setting-org-account-manager-stop'" :item="row" @forbided="forbid"
+                  <oms-forbid v-has="'system-setting-org-account-manage-stop'" :item="row" @forbided="forbid"
                               :tips='"确认停用单位用户\""+row.name+"\"？"'
                               v-show="row.status !== '2'">
                     <i class="el-icon-t-forbidden"></i>停用

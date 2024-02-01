@@ -3,7 +3,7 @@
     <!--科室筛选-->
     <div class="warning-list-part bar-part">
       <div style="display: flex;justify-content: space-between;">
-        <el-select v-model="departmentId" placeholder="全部" clearable @change="handleFloorChange($event)">
+        <el-select v-model="listParams.departmentId" placeholder="全部" clearable @change="deptChangeHandler">
           <el-option v-for="(item,index) in departmentList"
                      :key="index"
                      :value="item.id"
@@ -56,13 +56,13 @@
 
     <div style="padding: 0 20px">
       <el-row v-if="devMonitorList.length > 0" :gutter="90">
-        <el-col :xs="24" :sm="12" :md="8" :lg="6" :xl="4" :span="8"
+        <el-col :xs="24" :sm="12" :md="8" :lg="6" :xl="4"
                 v-for="(item,index) in devMonitorList" :key="index" style="min-width: 200px;margin-bottom: 20px">
           <div :class="getDevMonitorTitleBgClass(item)" style="height: 45px;line-height: 45px;padding: 5px 10px">
-            <span>{{ item.devName }} }}</span>
+            <span>{{ item.devName }}</span>
           </div>
           <div style="background: #fff;height: 120px;padding: 5px 10px;">
-            <div style="height: 18px;line-height: 18px">{{ item.deptName|| ''}}</div>
+            <div style="height: 18px;line-height: 18px">{{ item.departmentName || '' }}</div>
             <div style="align-items: center;text-align: center;padding-top: 10px">
               <div style="line-height: 30px">{{ item.electricityCount || '--' }}</div>
               <div style="line-height: 30px">今日用电量</div>
@@ -73,23 +73,34 @@
       <el-empty v-else description="暂无数据"></el-empty>
     </div>
 
+    <div class="text-center" v-show="(devMonitorList.length || pager.currentPage !== 1) && !loadingData">
+      <el-pagination :current-page="pager.currentPage" :page-size="pager.pageSize"
+                     :page-sizes="[6,12,24,48]"
+                     :total="pager.count" @current-change="handleCurrentChange"
+                     @size-change="handleSizeChange"
+                     layout="total, sizes, prev, pager, next, jumper">
+      </el-pagination>
+    </div>
   </div>
 </template>
 
 <script>
 
 import {EnergyEffciencyApi} from '@/resources';
-import AlarmEventMixin from '@/mixins/alarmEventMixin';
-import AlarmMixin from '@/mixins/alarmMixin';
 import TimeMixins from '@/mixins/timeMixin';
+import CommonMixin from '@/mixins/commonMixin';
 
 export default {
   name: 'energy-effciency',
   components: {},
-  mixins: [AlarmEventMixin, TimeMixins, AlarmMixin],
+  mixins: [TimeMixins, CommonMixin],
   data() {
     return {
-      departmentId: '',
+      listParams: {
+        departmentId: '',
+        pageNo: 1,
+        pageSize: 12
+      },
       departmentList: [],
       statisticInfo: {
         totalCount: '',     //设备总数
@@ -105,13 +116,19 @@ export default {
     };
   },
   mounted() {
+    this.pager.pageSize = 12;
+
     this.getDetpList();
     this.getDevCount();
     this.refreshDevMonitorList();
   },
   methods: {
+    deptChangeHandler(){
+      this.queryList(1);
+      this.getDevCount();
+    },
     refreshDevMonitorList() {
-      this.getDevMonitorList();
+      this.queryList();
       // 每10分钟刷新一次列表
       setTimeout(() => {
         this.refreshDevMonitorList();
@@ -137,18 +154,25 @@ export default {
         console.log('查询设备数量接口异常：', {...err})
       })
     },
-    getDevMonitorList() {
-      EnergyEffciencyApi.getDevMonitorList({departmentId: this.departmentId, pageNo: 1, pageSize: 100}).then(res => {
+    queryList(pageNo = 1) {
+      this.listParams.pageNo = pageNo;
+      this.listParams.pageSize = this.pager.pageSize;
+      EnergyEffciencyApi.getDevMonitorList(this.listParams).then(res => {
         console.log(res, '设备监控列表')
-        this.devMonitorList = res.data.pageInfo.list;
+        this.devMonitorList = res.data.list;
+        this.pager.count = res.data.total
       }).catch(err => {
         console.log('查询设备监控列表接口异常：', {...err})
       })
     },
     // 样式查询
     getDevMonitorTitleBgClass(item) {
-      let classes = ['bg-green', 'bg-blue', 'bg-yellow', 'bg-red']
-      return classes[item.devMonitorType] || 'bg-green'
+      let classes = {
+        'ONLINE': 'bg-green',
+        'OFFLINE': 'bg-grey',
+        'ALARM': 'bg-red'
+      }
+      return classes[item.status] || 'bg-green'
     },
   }
 };

@@ -56,7 +56,7 @@
           <div :style="'height:'+bodyHeight">
             <h2 class="header">
                 <span class="pull-right">
-                   <des-btn v-has="'system-setting-role-manager-export'" icon="export"
+                   <des-btn v-has="'system-setting-role-manage-export'" icon="export"
                             @click="exportRoleInfo"></des-btn>
                   <des-btn v-has="'access-role-add'" icon="plus" @click="addType"></des-btn>
                   <des-btn icon="search" @click="searchType"></des-btn>
@@ -74,7 +74,7 @@
                 <ul class="show-list">
                   <li v-for="item in showTypeList" class="list-item" @click="showType(item)"
                       :class="{'active':item.id===currentItem.id}">
-<!--                    <oms-remove v-has="'system-setting-role-manager-delete'" :item="item" @removed="removeType"-->
+<!--                    <oms-remove v-has="'system-setting-role-manage-delete'" :item="item" @removed="removeType"-->
 <!--                                :tips='"确认删除角色\""+item.title +"\"?"'-->
 <!--                                class="hover-show"><i-->
 <!--                      class="el-icon-t-delete"></i></oms-remove>-->
@@ -103,16 +103,16 @@
                      <i class="el-icon-t-edit"></i>
                      编辑
                    </el-button>
-                  <el-button v-has="'system-setting-role-manager-edit'" @click="forbid()"
+                  <el-button v-has="'system-setting-role-manage-edit'" @click="forbid()"
                              v-show="resData.usableStatus == 1">
                     <i class="el-icon-t-forbidden"></i>
                     停用
                   </el-button>
-                   <el-button v-has="'system-setting-role-manager-edit'" @click="useNormal()"
+                   <el-button v-has="'system-setting-role-manage-edit'" @click="useNormal()"
                               v-show="resData.usableStatus == 0">
                      <i class="el-icon-t-start"></i>启用
                    </el-button>
-<!--                   <el-button v-has="'system-setting-role-manager-delete'" @click="remove()"><i-->
+<!--                   <el-button v-has="'system-setting-role-manage-delete'" @click="remove()"><i-->
 <!--                     class="el-icon-t-delete"></i>删除</el-button>-->
                 </el-button-group>
               </span>

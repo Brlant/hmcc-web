@@ -112,7 +112,7 @@
 </template>
 <script>
   import SearchPart from './search';
-  import {managerAssess} from '@/resources';
+  import {manageAssess} from '@/resources';
   import utils from '@/tools/utils'
   export default {
     components: {
@@ -148,7 +148,7 @@
           date
         };
         this.loading = true;
-        managerAssess.query(params).then(res => {
+        manageAssess.query(params).then(res => {
           this.loading = false;
           if (res.code === 200) {
             this.dataList = res.data;
@@ -166,7 +166,7 @@
           orgId,
           date
         };
-        managerAssess.export(params).then(res => {
+        manageAssess.export(params).then(res => {
           utils.download(res.data.path);
           this.$store.commit('initPrint', {isPrinting: false, moduleId: this.$route.path, text: '拼命导出中'});
         }).catch(error => {
