@@ -3,7 +3,7 @@
     <!--科室筛选-->
     <div class="warning-list-part bar-part">
       <div style="display: flex;justify-content: space-between;">
-        <el-select v-model="listParams.departmentId" placeholder="全部" clearable @change="deptChangeHandler">
+        <el-select v-model="listParams.departmentId" placeholder="请选择科室" clearable @change="deptChangeHandler">
           <el-option v-for="(item,index) in departmentList"
                      :key="index"
                      :value="item.id"
@@ -13,22 +13,22 @@
       </div>
     </div>
 
-    <div class="warning-list-part bar-part" style="margin-top: 45px">
+    <div class="warning-list-part bar-part" style="margin-top: 45px;">
       <el-row>
         <el-col :span="6">
-          <div>
+          <div style="padding-top: 10px">
             <el-statistic title="今日总用电量">
               <template slot="formatter">
-                {{ statisticInfo.electricityTotalCount }}
+                <h3> {{ statisticInfo.electricityTotalCount }}度</h3>
               </template>
             </el-statistic>
           </div>
         </el-col>
-        <el-col :span="6" :offset="3">
-          <div>
+        <el-col :span="6" :offset="4">
+          <div style="padding-top: 10px">
             <el-statistic title="今日设备平均用电量">
               <template slot="formatter">
-                {{ statisticInfo.electricityAvgCount }}
+                <h3 style="font-weight: 800;margin-top: 20px"> {{ statisticInfo.electricityAvgCount }}度</h3>
               </template>
             </el-statistic>
           </div>
@@ -54,18 +54,20 @@
       </el-row>
     </div>
 
-    <div style="padding: 0 20px">
-      <el-row v-if="devMonitorList.length > 0" :gutter="90">
+    <div style="padding: 20px">
+      <el-row v-if="devMonitorList.length > 0" :gutter="100">
         <el-col :xs="24" :sm="12" :md="8" :lg="6" :xl="4"
-                v-for="(item,index) in devMonitorList" :key="index" style="min-width: 200px;margin-bottom: 20px">
-          <div :class="getDevMonitorTitleBgClass(item)" style="height: 45px;line-height: 45px;padding: 5px 10px">
-            <span>{{ item.devName }}</span>
-          </div>
-          <div style="background: #fff;height: 120px;padding: 5px 10px;">
-            <div style="height: 18px;line-height: 18px">{{ item.departmentName || '' }}</div>
-            <div style="align-items: center;text-align: center;padding-top: 10px">
-              <div style="line-height: 30px">{{ item.electricityCount || '--' }}</div>
-              <div style="line-height: 30px">今日用电量</div>
+                v-for="(item,index) in devMonitorList" :key="index">
+          <div class="dev-monitor">
+            <div :class="getDevMonitorTitleBgClass(item)" class="dev-monitor-title">
+              <span>{{ item.devName }}</span>
+            </div>
+            <div class="dev-monitor-main">
+              <div class="dev-monitor-departmentName">{{ item.departmentName || '' }}</div>
+              <div class="dev-monitor-elec">
+                <div class="dev-monitor-elec-count"><strong>{{ item.electricityCount || '--' }}</strong></div>
+                <div class="dev-monitor-elec-title">今日用电量</div>
+              </div>
             </div>
           </div>
         </el-col>
@@ -123,7 +125,7 @@ export default {
     this.refreshDevMonitorList();
   },
   methods: {
-    deptChangeHandler(){
+    deptChangeHandler() {
       this.queryList(1);
       this.getDevCount();
     },
@@ -139,16 +141,20 @@ export default {
       EnergyEffciencyApi.getDetpList({}).then(res => {
         this.departmentList = res.data.map(item => {
           return {
-            departmentName: item.departmentName,
-            departmentPosition: item.departmentPosition,
-            id: item.id
+            id: item.id,
+            departmentName: item.departmentName
           }
+        })
+
+        this.departmentList.unshift({
+          id: '',
+          departmentName: '全部',
         })
       })
     },
     /* 设备数量查询 */
     getDevCount() {
-      EnergyEffciencyApi.getStatisticInfo({departmentId: this.departmentId}).then(res => {
+      EnergyEffciencyApi.getStatisticInfo({departmentId: this.listParams.departmentId}).then(res => {
         this.statisticInfo = res.data;
       }).catch(err => {
         console.log('查询设备数量接口异常：', {...err})
@@ -367,5 +373,44 @@ export default {
 .grid-content {
   border-radius: 4px;
   min-height: 36px;
+}
+
+.dev-monitor {
+  //border: #fff 1px solid;
+  border-radius: 5px;
+  height: 150px;
+  width: 320px;
+  background: #fff;
+  margin-bottom: 20px;
+
+  .dev-monitor-title {
+    padding: 5px 10px;
+    -moz-border-radius-topleft: 5px;
+    -moz-border-radius-topright: 5px;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    line-height: 30px;
+  }
+
+  .dev-monitor-departmentName {
+    padding: 5px 10px;
+  }
+
+  .dev-monitor-elec {
+    align-items: center;
+    text-align: center;
+    padding-top: 10px
+  }
+
+  .dev-monitor-elec-title {
+    font-size: 14px;
+    color: #eeeeee;
+    line-height: 30px;
+  }
+
+  .dev-monitor-elec-count {
+    font-size: 20px;
+    line-height: 30px;
+  }
 }
 </style>

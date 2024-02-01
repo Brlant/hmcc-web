@@ -988,6 +988,7 @@ export const EnergyEffciencyApi = {
   },
   //设备总数和电量
   getStatisticInfo(params) {
+    // console.log(params)
     return http.get(`/deviceEnergy/queryCount`, {params})
   },
   // 设备监控列表
