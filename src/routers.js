@@ -111,17 +111,17 @@ export const routes = [
           {
             path: '/basicinformation/devicetemp',
             component: () => import('./components/hospital/devicetemp/index'),
-            meta: {moduleId: 'permission', title: '设备类型模板管理', perm: 'basic-information-devicetemp'}
+            meta: {moduleId: 'permission', title: '院内设备模板管理', perm: 'basic-information-devicetemp'}
           },
           {
             path: '/basicinformation/structure',
             component: () => import('./components/hospital/structure/index'),
-            meta: {moduleId: 'permission', title: '院内区域结构管理', perm: 'basic-information-structure'}
+            meta: {moduleId: 'permission', title: '楼宇结构管理', perm: 'basic-information-structure'}
           },
           {
             path: '/basicinformation/floormap',
             component: () => import('./components/hospital/floormap/index'),
-            meta: {moduleId: 'permission', title: '地图管理', perm: 'basic-information-floormap'}
+            meta: {moduleId: 'permission', title: '楼层地图管理', perm: 'basic-information-floormap'}
           }
         ]
       },
@@ -135,7 +135,7 @@ export const routes = [
             path: '/configuration/alarm',
             component: () => import('./components/configuration/alarm/index.vue'),
             meta: {
-              moduleId: 'configuration', title: '告警规则', perm: 'alarm-rule-scan',
+              moduleId: 'configuration', title: '告警规则设置', perm: 'alarm-rule-scan',
               permPage: {add: 'alarm-rule-add', edit: 'alarm-rule-edit', delete: 'alarm-rule-delete'}
             }
           },
@@ -154,7 +154,7 @@ export const routes = [
             path: '/configuration/test',
             component: () => import('./components/configuration/alarm-test/index.vue'),
             meta: {
-              moduleId: 'configuration', title: '告警测试', perm: 'alarm-test-log-scan',
+              moduleId: 'configuration', title: '告警通知测试', perm: 'alarm-test-log-scan',
               permPage: {add: 'alarm-test-log-add', confirm: 'alarm-test-log-confirm'}
             }
           }
@@ -170,14 +170,14 @@ export const routes = [
             path: '/alarm/record',
             component: () => import('./components/monitoring/alarm/event/index.vue'),
             meta: {
-              moduleId: 'alarm', title: '告警事件', perm: 'alarm-event-scan',
+              moduleId: 'alarm', title: '设备告警', perm: 'alarm-event-scan',
               permPage: {add: 'hmcc-system', handle: 'alarm-event-handle', export: 'alarm-event-export'}
             }
           },
           {
             path: '/alarm/send',
             component: () => import('./components/monitoring/alarm/notify/index.vue'),
-            meta: {moduleId: 'alarm', title: '告警通知', perm: 'alarm-notice-record-scan'}
+            meta: {moduleId: 'alarm', title: '告警通知记录', perm: 'alarm-notice-record-scan'}
           },
           {
             path: '/alarm/waring/label',
@@ -230,7 +230,7 @@ export const routes = [
             path: '/monitoring/pov/equipment',
             component: () => import('./components/monitoring/equipment/index.vue'),
             meta: {
-              moduleId: 'monitoring', title: '接种单位设备监控', perm: 'pov-dev-monitoring-scan', type: 2,
+              moduleId: 'monitoring', title: '关联单位设备监控', perm: 'pov-dev-monitoring-scan', type: 2,
               permPage: {
                 add: 'pov-dev-monitoring-add',
                 edit: 'pov-dev-monitoring-edit',

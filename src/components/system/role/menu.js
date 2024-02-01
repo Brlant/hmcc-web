@@ -329,18 +329,18 @@ export default [
     children: [
       {
         id: 'basic-information-devicetemp',
-        label: '设备类型模板管理',
+        label: '院内设备模板管理',
         children: [
         ]
       },
       {
         id: 'basic-information-structure',
-        label: '院内区域结构管理',
+        label: '楼宇结构管理',
         children: []
       },
       {
         id: 'basic-information-floormap',
-        label: '地图管理',
+        label: '楼层地图管理',
         children: []
       }
     ]
@@ -353,7 +353,7 @@ export default [
     children : [
       {
         id : 'alarm-rule-manage',
-        label : '告警规则',
+        label : '告警规则设置',
         parentId : 'hmcc-system',
         sort : '1',
         children : [
@@ -409,7 +409,7 @@ export default [
       },
       {
         id : 'alarm-test-log-manage',
-        label : '告警测试',
+        label : '告警通知测试',
         parentId : 'hmcc-system',
         sort : '3',
         children : [
@@ -440,35 +440,35 @@ export default [
     children : [
       {
         id : 'alarm-event-manage',
-        label : '告警事件',
+        label : '设备告警',
         parentId : 'alarm-center-manage',
         sort : '1',
         children : [
           {
             id : 'alarm-event-scan',
-            label : '查看告警事件',
+            label : '查看设备告警',
             parentId : 'alarm-center-manage'
           },
           {
             id : 'alarm-event-handle',
-            label : '处理告警事件',
+            label : '处理设备告警',
             parentId : 'alarm-center-manage'
           },
           {
             id : 'alarm-event-export',
-            label : '导出告警事件',
+            label : '导出设备告警',
             parentId : 'alarm-center-manage'
           }
         ]
       },
       {
         id : 'alarm-notice-record-manage',
-        label : '告警通知',
+        label : '告警通知记录',
         parentId : 'alarm-center-manage',
         sort : '2',
         children : [{
           id : 'alarm-notice-record-scan',
-          label : '查看告警通知',
+          label : '查看告警通知记录',
           parentId : 'alarm-notice-record-manage'
         }]
       }, {
@@ -548,38 +548,38 @@ export default [
       },
       {
         id : 'pov-dev-monitoring',
-        label : '接种单位设备监控',
+        label : '关联单位设备监控',
         parentId : 'hmcc-system',
         sort : '2',
         children : [
           {
             id : 'pov-dev-monitoring-scan',
-            label : '查看接种单位设备监控',
+            label : '查看关联单位设备监控',
             parentId : 'hmcc-system'
           },
           {
             id : 'pov-dev-monitoring-add',
-            label : '添加接种单位设备监控',
+            label : '添加关联单位设备监控',
             parentId : 'hmcc-system'
           },
           {
             id : 'pov-dev-monitoring-edit',
-            label : '修改接种单位设备监控',
+            label : '修改关联单位设备监控',
             parentId : 'hmcc-system'
           },
           {
             id : 'pov-dev-monitoring-delete',
-            label : '删除接种单位设备监控',
+            label : '删除关联单位设备监控',
             parentId : 'hmcc-system'
           },
           {
             id : 'pov-dev-monitoring-active',
-            label : '激活接种单位设备监控',
+            label : '激活关联单位设备监控',
             parentId : 'hmcc-system'
           },
           {
             id : 'pov-own-dev-monitoring-disable',
-            label : '停止接种单位设备监控',
+            label : '停止关联单位设备监控',
             parentId : 'hmcc-system'
           }
         ]
@@ -652,6 +652,13 @@ export default [
         label : '实时能耗监控',
         parentId : 'energy-efficiency-manage',
         sort : 0,
+        children : []
+      },
+      {
+        id : 'energy-efficiency-analysis',
+        label : '汇总能耗分析',
+        parentId : 'energy-efficiency-manage',
+        sort : 1,
         children : []
       },
     ]
