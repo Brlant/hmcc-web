@@ -13,69 +13,73 @@
     </template>
     <template slot="content">
       <el-form class="advanced-query-form" onsubmit="return false">
-        <el-col :span="6">
-          <oms-form-row label="设备编号/名称" :span="5">
-            <el-input
-              v-model.trim="searchCondition.text"
-              placeholder="设备编号/名称"
-              clearable>
-            </el-input>
-          </oms-form-row>
-        </el-col>
-        <el-col :span="6">
-          <oms-form-row label="定位标签" :span="5">
-            <el-input
-              v-model.trim="searchCondition.tagSnNumber"
-              placeholder="定位标签"
-              clearable>
-            </el-input>
-          </oms-form-row>
-        </el-col>
-        <el-col :span="6">
-          <oms-form-row label="能耗标签" :span="5">
-            <el-input
-              v-model.trim="searchCondition.energyTagSnNumber"
-              placeholder="请选择能耗标签"
-              clearable>
-            </el-input>
-          </oms-form-row>
-        </el-col>
-        <el-col :span="6">
-          <oms-form-row label="设备分类" :span="5">
-            <el-select v-model="searchCondition.devType" placeholder="设备分类" clearable>
-              <el-option
-                v-for="(item,index) in deviceTypeList"
-                :key="index"
-                :label="item.label"
-                :value="item.value"
-              />
-            </el-select>
-          </oms-form-row>
-        </el-col>
-        <el-col :span="6">
-          <oms-form-row label="所属科室" :span="5">
-            <el-select v-model="searchCondition.departmentId" placeholder="所属科室" clearable>
-              <el-option
-                v-for="(item,index) in deviceDeptList"
-                :key="index"
-                :value="item.id"
-                :label="item.departmentName"
-              />
-            </el-select>
-          </oms-form-row>
-        </el-col>
-        <el-col :span="6">
-          <oms-form-row label="设备状态" :span="5">
-            <el-select placeholder="设备状态" v-model="searchCondition.status" clearable>
-              <el-option
-                v-for="(item,index) in deviceStatusList"
-                :key="index"
-                :label="item.label"
-                :value="item.value"
-              />
-            </el-select>
-          </oms-form-row>
-        </el-col>
+        <el-row>
+          <el-col :span="7">
+            <oms-form-row label="设备编号/名称" :span="7">
+              <el-input
+                v-model.trim="searchCondition.text"
+                placeholder="请输入设备编号/名称"
+                clearable>
+              </el-input>
+            </oms-form-row>
+          </el-col>
+          <el-col :span="7">
+            <oms-form-row label="定位标签" :span="7">
+              <el-input
+                v-model.trim="searchCondition.tagSnNumber"
+                placeholder="请输入定位标签"
+                clearable>
+              </el-input>
+            </oms-form-row>
+          </el-col>
+          <el-col :span="7">
+            <oms-form-row label="能耗标签" :span="7">
+              <el-input
+                v-model.trim="searchCondition.energyTagSnNumber"
+                placeholder="请输入能耗标签"
+                clearable>
+              </el-input>
+            </oms-form-row>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="7">
+            <oms-form-row label="设备分类" :span="7">
+              <el-select v-model="searchCondition.devType" placeholder="请选择设备分类" clearable>
+                <el-option
+                  v-for="(item,index) in deviceTypeList"
+                  :key="index"
+                  :label="item.label"
+                  :value="item.value"
+                />
+              </el-select>
+            </oms-form-row>
+          </el-col>
+          <el-col :span="7">
+            <oms-form-row label="所属科室" :span="7">
+              <el-select v-model="searchCondition.departmentId" placeholder="请选择设备所属科室" clearable>
+                <el-option
+                  v-for="(item,index) in deviceDeptList"
+                  :key="index"
+                  :value="item.id"
+                  :label="item.departmentName"
+                />
+              </el-select>
+            </oms-form-row>
+          </el-col>
+          <el-col :span="7">
+            <oms-form-row label="运行状态" :span="7">
+              <el-select placeholder="请选择设备运行状态" v-model="searchCondition.status" clearable>
+                <el-option
+                  v-for="(item,index) in deviceStatusList"
+                  :key="index"
+                  :label="item.label"
+                  :value="item.value"
+                />
+              </el-select>
+            </oms-form-row>
+          </el-col>
+        </el-row>
       </el-form>
     </template>
   </search-template>
@@ -89,16 +93,22 @@ export default {
   data: function () {
     return {
       searchCondition: {
-        text: '',              //设备编号和名称
-        tagSnNumber: '',       //标签编号
-        devType: "",          //设备分类
-        departmentId: '',     //所属科室id
-        status: "",           //设备状态   在线:ONLINE  不在线:OFFLINE  异常:ALARM
+        // 设备编号和名称
+        text: '',
+        // 定位标签
+        tagSnNumber: '',
+        // 能耗标签
+        energyTagSnNumber: '',
+        // 设备分类
+        devType: "",
+        // 所属科室id
+        departmentId: '',
+        // 设备状态   在线:ONLINE  不在线:OFFLINE  异常:ALARM
+        status: "",
       },
       showSearch: false,
       list: [],
       times: [],
-      deviceTypeList: [],
       //所属科室
       deviceDeptList: [],
     };
@@ -107,18 +117,15 @@ export default {
     coolDevType() {
       return this.$getDict('coolDevType')
     },
-    deviceStatus() {
-      return this.$getDict('device_status')
+    deviceTypeList() {
+      return this.$getDict('device_type')
     },
     deviceStatusList() {
       return this.$getDict('device_status')
     }
   },
   mounted() {
-    //科室
-    this.queryDepartmentList();
-    //设备状态
-    this.getDeviceStatusList();
+    this.queryDeptList();
   },
   methods: {
     search() {
@@ -126,11 +133,18 @@ export default {
     },
     reset() {
       this.searchCondition = {
-        no: null,
-        devName: null,
-        devType: null,
-        type: null,
-        orgId: ''
+        // 设备编号和名称
+        text: '',
+        // 定位标签
+        tagSnNumber: '',
+        // 能耗标签
+        energyTagSnNumber: '',
+        // 设备分类
+        devType: "",
+        // 所属科室id
+        departmentId: '',
+        // 设备状态   在线:ONLINE  不在线:OFFLINE  异常:ALARM
+        status: "",
       };
       this.$emit('search', this.searchCondition);
     },
@@ -138,7 +152,7 @@ export default {
       this.showSearch = val;
     },
     //所属科室
-    queryDepartmentList() {
+    queryDeptList() {
       queryApi.queryDepartment({}).then(res => {
         this.departmentId = []
         this.deviceDeptList = res.data.map(item => {

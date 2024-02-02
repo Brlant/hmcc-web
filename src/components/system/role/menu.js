@@ -121,7 +121,7 @@ export default [
     sort: 2,
     children: [
       {
-        id: 'in-hospital-dev-manage',
+        id: 'hospital-dev-manage',
         label: '院内设备管理',
         parentId: 'dev-manage',
         sort: '1',
@@ -152,7 +152,7 @@ export default [
           {
             id: 'medical-dev-manage',
             label: '医疗设备管理',
-            parentId: 'in-hospital-dev-manage',
+            parentId: 'hospital-dev-manage',
             sort: '2',
             children: [
               {
@@ -168,6 +168,11 @@ export default [
               {
                 id: 'medical-dev-edit',
                 label: '编辑医疗设备',
+                parentId: 'medical-dev-manage'
+              },
+              {
+                id: 'medical-dev-delete',
+                label: '删除医疗设备',
                 parentId: 'medical-dev-manage'
               }
             ]

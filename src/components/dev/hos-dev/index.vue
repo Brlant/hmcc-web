@@ -15,7 +15,7 @@ import Healths from './medical';
 
 export default {
   // 院内设备管理
-  name: "InHospitalEquipmentManagement",
+  name: "HosDev",
   components: {
     CoolDev,
     Healths

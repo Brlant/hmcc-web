@@ -32,6 +32,7 @@
   import methodsMixin from '@/mixins/methodsMixin';
 
   export default {
+    name: 'EnergyTagAddForm',
     mixins: [methodsMixin],
 
     data() {

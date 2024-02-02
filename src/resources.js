@@ -257,7 +257,20 @@ export const gateway = resource('/gateway', http, {
 
 
 //冷链设备管理
-export const cool = resource('/freezer-dev', http, {
+export const coolApi = resource('/freezer-dev', http, {
+  query(params) {
+    return http.post('/freezer-dev/page', params);
+  },
+  update(obj) {
+    return http.put('/freezer-dev', obj);
+  },
+  queryStateNum(params) {
+    return http.post('/freezer-dev/count', params);
+  }
+});
+
+//医疗设备管理
+export const medicalApi = resource('/freezer-dev', http, {
   query(params) {
     return http.post('/freezer-dev/page', params);
   },

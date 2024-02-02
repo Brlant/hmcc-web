@@ -1,6 +1,6 @@
 <template>
   <dialog-template :btnSavePosition="100">
-    <template slot="title">{{actionType}}</template>
+    <template slot="title">{{ actionType }}</template>
     <template slot="btnSave">
       <el-button :disabled="doing" @click="save('tempForm')" plain type="primary">保存</el-button>
     </template>
@@ -28,114 +28,115 @@
   </dialog-template>
 </template>
 <script>
-  import {probe} from '@/resources';
-  import methodsMixin from '@/mixins/methodsMixin';
+import {probe} from '@/resources';
+import methodsMixin from '@/mixins/methodsMixin';
 
-  export default {
-    mixins: [methodsMixin],
+export default {
+  name: 'CoolTagAddForm',
+  mixins: [methodsMixin],
 
-    data() {
-      return {
-        form: {},
-        doing: false,
-        rules: {
-          devCode: [
-            {required: true, message: '请输入编码', trigger: 'blur'}
-          ],
-          name: [
-            {required: true, message: '请输入名称', trigger: 'blur'}
-          ],
-          type: [
-            {required: true, message: '请输入型号', trigger: 'blur'}
-          ],
-          orgId: [
-            {required: true, message: '请选择所属单位', trigger: 'change'}
-          ],
-          calibrationTime: [
-            {required: true, message: '请选择校准期', trigger: 'change'}
-          ],
-          no: [
-            {required: true, message: '请输入编号', trigger: 'blur'}
-          ]
-        },
-        actionType: '添加',
-        orgList: []
-      };
-    },
-    props: {
-      formItem: Object,
-      index: Number
-    },
-    watch: {
-      index: function (val) {
-        if (this.formItem.id) {
-          this.orgList = [
-            {name: this.formItem.orgName, id: this.formItem.orgId}
-          ];
-          this.form = Object.assign({}, this.formItem);
-          this.actionType = '编辑';
-        } else {
-          this.form = {
-            name: '',
-            status: '1',
-            type: '',
-            calibrationTime: '',
-            no: ''
-          };
-          this.actionType = '添加';
-        }
-        this.$nextTick(() => {
-          this.$refs['tempForm'].clearValidate();
-        });
+  data() {
+    return {
+      form: {},
+      doing: false,
+      rules: {
+        devCode: [
+          {required: true, message: '请输入编码', trigger: 'blur'}
+        ],
+        name: [
+          {required: true, message: '请输入名称', trigger: 'blur'}
+        ],
+        type: [
+          {required: true, message: '请输入型号', trigger: 'blur'}
+        ],
+        orgId: [
+          {required: true, message: '请选择所属单位', trigger: 'change'}
+        ],
+        calibrationTime: [
+          {required: true, message: '请选择校准期', trigger: 'change'}
+        ],
+        no: [
+          {required: true, message: '请输入编号', trigger: 'blur'}
+        ]
+      },
+      actionType: '添加',
+      orgList: []
+    };
+  },
+  props: {
+    formItem: Object,
+    index: Number
+  },
+  watch: {
+    index: function (val) {
+      if (this.formItem.id) {
+        this.orgList = [
+          {name: this.formItem.orgName, id: this.formItem.orgId}
+        ];
+        this.form = Object.assign({}, this.formItem);
+        this.actionType = '编辑';
+      } else {
+        this.form = {
+          name: '',
+          status: '1',
+          type: '',
+          calibrationTime: '',
+          no: ''
+        };
+        this.actionType = '添加';
       }
-    },
-    methods: {
-      save(formName) {
-        this.$refs[formName].validate((valid) => {
-          if (valid && this.doing === false) {
+      this.$nextTick(() => {
+        this.$refs['tempForm'].clearValidate();
+      });
+    }
+  },
+  methods: {
+    save(formName) {
+      this.$refs[formName].validate((valid) => {
+        if (valid && this.doing === false) {
 
-            this.orgList.forEach(i => {
-              if (i.id === this.form.orgId) {
-                this.form.orgName = i.name;
+          this.orgList.forEach(i => {
+            if (i.id === this.form.orgId) {
+              this.form.orgName = i.name;
+            }
+          });
+          if (!this.form.id) {
+            this.doing = true;
+            this.$httpRequestOpera(probe.save(this.form), {
+              errorTitle: '添加失败',
+              success: res => {
+                if (res.code === 200) {
+                  this.$notify.success({message: '添加成功'});
+                  this.doing = false;
+                  this.$emit('change', res.data);
+                } else {
+                  this.doing = false;
+                }
+              },
+              error: () => {
+                this.doing = false;
               }
             });
-            if (!this.form.id) {
-              this.doing = true;
-              this.$httpRequestOpera(probe.save(this.form), {
-                errorTitle: '添加失败',
-                success: res => {
-                  if (res.code === 200) {
-                    this.$notify.success({message: '添加成功'});
-                    this.doing = false;
-                    this.$emit('change', res.data);
-                  } else {
-                    this.doing = false;
-                  }
-                },
-                error: () => {
+          } else {
+            this.$httpRequestOpera(probe.update(this.form), {
+              errorTitle: '修改失败',
+              success: res => {
+                if (res.code === 200) {
+                  this.$notify.success({message: '修改成功'});
+                  this.doing = false;
+                  this.$emit('change', res.data);
+                } else {
                   this.doing = false;
                 }
-              });
-            } else {
-              this.$httpRequestOpera(probe.update(this.form), {
-                errorTitle: '修改失败',
-                success: res => {
-                  if (res.code === 200) {
-                    this.$notify.success({message: '修改成功'});
-                    this.doing = false;
-                    this.$emit('change', res.data);
-                  } else {
-                    this.doing = false;
-                  }
-                },
-                error: () => {
-                  this.doing = false;
-                }
-              });
-            }
+              },
+              error: () => {
+                this.doing = false;
+              }
+            });
           }
-        });
-      }
+        }
+      });
     }
-  };
+  }
+};
 </script>

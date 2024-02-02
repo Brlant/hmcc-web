@@ -13,17 +13,17 @@
 </template>
 
 <script>
-import LocateLabel from './label';
-import ProbeLabel from './probe';
-import EnergyConsumptionLabel from './EnergyConsumptionLabel';
+import LocateLabel from './locate-tag';
+import CoolTag from './cool-tag';
+import EnergyTag from './energy-tag';
 
 export default {
   // 物联网标签管理
   name: 'IotTagManagement',
   components: {
     LocateLabel,
-    ProbeLabel,
-    EnergyConsumptionLabel
+    CoolTag,
+    EnergyConsumptionLabel: EnergyTag
   },
   data() {
     return {

@@ -34,6 +34,7 @@
 </template>
 <script>
   export default {
+    name: 'CoolTagShowForm',
     props: {
       index: Number,
       formItem: Object,

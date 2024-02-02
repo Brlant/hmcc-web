@@ -34,6 +34,7 @@
 </template>
 <script>
   export default {
+    name: 'EnergyTagShowForm',
     props: {
       index: Number,
       formItem: Object,

@@ -109,7 +109,7 @@ import CommonMixin from '@/mixins/commonMixin';
 import {download, EnergyTagApi} from '@/resources';
 
 export default {
-  name: 'EnergyConsumptionLabel',
+  name: 'EnergyTag',
   components: {
     SearchPart
   },

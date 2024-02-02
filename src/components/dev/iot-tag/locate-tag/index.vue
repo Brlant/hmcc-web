@@ -111,7 +111,7 @@
       </el-pagination>
     </div>
 
-<!--    新增标签-->
+  <!--新增标签-->
     <form-label :titleDetail="titleDetail" :detailForm="detailForm" :addEditVisible="addEditVisible" :edit="edit" @closeDetail="closeDetail"></form-label>
   </div>
 </template>

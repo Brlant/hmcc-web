@@ -1,9 +1,9 @@
 <style lang="scss" scoped>
-  .el-form::after {
-    content: '';
-    clear: both;
-    display: table;
-  }
+.el-form::after {
+  content: '';
+  clear: both;
+  display: table;
+}
 </style>
 <template>
   <search-template :isShow="showSearch" :isShowAdvance="false" @search="search" @reset="reset" @isShow="isShow">
@@ -51,49 +51,49 @@
 </template>
 <script>
 
-  import methodsMixin from '@/mixins/methodsMixin';
+import methodsMixin from '@/mixins/methodsMixin';
 
-  export default {
-    mixins: [methodsMixin],
+export default {
+  mixins: [methodsMixin],
 
-    data: function () {
-      return {
-        searchCondition: {
-          no: null,
-          name: null,
-          type: null,
-          status: null,
-          orgId: ''
-        },
-        showSearch: false,
-        list: [],
-        times: [],
-        orgList: []
+  data: function () {
+    return {
+      searchCondition: {
+        no: null,
+        name: null,
+        type: null,
+        status: null,
+        orgId: ''
+      },
+      showSearch: false,
+      list: [],
+      times: [],
+      orgList: []
+    };
+  },
+  mounted() {
+    let no = this.$route.query.no;
+    if (!no) return;
+    this.searchCondition.no = no;
+    this.search();
+  },
+  methods: {
+    search() {
+      this.$emit('search', this.searchCondition);
+    },
+    reset() {
+      this.searchCondition = {
+        no: null,
+        name: null,
+        type: null,
+        status: null,
+        orgId: ''
       };
+      this.$emit('search', this.searchCondition);
     },
-    mounted() {
-      let no = this.$route.query.no;
-      if (!no) return;
-      this.searchCondition.no = no;
-      this.search();
-    },
-    methods: {
-      search() {
-        this.$emit('search', this.searchCondition);
-      },
-      reset() {
-        this.searchCondition = {
-          no: null,
-          name: null,
-          type: null,
-          status: null,
-          orgId: ''
-        };
-        this.$emit('search', this.searchCondition);
-      },
-      isShow(val) {
-        this.showSearch = val;
-      }
+    isShow(val) {
+      this.showSearch = val;
     }
-  };
+  }
+};
 </script>

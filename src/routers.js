@@ -58,6 +58,8 @@ export const routes = [
               permPage: {
                 addMedical: 'medical-dev-add',
                 editMedical: 'medical-dev-edit',
+                delMedical: 'medical-dev-delete',
+                positionMedical: 'device-position-query',
                 addCool: 'freezer-dev-add',
                 editCool: 'freezer-dev-edit',
               }

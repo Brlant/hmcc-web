@@ -2,12 +2,13 @@
   <div class="order-page">
     <search-part @search="searchResult">
       <template slot="btn">
-        <el-button @click="add" plain size="small" v-has="permPage.add">
+        <el-button @click="add" plain size="small" v-has="permPage.addMedical">
           <f-a class="icon-small" name="plus"></f-a>
           添加
         </el-button>
       </template>
     </search-part>
+
     <div class="totalNumberDevices">
       <div class="deviceStyle">
         <span>设备总数</span>
@@ -34,47 +35,78 @@
         <span class="failureNumber">{{ totalNumberDevices.ailure }}</span>
       </div>
     </div>
-    <!--    表格-->
-    <el-table v-loading="loading" :data="dataList" style="width: 100%">
-      <el-table-column label="序号" align="center" type="index"/>
-      <el-table-column label="设备名称" prop="devName" align="center"></el-table-column>
-      <el-table-column label="设备编号" prop="devNo" align="center"></el-table-column>
-      <el-table-column label="设备分类" prop="devType" align="center">
-        <template v-slot="{row}">
-          <div v-for="(item,index) in deviceTypeList" :key="index">
-            <span v-if="row.devType===item.value">{{ item.label }}</span>
-          </div>
-        </template>
-      </el-table-column>
-      <el-table-column label="所属科室" prop="departmentName" align="center"></el-table-column>
-      <el-table-column label="定位标签" prop="tagSnNumber" align="center"></el-table-column>
-      <el-table-column label="能耗标签" prop="energyTagSnNumber" align="center"></el-table-column>
-      <el-table-column label="运行状态" prop="deviceStatus" align="center">
-        <template v-slot="{row}">
-          <span v-if="row.deviceStatus === 'ONLINE'" style="color: green">开机</span>
-          <span v-if="row.deviceStatus === 'OFFLINE'" style="color: grey">关机</span>
-          <span v-if="row.deviceStatus === 'ALARM'" style="color: red">异常</span>
-          <span v-if="row.deviceStatus === 'FAILURE'" style="color: yellow">故障</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="最后位置" prop="lastPositionStr" align="center">
-        <template v-slot="{row}">
-          <span v-if="row.lastPositionStr">{{ row.lastPositionStr }}</span>
-          <span v-else>暂无</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="操作" prop="" align="center">
-        <template v-slot="{row}">
-          <el-button type="primary" size="mini" icon="el-icon-location-outline" circle
-                     @click="devicesPosition(row)"></el-button>
-          <el-button icon="el-icon-search" size="mini" circle @click="detailInfo(row)"></el-button>
-          <el-button type="primary" icon="el-icon-edit" size="mini" @click="detailEdit(row)" circle></el-button>
-          <el-button type="danger" icon="el-icon-delete" size="mini" circle @click="remove(row)"></el-button>
-        </template>
-      </el-table-column>
-    </el-table>
 
-    <div class="text-center" v-show="(dataList.length || pager.currentPage !== 1) && !loadingData">
+    <div class="order-list" style="margin-top: 20px">
+      <el-row class="order-list-header">
+        <el-col :span="1">序号</el-col>
+        <el-col :span="3">设备名称</el-col>
+        <el-col :span="2">设备编号</el-col>
+        <el-col :span="3">所属科室</el-col>
+        <el-col :span="2">设备分类</el-col>
+        <el-col :span="2">定位标签</el-col>
+        <el-col :span="2">能耗标签</el-col>
+        <!--<el-col :span="2">启用时间</el-col>-->
+        <el-col :span="2">运行状态</el-col>
+        <el-col :span="4">最后位置</el-col>
+        <el-col :span="3">操作</el-col>
+      </el-row>
+      <el-row v-if="loading">
+        <el-col :span="24">
+          <oms-loading :loading="loading"></oms-loading>
+        </el-col>
+      </el-row>
+      <el-row v-else-if="!dataList.length">
+        <el-col :span="24">
+          <div class="empty-info">
+            暂无信息
+          </div>
+        </el-col>
+      </el-row>
+      <div class="order-list-body flex-list-dom" v-else>
+        <div :class="[{'active':currentItemId===item.id}]"
+             @click="showItemDetail(item)" class="order-list-item order-list-item-bg"
+             v-for="(item,index) in dataList">
+          <el-row>
+            <el-col :span="1" class="R">
+              {{ index + 1 }}
+            </el-col>
+            <el-col :span="3" class="R">
+              {{ item.name }}
+            </el-col>
+            <el-col :span="2" class="R">{{ item.devNo }}</el-col>
+            <el-col :span="3" class="R">{{ item.orgName }}</el-col>
+            <el-col :span="2" class="R">
+              {{ formatStatus(item.type, coolDevType) }}
+            </el-col>
+            <el-col :span="2" class="R">{{ item.tagSnNumber }}</el-col>
+            <el-col :span="2" class="R">{{ item.energyTagSnNumber }}</el-col>
+
+            <!--<el-col :span="3">{{ item.startUsingTime | date }}</el-col>-->
+            <el-col :span="2">
+              <span v-if="item.deviceStatus === 'ONLINE'" style="color: green">开机</span>
+              <span v-if="item.deviceStatus === 'OFFLINE'" style="color: grey">关机</span>
+              <span v-if="item.deviceStatus === 'ALARM'" style="color: red">异常</span>
+              <span v-if="item.deviceStatus === 'FAILURE'" style="color: yellow">故障</span>
+            </el-col>
+            <el-col :span="4">
+              {{ item.lastPositionStr }}
+            </el-col>
+            <el-col :span="3" class="opera-btn">
+              <span @click="devicesPosition(item)" class="des-btn">
+               <a href="#" class="btn-circle" @click.prevent=""><i
+                 :class="'el-icon-location-outline'"></i></a>
+                定位
+              </span>
+              <des-btn @click="edit(item)" icon="edit" v-has="permPage.editMedical">编辑</des-btn>
+              <des-btn @click="remove(item)" icon="delete" v-has="permPage.delMedical">删除</des-btn>
+            </el-col>
+          </el-row>
+          <!--<div class="order-list-item-bg"></div>-->
+        </div>
+      </div>
+    </div>
+
+    <div class="text-center" v-show="(dataList.length || pager.currentPage !== 1) && !loading">
       <el-pagination :current-page="pager.currentPage" :page-size="pager.pageSize"
                      :page-sizes="[10,20,50,100]"
                      :total="pager.count" @current-change="handleCurrentChange"
@@ -84,77 +116,53 @@
     </div>
 
     <page-right :css="defaultPageRight" :show="showIndex !== -1" @right-close="resetRightBox">
-      <!--<component :formItem="form" :statusType="statusType" :index="showIndex" :is="currentPart" @change="change"-->
-      <!--           @right-close="resetRightBox"/>-->
-      <form-msg :addEditVisible="addEditVisible" :titleDetail="titleDetail" @closeDetail="closeDetail"
-                :detailForm="detailForm" :edit="edit"></form-msg>
+      <component :formItem="form" :index="showIndex" :is="currentPart" @change="change"
+                 @right-close="resetRightBox"/>
     </page-right>
   </div>
 </template>
 
 <script>
-import filesApi from '@/api/files/files'
-import queryApi from '@/api/query/query'
-import formMsg from './formMsg'
+
 import SearchPart from './search'
 import CommonMixin from '@/mixins/commonMixin';
+import addForm from '@/components/dev/hos-dev/cool/form/add-form'
+import showForm from '@/components/dev/hos-dev/cool/form/show-form'
+import filesApi from '@/api/files/files'
+import queryApi from '@/api/query/query'
 
 export default {
   // 医疗设备管理
   name: 'HealthManagement',
   components: {
-    formMsg, SearchPart
+    SearchPart
   },
   mixins: [CommonMixin],
   data() {
     return {
-      edit: false,
-      addEditVisible: false, //新增编辑弹框
-      msgVisible: false,
-      titleDetail: '', //弹框名字
-      msgDetail: '设备详情',
-      //详情信息
-      detailForm: {},
-      total: 0,
-      showSearch: true,
       loading: false,
-      queryParams: {
-        text: '',              //设备编号和名称
-        tagSnNumber: '',       //标签编号
-        devType: "",          //设备分类
-        departmentId: '',     //所属科室id
-        status: "",           //设备状态   在线:ONLINE  不在线:OFFLINE  异常:ALARM
-      },
+      statusType: [],
       filters: {
-        text: '',              //设备编号和名称
-        tagSnNumber: '',       //标签编号
-        devType: "",          //设备分类
-        departmentId: '',     //所属科室id
-        status: "",           //设备状态   在线:ONLINE  不在线:OFFLINE  异常:ALARM
+        text: '',             // 设备编号和名称
+        tagSnNumber: '',      // 标签编号
+        devType: "",          // 设备分类
+        departmentId: '',     // 所属科室id
+        status: "",           // 设备状态   在线:ONLINE  不在线:OFFLINE  异常:ALARM
       },
-      //楼层
-      floorList: [],
-      //设备类型
-      deviceTypeList: [],
-      //所属科室
+      dialogComponents: {
+        0: addForm,
+        1: showForm
+      },
+      defaultPageRight: {'width': '1500px', 'padding': 0},
+      // 所属科室
       deviceDeptList: [],
-      //设备状态
-      deviceStatusList: [
-        // {locate-tag:'开机',value:'ONLINE'},
-        // {locate-tag:'关机',value:'OFFLINE'},
-        // {locate-tag:'异常',value:'ALARM'},
-      ],
-      //设备总数
+      // 设备总数
       totalNumberDevices: {
-        totalCount: '',     //设备总数
-        onlineCount: '',    //开机数
-        offlineCount: '',   //关机数
-        alarmCount: ''      //异常数
+        totalCount: '',     // 设备总数
+        onlineCount: '',    // 开机数
+        offlineCount: '',   // 关机数
+        alarmCount: ''      // 异常数
       },
-      //页面传参
-      deviceQueryStatus: '',
-      deviceQueryDepartment: '',
-      defaultPageRight: {'width': '700px', 'padding': 0}
     }
   },
   computed: {
@@ -163,6 +171,9 @@ export default {
     },
     deviceStatus() {
       return this.$getDict('device_status')
+    },
+    alarmStatus() {
+      return this.$getDict('alarm_status')
     },
   },
   watch: {
@@ -174,20 +185,28 @@ export default {
     }
   },
   mounted() {
-    //接受页面传参数
-    this.pageParameters();
-    //设备类别
-    this.getDeviceTypeList();
     //科室
     this.queryDepartmentList();
-    //设备状态
-    this.getDeviceStatusList();
     //查询列表
     this.queryList(1);
   },
   methods: {
     searchResult: function (search) {
       this.filters = Object.assign({}, this.filters, search);
+    },
+    checkStatus(item, key) {
+      this.filters.status = item.status;
+      this.activeStatus = key;
+    },
+    resetRightBox() {
+      this.defaultPageRight.width = '700px';
+      this.showIndex = -1;
+    },
+    showPart(index) {
+      this.currentPart = this.dialogComponents[index];
+      this.$nextTick(() => {
+        this.showIndex = index;
+      });
     },
     /* 定位 */
     devicesPosition(row) {
@@ -205,90 +224,10 @@ export default {
       }).then(() => {
         filesApi.filesDeleteList({id: row.id}).then(() => {
           this.$notify.success('删除成功')
-          this.queryList(1)();
+          this.queryList(1);
         })
       }).catch(err => {
       });
-    },
-    /* 查看详情 */
-    detailInfo(row) {
-      filesApi.filesDetailList({id: row.id}).then(res => {
-        if (res.code === 200) {
-          this.addEditVisible = true;
-          this.detailForm = res.data
-          this.edit = false;
-        }
-      }).catch(err => {
-
-      })
-    },
-    detailEdit(row) {
-      filesApi.filesDetailList({id: row.id}).then(res => {
-        if (res.code === 200) {
-          this.addEditVisible = true;
-          this.detailForm = res.data
-          this.edit = true;
-        }
-      }).catch(err => {
-
-      })
-    },
-    //设备档案
-    addEditFiles() {
-      this.addEditVisible = true;
-      this.titleDetail = '添加设备'
-      this.edit = true;
-    },
-    //关闭弹框
-    closeDetail() {
-      this.addEditVisible = false;
-      this.titleDetail = '';
-      this.queryParams.pageSize = 10;
-      this.queryParams.pageNo = 1;
-      this.queryList(1);
-    },
-    closeMsgDetail() {
-      this.msgVisible = false;
-      this.queryList(1);
-    },
-    //所属科室
-    queryDepartmentList() {
-      queryApi.queryDepartment({}).then(res => {
-        this.departmentId = []
-        this.deviceDeptList = res.data.map(item => {
-          return {
-            departmentName: item.departmentName,
-            departmentPosition: item.departmentPosition,
-            id: item.id,
-            departmentId: item.id
-          }
-        })
-      })
-    },
-    //页面传参
-    pageParameters() {
-      if (this.$route.query.status || this.$route.query.departmentId) {
-        this.deviceQueryStatus = this.$route.query.status;
-        if (this.$route.query.departmentId) {
-          this.deviceQueryDepartment = Number(this.$route.query.departmentId);
-        }
-
-        this.queryParams.departmentId = this.deviceQueryDepartment;
-        this.queryParams.status = this.deviceQueryStatus;
-
-        this.queryList(1);
-      }
-    },
-    //区分设备编号和名称
-    handDevMsg(row) {
-      let reg = /^[0-9]+.?[0-9]*/;
-      if (reg.test(row)) {
-        this.queryParams.devNo = row;
-        this.queryParams.devName = '';
-      } else {
-        this.queryParams.devName = row;
-        this.queryParams.devNo = '';
-      }
     },
     queryList(pageNo) {
       this.pager.currentPage = pageNo;
@@ -335,7 +274,21 @@ export default {
     change() {
       this.resetRightBox();
       this.queryList(this.pager.currentPage);
-    }
+    },
+    //所属科室
+    queryDepartmentList() {
+      queryApi.queryDepartment({}).then(res => {
+        this.departmentId = []
+        this.deviceDeptList = res.data.map(item => {
+          return {
+            departmentName: item.departmentName,
+            departmentPosition: item.departmentPosition,
+            id: item.id,
+            departmentId: item.id
+          }
+        })
+      })
+    },
   }
 }
 </script>
