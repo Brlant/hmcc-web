@@ -38,18 +38,18 @@ body {
   <!--    <el-card class="box-card main-card-box">-->
   <!--      <div class="logo-part clearfix">智慧医院管理系统</div>-->
   <!--      <div style="padding:20px">-->
-  <!--        <el-form label-position="top" ref="loginForm" label-width="80px" :model="user" :rules="rules"-->
+  <!--        <el-form locate-tag-position="top" ref="loginForm" locate-tag-width="80px" :model="user" :rules="rules"-->
   <!--                 @submit.prevent="done" onsubmit="return false">-->
-  <!--          <el-form-item label="账号" prop="username">-->
+  <!--          <el-form-item locate-tag="账号" prop="username">-->
   <!--            <oms-input v-model="user.username" :showFocus="isFocus === 2" placeholder="手机号/邮箱/用户名"-->
   <!--                       @blur="check()"></oms-input>-->
   <!--          </el-form-item>-->
-  <!--          <el-form-item label="密码" style="position:relative" prop="password">-->
+  <!--          <el-form-item locate-tag="密码" style="position:relative" prop="password">-->
   <!--            <oms-input v-model="user.password" :showFocus="isFocus === 3" type="password"-->
   <!--                       placeholder="请输入密码"></oms-input>-->
   <!--            <router-link style="position: absolute;top:-35px;right:0;" to="/forget">激活账号/忘记密码?</router-link>-->
   <!--          </el-form-item>-->
-  <!--          <el-form-item label="验证码" v-show="showCode">-->
+  <!--          <el-form-item locate-tag="验证码" v-show="showCode">-->
   <!--            <div style="display:flex">-->
   <!--              <div style="width:300px;margin-right:50px">-->
   <!--                <oms-input v-model="user.validateCode"></oms-input>-->
@@ -59,7 +59,7 @@ body {
 
   <!--          </el-form-item>-->
 
-  <!--          <el-form-item label-width="80px">-->
+  <!--          <el-form-item locate-tag-width="80px">-->
   <!--            <el-button type="primary" @click="done" style="display:block;width:100%;" native-type="submit">-->
   <!--              {{ btnString }} <i class="el-icon-loading" v-show="loading"></i>-->
   <!--            </el-button>-->

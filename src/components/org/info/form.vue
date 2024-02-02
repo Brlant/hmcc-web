@@ -205,7 +205,7 @@ $leftWidth: 200px;
               <el-option v-for="item in LogisticsCenter" :key="item.id" :label="item.name" :value="item.id"/>
             </el-select>
           </el-form-item>
-          <!--<el-form-item label-width="140px">-->
+          <!--<el-form-item locate-tag-width="140px">-->
           <!--<el-button type="primary" @click="onSubmit('baseForm')" native-type="submit">保存</el-button>-->
           <!--<el-button @click="doClose">取消</el-button>-->
           <!--</el-form-item>-->

@@ -11,7 +11,7 @@
 
 <script>
 import CoolDev from './cool';
-import Healths from './healths';
+import Healths from './medical';
 
 export default {
   // 院内设备管理

@@ -15,10 +15,10 @@
             </oms-form-row>
           </el-col>
 <!--          <el-col :span="8">-->
-<!--            <oms-form-row :span="5" label="" >-->
+<!--            <oms-form-row :span="5" locate-tag="" >-->
 <!--              <el-radio-group v-model="searchCondition.status" size="small">-->
-<!--                <el-radio-button label="0">未计算</el-radio-button>-->
-<!--                <el-radio-button label="1">已计算</el-radio-button>-->
+<!--                <el-radio-button locate-tag="0">未计算</el-radio-button>-->
+<!--                <el-radio-button locate-tag="1">已计算</el-radio-button>-->
 <!--              </el-radio-group>-->
 <!--            </oms-form-row>-->
 <!--          </el-col>-->

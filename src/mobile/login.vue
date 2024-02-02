@@ -19,7 +19,7 @@
     <div class="logo-part">MCC冷链监控</div>
     <el-form :model="user" :rules="rules" @submit.prevent="done" label-position="top" label-width="80px"
              onsubmit="return false" ref="loginForm">
-      <!--<el-form-item label="系统代码" prop="orgCode" v-if="needCode">-->
+      <!--<el-form-item locate-tag="系统代码" prop="orgCode" v-if="needCode">-->
       <!--  <oms-input :showFocus="isFocus === 1" v-model="user.orgCode"></oms-input>-->
       <!--</el-form-item>-->
       <el-form-item label="用户名" prop="username">

@@ -50,20 +50,22 @@ export const routes = [
         meta: {moduleId: 'dev', title: '设备管理', icon: 'dashboard', perm: 'dev-manage'},
         children: [
           {
-            path: '/dev/inhospital',
-            component: () => import('./components/dev/InHospitalEquipmentManagement/index.vue'),
+            path: '/dev/hospital',
+            component: () => import('./components/dev/hos-dev/index.vue'),
             meta: {
               moduleId: 'dev', title: '院内设备管理', perm: 'in-hospital-dev-manage',
               type: 1,
               permPage: {
-                add: 'freezer-dev-add',
-                edit: 'freezer-dev-edit'
+                addMedical: 'medical-dev-add',
+                editMedical: 'medical-dev-edit',
+                addCool: 'freezer-dev-add',
+                editCool: 'freezer-dev-edit',
               }
             }
           },
           {
             path: '/dev/iot',
-            component: () => import('./components/dev/IotTagManagement/index.vue'),
+            component: () => import('./components/dev/iot-tag/index.vue'),
             meta: {
               moduleId: 'dev', title: '物联网标签管理', perm: 'iot-tag-manage',
               type: 1,
@@ -175,7 +177,7 @@ export const routes = [
             meta: {moduleId: 'alarm', title: '告警通知记录', perm: 'alarm-notice-record-scan'}
           },
           {
-            path: '/alarm/waring/label',
+            path: '/alarm/waring/locate-tag',
             component: () => import('./components/monitoring/alarm/waring/label/index.vue'),
             meta: {moduleId: 'alarm', title: '标签告警', perm: 'alarm-tag-manage'}
           },

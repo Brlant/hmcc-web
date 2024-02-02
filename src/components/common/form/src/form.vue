@@ -1,6 +1,6 @@
 <template>
   <form :class="[
-    labelPosition ? 'el-form--label-' + labelPosition : '',
+    labelPosition ? 'el-form--locate-tag-' + labelPosition : '',
     { 'el-form--inline': inline }
   ]" class="el-form">
     <slot></slot>

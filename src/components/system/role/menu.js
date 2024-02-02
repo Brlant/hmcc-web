@@ -62,35 +62,35 @@ export default [
       },
       // {
       //   id: 'address-manage',
-      //   label: '仓库地址管理',
+      //   locate-tag: '仓库地址管理',
       //   children: [
       //     {
       //       id: 'address-manage-query',
-      //       label: '查看单位仓库地址'
+      //       locate-tag: '查看单位仓库地址'
       //     },
       //     {
       //       id: 'address-manage-add',
-      //       label: '添加单位仓库地址'
+      //       locate-tag: '添加单位仓库地址'
       //     },
       //     {
       //       id: 'address-manage-edit',
-      //       label: '编辑单位仓库地址'
+      //       locate-tag: '编辑单位仓库地址'
       //     },
       //     {
       //       id: 'address-manage-stop',
-      //       label: '停用单位仓库地址'
+      //       locate-tag: '停用单位仓库地址'
       //     },
       //     {
       //       id: 'address-manage-start',
-      //       label: '启用单位仓库地址'
+      //       locate-tag: '启用单位仓库地址'
       //     },
       //     {
       //       id: 'address-manage-audit',
-      //       label: '审核单位仓库地址'
+      //       locate-tag: '审核单位仓库地址'
       //     },
       //     {
       //       id: 'address-manage-export',
-      //       label: '导出单位仓库地址',
+      //       locate-tag: '导出单位仓库地址',
       //     }
       //   ]
       // }
@@ -150,10 +150,27 @@ export default [
             ]
           },
           {
-            id: 'healths-dev-manage',
+            id: 'medical-dev-manage',
             label: '医疗设备管理',
             parentId: 'in-hospital-dev-manage',
             sort: '2',
+            children: [
+              {
+                id: 'medical-dev-scan',
+                label: '查看医疗设备管理',
+                parentId: 'medical-dev-manage'
+              },
+              {
+                id: 'medical-dev-add',
+                label: '新增医疗设备',
+                parentId: 'medical-dev-manage'
+              },
+              {
+                id: 'medical-dev-edit',
+                label: '编辑医疗设备',
+                parentId: 'medical-dev-manage'
+              }
+            ]
           },
         ]
       },

@@ -20,7 +20,7 @@
             <oms-col :isShow="true" label="编码">{{dev.monitordevCode}}</oms-col>
             <oms-col :isShow="true" label="类型">{{typeList[dev.monitordevType-1].title}}</oms-col>
             <oms-col :isShow="true" label="监控状态">{{dev.monitorFlag | formatMonitoringStatus}}</oms-col>
-            <!--<oms-col label="告警状态" :isShow="true">{{dev.warnStatus | formatAlarmStatus}}</oms-col>-->
+            <!--<oms-col locate-tag="告警状态" :isShow="true">{{dev.warnStatus | formatAlarmStatus}}</oms-col>-->
             <oms-col :isShow="true" label="状态">{{dev.activeFlag | formatUseStatus}}</oms-col>
           </div>
           <div class="hr mb-10 mt-10"></div>

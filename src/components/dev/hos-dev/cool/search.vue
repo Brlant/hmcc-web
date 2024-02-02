@@ -7,7 +7,7 @@
 </style>
 <template>
   <search-template :isShow="showSearch" :isShowAdvance="false" @search="search" @reset="reset" @isShow="isShow">
-    <template slot="title">查询</template>
+    <template slot="title">冷链设备查询</template>
     <template slot="btn">
       <slot name="btn"></slot>
     </template>
@@ -68,11 +68,11 @@
       },
       reset() {
         this.searchCondition = {
-          no: null,
-          devName: null,
-          devType: null,
-          type: null,
-          orgId: ''
+          text: '',              //设备编号和名称
+          tagSnNumber: '',       //标签编号
+          devType: "",          //设备分类
+          departmentId: '',     //所属科室id
+          status: "",           //设备状态   在线:ONLINE  不在线:OFFLINE  异常:ALARM
         };
         this.$emit('search', this.searchCondition);
       },
