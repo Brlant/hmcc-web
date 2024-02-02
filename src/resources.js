@@ -980,6 +980,58 @@ export const indexApi = {
   },
 }
 
+//科室管理
+export const departmentApi = {
+  //获取科室列表接口查询
+  getDeptQueryList(data) {
+    return http({
+      url: `/department/queryListByPage`,
+      method: 'POST',
+      data: data
+    })
+  },
+  //删除
+  deleteDept(params) {
+    return http({
+      url: `/department/deleteById`,
+      method: 'get',
+      params: params
+    })
+  },
+  //详情
+  getDeptDetail(params) {
+    return http({
+      url: `/department/queryById`,
+      method: 'get',
+      params: params
+    })
+  },
+  //楼栋
+  getFloorList(data) {
+    return http({
+      url: `/tFloor/getFloorByTypeAndFloorId`,
+      method: 'post',
+      data: data
+    })
+  },
+  //新增
+  addDept(data) {
+    return http({
+      url: `/department/addDepartment`,
+      method: 'post',
+      data: data
+    })
+  },
+  //更新
+  updateDept(data) {
+    return http({
+      url: `/department/editDepartment`,
+      method: 'post',
+      data: data
+    })
+  },
+}
+
 // 能耗监控接口
 export const EnergyEffciencyApi = {
   //获取科室列表接口查询

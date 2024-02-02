@@ -644,6 +644,29 @@ export default [
     id: 'system-config',
     label: '系统设置',
     children: [
+      //科室管理
+      {
+        id: 'system-depart-manage',
+        label: '科室管理',
+        children: [
+          {
+            id: 'system-depart-manage-query',
+            label: '查看科室'
+          },
+          {
+            id: 'system-depart-manage-add',
+            label: '添加科室'
+          },
+          {
+            id: 'system-depart-manage-edit',
+            label: '编辑科室'
+          },
+          {
+            id: 'system-depart-manage-delete',
+            label: '删除科室'
+          },
+        ]
+      },
       {
         id: 'system-setting-account-manage',
         label: '账号管理',
