@@ -122,7 +122,7 @@ import { sinopharmDictDataType } from '@/api/system/dict/data'
 import labelTagList from '@/api/label/label'
 import CommonMixin from '@/mixins/commonMixin'
 export default {
-  name: 'LocateLabel',
+  name: 'LocateTag',
   components: {
     formLabel,
   },
