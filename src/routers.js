@@ -300,11 +300,6 @@ export const routes = [
         meta: {moduleId: 'permission', title: '系统设置', icon: 'setting', perm: 'system-config'}, // hmcc-system-config
         children: [
           {
-            path: '/permission/depart',
-            component: () => import('./components/system/depart/index.vue'),
-            meta: {moduleId: 'permission', title: '科室管理', perm: 'system-depart-manage-query'} // ccs-platform-user-watch
-          },
-          {
             path: '/permission/user',
             component: () => import('./components/system/user/list.vue'),
             meta: {moduleId: 'permission', title: '账号管理', perm: 'system-setting-account-manage-query'} // ccs-platform-user-watch
@@ -319,6 +314,11 @@ export const routes = [
             component: () => import('./components/system/org-account/list.vue'),
             meta: {moduleId: 'public', title: '各单位账号管理', perm: 'system-setting-org-account-manage-query'},
             children: []
+          },
+          {
+            path: '/permission/depart',
+            component: () => import('./components/system/depart/index.vue'),
+            meta: {moduleId: 'permission', title: '科室管理', perm: 'system-depart-manage-query'} // ccs-platform-user-watch
           },
           {
             path: '/setting/dict',
