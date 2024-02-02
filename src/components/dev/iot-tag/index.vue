@@ -1,19 +1,19 @@
 <template>
   <el-tabs v-model="activeName" @tab-click="handleClick">
     <el-tab-pane label="冷链标签" name="first">
-      <probe-label/>
+      <cool-tag/>
     </el-tab-pane>
     <el-tab-pane label="定位标签" name="second">
-      <locate-label/>
+      <locate-tag/>
     </el-tab-pane>
     <el-tab-pane label="能耗标签" name="three">
-      <energy-consumption-label/>
+      <energy-tag/>
     </el-tab-pane>
   </el-tabs>
 </template>
 
 <script>
-import LocateLabel from './locate-tag';
+import LocateTag from './locate-tag';
 import CoolTag from './cool-tag';
 import EnergyTag from './energy-tag';
 
@@ -21,9 +21,9 @@ export default {
   // 物联网标签管理
   name: 'IotTagManagement',
   components: {
-    LocateLabel,
+    LocateTag,
     CoolTag,
-    EnergyConsumptionLabel: EnergyTag
+    EnergyTag
   },
   data() {
     return {

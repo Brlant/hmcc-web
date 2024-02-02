@@ -28,8 +28,8 @@
           <el-option
             v-for="(item,index) in labelTypeList"
             :key="index"
-            :label="item.dictLabel"
-            :value="item.dictValue"
+            :label="item.label"
+            :value="item.key"
           />
         </el-select>
       </el-form-item>
@@ -202,8 +202,8 @@ export default {
       sinopharmDictDataType('tag_type').then(res => {
         this.labelTypeList = res.data.map(item => {
           return {
-            dictLabel: item.dictLabel,
-            dictValue: item.dictValue,
+            label: item.label,
+            key: item.key,
             dictSort: item.dictSort,
             id: item.id,
             remark: item.remark,
