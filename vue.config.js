@@ -26,6 +26,13 @@ module.exports = {
         pathRewrite: {
           '/api': ''
         }
+      },
+      '/hengshi': {
+        target: 'https://data-analysis.tracentsure.com',
+        changOrigin: true,
+        pathRewrite: {
+          '/hengshi': ''
+        }
       }
     }
   },

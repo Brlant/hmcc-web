@@ -6,6 +6,7 @@ Vue.use(VueRouter);
 export const routes = [
   {
     path: '/',
+    redirect: '/dashboard',
     component: () => import('./components/layout/index.vue'),
     children: [
       // 首页
@@ -40,12 +41,6 @@ export const routes = [
             meta: {moduleId: 'sub', title: '单位关系管理', icon: 'org1', perm: 'org-relation-manage-query'},
             children: []
           },
-          // {
-          //   path: '/org/address',
-          //   component: () => import('./components/org/address/index.vue'),
-          //   meta: {moduleId: 'org', title: '仓库地址管理', perm: 'address-manage-query'},
-          //   children: []
-          // }
         ]
       },
       // 设备管理
@@ -242,29 +237,6 @@ export const routes = [
               }
             }
           },
-          // {
-          //   path: '/monitoring/store',
-          //   component: () => import('./components/common/parent-route'),
-          //   meta: {moduleId: 'monitoring', title: '委托仓库监控', perm: 'query-monitor-relations', subMenuId: 'store'},
-          //   children: [
-          //     {
-          //       path: '',
-          //       component: () => import('./components/monitoring/store/index.vue'),
-          //       meta: {
-          //         moduleId: 'monitoring', subMenuId: 'store',
-          //         permPage: {add: 'hmcc-system', edit: '', delete: '', start: '', stop: ''}
-          //       }
-          //     },
-          //     {
-          //       path: '/monitoring/store/temp',
-          //       component: () => import('./components/monitoring/store/dev-temp/index.vue'),
-          //       meta: {
-          //         moduleId: 'monitoring', subMenuId: 'store',
-          //         permPage: {add: 'hmcc-system', edit: '', delete: '', start: '', stop: ''}
-          //       }
-          //     },
-          //   ]
-          // },
           {
             path: '/monitoring/temp',
             component: () => import('./components/monitoring/temp-new/index.vue'),
@@ -301,15 +273,22 @@ export const routes = [
       },
       // 设备能效管理系统
       {
-        path: '/energy-efficiency-manage',
+        path: '/energy-efficiency',
         component: () => import('./components/common/parent-route.vue'),
         meta: {moduleId: 'energy-efficiency', title: '设备能效管理系统', icon: 'home', perm: 'energy-efficiency-manage'},
         children: [
           {
-            path: '/energy-efficiency-monitor',
+            path: '/energy-efficiency/monitor',
             component: () => import('./components/energy-efficiency/index.vue'),
             meta: {
-              moduleId: 'monitoring', title: '实时能耗监控', perm: 'energy-efficiency-manage', type: 1,
+              moduleId: 'energy-efficiency', title: '实时能耗监控', perm: 'energy-efficiency-monitor',
+            },
+          },
+          {
+            path: '/energy-efficiency/analysis',
+            component: () => import('./components/energy-efficiency/analysis.vue'),
+            meta: {
+              moduleId: 'energy-efficiency', title: '汇总能耗分析', perm: 'energy-efficiency-manage',
             }
           },
         ]

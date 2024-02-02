@@ -421,13 +421,14 @@ import showForm from '@/components/monitoring/alarm/event/form/show-form';
 import confirmForm from '@/components/monitoring/alarm/event/form/confirm-form';
 
 import utils from '@/tools/utils';
-import {alarmEvent, indexApi, hmccDictDataType} from '@/resources';
+import {alarmEvent, indexApi} from '@/resources';
 import RefreshCycle from '@/components/common/refresh-cycle';
 import EquipmentChart from './chart/equipmentChart.vue';
 import AlarmChart from './chart/alarmChart.vue';
 import AlarmEventMixin from '@/mixins/alarmEventMixin';
 import AlarmMixin from '@/mixins/alarmMixin';
 import TimeMixins from '@/mixins/timeMixin';
+import {sinopharmDictDataType} from '@/api/system/dict/data'
 
 export default {
   components: {
@@ -612,7 +613,7 @@ export default {
     },
     //设备类型
     getDeviceTypeList() {
-      hmccDictDataType('device_type').then(res => {
+      sinopharmDictDataType('device_type').then(res => {
         this.deviceTypeList = res.data.map(item => {
           return {
             dictLabel: item.label,
@@ -625,7 +626,7 @@ export default {
     },
     /* 异常类型 */
     gethmccDictDataType() {
-      hmccDictDataType('alarm_status').then(res => {
+      sinopharmDictDataType('alarm_status').then(res => {
         this.alarmStatusList = res.data.map(item => {
           return {
             dictLabel: item.label,

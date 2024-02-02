@@ -58,7 +58,7 @@
       <el-row v-if="devMonitorList.length > 0" :gutter="100">
         <el-col :xs="24" :sm="12" :md="8" :lg="6" :xl="4"
                 v-for="(item,index) in devMonitorList" :key="index">
-          <div class="dev-monitor">
+          <div class="dev-monitor" @click="handleDevMonitorClick(item)">
             <div :class="getDevMonitorTitleBgClass(item)" class="dev-monitor-title">
               <span>{{ item.devName }}</span>
             </div>
@@ -180,6 +180,15 @@ export default {
       }
       return classes[item.status] || 'bg-green'
     },
+    handleDevMonitorClick(item) {
+      // debugger
+      this.$router.push({
+        path: '/energy-efficiency/analysis',
+        query: {
+          id: item.deviceId
+        }
+      })
+    }
   }
 };
 </script>
@@ -376,6 +385,7 @@ export default {
 }
 
 .dev-monitor {
+  cursor: pointer;
   //border: #fff 1px solid;
   border-radius: 5px;
   height: 150px;
