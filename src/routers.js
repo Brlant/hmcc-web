@@ -222,17 +222,17 @@ export const routes = [
             }
           },
           {
-            path: '/monitoring/pov/equipment',
+            path: '/monitoring/relevancy/equipment',
             component: () => import('./components/monitoring/equipment/index.vue'),
             meta: {
-              moduleId: 'monitoring', title: '关联单位设备监控', perm: 'pov-dev-monitoring-scan', type: 2,
+              moduleId: 'monitoring', title: '关联单位设备监控', perm: 'relevancy-dev-monitoring-scan', type: 2,
               permPage: {
-                add: 'pov-dev-monitoring-add',
-                edit: 'pov-dev-monitoring-edit',
-                delete: 'pov-dev-monitoring-delete',
-                start: 'pov-dev-monitoring-active',
-                stop: 'pov-own-dev-monitoring-disable',
-                record: 'pov-dev-monitoring-record',
+                add: 'relevancy-dev-monitoring-add',
+                edit: 'relevancy-dev-monitoring-edit',
+                delete: 'relevancy-dev-monitoring-delete',
+                start: 'relevancy-dev-monitoring-active',
+                stop: 'relevancy-own-dev-monitoring-disable',
+                record: 'relevancy-dev-monitoring-record',
                 query: 'history-data-manage-scan'
               }
             }

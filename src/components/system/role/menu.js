@@ -537,38 +537,38 @@ export default [
         ]
       },
       {
-        id: 'pov-dev-monitoring',
+        id: 'relevancy-dev-monitoring',
         label: '关联单位设备监控',
         parentId: 'hmcc-system',
         sort: '2',
         children: [
           {
-            id: 'pov-dev-monitoring-scan',
+            id: 'relevancy-dev-monitoring-scan',
             label: '查看关联单位设备监控',
             parentId: 'hmcc-system'
           },
           {
-            id: 'pov-dev-monitoring-add',
+            id: 'relevancy-dev-monitoring-add',
             label: '添加关联单位设备监控',
             parentId: 'hmcc-system'
           },
           {
-            id: 'pov-dev-monitoring-edit',
+            id: 'relevancy-dev-monitoring-edit',
             label: '修改关联单位设备监控',
             parentId: 'hmcc-system'
           },
           {
-            id: 'pov-dev-monitoring-delete',
+            id: 'relevancy-dev-monitoring-delete',
             label: '删除关联单位设备监控',
             parentId: 'hmcc-system'
           },
           {
-            id: 'pov-dev-monitoring-active',
+            id: 'relevancy-dev-monitoring-active',
             label: '激活关联单位设备监控',
             parentId: 'hmcc-system'
           },
           {
-            id: 'pov-own-dev-monitoring-disable',
+            id: 'relevancy-own-dev-monitoring-disable',
             label: '停止关联单位设备监控',
             parentId: 'hmcc-system'
           }

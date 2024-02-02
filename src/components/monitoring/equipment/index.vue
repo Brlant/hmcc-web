@@ -99,7 +99,7 @@
       </el-pagination>
     </div>
 
-    <page-right :css="{'width':'800px','padding':0}" :show="showIndex !== -1" @right-close="resetRightBox">
+    <page-right :css="{'width':'1200px','padding':0}" :show="showIndex !== -1" @right-close="resetRightBox">
       <component :formItem="form" :index="showIndex" :is="currentPart" @change="change" @right-close="resetRightBox"/>
     </page-right>
 
