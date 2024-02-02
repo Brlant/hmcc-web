@@ -15,8 +15,8 @@
               <el-option
                 v-for="(item,index) in labelTypeList"
                 :key="index"
-                :label="item.dictLabel"
-                :value="item.dictValue"
+                :label="item.label"
+                :value="item.key"
               />
             </el-select>
           </el-form-item>
@@ -25,8 +25,8 @@
               <el-option
                 v-for="(item,index) in bindingStateList"
                 :key="index"
-                :label="item.dictLabel"
-                :value="item.dictValue"
+                :label="item.label"
+                :value="item.key"
               />
             </el-select>
           </el-form-item>
@@ -42,8 +42,8 @@
               <el-option
                 v-for="(item,index) in labelStateList"
                 :key="index"
-                :label="item.dictLabel"
-                :value="item.dictValue"
+                :label="item.label"
+                :value="item.key"
               />
             </el-select>
           </el-form-item>
@@ -72,14 +72,14 @@
       <el-table-column label="标签类型" prop="tagType" align="center">
         <template v-slot="{row}">
           <div v-for="(item,index) in labelTypeList" :key="index">
-            <span v-if="item.dictValue===row.tagType">{{item.dictLabel}}</span>
+            <span v-if="item.key===row.tagType">{{item.label}}</span>
           </div>
         </template>
       </el-table-column>
       <el-table-column label="绑定状态" prop="bindStatus" align="center">
         <template v-slot="{row}">
           <div v-for="(item,index) in bindingStateList" :key="index">
-            <span v-if="item.dictValue === row.bindStatus">{{item.dictLabel}}</span>
+            <span v-if="item.key === row.bindStatus">{{item.label}}</span>
           </div>
         </template>
       </el-table-column>
@@ -149,13 +149,13 @@ export default {
       loading: false,
       labelTypeList: [],//标签类型
       bindingStateList: [
-        {dictLabel:'已绑定',dictValue:'1'},
-        {dictLabel:'未绑定',dictValue:'2'},
+        {label:'已绑定',key:'1'},
+        {label:'未绑定',key:'2'},
       ],//绑定状态
       labelStateList: [
-        {dictLabel:'脱落',dictValue:3},
-        {dictLabel:'在线',dictValue:1},
-        {dictLabel:'不在线',dictValue:2},
+        {label:'脱落',key:3},
+        {label:'在线',key:1},
+        {label:'不在线',key:2},
       ],//标签状态
 
       labelList:[],
@@ -190,9 +190,9 @@ export default {
       sinopharmDictDataType('tag_type').then(res=>{
         this.labelTypeList = res.data.map(item=>{
           return {
-            dictLabel:item.dictLabel,
-            dictValue:item.dictValue,
-            dictSort:item.dictSort,
+            label:item.label,
+            key:item.key,
+            sort:item.sort,
             id:item.id,
             remark:item.remark,
           }
