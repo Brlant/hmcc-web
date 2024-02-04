@@ -32,7 +32,7 @@
       <div class="vertical-line"></div>
       <div class="deviceStyle">
         <span>故障数</span>
-        <span class="failureNumber">{{ totalNumberDevices.ailure }}</span>
+        <span class="failureNumber">{{ totalNumberDevices.faultCount }}</span>
       </div>
     </div>
 
@@ -71,12 +71,12 @@
               {{ index + 1 }}
             </el-col>
             <el-col :span="3" class="R">
-              {{ item.name }}
+              {{ item.devName }}
             </el-col>
             <el-col :span="2" class="R">{{ item.devNo }}</el-col>
-            <el-col :span="3" class="R">{{ item.orgName }}</el-col>
+            <el-col :span="3" class="R">{{ item.departmentName }}</el-col>
             <el-col :span="2" class="R">
-              {{ formatStatus(item.type, coolDevType) }}
+              {{ formatDictLabel(item.devType, deviceTypes) }}
             </el-col>
             <el-col :span="2" class="R">{{ item.tagSnNumber }}</el-col>
             <el-col :span="2" class="R">{{ item.energyTagSnNumber }}</el-col>
@@ -143,11 +143,18 @@ export default {
       loading: false,
       statusType: [],
       filters: {
-        text: '',             // 设备编号和名称
-        tagSnNumber: '',      // 标签编号
-        devType: "",          // 设备分类
-        departmentId: '',     // 所属科室id
-        status: "",           // 设备状态   在线:ONLINE  不在线:OFFLINE  异常:ALARM
+        // 设备编号和名称
+        text: '',
+        // 定位标签
+        tagSnNumber: '',
+        // 能耗标签
+        energyTagSnNumber: '',
+        // 设备分类
+        devType: "",
+        // 所属科室id
+        departmentId: '',
+        // 设备状态
+        status: "",
       },
       dialogComponents: {
         0: addForm,
@@ -166,8 +173,8 @@ export default {
     }
   },
   computed: {
-    coolDevType() {
-      return this.$getDict('coolDevType')
+    deviceTypes() {
+      return this.$getDict('device_type')
     },
     deviceStatus() {
       return this.$getDict('device_status')
@@ -234,7 +241,7 @@ export default {
       let params = Object.assign({}, {
         pageNo: pageNo,
         pageSize: this.pager.pageSize
-      }, this.queryParams);
+      }, this.filters);
 
       this.loading = true;
       queryApi.queryDevice(params).then(res => {
@@ -246,6 +253,7 @@ export default {
         this.totalNumberDevices.onlineCount = res.data.onlineCount;
         this.totalNumberDevices.offlineCount = res.data.offlineCount;
         this.totalNumberDevices.alarmCount = res.data.alarmCount;
+        this.totalNumberDevices.faultCount = res.data.faultCount;
 
         this.loading = false;
       }).catch(err => {

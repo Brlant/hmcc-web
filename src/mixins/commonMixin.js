@@ -94,6 +94,10 @@ export default {
       });
       return title;
     },
+    formatDictLabel(dictKey, dicts) {
+      const dict =  dicts.find(dict=>dict.key == dictKey);
+      return dict ? dict.label : '';
+    },
     formatTimeAry(times, index) {
       if (!times) return;
       return times[index];

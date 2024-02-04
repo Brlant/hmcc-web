@@ -51,7 +51,7 @@
             <el-col :span="2" class="R">{{ item.devNo }}</el-col>
             <el-col :span="3" class="R">{{ item.orgName }}</el-col>
             <el-col :span="2" class="R">
-              {{ formatStatus(item.type, coolDevType) }}
+              {{ formatDictLabel(item.type, coolDevType) }}
             </el-col>
             <el-col :span="2" class="R">{{ item.tagSnNumber }}</el-col>
             <el-col :span="2" class="R">{{ item.energyTagSnNumber }}</el-col>
@@ -114,9 +114,18 @@ export default {
       loading: false,
       statusType: JSON.parse(JSON.stringify(utils.coolType)),
       filters: {
-        status: '1',
-        type: '',
-        no: ''
+        // 设备编号和名称
+        text: '',
+        // 定位标签
+        tagSnNumber: '',
+        // 能耗标签
+        energyTagSnNumber: '',
+        // 设备分类
+        devType: "",
+        // 所属科室id
+        departmentId: '',
+        // 设备状态
+        status: "",
       },
       dialogComponents: {
         0: addForm,
