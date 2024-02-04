@@ -17,7 +17,7 @@
           <el-col :span="7">
             <oms-form-row label="设备编号/名称" :span="7">
               <el-input
-                v-model.trim="searchCondition.text"
+                v-model.trim="searchCondition.keyWord"
                 placeholder="请输入设备编号/名称"
                 clearable>
               </el-input>
@@ -45,12 +45,12 @@
         <el-row>
           <el-col :span="7">
             <oms-form-row label="设备分类" :span="7">
-              <el-select v-model="searchCondition.devType" placeholder="请选择设备分类" clearable>
+              <el-select v-model="searchCondition.type" placeholder="请选择设备分类" clearable>
                 <el-option
-                  v-for="(item,index) in deviceTypeList"
+                  v-for="(item,index) in coolDevTypes"
                   :key="index"
                   :label="item.label"
-                  :value="item.value"
+                  :value="item.key"
                 />
               </el-select>
             </oms-form-row>
@@ -74,7 +74,7 @@
                   v-for="(item,index) in deviceStatusList"
                   :key="index"
                   :label="item.label"
-                  :value="item.value"
+                  :value="item.key"
                 />
               </el-select>
             </oms-form-row>
@@ -94,13 +94,13 @@ export default {
     return {
       searchCondition: {
         // 设备编号和名称
-        text: '',
+        keyWord: '',
         // 定位标签
         tagSnNumber: '',
         // 能耗标签
         energyTagSnNumber: '',
         // 设备分类
-        devType: "",
+        type: "",
         // 所属科室id
         departmentId: '',
         // 设备状态
@@ -114,7 +114,7 @@ export default {
     };
   },
   computed: {
-    coolDevType() {
+    coolDevTypes() {
       return this.$getDict('coolDevType')
     },
     deviceTypeList() {
@@ -134,13 +134,13 @@ export default {
     reset() {
       this.searchCondition = {
         // 设备编号和名称
-        text: '',
+        keyWord: '',
         // 定位标签
         tagSnNumber: '',
         // 能耗标签
         energyTagSnNumber: '',
         // 设备分类
-        devType: "",
+        type: "",
         // 所属科室id
         departmentId: '',
         // 设备状态   在线:ONLINE  不在线:OFFLINE  异常:ALARM

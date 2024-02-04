@@ -9,18 +9,19 @@
         <div>
           <el-row :gutter="10">
             <el-col :span="8">
-              <el-form-item label="设备编号" prop="no">
-                <el-input placeholder="请输入设备编号" type="input" v-model="form.no"/>
-              </el-form-item>
+                  <el-form-item label="设备编号" prop="no">
+                    <el-input placeholder="请输入设备编号" type="input" v-model="form.no"/>
+                  </el-form-item>
             </el-col>
             <el-col :span="8">
-              <el-form-item label="设备名称" prop="name">
-                <oms-input placeholder="请输入设备名称" type="input" v-model="form.name"/>
-              </el-form-item>
+                  <el-form-item label="设备名称" prop="name">
+                    <oms-input placeholder="请输入设备名称" type="input" v-model="form.name"/>
+                  </el-form-item>
             </el-col>
             <el-col :span="8">
               <el-form-item label="设备类型" prop="type">
-                <el-select placeholder="请选择设备类型" v-model="form.devType" popper-class="selects--custom">
+                <el-select placeholder="请选择设备类型" v-model="form.type" popper-class="selects--custom"
+                           @change="getTempList">
                   <el-option :key="item.key" :label="item.label" :value="item.key"
                              v-for="(item, index) in coolDevType">
                   </el-option>
@@ -31,7 +32,7 @@
           <el-row :gutter="10">
             <el-col :span="8">
               <el-form-item label="设备类型模板">
-                <el-select placeholder="请选择设备类型模板"
+                <el-select placeholder="请先选择设备类型"
                            v-model="form.templateId"
                            @change="setTempData"
                            popper-class="selects--custom">
@@ -48,9 +49,9 @@
                            filterable
                            popper-class="selects--custom">
                   <el-option v-for="(item, index) in deptList"
-                             :key="item.departmentId"
+                             :key="item.id"
                              :label="item.departmentName"
-                             :value="item.departmentId"
+                             :value="item.id"
                   >
                   </el-option>
                 </el-select>
@@ -214,7 +215,7 @@
             <el-row :gutter="10">
               <el-col :span="7">
                 <el-form-item label="设备状态监控" prop="firstStatusType">
-                  <el-switch v-model="form.firstStatusType" active-value="1" inactive-value="0"></el-switch>
+                  <el-switch v-model.number="form.firstStatusType" :active-value="1" :inactive-value="0"></el-switch>
                 </el-form-item>
               </el-col>
               <el-col :span="10">
@@ -259,7 +260,7 @@
             <el-row :gutter="10">
               <el-col :span="7">
                 <el-form-item label="设备状态监控" prop="firstStatusType">
-                  <el-switch v-model="form.firstStatusType" active-value="2" inactive-value="0"></el-switch>
+                  <el-switch v-model.number="form.firstStatusType" :active-value="2" :inactive-value="0"></el-switch>
                 </el-form-item>
               </el-col>
               <el-col :span="10">
@@ -319,9 +320,9 @@ export default {
   data() {
     return {
       form: {
-        status: '1',
-        medicalFlag: '1',
-        doorSheetType: '1',
+        status: '',
+        medicalFlag: '',
+        doorSheetType: '',
         templateId: '',
         departmentId: '',
         orgId: '',
@@ -344,8 +345,11 @@ export default {
         orgId: [
           {required: true, message: '请选择所属单位', trigger: 'change'}
         ],
+        departmentId: [
+          {required: true, message: '请选择所属科室', trigger: 'change'}
+        ],
         type: [
-          {required: true, message: '请输入类型', trigger: 'blur'}
+          {required: true, message: '请输入类型', trigger: 'change'}
         ],
         status: [
           {required: true, message: '请选择状态', trigger: 'change'}
@@ -354,10 +358,10 @@ export default {
           {validator: this.validatorTagSnNumberId, trigger: 'blur'}
         ],
         energyTagId: [
-          {validator: this.validatorTagSnNumberId, trigger: 'blur'}
+          {validator: this.validatorEnergyTagSnNumberId, trigger: 'blur'}
         ]
       },
-      actionType: '添加',
+      actionType: '添加冷链设备',
       tempList: [],
       locationTags: [],
       energyTags: [],
@@ -388,22 +392,16 @@ export default {
           {name: this.formItem.orgName, id: this.formItem.orgId}
         ];
         this.form = Object.assign({}, this.formItem);
-        this.actionType = '编辑';
+        this.actionType = '编辑冷链设备';
+        this.getTempList();
       } else {
         this.form = {};
-        this.actionType = '添加';
+        this.actionType = '添加冷链设备';
       }
       this.$nextTick(() => {
         this.$refs['tempForm'] && this.$refs['tempForm'].clearValidate();
       });
     },
-    'form.devType': function (val) {
-      if (!val) {
-        return
-      }
-
-      this.getTempList();
-    }
   },
   methods: {
     changPhoto: function (photo) {
@@ -462,8 +460,10 @@ export default {
     getTempList() {
       let params = {
         templateType: '1',
-        devType: this.form.devType
+        devType: this.form.type
       };
+
+      this.tempList = [];
       this.$http.get('/template/queryByType', {params}).then(res => {
         this.tempList = res.data;
       });
@@ -498,7 +498,7 @@ export default {
     },
     setTempData(templateId) {
       let template = this.tempList.find(i => i.templateId == templateId);
-      console.log('当前模板：',template)
+      console.log('当前模板：', template)
       Object.assign(this.form, template)
       this.form.brand = template.devBrand;
       this.form.version = template.devVersion;
@@ -506,14 +506,36 @@ export default {
       this.form.medicalFlag = template.devMedicalFlag;
       this.form.startUsingTime = template.devStartUsingTime;
     },
-    checkTag(id, cb) {
-      this.$http.post('/tag/checkTagStatus?id=' + id).then(res => {
+    checkTag(id, type, cb) {
+      let deviceId = this.form.id
+      this.$http.get(`/tag/checkTagStatus?id=${id}&&type=${type}&&deviceId=${deviceId}`).then(res => {
         cb(res.data)
+      }).catch(err => {
+        let res = err.response.data;
+
+        cb({
+          tagCode: res.code,
+          tip: res.msg || '标签异常'
+        })
       })
     },
     validatorTagSnNumberId(rule, value, callback) {
       if (value) {
-        this.checkTag(value, ({tagCode, tip}) => {
+        this.checkTag(value, 1, ({tagCode, tip}) => {
+          if (tagCode == 0) {
+            callback();
+          } else {
+            debugger
+            callback(new Error(tip));
+          }
+        })
+      } else {
+        callback();
+      }
+    },
+    validatorEnergyTagSnNumberId(rule, value, callback) {
+      if (value) {
+        this.checkTag(value, 2, ({tagCode, tip}) => {
           if (tagCode == 0) {
             callback();
           } else {
@@ -529,6 +551,8 @@ export default {
     }
   },
   mounted() {
+    this.queryDeptList();
+    this.queryAllOrg();
   }
 };
 </script>
