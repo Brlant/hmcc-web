@@ -53,7 +53,7 @@ export const routes = [
             path: '/dev/hospital',
             component: () => import('./components/dev/hos-dev/index.vue'),
             meta: {
-              moduleId: 'dev', title: '院内设备管理', perm: 'in-hospital-dev-manage',
+              moduleId: 'dev', title: '院内设备管理', perm: 'hospital-dev-manage',
               type: 1,
               permPage: {
                 addMedical: 'medical-dev-add',
