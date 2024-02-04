@@ -5,7 +5,7 @@
       <el-button :disabled="doing" @click="save('tempForm')" plain type="primary">保存</el-button>
     </template>
     <template slot="content">
-      <el-form :model="form" :rules="rules" label-width="140px" ref="tempForm">
+      <el-form :model="form" :rules="rules" label-width="150px" ref="tempForm">
         <div>
           <el-row :gutter="10">
             <el-col :span="8">
@@ -463,6 +463,7 @@ export default {
         devType: this.form.type
       };
 
+      this.form.templateId = '';
       this.tempList = [];
       this.$http.get('/template/queryByType', {params}).then(res => {
         this.tempList = res.data;
