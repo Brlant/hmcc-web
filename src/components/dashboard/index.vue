@@ -173,7 +173,7 @@
     <div class="warning-list-part bar-part">
       <div style="display: flex;justify-content: space-between;">
         <el-select v-model="departmentId" placeholder="全部" clearable @change="handleFloorChange($event)">
-          <el-option v-for="(item,index) in deviceList"
+          <el-option v-for="(item,index) in deptList"
                      :key="index"
                      :value="item.id"
                      :label="item.departmentName"
@@ -452,7 +452,7 @@ export default {
       departmentId: '',
       rules: {},
       //设别数组
-      deviceList: [],
+      deptList: [],
       //设备总数
       totalNumberDevices: {
         totalCount: '',     //设备总数
@@ -489,7 +489,7 @@ export default {
     this.getAbnormalList();
     this.getAbnormalList1();
     //科室列表
-    this.getDevicesList()
+    this.getDeptList()
     //设备状态
     this.getEquipmentTotalNumber();
     this.startInterval();
@@ -637,9 +637,9 @@ export default {
       }, 60 * 1000); // 每隔一分钟调用一次接口
     },
     /* 科室列表 */
-    getDevicesList() {
+    getDeptList() {
       indexApi.getDeptQueryList({}).then(res => {
-        this.deviceList = res.data.map(item => {
+        this.deptList = res.data.map(item => {
           return {
             departmentName: item.departmentName,
             departmentPosition: item.departmentPosition,
