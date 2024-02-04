@@ -187,17 +187,17 @@ export const routes = [
       },
       // 设备定位管理
       {
-        path: '/deviceposition',
+        path: '/device-position',
         component: () => import('./components/hospital/index.vue'),
-        meta: {moduleId: 'deviceposition', title: '设备定位管理', icon: 'didian', perm: 'device-position'},
+        meta: {moduleId: 'device-position', title: '设备定位管理', icon: 'didian', perm: 'device-position'},
         children: [
           {
-            path: '/deviceposition/position',
+            path: '/device-position/position',
             component: () => import('./components/hospital/equipment/position/index'),
             meta: {moduleId: 'permission', title: '设备定位', perm: 'device-position-query'}
           },
           {
-            path: '/deviceposition/trajectory',
+            path: '/device-position/trajectory',
             component: () => import('./components/hospital/equipment/trajectory/index'),
             meta: {moduleId: 'permission', title: '轨迹查询', perm: 'device-position-trajectory'}
           }
