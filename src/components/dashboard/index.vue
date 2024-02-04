@@ -275,7 +275,7 @@
     </div>
 
     <div class="warning-list-part bar-part">
-      <el-tabs v-model="activeName" @tab-click="handleClick">
+      <el-tabs v-model="activeName">
         <el-tab-pane label="定位标签告警" name="0">
           <div class="deviceStatus">
             <el-table v-loading="loading" :data="abnormalList">
@@ -285,7 +285,7 @@
               <el-table-column label="设备类型" align="center" prop="devType">
                 <template v-slot="{row}">
                   <div v-for="(item,index) in deviceTypeList" :key="index">
-                    <span v-if="Number(row.devType)===item.dictSort">{{ item.label }}</span>
+                    <span v-if="row.devType==item.key">{{ item.label }}</span>
                   </div>
                 </template>
               </el-table-column>
@@ -294,10 +294,9 @@
               <el-table-column label="异常类型" align="center" prop="alarmStatus">
                 <template v-slot="{row}">
                   <div v-for="(item,index) in alarmStatusList" :key="index">
-              <span v-if="item.dictSort === row.alarmStatus"
-                    :class="item.dictSort === row.alarmStatus ? 'sheBeiShuColor' : ''">
-                {{ item.label }}
-              </span>
+                    <span v-if="item.key == row.alarmStatus" style="color: red">
+                      {{ item.label }}
+                    </span>
                   </div>
                 </template>
               </el-table-column>
@@ -370,14 +369,14 @@
         </el-tab-pane>
         <el-tab-pane label="能耗标签告警" name="2">
           <div class="deviceStatus">
-            <el-table v-loading="loading" :data="abnormalList">
+            <el-table v-loading="loading" :data="abnormalList1">
               <el-table-column label="序号" align="center" type="index"/>
               <el-table-column label="设备编号" align="center" prop="devNo"/>
               <el-table-column label="设备名称" align="center" prop="devName"/>
               <el-table-column label="设备类型" align="center" prop="devType">
                 <template v-slot="{row}">
                   <div v-for="(item,index) in deviceTypeList" :key="index">
-                    <span v-if="Number(row.devType)===item.dictSort">{{ item.label }}</span>
+                    <span v-if="row.devType==item.key">{{ item.label }}</span>
                   </div>
                 </template>
               </el-table-column>
@@ -386,22 +385,13 @@
               <el-table-column label="异常类型" align="center" prop="alarmStatus">
                 <template v-slot="{row}">
                   <div v-for="(item,index) in alarmStatusList" :key="index">
-              <span v-if="item.dictSort === row.alarmStatus"
-                    :class="item.dictSort === row.alarmStatus ? 'sheBeiShuColor' : ''">
-                {{ item.label }}
-              </span>
+                    <span v-if="item.key == row.alarmStatus" style="color: red">
+                      {{ item.label }}
+                    </span>
                   </div>
                 </template>
               </el-table-column>
-              <el-table-column label="最后定位时间" align="center" prop="lastPositionTime"/>
-              <el-table-column label="最后位置" align="center" prop="lastPositionStr"/>
               <el-table-column label="告警发生时间" align="center" prop="alarmTime"/>
-              <el-table-column label="操作" align="center" prop="">
-                <template v-slot="{row}">
-                  <el-button type="primary" size="mini" icon="el-icon-location-outline" circle
-                             @click="devicesPosition(row)"></el-button>
-                </template>
-              </el-table-column>
             </el-table>
           </div>
         </el-tab-pane>
@@ -475,6 +465,7 @@ export default {
       loading: true,
       //异常列表
       abnormalList: [],
+      abnormalList1: [],
       //当前更新时间
       lastUpdateTime: '',
       //异常类型
@@ -496,6 +487,7 @@ export default {
     this.queryFocusTotalCount();
 
     this.getAbnormalList();
+    this.getAbnormalList1();
     //科室列表
     this.getDevicesList()
     //设备状态
@@ -591,7 +583,7 @@ export default {
     /* 定位 */
     devicesPosition(row) {
       this.$router.push({
-        path: 'deviceposition/position',
+        path: 'device-position/position',
         params: {...row}
       });
       // queryApi.queryAddressPos({deviceId:row.id}).then(res=>{
@@ -616,8 +608,8 @@ export default {
       sinopharmDictDataType('device_type').then(res => {
         this.deviceTypeList = res.data.map(item => {
           return {
-            dictLabel: item.label,
-            dictSort: item.dictSort
+            label: item.label,
+            key: item.key
           }
         })
       }).catch(err => {
@@ -629,8 +621,8 @@ export default {
       sinopharmDictDataType('alarm_status').then(res => {
         this.alarmStatusList = res.data.map(item => {
           return {
-            dictLabel: item.label,
-            dictSort: item.dictSort
+            label: item.label,
+            key: item.key
           }
         })
       }).catch(err => {
@@ -641,6 +633,7 @@ export default {
       this.deviceLastUpdateTime = setInterval(() => {
         // 调用接口的代码
         this.getAbnormalList();
+        this.getAbnormalList1();
       }, 60 * 1000); // 每隔一分钟调用一次接口
     },
     /* 科室列表 */
@@ -666,12 +659,26 @@ export default {
     //异常告警列表
     getAbnormalList() {
       let params = {
-        departmentId: this.departmentId
+        departmentId: this.departmentId,
+        relationTagType: 2
       }
 
       indexApi.getList(params).then(res => {
-        this.loading = false;
+        this.loading = false
         this.abnormalList = res.data;
+      })
+
+      this.lastUpdateTime = new Date().toLocaleString();
+    },
+    getAbnormalList1() {
+      let params = {
+        departmentId: this.departmentId,
+        relationTagType: 1
+      }
+
+      indexApi.getList(params).then(res => {
+        this.loading = false
+        this.abnormalList1 = res.data;
       })
 
       this.lastUpdateTime = new Date().toLocaleString();
@@ -691,10 +698,10 @@ export default {
       //     departmentId: this.departmentId
       //   }
       // })
-      console.log(status)
+      console.log('点了 ', status)
     },
     handleClick(tab, event) {
-      console.log(tab, event);
+      // console.log(tab, event);
     }
   }
 };

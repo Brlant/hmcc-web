@@ -103,7 +103,7 @@ export default {
         devType: "",
         // 所属科室id
         departmentId: '',
-        // 设备状态   在线:ONLINE  不在线:OFFLINE  异常:ALARM
+        // 设备状态
         status: "",
       },
       showSearch: false,
@@ -143,7 +143,7 @@ export default {
         devType: "",
         // 所属科室id
         departmentId: '',
-        // 设备状态   在线:ONLINE  不在线:OFFLINE  异常:ALARM
+        // 设备状态
         status: "",
       };
       this.$emit('search', this.searchCondition);
