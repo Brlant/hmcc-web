@@ -170,7 +170,7 @@ export default {
       this.activeStatus = key;
     },
     resetRightBox() {
-      this.defaultPageRight.width = '700px';
+      this.defaultPageRight.width = '1500px';
       this.showIndex = -1;
     },
     showPart(index) {

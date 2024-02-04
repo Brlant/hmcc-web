@@ -1,4 +1,4 @@
-import {AlarmNotifyGroup, ColdChainLabelApi, cool, gateway, orgRelation} from '@/resources';
+import {AlarmNotifyGroup, ColdChainLabelApi, coolApi, gateway, orgRelation} from '@/resources';
 
 
 export default {
@@ -6,6 +6,7 @@ export default {
     return {
       probeList: [],
       orgList: [],
+      deptList: [],
       notifyList: [],
       objectOrgList: [],
       groupList: [],
@@ -30,10 +31,17 @@ export default {
         this.gatewayList = res.data.list;
       });
     },
-    queryAllOrg: function (query) {// 查询货主
+    // 查询单位
+    queryAllOrg(query) {
       let params = {keyWord: query};
       this.$http.get('/subordinate-org/info/permission/self', {params: params}).then(res => {
         this.orgList = res.data;
+      });
+    },
+    // 查询科室
+    queryDeptList(keyword) {
+      this.$http.post('/department/queryList',  {departmentName: keyword}).then(res => {
+        this.deptList = res.data;
       });
     },
     queryNotifyList(query) {
@@ -54,11 +62,11 @@ export default {
       if (typeof query === 'object') {
         params = query;
       }
-      cool.query(params).then(res => {
+      coolApi.query(params).then(res => {
         this.coolList = res.data.list;
       });
     },
-    filterPOV: function (query) {// 过滤POV
+    filterPOV(query) {// 过滤POV
       let params = {
         keyWord: query
       };
