@@ -32,7 +32,7 @@
       <div id="newChartLine" class="chart-Line" :style="{width: chartWidth}"></div>
     </div>
     <el-tabs class="tabs" v-model="activeIndex" v-if="dataDetail.freezerDevId">
-      <el-tab-pane :label="item.name" :name="index + ''" :key="item.id"
+      <el-tab-pane :label="item.areaName" :name="index + ''" :key="item.areaId"
                    v-for="(item, index) in probeList"></el-tab-pane>
       <el-table :data="dataList" v-loading="loadingListData" class="header-list" border
                 header-row-class-name="headerClass">
@@ -144,7 +144,7 @@
       },
       getLegend(typeList) {
         return {
-          data: typeList.map(m => m.name)
+          data: typeList.map(m => m.areaName)
         };
       },
       getYAxis(m) {
@@ -162,7 +162,7 @@
       },
       getData(data, i, index) {
         return {
-          name: i.name,
+          name: i.areaName,
           type: 'line',
           showSymbol: true,
           symbolSize: 6,
@@ -279,8 +279,8 @@
         // 设置Y轴
         option.yAxis = getYAxis(this.filter.type);
         option.series = [];
-        option.legend = getLegend(this.dataDetail.devDataList);
-        this.dataDetail.devDataList.forEach(i => {
+        option.legend = getLegend(this.dataDetail.devAreaDataList);
+        this.dataDetail.devAreaDataList.forEach(i => {
           const data = i.dataList.map(m => {
             m.value = this.filter.type === '1' ? m.temperature : this.filter.type === '2' ? m.humidity : m.voltage;
             return {
@@ -290,7 +290,7 @@
           }) || [];
           option.series.push(getData(data, i));
         });
-        this.probeList = this.dataDetail.devDataList;
+        this.probeList = this.dataDetail.devAreaDataList;
         this.$nextTick(() => {
           let chartDom = document.getElementById('newChartLine');
           if (!chartDom) return;
