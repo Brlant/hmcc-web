@@ -269,7 +269,8 @@
           this.getCurrentList(1);
         }).catch((e) => {
           this.loadingData = false;
-          this.$notify.error(e.response && e.response.data && e.response.data.msg || '查询失败');
+          // this.$notify.error(e.response && e.response.data && e.response.data.msg || '查询失败');
+          this.$notify.error(e.response && e.response.data && e.response.data.msg);
         });
       },
       setChart() {
