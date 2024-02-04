@@ -211,7 +211,7 @@ export default {
     /* 定位 */
     devicesPosition(row) {
       this.$router.push({
-        name: 'position',
+        path: '/device-position/position',
         params: {...row}
       });
     },

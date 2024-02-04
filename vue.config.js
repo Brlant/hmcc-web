@@ -23,9 +23,9 @@ module.exports = {
       '/api': {
         target: proxyTarget,
         changOrigin: true,
-        // pathRewrite: {
-        //   '/api': ''
-        // }
+        pathRewrite: {
+          '/api': ''
+        }
       },
       '/hengshi': {
         target: 'https://data-analysis.tracentsure.com',
