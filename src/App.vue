@@ -151,7 +151,7 @@
           }
           data = JSON.parse(data);
           this.$store.commit('initUser', data);
-          this.queryWeChat();
+          // this.queryWeChat();
         }).catch((err) => {
           // console.log('state.user.userId is null',{...err},this.$store)
         });
