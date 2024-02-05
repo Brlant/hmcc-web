@@ -32,7 +32,7 @@ export const routes = [
           {
             path: '/org/licences',
             component: () => import('./components/org/licences/list.vue'),
-            meta: {moduleId: 'org', title: '单位证照管理', perm: 'org-licences-manager-query'},
+            meta: {moduleId: 'org', title: '单位证照管理', perm: 'licences-manager-query'},
             children: []
           },
           {
