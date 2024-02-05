@@ -48,8 +48,8 @@
             <el-col :span="3" class="R">
               {{ item.name }}
             </el-col>
-            <el-col :span="2" class="R">{{ item.devNo }}</el-col>
-            <el-col :span="3" class="R">{{ item.orgName }}</el-col>
+            <el-col :span="2" class="R">{{ item.no }}</el-col>
+            <el-col :span="3" class="R">{{ item.departmentName }}</el-col>
             <el-col :span="2" class="R">
               {{ formatDictLabel(item.type, coolDevType) }}
             </el-col>
@@ -115,13 +115,13 @@ export default {
       statusType: JSON.parse(JSON.stringify(utils.coolType)),
       filters: {
         // 设备编号和名称
-        text: '',
+        keyWord: '',
         // 定位标签
         tagSnNumber: '',
         // 能耗标签
         energyTagSnNumber: '',
         // 设备分类
-        devType: "",
+        type: "",
         // 所属科室id
         departmentId: '',
         // 设备状态
@@ -149,7 +149,7 @@ export default {
   },
   watch: {
     filters: {
-      handler: function (val) {
+      handler(val) {
         this.queryList(1);
       },
       deep: true
@@ -162,7 +162,7 @@ export default {
     this.queryList(1);
   },
   methods: {
-    searchResult: function (search) {
+    searchResult(search) {
       this.filters = Object.assign({}, this.filters, search);
     },
     checkStatus(item, key) {
@@ -170,7 +170,7 @@ export default {
       this.activeStatus = key;
     },
     resetRightBox() {
-      this.defaultPageRight.width = '700px';
+      this.defaultPageRight.width = '1500px';
       this.showIndex = -1;
     },
     showPart(index) {
@@ -225,7 +225,7 @@ export default {
       this.currentItem = item;
       this.currentItemId = item.id;
       this.showPart(1);
-      this.defaultPageRight.width = '900px';
+      this.defaultPageRight.width = '1500px';
       this.$nextTick(() => {
         this.form = item;
       });
