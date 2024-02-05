@@ -229,7 +229,7 @@
       <div :class="{up:!showSearch}" class="opera-btn-group">
         <div class="opera-icon">
           <span class="pull-right opera-btn" style="margin-left: 10px">
-            <des-btn v-has="'address-manage-add'" icon="plus" @click="addType">添加</des-btn>
+            <des-btn v-has="'address-manager-add'" icon="plus" @click="addType">添加</des-btn>
           </span>
           <span class="pull-left switching-icon" @click="showSearch = !showSearch">
               <i class="el-icon-arrow-up"></i>
@@ -361,7 +361,7 @@
               </el-col>
               <el-col :span="3" class="opera-btn">
                 <div>
-                  <des-btn v-if="item.status==='0'" v-has="'address-manage-edit'" icon="edit" @click="edit(item)">编辑
+                  <des-btn v-if="item.status==='0'" v-has="'address-manager-edit'" icon="edit" @click="edit(item)">编辑
                   </des-btn>
                   <des-btn icon="search" @click="showInfo(item)">查看</des-btn>
                 </div>

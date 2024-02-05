@@ -133,7 +133,7 @@ import {medicalApi} from '@/resources'
 
 export default {
   // 医疗设备管理
-  name: 'HealthManagement',
+  name: 'Healthmanagerment',
   components: {
     SearchPart
   },

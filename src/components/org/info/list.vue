@@ -32,8 +32,8 @@
                   <i class="el-icon-t-search" @click.stop="showSearch=(!showSearch)"></i>
               </span>
               <des-btn v-show="!showSearch" icon="search" @click="showSearch=(!showSearch)"/>
-              <des-btn v-has="'org-base-manage-add'" icon="plus" @click="add" class="mr-10"/>
-              <des-btn v-has="'org-base-manage-export'" icon="export" @click="exportFile"/>
+              <des-btn v-has="'org-base-manager-add'" icon="plus" @click="add" class="mr-10"/>
+              <des-btn v-has="'org-base-manager-export'" icon="export" @click="exportFile"/>
             </span>
             <h2 class="org-name-h2">
               {{ menuTitle }}
@@ -119,21 +119,21 @@
                     </span>
                 </td>
                 <td>
-                  <des-btn v-has="'org-base-manage-edit'"
+                  <des-btn v-has="'org-base-manager-edit'"
                            icon="edit"
                            @click="edit(row)"
                            class="mr-10">
                     编辑
                   </des-btn>
                   <des-btn v-show="!row.deleteFlag"
-                           v-has="'org-base-manage-edit'"
+                           v-has="'org-base-manager-edit'"
                            icon="forbidden"
                            @click="forbid(row)"
                            class="mr-10">
                     停用
                   </des-btn>
                   <des-btn v-show="row.deleteFlag"
-                           v-has="'org-base-manage-edit'"
+                           v-has="'org-base-manager-edit'"
                            icon="start"
                            @click="enableGoods(row)"
                            class="mr-10">

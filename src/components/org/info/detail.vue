@@ -96,7 +96,7 @@ $leftWidth: 0;
       </el-row>
       <oms-row :span="5" label="">
         <el-button v-show="!data.deleteFlag && data.auditDto && data.auditDto.baseInfoStatus === '0'"
-                   v-has="'org-base-manage-audit'"
+                   v-has="'org-base-manager-audit'"
                    type="primary"
                    @click="auditBaseInfo">审核
         </el-button>

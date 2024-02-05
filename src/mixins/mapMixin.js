@@ -1,7 +1,7 @@
 export default {
   methods: {
     addMapTools() {
-      const map = this.amapManager._map;
+      const map = this.amapmanagerr._map;
       if (!map) {
         return setTimeout(this.addMapTools, 200);
       }

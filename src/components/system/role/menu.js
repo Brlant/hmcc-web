@@ -6,108 +6,108 @@ export default [
     sort: 0
   },
   {
-    id: 'org-manage',
+    id: 'org-manager',
     label: '业务单位管理',
     sort: 1,
     children: [
       {
-        id: 'org-base-manage',
+        id: 'org-base-manager',
         label: '基础信息管理',
         sort: 0,
         children: [
           {
-            id: 'org-base-manage-query',
+            id: 'org-base-manager-query',
             label: '查看单位'
           },
           {
-            id: 'org-base-manage-add',
+            id: 'org-base-manager-add',
             label: '添加单位'
           },
           {
-            id: 'org-base-manage-edit',
+            id: 'org-base-manager-edit',
             label: '编辑单位'
           },
           {
-            id: 'org-base-manage-audit',
+            id: 'org-base-manager-audit',
             label: '审核单位'
           },
           {
-            id: 'org-base-manage-export',
+            id: 'org-base-manager-export',
             label: '导出单位'
           }
         ]
       },
       {
-        id: 'org-licences-manage',
+        id: 'org-licences-manager',
         label: '单位证照管理',
         sort: 1,
         children: [
           {
-            id: 'org-licences-manage-query',
+            id: 'org-licences-manager-query',
             label: '查看单位证照'
           },
           {
-            id: 'org-licences-manage-add',
+            id: 'org-licences-manager-add',
             label: '添加单位证照'
           },
           {
-            id: 'org-licences-manage-edit',
+            id: 'org-licences-manager-edit',
             label: '编辑单位证照'
           },
           {
-            id: 'org-licences-manage-delete',
+            id: 'org-licences-manager-delete',
             label: '删除单位证照'
           }
         ]
       },
       // {
-      //   id: 'address-manage',
+      //   id: 'address-manager',
       //   locate-tag: '仓库地址管理',
       //   children: [
       //     {
-      //       id: 'address-manage-query',
+      //       id: 'address-manager-query',
       //       locate-tag: '查看单位仓库地址'
       //     },
       //     {
-      //       id: 'address-manage-add',
+      //       id: 'address-manager-add',
       //       locate-tag: '添加单位仓库地址'
       //     },
       //     {
-      //       id: 'address-manage-edit',
+      //       id: 'address-manager-edit',
       //       locate-tag: '编辑单位仓库地址'
       //     },
       //     {
-      //       id: 'address-manage-stop',
+      //       id: 'address-manager-stop',
       //       locate-tag: '停用单位仓库地址'
       //     },
       //     {
-      //       id: 'address-manage-start',
+      //       id: 'address-manager-start',
       //       locate-tag: '启用单位仓库地址'
       //     },
       //     {
-      //       id: 'address-manage-audit',
+      //       id: 'address-manager-audit',
       //       locate-tag: '审核单位仓库地址'
       //     },
       //     {
-      //       id: 'address-manage-export',
+      //       id: 'address-manager-export',
       //       locate-tag: '导出单位仓库地址',
       //     }
       //   ]
       // }
       {
-        id: 'org-relation-manage',
+        id: 'org-relation-manager',
         label: '单位关系管理',
         children: [
           {
-            id: 'org-relation-manage-query',
+            id: 'org-relation-manager-query',
             label: '查看单位关系'
           },
           {
-            id: 'org-relation-manage-add',
+            id: 'org-relation-manager-add',
             label: '添加单位关系'
           },
           {
-            id: 'org-relation-manage-delete',
+            id: 'org-relation-manager-delete',
             label: '删除单位关系'
           }
         ]
@@ -115,119 +115,119 @@ export default [
     ]
   },
   {
-    id: 'dev-manage',
+    id: 'dev-manager',
     label: '设备管理',
     parentId: 'hmcc-system',
     sort: 2,
     children: [
       {
-        id: 'hospital-dev-manage',
+        id: 'hospital-dev-manager',
         label: '院内设备管理',
-        parentId: 'dev-manage',
+        parentId: 'dev-manager',
         sort: '1',
         children: [
           {
-            id: 'freezer-dev-manage',
+            id: 'freezer-dev-manager',
             label: '冷链设备管理',
-            parentId: 'in-hospital-dev-manage',
+            parentId: 'in-hospital-dev-manager',
             sort: '1',
             children: [
               {
                 id: 'freezer-dev-scan',
                 label: '查看冷链设备管理',
-                parentId: 'freezer-dev-manage'
+                parentId: 'freezer-dev-manager'
               },
               {
                 id: 'freezer-dev-add',
                 label: '新增冷链设备',
-                parentId: 'freezer-dev-manage'
+                parentId: 'freezer-dev-manager'
               },
               {
                 id: 'freezer-dev-edit',
                 label: '编辑冷链设备',
-                parentId: 'freezer-dev-manage'
+                parentId: 'freezer-dev-manager'
               }
             ]
           },
           {
-            id: 'medical-dev-manage',
+            id: 'medical-dev-manager',
             label: '医疗设备管理',
-            parentId: 'hospital-dev-manage',
+            parentId: 'hospital-dev-manager',
             sort: '2',
             children: [
               {
                 id: 'medical-dev-scan',
                 label: '查看医疗设备管理',
-                parentId: 'medical-dev-manage'
+                parentId: 'medical-dev-manager'
               },
               {
                 id: 'medical-dev-add',
                 label: '新增医疗设备',
-                parentId: 'medical-dev-manage'
+                parentId: 'medical-dev-manager'
               },
               {
                 id: 'medical-dev-edit',
                 label: '编辑医疗设备',
-                parentId: 'medical-dev-manage'
+                parentId: 'medical-dev-manager'
               },
               {
                 id: 'medical-dev-delete',
                 label: '删除医疗设备',
-                parentId: 'medical-dev-manage'
+                parentId: 'medical-dev-manager'
               }
             ]
           },
         ]
       },
       {
-        id: 'iot-tag-manage',
+        id: 'iot-tag-manager',
         label: '物联网标签管理',
-        parentId: 'dev-manage',
+        parentId: 'dev-manager',
         sort: '2',
         children: [
           {
-            id: 'sensor-manage',
+            id: 'sensor-manager',
             label: '冷链标签',
-            parentId: 'iot-tag-manage',
+            parentId: 'iot-tag-manager',
             sort: '1',
             children: [
               {
                 id: 'sensor-scan',
                 label: '查看冷链标签',
-                parentId: 'sensor-manage'
+                parentId: 'sensor-manager'
               },
               {
                 id: 'sensor-add',
                 label: '新增冷链标签',
-                parentId: 'sensor-manage'
+                parentId: 'sensor-manager'
               },
               {
                 id: 'sensor-edit',
                 label: '编辑冷链标签',
-                parentId: 'sensor-manage'
+                parentId: 'sensor-manager'
               },
               {
                 id: 'sensor-active',
                 label: '启用冷链标签',
-                parentId: 'sensor-manage'
+                parentId: 'sensor-manager'
               },
               {
                 id: 'sensor-disable',
                 label: '停用冷链标签',
-                parentId: 'sensor-manage'
+                parentId: 'sensor-manager'
               }
             ]
           },
           {
             id: 'locate-label',
             label: '定位标签',
-            parentId: 'iot-tag-manage',
+            parentId: 'iot-tag-manager',
             sort: '2',
           },
           {
             id: 'energy-consumption-label',
             label: '能耗标签',
-            parentId: 'iot-tag-manage',
+            parentId: 'iot-tag-manager',
             sort: '3',
             children: [
               {
@@ -260,82 +260,82 @@ export default [
         ]
       },
       {
-        id: 'gateway-basestation-manage',
+        id: 'gateway-basestation-manager',
         label: '网关基站管理',
-        parentId: 'dev-manage',
+        parentId: 'dev-manager',
         sort: '3',
         children: [
           {
-            id: 'gateway-dev-manage',
+            id: 'gateway-dev-manager',
             label: '网关管理',
-            parentId: 'gateway-basestation-manage',
+            parentId: 'gateway-basestation-manager',
             sort: '2',
             children: [
               {
                 id: 'gateway-dev-scan',
                 label: '查看网关管理',
-                parentId: 'gateway-dev-manage'
+                parentId: 'gateway-dev-manager'
               },
               {
                 id: 'gateway-dev-add',
                 label: '新增网关',
-                parentId: 'gateway-dev-manage'
+                parentId: 'gateway-dev-manager'
               },
               {
                 id: 'gateway-dev-edit',
                 label: '编辑网关',
-                parentId: 'gateway-dev-manage'
+                parentId: 'gateway-dev-manager'
               },
               {
                 id: 'gateway-dev-active',
                 label: '启用网关',
-                parentId: 'gateway-dev-manage'
+                parentId: 'gateway-dev-manager'
               },
               {
                 id: 'gateway-dev-disable',
                 label: '停用网关',
-                parentId: 'gateway-dev-manage'
+                parentId: 'gateway-dev-manager'
               }
             ]
           },
           {
-            id: 'basestation-manage',
+            id: 'basestation-manager',
             label: '基站管理',
-            parentId: 'gateway-basestation-manage',
+            parentId: 'gateway-basestation-manager',
             sort: '2'
           },
         ]
       },
       {
-        id: 'patrol-project-manage',
+        id: 'patrol-project-manager',
         label: '院内设备巡检',
-        parentId: 'dev-manage',
+        parentId: 'dev-manager',
         sort: '4',
         children: [
           {
             id: 'patrol-project-scan',
             label: '查看巡检计划',
-            parentId: 'dev-patrol-manage'
+            parentId: 'dev-patrol-manager'
           },
           {
             id: 'patrol-project-add',
             label: '新增巡检计划',
-            parentId: 'dev-patrol-manage'
+            parentId: 'dev-patrol-manager'
           },
           {
             id: 'patrol-project-edit',
             label: '编辑巡检计划',
-            parentId: 'dev-patrol-manage'
+            parentId: 'dev-patrol-manager'
           },
           {
             id: 'patrol-project-delete',
             label: '删除巡检计划',
-            parentId: 'dev-patrol-manage'
+            parentId: 'dev-patrol-manager'
           },
           {
             id: 'patrol-record-add',
             label: '新增设备巡检记录',
-            parentId: 'dev-patrol-manage'
+            parentId: 'dev-patrol-manager'
           },
         ]
       }
@@ -361,13 +361,13 @@ export default [
     ]
   },
   {
-    id: 'config-center-manage',
+    id: 'config-center-manager',
     label: '告警管理',
     parentId: 'hmcc-system',
     sort: 4,
     children: [
       {
-        id: 'alarm-rule-manage',
+        id: 'alarm-rule-manager',
         label: '告警规则设置',
         parentId: 'hmcc-system',
         sort: '1',
@@ -395,7 +395,7 @@ export default [
         ]
       },
       {
-        id: 'alarm-notice-group-manage',
+        id: 'alarm-notice-group-manager',
         label: '告警通知组',
         parentId: 'hmcc-system',
         sort: '2',
@@ -423,7 +423,7 @@ export default [
         ]
       },
       {
-        id: 'alarm-test-log-manage',
+        id: 'alarm-test-log-manager',
         label: '告警通知测试',
         parentId: 'hmcc-system',
         sort: '3',
@@ -448,48 +448,48 @@ export default [
     ]
   },
   {
-    id: 'alarm-center-manage',
+    id: 'alarm-center-manager',
     label: '告警中心',
     parentId: 'hmcc-system',
     sort: 5,
     children: [
       {
-        id: 'alarm-event-manage',
+        id: 'alarm-event-manager',
         label: '设备告警',
-        parentId: 'alarm-center-manage',
+        parentId: 'alarm-center-manager',
         sort: '1',
         children: [
           {
             id: 'alarm-event-scan',
             label: '查看设备告警',
-            parentId: 'alarm-center-manage'
+            parentId: 'alarm-center-manager'
           },
           {
             id: 'alarm-event-handle',
             label: '处理设备告警',
-            parentId: 'alarm-center-manage'
+            parentId: 'alarm-center-manager'
           },
           {
             id: 'alarm-event-export',
             label: '导出设备告警',
-            parentId: 'alarm-center-manage'
+            parentId: 'alarm-center-manager'
           }
         ]
       },
       {
-        id: 'alarm-notice-record-manage',
+        id: 'alarm-notice-record-manager',
         label: '告警通知记录',
-        parentId: 'alarm-center-manage',
+        parentId: 'alarm-center-manager',
         sort: '2',
         children: [{
           id: 'alarm-notice-record-scan',
           label: '查看告警通知记录',
-          parentId: 'alarm-notice-record-manage'
+          parentId: 'alarm-notice-record-manager'
         }]
       }, {
-        id: 'alarm-tag-manage',
+        id: 'alarm-tag-manager',
         label: '定位标签告警',
-        parentId: 'alarm-center-manage',
+        parentId: 'alarm-center-manager',
         sort: '3',
       }
     ]
@@ -510,7 +510,7 @@ export default [
     ]
   },
   {
-    id: 'monitoring-center-manage',
+    id: 'monitoring-center-manager',
     label: '无线冷链管理系统',
     parentId: 'hmcc-system',
     sort: 7,
@@ -597,34 +597,34 @@ export default [
         ]
       },
       {
-        id: 'history-data-manage',
+        id: 'history-data-manager',
         label: '历史数据查询',
         parentId: 'hmcc-system',
         sort: '4',
         children: [{
-          id: 'history-data-manage-scan',
+          id: 'history-data-manager-scan',
           label: '查看历史数据',
           parentId: 'hmcc-system'
         }]
       },
       {
-        id: 'freezer-dev-temperature-record-manage',
+        id: 'freezer-dev-temperature-record-manager',
         label: '冷链设备温度记录',
         parentId: 'hmcc-system',
         sort: '5',
         children: [{
-          id: 'freezer-dev-temperature-record-manage-scan',
+          id: 'freezer-dev-temperature-record-manager-scan',
           label: '查看冷链设备温度记录',
           parentId: 'hmcc-system'
         }]
       },
       {
-        id: 'freezer-manage-evaluation',
+        id: 'freezer-manager-evaluation',
         label: '冷链管理评估表',
         parentId: 'hmcc-system',
         sort: '5',
         children: [{
-          id: 'freezer-manage-evaluation-scan',
+          id: 'freezer-manager-evaluation-scan',
           label: '查看冷链管理评估表',
           parentId: 'hmcc-system'
         }]
@@ -643,7 +643,7 @@ export default [
     ]
   },
   {
-    id: 'energy-efficiency-manage',
+    id: 'energy-efficiency-manager',
     label: '设备能效管理系统',
     parentId: 'hmcc-system',
     sort: 8,
@@ -651,13 +651,13 @@ export default [
       {
         id: 'energy-efficiency-monitor',
         label: '实时能耗监控',
-        parentId: 'energy-efficiency-manage',
+        parentId: 'energy-efficiency-manager',
         sort: 0,
       },
       {
         id: 'energy-efficiency-analysis',
         label: '汇总能耗分析',
-        parentId: 'energy-efficiency-manage',
+        parentId: 'energy-efficiency-manager',
         sort: 1,
       },
     ]
@@ -668,55 +668,55 @@ export default [
     children: [
       //科室管理
       {
-        id: 'system-depart-manage',
+        id: 'system-depart-manager',
         label: '科室管理',
         children: [
           {
-            id: 'system-depart-manage-query',
+            id: 'system-depart-manager-query',
             label: '查看科室'
           },
           {
-            id: 'system-depart-manage-add',
+            id: 'system-depart-manager-add',
             label: '添加科室'
           },
           {
-            id: 'system-depart-manage-edit',
+            id: 'system-depart-manager-edit',
             label: '编辑科室'
           },
           {
-            id: 'system-depart-manage-delete',
+            id: 'system-depart-manager-delete',
             label: '删除科室'
           },
         ]
       },
       {
-        id: 'system-setting-account-manage',
+        id: 'system-setting-account-manager',
         label: '账号管理',
         children: [
           {
-            id: 'system-setting-account-manage-query',
+            id: 'system-setting-account-manager-query',
             label: '查看账号'
           },
           {
-            id: 'system-setting-account-manage-add',
+            id: 'system-setting-account-manager-add',
             label: '添加账号'
           },
           {
-            id: 'system-setting-account-manage-edit',
+            id: 'system-setting-account-manager-edit',
             label: '编辑账号'
           },
           {
-            id: 'system-setting-account-manage-start',
+            id: 'system-setting-account-manager-start',
             label: '启用账号'
           },
           {
-            id: 'system-setting-account-manage-stop',
+            id: 'system-setting-account-manager-stop',
             label: '停用账号'
           }
         ]
       },
       {
-        id: 'access-role-manage',
+        id: 'access-role-manager',
         label: '角色管理',
         children: [
           {
@@ -732,39 +732,39 @@ export default [
             label: '编辑角色'
           },
           {
-            id: 'system-setting-role-manage-export',
+            id: 'system-setting-role-manager-export',
             label: '导出角色Excel'
           }
         ]
       },
       {
-        id: 'system-setting-org-account-manage',
+        id: 'system-setting-org-account-manager',
         label: '各单位账号管理',
         children: [
           {
-            id: 'system-setting-org-account-manage-query',
+            id: 'system-setting-org-account-manager-query',
             label: '查看单位账号'
           },
           {
-            id: 'system-setting-org-account-manage-add',
+            id: 'system-setting-org-account-manager-add',
             label: '添加单位账号'
           },
           {
-            id: 'system-setting-org-account-manage-edit',
+            id: 'system-setting-org-account-manager-edit',
             label: '编辑单位账号'
           },
           {
-            id: 'system-setting-org-account-manage-start',
+            id: 'system-setting-org-account-manager-start',
             label: '启用单位账号'
           },
           {
-            id: 'system-setting-org-account-manage-stop',
+            id: 'system-setting-org-account-manager-stop',
             label: '停用单位账号'
           }
         ]
       },
       {
-        id: 'dict-manage',
+        id: 'dict-manager',
         label: '数据字典',
         children: [
           {
