@@ -488,7 +488,7 @@ export default [
         }]
       }, {
         id: 'alarm-tag-manage',
-        label: '标签告警',
+        label: '定位标签告警',
         parentId: 'alarm-center-manage',
         sort: '3',
       }
