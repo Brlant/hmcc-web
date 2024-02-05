@@ -395,6 +395,8 @@ export default {
           {name: this.formItem.orgName, id: this.formItem.orgId}
         ];
         this.form = Object.assign({}, this.formItem);
+        this.showUnbindLocationTag = !!(this.formItem.id && this.formItem.tagSnNumber);
+        this.showUnbindEnergyTag = !!(this.formItem.id && this.formItem.energyTagSnNumber);
         this.actionType = '编辑冷链设备';
         this.getTempList();
       } else {
@@ -513,7 +515,7 @@ export default {
     },
     setTempData(templateId) {
       let template = this.tempList.find(i => i.templateId == templateId);
-      this.form = Object.assign({}, this.form,template)
+      this.form = Object.assign({}, this.form, template)
       this.form.brand = template.devBrand;
       this.form.version = template.devVersion;
       this.form.volume = template.devVolume;

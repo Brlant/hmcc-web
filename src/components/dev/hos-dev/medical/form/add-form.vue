@@ -383,6 +383,8 @@ export default {
     index(val) {
       if (this.formItem.id) {
         this.actionType = '编辑医疗设备';
+        this.showUnbindLocationTag = !!(this.formItem.id && this.formItem.tagSnNumber);
+        this.showUnbindEnergyTag = !!(this.formItem.id && this.formItem.energyTagSnNumber);
         this.getDetail(this.formItem.id)
       } else {
         this.form = {};
