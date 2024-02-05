@@ -266,22 +266,49 @@ export const coolApi = resource('/freezer-dev', http, {
   },
   queryStateNum(params) {
     return http.post('/freezer-dev/count', params);
-  }
+  },
+  unbindDeviceTagRelation(tagId, deviceId, type) {
+    let params = {
+      tagId,
+      deviceId,
+      type
+    };
+    return http.get('/freezer-dev/unbindDeviceTagRelation', {params});
+  },
 });
 
 //医疗设备管理
-export const medicalApi = resource('/freezer-dev', http, {
-  query(params) {
-    return http.post('/freezer-dev/page', params);
+export const medicalApi = {
+  queryAllByCondition(params) {
+    return http.post('/device/queryAllByCondition', params);
   },
-  update(obj) {
-    return http.put('/freezer-dev', obj);
+  addDevice(data) {
+    return http.post('/device/addDevice', data)
   },
-  queryStateNum(params) {
-    return http.post('/freezer-dev/count', params);
-  }
-});
+  editDevice(data) {
+    return http.post('/device/editDevice', data);
+  },
+  queryById(id) {
+    let params = {id};
 
+    return http.get(`/device/queryById`, {params});
+  },
+  deleteById(id) {
+    let params = {
+      id
+    };
+
+    return http.get(`/device/deleteById`, {params});
+  },
+  unbindDeviceTagRelation(tagId, deviceId, type) {
+    let params = {
+      tagId,
+      deviceId,
+      type
+    };
+    return http.get('/device/unbindDeviceTagRelation', {params});
+  },
+};
 
 // 冷链标签api
 export const ColdChainLabelApi = resource('/sensor', http, {
@@ -616,9 +643,9 @@ export const Auth = {
   permission: () => {
     return http.get('/oms/access/permissions', {params: {objectId: 'hmcc-system'}}); //
   },
-  queryWeChatInfo() {
-    return http.get('/wechat/user/wechat');
-  },
+  // queryWeChatInfo() {
+  //   return http.get('/wechat/user/wechat');
+  // },
   unBindWeChat() {
     return http.put('/wechat/unbind/wechat');
   }

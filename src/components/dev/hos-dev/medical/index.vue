@@ -12,27 +12,27 @@
     <div class="totalNumberDevices">
       <div class="deviceStyle">
         <span>设备总数</span>
-        <span class="deviceStyleNumber">{{ totalNumberDevices.totalCount }}</span>
+        <span class="deviceStyleNumber">{{ totalNumberDevices.totalCount  || 0 }}</span>
       </div>
       <div class="vertical-line"></div>
       <div class="deviceStyle">
         <span>开机数</span>
-        <span class="deviceStyleNumber">{{ totalNumberDevices.onlineCount }}</span>
+        <span class="deviceStyleNumber">{{ totalNumberDevices.onlineCount || 0 }}</span>
       </div>
       <div class="vertical-line"></div>
       <div class="deviceStyle">
         <span>关机数</span>
-        <span class="deviceStyleNumber">{{ totalNumberDevices.offlineCount }}</span>
+        <span class="deviceStyleNumber">{{ totalNumberDevices.offlineCount || 0 }}</span>
       </div>
       <div class="vertical-line"></div>
       <div class="deviceStyle">
         <span>异常数</span>
-        <span class="deviceStyleNumber">{{ totalNumberDevices.alarmCount }}</span>
+        <span class="deviceStyleNumber">{{ totalNumberDevices.alarmCount || 0 }}</span>
       </div>
       <div class="vertical-line"></div>
       <div class="deviceStyle">
         <span>故障数</span>
-        <span class="failureNumber">{{ totalNumberDevices.faultCount }}</span>
+        <span class="deviceStyleNumber">{{ totalNumberDevices.faultCount || 0 }}</span>
       </div>
     </div>
 
@@ -126,10 +126,10 @@
 
 import SearchPart from './search'
 import CommonMixin from '@/mixins/commonMixin';
-import addForm from '@/components/dev/hos-dev/cool/form/add-form'
-import showForm from '@/components/dev/hos-dev/cool/form/show-form'
-import filesApi from '@/api/files/files'
+import addForm from './form/add-form'
+import showForm from './form/show-form'
 import queryApi from '@/api/query/query'
+import {medicalApi} from '@/resources'
 
 export default {
   // 医疗设备管理
@@ -206,7 +206,7 @@ export default {
       this.activeStatus = key;
     },
     resetRightBox() {
-      this.defaultPageRight.width = '700px';
+      this.defaultPageRight.width = '1500px';
       this.showIndex = -1;
     },
     showPart(index) {
@@ -229,7 +229,7 @@ export default {
         cancelButtonText: '取消',
         confirmButtonText: '确认删除'
       }).then(() => {
-        filesApi.filesDeleteList({id: row.id}).then(() => {
+        medicalApi.deleteById(row.id).then(() => {
           this.$notify.success('删除成功')
           this.queryList(1);
         })
@@ -244,7 +244,7 @@ export default {
       }, this.filters);
 
       this.loading = true;
-      queryApi.queryDevice(params).then(res => {
+      medicalApi.queryAllByCondition(params).then(res => {
         this.loading = false;
         this.dataList = res.data.pageInfo.list
         this.pager.count = res.data.pageInfo.total;
@@ -274,7 +274,7 @@ export default {
       this.currentItem = item;
       this.currentItemId = item.id;
       this.showPart(1);
-      this.defaultPageRight.width = '900px';
+      this.defaultPageRight.width = '1500px';
       this.$nextTick(() => {
         this.form = item;
       });

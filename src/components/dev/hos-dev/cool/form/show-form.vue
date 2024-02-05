@@ -145,6 +145,9 @@
             <div class="content">
               <div>
                 <el-form-item label="定位标签">
+                  <template slot="label">
+                    <span style="font-size: 1.17em">定位标签</span>
+                  </template>
                   <el-row :gutter="10">
                     <el-col :span="7">
                       <el-form-item label="设备状态监控" prop="firstStatusType">
@@ -161,6 +164,9 @@
                   </el-row>
                 </el-form-item>
                 <el-form-item label="能耗标签">
+                  <template slot="label">
+                    <span style="font-size: 1.17em">能耗标签</span>
+                  </template>
                   <el-row :gutter="10">
                     <el-col :span="7">
                       <el-form-item label="设备状态监控" prop="firstStatusType">
