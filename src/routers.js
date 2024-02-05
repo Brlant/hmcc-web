@@ -181,7 +181,7 @@ export const routes = [
           {
             path: '/alarm/waring/locate-tag',
             component: () => import('./components/monitoring/alarm/waring/label/index.vue'),
-            meta: {moduleId: 'alarm', title: '标签告警', perm: 'alarm-tag-manage'}
+            meta: {moduleId: 'alarm', title: '定位标签告警', perm: 'alarm-tag-manage'}
           },
         ]
       },
