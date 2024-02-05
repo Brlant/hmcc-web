@@ -147,7 +147,7 @@
                     <el-col :span="7">
                       <el-form-item label="设备状态监控" prop="firstStatusType">
                         <el-switch v-model.number="form.firstStatusType" :active-value="1"
-                                   :inactive-value="0" disabled></el-switch>
+                                   inactive-value="" disabled></el-switch>
                       </el-form-item>
                     </el-col>
                     <el-col :span="10">
@@ -232,7 +232,7 @@ export default {
         standardVoltageRangeEnd: '',
         standbyStatusRangeStart: '',
         standbyStatusRangeEnd: '',
-        firstStatusType: 0,
+        firstStatusType: '',
         locationTagId: '',
         energyTagId: '',
       }
