@@ -69,7 +69,7 @@
           </el-col>
           <el-col :span="7">
             <oms-form-row label="运行状态" :span="7">
-              <el-select placeholder="请选择设备运行状态" v-model="searchCondition.status" clearable>
+              <el-select placeholder="请选择设备运行状态" v-model="searchCondition.deviceStatus" clearable>
                 <el-option
                   v-for="(item,index) in deviceStatusList"
                   :key="index"
@@ -104,7 +104,8 @@ export default {
         // 所属科室id
         departmentId: '',
         // 设备状态
-        status: "",
+        status: "1",
+        deviceStatus: "",
       },
       showSearch: false,
       list: [],
@@ -143,8 +144,9 @@ export default {
         type: "",
         // 所属科室id
         departmentId: '',
-        // 设备状态   在线:ONLINE  不在线:OFFLINE  异常:ALARM
-        status: "",
+        // 设备状态
+        deviceStatus: "",
+        status: "1",
       };
       this.$emit('search', this.searchCondition);
     },

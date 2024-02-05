@@ -104,7 +104,7 @@ import queryApi from '@/api/query/query'
 
 export default {
   // 冷链设备管理
-  name: 'Coolmanagerment',
+  name: 'CoolDev',
   components: {
     SearchPart
   },
@@ -125,7 +125,8 @@ export default {
         // 所属科室id
         departmentId: '',
         // 设备状态
-        status: "",
+        status: "1",
+        deviceStatus: "",
       },
       dialogComponents: {
         0: addForm,
