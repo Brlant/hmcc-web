@@ -9,14 +9,14 @@
         <div>
           <el-row :gutter="10">
             <el-col :span="8">
-                  <el-form-item label="设备编号" prop="no">
-                    <el-input placeholder="请输入设备编号" type="input" v-model="form.no"/>
-                  </el-form-item>
+              <el-form-item label="设备编号" prop="no">
+                <el-input placeholder="请输入设备编号" type="input" v-model="form.no"/>
+              </el-form-item>
             </el-col>
             <el-col :span="8">
-                  <el-form-item label="设备名称" prop="name">
-                    <oms-input placeholder="请输入设备名称" type="input" v-model="form.name"/>
-                  </el-form-item>
+              <el-form-item label="设备名称" prop="name">
+                <oms-input placeholder="请输入设备名称" type="input" v-model="form.name"/>
+              </el-form-item>
             </el-col>
             <el-col :span="8">
               <el-form-item label="设备类型" prop="type">
@@ -137,7 +137,7 @@
             </el-col>
             <el-col :span="12">
               <el-form-item label="工作状态" prop="workStatus">
-                <el-input placeholder="请输入数字" type="number" v-model.number="form.workStatus">
+                <el-input placeholder="请输入数字" type="number" v-model.number="form.workStatus" disabled>
                   <template slot="prepend">大于</template>
                   <template slot="append">mA</template>
                 </el-input>
@@ -150,7 +150,8 @@
                 <el-row :gutter="10">
                   <el-col :span="10">
                     <el-form-item prop="idleStateRangeStart">
-                      <el-input placeholder="请输入数字" type="number" v-model.number="form.idleStateRangeStart"></el-input>
+                      <el-input placeholder="请输入数字" type="number" v-model.number="form.idleStateRangeStart"
+                                disabled></el-input>
                     </el-form-item>
                   </el-col>
                   <el-col class="line" :span="1">至</el-col>
@@ -191,7 +192,7 @@
                   <el-col :span="10">
                     <el-form-item prop="standbyStatusRangeStart">
                       <el-input placeholder="请输入数字" type="number"
-                                v-model.number="form.standbyStatusRangeStart"></el-input>
+                                v-model.number="form.standbyStatusRangeStart" disabled></el-input>
                     </el-form-item>
                   </el-col>
                   <el-col class="line" :span="1">至</el-col>
@@ -210,7 +211,11 @@
         <div>
           <el-divider/>
           <h3>标签绑定</h3>
-          <el-form-item label="定位标签"></el-form-item>
+          <el-form-item label="定位标签">
+            <template slot="label">
+              <span style="font-size: 1.17em">定位标签</span>
+            </template>
+          </el-form-item>
           <el-form-item>
             <el-row :gutter="10">
               <el-col :span="7">
@@ -236,6 +241,7 @@
                   <!--</el-autocomplete>-->
                   <el-select
                     v-model="form.locationTagId"
+                    :disabled="showUnbindLocationTag"
                     placeholder="输入搜索标签sn号"
                     filterable
                     remote
@@ -253,9 +259,16 @@
                   </el-select>
                 </el-form-item>
               </el-col>
+              <el-col :span="1">
+                <el-button type="primary" @click="unbindLocationTag" v-show="showUnbindLocationTag">解绑</el-button>
+              </el-col>
             </el-row>
           </el-form-item>
-          <el-form-item label="能耗标签"></el-form-item>
+          <el-form-item label="能耗标签">
+            <template slot="label">
+              <span style="font-size: 1.17em">能耗标签</span>
+            </template>
+          </el-form-item>
           <el-form-item>
             <el-row :gutter="10">
               <el-col :span="7">
@@ -265,22 +278,9 @@
               </el-col>
               <el-col :span="10">
                 <el-form-item label="标签sn号" prop="energyTagId">
-                  <!--<el-autocomplete-->
-                  <!--  class="inline-input"-->
-                  <!--  v-model="form.energyTagId"-->
-                  <!--  :fetch-suggestions="searchLocationTagSn"-->
-                  <!--  placeholder="输入搜索标签sn号"-->
-                  <!--  :trigger-on-focus="false"-->
-                  <!--  :validate-event="false"-->
-                  <!--&gt;-->
-                  <!--  <template v-slot="{ item }">-->
-                  <!--    <span style="float: left">{{ item.tagSnNumber }}</span>-->
-                  <!--    <span style="float: right; color: #8492a6; font-size: 12px">{{ item.tagName }}</span>-->
-                  <!--  </template>-->
-                  <!--</el-autocomplete>-->
-
                   <el-select
                     v-model="form.energyTagId"
+                    :disabled="showUnbindEnergyTag"
                     placeholder="输入搜索标签sn号"
                     filterable
                     remote
@@ -298,6 +298,9 @@
                   </el-select>
                 </el-form-item>
               </el-col>
+              <el-col :span="1">
+                <el-button type="primary" @click="unbindEnergyTag" v-show="showUnbindEnergyTag">解绑</el-button>
+              </el-col>
             </el-row>
           </el-form-item>
         </div>
@@ -310,7 +313,7 @@
 import omsUploadPicture from '@/components/common/upload/upload.picture';
 import methodsMixin from '@/mixins/methodsMixin';
 
-import {coolApi} from '@/resources';
+import {coolApi, medicalApi} from '@/resources';
 
 export default {
   mixins: [methodsMixin],
@@ -320,19 +323,31 @@ export default {
   data() {
     return {
       form: {
-        status: '',
-        medicalFlag: '',
-        doorSheetType: '',
+        no: '',
+        name: '',
+        type: '',
         templateId: '',
         departmentId: '',
         orgId: '',
         startUsingTime: '',
         version: '',
-        remark: '',
-        brand: '',
+        status: '',
+        medicalFlag: '',
         volume: '',
-        locationTagId: '',
+        remark: '',
+        doorSheetType: '',
+        brand: '',
+        standardWorkingHours: '',
+        workStatus: '',
+        idleStateRangeStart: 0.00,
+        idleStateRangeEnd: '',
+        standardVoltageRangeStart: '',
+        standardVoltageRangeEnd: '',
+        standbyStatusRangeStart: '',
+        standbyStatusRangeEnd: '',
         firstStatusType: 0,
+        locationTagId: '',
+        energyTagId: '',
       },
       doing: false,
       rules: {
@@ -367,6 +382,8 @@ export default {
       energyTags: [],
       loadingLocationTag: false,
       loadingEnergyTag: false,
+      showUnbindLocationTag:!!(this.formItem.id && this.formItem.tagSnNumber),
+      showUnbindEnergyTag:!!(this.formItem.id && this.formItem.energyTagSnNumber),
     };
   },
   props: {
@@ -383,7 +400,7 @@ export default {
     },
     coolDevType() {
       return this.$getDict('coolDevType')
-    }
+    },
   },
   watch: {
     index: function (val) {
@@ -401,6 +418,12 @@ export default {
       this.$nextTick(() => {
         this.$refs['tempForm'] && this.$refs['tempForm'].clearValidate();
       });
+    },
+    'form.idleStateRangeEnd': function (val) {
+      this.form.standbyStatusRangeStart = this.form.idleStateRangeEnd;
+    },
+    'form.standbyStatusRangeEnd': function (val) {
+      this.form.workStatus = this.form.standbyStatusRangeEnd;
     },
   },
   methods: {
@@ -549,11 +572,28 @@ export default {
     },
     handleSelect(item) {
       console.log(`handleSelect`, item);
-    }
+    },
+    unbindLocationTag() {
+      coolApi.unbindDeviceTagRelation(this.form.locationTagId,this.form.id,"2").then(res => {
+        this.form.locationTagId = '';
+        this.showUnbindLocationTag = false;
+        this.$message.success('解绑成功')
+      })
+    },
+    unbindEnergyTag() {
+      coolApi.unbindDeviceTagRelation(this.form.energyTagId,this.form.id,"1").then(res => {
+        this.form.energyTagId = '';
+        this.showUnbindEnergyTag = false;
+        this.$message.success('解绑成功')
+      })
+    },
   },
   mounted() {
     this.queryDeptList();
     this.queryAllOrg();
+
+    this.searchLocationTagSn(this.form.locationTagId);
+    this.searchEnergyTagSn(this.form.energyTagId);
   }
 };
 </script>

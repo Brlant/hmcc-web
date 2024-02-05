@@ -128,8 +128,8 @@ import SearchPart from './search'
 import CommonMixin from '@/mixins/commonMixin';
 import addForm from './form/add-form'
 import showForm from './form/show-form'
-import filesApi from '@/api/files/files'
 import queryApi from '@/api/query/query'
+import {medicalApi} from '@/resources'
 
 export default {
   // 医疗设备管理
@@ -229,7 +229,7 @@ export default {
         cancelButtonText: '取消',
         confirmButtonText: '确认删除'
       }).then(() => {
-        filesApi.filesDeleteList({id: row.id}).then(() => {
+        medicalApi.deleteById(row.id).then(() => {
           this.$notify.success('删除成功')
           this.queryList(1);
         })
@@ -244,7 +244,7 @@ export default {
       }, this.filters);
 
       this.loading = true;
-      queryApi.queryDevice(params).then(res => {
+      medicalApi.queryAllByCondition(params).then(res => {
         this.loading = false;
         this.dataList = res.data.pageInfo.list
         this.pager.count = res.data.pageInfo.total;

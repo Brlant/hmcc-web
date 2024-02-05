@@ -25,21 +25,16 @@
                   {{ formatDictLabel(form.devType, deviceTypes) }}
                 </oms-col>
                 <oms-col :isShow="true" :rowSpan="8" :colSpan="8" label="设备类型模板">{{ templateName }}</oms-col>
+                <oms-col :isShow="true" :rowSpan="8" :colSpan="8" label="供应商">{{ form.supplier }}</oms-col>
+                <oms-col :isShow="true" :rowSpan="8" :colSpan="8" label="生产厂商">{{ form.manufacturer }}</oms-col>
                 <oms-col :isShow="true" :rowSpan="8" :colSpan="8" label="所属科室">{{ form.departmentName }}</oms-col>
-                <oms-col :isShow="true" :rowSpan="8" :colSpan="8" label="所属科室">{{ form.departmentName }}</oms-col>
-                <oms-col :isShow="true" :rowSpan="8" :colSpan="8" label="所属单位">{{ form.orgName }}</oms-col>
-                <oms-col :isShow="true" :rowSpan="8" :colSpan="8" label="设备启用时间">{{ form.startUsingTime }}</oms-col>
-                <oms-col :isShow="true" :rowSpan="8" :colSpan="8" label="型号">{{ form.version }}</oms-col>
-                <oms-col :isShow="true" :rowSpan="8" :colSpan="8" label="状态">{{ form.status }}</oms-col>
-                <oms-col :isShow="true" :rowSpan="8" :colSpan="8" label="是否医用设备">
-                  {{ formatDictLabel(form.medicalFlag, medicalDevType) }}
-                </oms-col>
-                <oms-col :isShow="true" :rowSpan="8" :colSpan="8" label="容积">{{ form.volume }}</oms-col>
-                <oms-col :isShow="true" :rowSpan="8" :colSpan="8" label="备注">{{ form.remark }}</oms-col>
-                <oms-col :isShow="true" :rowSpan="8" :colSpan="8" label="门板类型">
-                  {{ formatDictLabel(form.doorSheetType, doorDevType) }}
-                </oms-col>
-                <oms-col :isShow="true" :rowSpan="8" :colSpan="8" label="品牌">{{ form.brand }}</oms-col>
+                <oms-col :isShow="true" :rowSpan="8" :colSpan="8" label="生产日期">{{ form.productTime }}</oms-col>
+                <oms-col :isShow="true" :rowSpan="8" :colSpan="8" label="报废时间">{{ form.discardTime }}</oms-col>
+                <oms-col :isShow="true" :rowSpan="8" :colSpan="8" label="首次投入使用时间">{{ form.firstUserTime }}</oms-col>
+                <oms-col :isShow="true" :rowSpan="8" :colSpan="8" label="厂商备案凭证号">{{ form.manufacturerRegistrationNumber }}</oms-col>
+                <oms-col :isShow="true" :rowSpan="8" :colSpan="8" label="生产许可证号">{{ form.productionLicenseNumber }}</oms-col>
+                <oms-col :isShow="true" :rowSpan="8" :colSpan="8" label="维保周期">{{ form.maintenanceCycle }}</oms-col>
+                <oms-col :isShow="true" :rowSpan="8" :colSpan="8" label="注册证号/备案凭证号">{{ form.registrationCertificateNumber }}</oms-col>
               </div>
             </div>
             <div class="header">
@@ -145,6 +140,9 @@
             <div class="content">
               <div>
                 <el-form-item label="定位标签">
+                  <template slot="label">
+                    <span style="font-size: 1.17em">定位标签</span>
+                  </template>
                   <el-row :gutter="10">
                     <el-col :span="7">
                       <el-form-item label="设备状态监控" prop="firstStatusType">
@@ -161,6 +159,9 @@
                   </el-row>
                 </el-form-item>
                 <el-form-item label="能耗标签">
+                  <template slot="label">
+                    <span style="font-size: 1.17em">能耗标签</span>
+                  </template>
                   <el-row :gutter="10">
                     <el-col :span="7">
                       <el-form-item label="设备状态监控" prop="firstStatusType">

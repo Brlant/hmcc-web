@@ -23,7 +23,7 @@
                 <el-select placeholder="请选择设备类型" v-model="form.devType" popper-class="selects--custom"
                            @change="getTempList">
                   <el-option :key="item.key" :label="item.label" :value="item.key"
-                             v-for="(item, index) in deviceTypes">
+                             v-for="(item, index) in devTypes">
                   </el-option>
                 </el-select>
               </el-form-item>
@@ -43,13 +43,13 @@
               </el-form-item>
             </el-col>
             <el-col :span="8">
-              <el-form-item label="供应商" prop="vendor">
-                <oms-input placeholder="请输入供应商" type="input" v-model="form.vendor"/>
+              <el-form-item label="供应商" prop="supplier">
+                <oms-input placeholder="请输入供应商" type="input" v-model="form.supplier"/>
               </el-form-item>
             </el-col>
             <el-col :span="8">
-              <el-form-item label="厂商" prop="manufacturers">
-                <oms-input placeholder="请输入厂商" type="input" v-model="form.manufacturers"/>
+              <el-form-item label="生产厂商" prop="manufacturer">
+                <oms-input placeholder="请输入生产厂商" type="input" v-model="form.manufacturer"/>
               </el-form-item>
             </el-col>
           </el-row>
@@ -70,26 +70,26 @@
               </el-form-item>
             </el-col>
             <el-col :span="8">
-              <el-form-item label="生产日期" prop="dateOfManufacture">
-                <el-date-picker placeholder="请选择日期" type="date" v-model="form.dateOfManufacture" value-format="timestamp"/>
+              <el-form-item label="生产日期" prop="productTime">
+                <el-date-picker placeholder="请选择日期" type="date" v-model="form.productTime" value-format="timestamp"/>
               </el-form-item>
             </el-col>
             <el-col :span="8">
-              <el-form-item label="报废时间" prop="scrapTime">
-                <el-date-picker placeholder="请选择时间" type="datetime" v-model="form.scrapTime"
+              <el-form-item label="报废时间" prop="discardTime">
+                <el-date-picker placeholder="请选择时间" type="datetime" v-model="form.discardTime"
                                 value-format="timestamp"/>
               </el-form-item>
             </el-col>
           </el-row>
           <el-row :gutter="10">
             <el-col :span="8">
-              <el-form-item label="首次投入使用时间" prop="startUsingTime">
-                <el-date-picker placeholder="请选择" type="date" v-model="form.startUsingTime" value-format="timestamp"/>
+              <el-form-item label="首次投入使用时间" prop="firstUserTime">
+                <el-date-picker placeholder="请选择" type="date" v-model="form.firstUserTime" value-format="timestamp"/>
               </el-form-item>
             </el-col>
             <el-col :span="8">
-              <el-form-item label="厂商备案凭证号" prop="theCertificateNumberOfTheVendorSICPFiling">
-                <oms-input placeholder="请输入厂商备案凭证号" v-model="form.theCertificateNumberOfTheVendorSICPFiling"/>
+              <el-form-item label="厂商备案凭证号" prop="manufacturerRegistrationNumber">
+                <oms-input placeholder="请输入厂商备案凭证号" v-model="form.manufacturerRegistrationNumber"/>
               </el-form-item>
             </el-col>
             <el-col :span="8">
@@ -103,13 +103,13 @@
 
             </el-col>
             <el-col :span="8">
-              <el-form-item label="维保周期">
-                <oms-input placeholder="请输入维保周期" v-model="form.volume"/>
+              <el-form-item label="维保周期" prop="maintenanceCycle">
+                <oms-input placeholder="请输入维保周期" v-model="form.maintenanceCycle"/>
               </el-form-item>
             </el-col>
             <el-col :span="8">
-              <el-form-item label="注册证号/备案凭证号" prop="icpFilingCertificateNumber">
-                <oms-input placeholder="请输入注册证号 / 备案凭证号" v-model="form.icpFilingCertificateNumber"/>
+              <el-form-item label="注册证号/备案凭证号" prop="registrationCertificateNumber">
+                <oms-input placeholder="请输入注册证号 / 备案凭证号" v-model="form.registrationCertificateNumber"/>
               </el-form-item>
             </el-col>
           </el-row>
@@ -127,7 +127,7 @@
             </el-col>
             <el-col :span="12">
               <el-form-item label="工作状态" prop="workStatus">
-                <el-input placeholder="请输入数字" type="number" v-model.number="form.workStatus">
+                <el-input placeholder="请输入数字" type="number" v-model.number="form.workStatus" disabled>
                   <template slot="prepend">大于</template>
                   <template slot="append">mA</template>
                 </el-input>
@@ -140,7 +140,8 @@
                 <el-row :gutter="10">
                   <el-col :span="10">
                     <el-form-item prop="idleStateRangeStart">
-                      <el-input placeholder="请输入数字" type="number" v-model.number="form.idleStateRangeStart"></el-input>
+                      <el-input placeholder="请输入数字" type="number" v-model.number="form.idleStateRangeStart"
+                                disabled></el-input>
                     </el-form-item>
                   </el-col>
                   <el-col class="line" :span="1">至</el-col>
@@ -181,7 +182,7 @@
                   <el-col :span="10">
                     <el-form-item prop="standbyStatusRangeStart">
                       <el-input placeholder="请输入数字" type="number"
-                                v-model.number="form.standbyStatusRangeStart"></el-input>
+                                v-model.number="form.standbyStatusRangeStart" disabled></el-input>
                     </el-form-item>
                   </el-col>
                   <el-col class="line" :span="1">至</el-col>
@@ -200,7 +201,11 @@
         <div>
           <el-divider/>
           <h3>标签绑定</h3>
-          <el-form-item label="定位标签"></el-form-item>
+          <el-form-item label="定位标签">
+            <template slot="label">
+              <span style="font-size: 1.17em">定位标签</span>
+            </template>
+          </el-form-item>
           <el-form-item>
             <el-row :gutter="10">
               <el-col :span="7">
@@ -210,22 +215,9 @@
               </el-col>
               <el-col :span="10">
                 <el-form-item label="标签sn号" prop="locationTagId">
-                  <!--<el-input placeholder="输入搜索标签sn号" type="input" v-model="form.name"/>-->
-                  <!--<el-autocomplete-->
-                  <!--  v-model="form.locationTagId"-->
-                  <!--  :fetch-suggestions="searchLocationTagSn"-->
-                  <!--  placeholder="输入搜索标签sn号"-->
-                  <!--  :trigger-on-focus="false"-->
-                  <!--  :validate-event="false"-->
-                  <!--  @select=" handleSelect"-->
-                  <!--&gt;-->
-                  <!--  <template v-slot="{ item }">-->
-                  <!--    <span style="float: left">{{ item.tagSnNumber }}</span>-->
-                  <!--    <span style="float: right; color: #8492a6; font-size: 13px">{{ item.tagName }}</span>-->
-                  <!--  </template>-->
-                  <!--</el-autocomplete>-->
                   <el-select
                     v-model="form.locationTagId"
+                    :disabled="showUnbindLocationTag"
                     placeholder="输入搜索标签sn号"
                     filterable
                     remote
@@ -243,9 +235,16 @@
                   </el-select>
                 </el-form-item>
               </el-col>
+              <el-col :span="1">
+                <el-button type="primary" @click="unbindLocationTag" v-show="showUnbindLocationTag">解绑</el-button>
+              </el-col>
             </el-row>
           </el-form-item>
-          <el-form-item label="能耗标签"></el-form-item>
+          <el-form-item label="能耗标签">
+            <template slot="label">
+              <span style="font-size: 1.17em">能耗标签</span>
+            </template>
+          </el-form-item>
           <el-form-item>
             <el-row :gutter="10">
               <el-col :span="7">
@@ -255,22 +254,10 @@
               </el-col>
               <el-col :span="10">
                 <el-form-item label="标签sn号" prop="energyTagId">
-                  <!--<el-autocomplete-->
-                  <!--  class="inline-input"-->
-                  <!--  v-model="form.energyTagId"-->
-                  <!--  :fetch-suggestions="searchLocationTagSn"-->
-                  <!--  placeholder="输入搜索标签sn号"-->
-                  <!--  :trigger-on-focus="false"-->
-                  <!--  :validate-event="false"-->
-                  <!--&gt;-->
-                  <!--  <template v-slot="{ item }">-->
-                  <!--    <span style="float: left">{{ item.tagSnNumber }}</span>-->
-                  <!--    <span style="float: right; color: #8492a6; font-size: 12px">{{ item.tagName }}</span>-->
-                  <!--  </template>-->
-                  <!--</el-autocomplete>-->
 
                   <el-select
                     v-model="form.energyTagId"
+                    :disabled="showUnbindEnergyTag"
                     placeholder="输入搜索标签sn号"
                     filterable
                     remote
@@ -288,6 +275,9 @@
                   </el-select>
                 </el-form-item>
               </el-col>
+              <el-col :span="1">
+                <el-button type="primary" @click="unbindEnergyTag" v-show="showUnbindEnergyTag">解绑</el-button>
+              </el-col>
             </el-row>
           </el-form-item>
         </div>
@@ -300,7 +290,7 @@
 import omsUploadPicture from '@/components/common/upload/upload.picture';
 import methodsMixin from '@/mixins/methodsMixin';
 
-import {coolApi} from '@/resources';
+import {medicalApi} from '@/resources';
 
 export default {
   mixins: [methodsMixin],
@@ -310,19 +300,31 @@ export default {
   data() {
     return {
       form: {
-        status: '',
-        medicalFlag: '',
-        doorSheetType: '',
+        devNo: '',
+        devName: '',
+        devType: '',
         templateId: '',
+        supplier: '',
+        manufacturer: '',
         departmentId: '',
-        orgId: '',
-        startUsingTime: '',
-        version: '',
-        remark: '',
-        brand: '',
-        volume: '',
-        locationTagId: '',
+        productTime: '',
+        discardTime: '',
+        firstUserTime: '',
+        manufacturerRegistrationNumber: '',
+        productionLicenseNumber: '',
+        maintenanceCycle: '',
+        registrationCertificateNumber: '',
+        standardWorkingHours: '',
+        idleStateRangeStart: 0.00,
+        idleStateRangeEnd: '',
+        standardVoltageRangeStart: '',
+        standardVoltageRangeEnd: '',
+        standbyStatusRangeStart: '',
+        standbyStatusRangeEnd: '',
+        workStatus: '',
         firstStatusType: 0,
+        locationTagId: '',
+        energyTagId: '',
       },
       doing: false,
       rules: {
@@ -357,6 +359,8 @@ export default {
       energyTags: [],
       loadingLocationTag: false,
       loadingEnergyTag: false,
+      showUnbindLocationTag:!!(this.formItem.id && this.formItem.tagSnNumber),
+      showUnbindEnergyTag:!!(this.formItem.id && this.formItem.energyTagSnNumber),
     };
   },
   props: {
@@ -371,19 +375,16 @@ export default {
     doorDevType() {
       return this.$store.state.doorDevType;
     },
-    deviceTypes() {
+    devTypes() {
       return this.$getDict('device_type')
-    }
+    },
   },
   watch: {
     index: function (val) {
       if (this.formItem.id) {
-        this.orgList = [
-          {name: this.formItem.orgName, id: this.formItem.orgId}
-        ];
-        this.form = Object.assign({}, this.formItem);
         this.actionType = '编辑医疗设备';
         this.getTempList();
+        this.getDetail(this.formItem.id)
       } else {
         this.form = {};
         this.actionType = '添加医疗设备';
@@ -392,8 +393,25 @@ export default {
         this.$refs['tempForm'] && this.$refs['tempForm'].clearValidate();
       });
     },
+    'form.idleStateRangeEnd': function () {
+      this.form.standbyStatusRangeStart = this.form.idleStateRangeEnd;
+    },
+    'form.standbyStatusRangeEnd': function (val) {
+      this.form.workStatus = this.form.standbyStatusRangeEnd;
+    },
   },
   methods: {
+    getDetail(id) {
+      if (!id){
+        return
+      }
+
+      medicalApi.queryById(id).then(res => {
+        this.form = res.data;
+      }).catch(err => {
+        this.$notify.error(err.response && err.response.data && err.response.data.msg || '详情接口异常，请联系管理员');
+      })
+    },
     changPhoto: function (photo) {
       if (photo) {
         this.form.photoId = photo.attachmentId;
@@ -403,15 +421,9 @@ export default {
     save(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid && this.doing === false) {
-          // this.form.createTime = this.form.createTime ? this.$moment(this.form.createTime).format('YYYY-MM-DD') : '';
-          this.orgList.forEach(i => {
-            if (i.id === this.form.orgId) {
-              this.form.orgName = i.name;
-            }
-          });
           if (!this.form.id) {
             this.doing = true;
-            this.$httpRequestOpera(coolApi.save(this.form), {
+            this.$httpRequestOpera(medicalApi.addDevice(this.form), {
               errorTitle: '添加失败',
               success: res => {
                 if (res.code === 200) {
@@ -427,7 +439,7 @@ export default {
               }
             });
           } else {
-            this.$httpRequestOpera(coolApi.update(this.form), {
+            this.$httpRequestOpera(medicalApi.editDevice(this.form), {
               errorTitle: '修改失败',
               success: res => {
                 if (res.code === 200) {
@@ -539,11 +551,26 @@ export default {
     },
     handleSelect(item) {
       console.log(`handleSelect`, item);
-    }
+    },
+    unbindLocationTag() {
+      medicalApi.unbindDeviceTagRelation(this.form.locationTagId,this.form.id,"2").then(res => {
+        this.form.locationTagId = '';
+        this.showUnbindLocationTag = false;
+        this.$message.success('解绑成功')
+      })
+    },
+    unbindEnergyTag() {
+      medicalApi.unbindDeviceTagRelation(this.form.energyTagId,this.form.id,"1").then(res => {
+        this.form.energyTagId = '';
+        this.showUnbindEnergyTag = false;
+        this.$message.success('解绑成功')
+      })
+    },
   },
   mounted() {
     this.queryDeptList();
-    this.queryAllOrg();
+    this.searchLocationTagSn(this.form.locationTagId);
+    this.searchEnergyTagSn(this.form.energyTagId);
   }
 };
 </script>
