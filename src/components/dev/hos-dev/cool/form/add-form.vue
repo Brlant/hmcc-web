@@ -313,7 +313,7 @@
 import omsUploadPicture from '@/components/common/upload/upload.picture';
 import methodsMixin from '@/mixins/methodsMixin';
 
-import {coolApi, medicalApi} from '@/resources';
+import {coolApi} from '@/resources';
 
 export default {
   mixins: [methodsMixin],
@@ -382,8 +382,8 @@ export default {
       energyTags: [],
       loadingLocationTag: false,
       loadingEnergyTag: false,
-      showUnbindLocationTag:!!(this.formItem.id && this.formItem.tagSnNumber),
-      showUnbindEnergyTag:!!(this.formItem.id && this.formItem.energyTagSnNumber),
+      showUnbindLocationTag: !!(this.formItem.id && this.formItem.tagSnNumber),
+      showUnbindEnergyTag: !!(this.formItem.id && this.formItem.energyTagSnNumber),
     };
   },
   props: {
@@ -522,8 +522,7 @@ export default {
     },
     setTempData(templateId) {
       let template = this.tempList.find(i => i.templateId == templateId);
-      console.log('当前模板：', template)
-      Object.assign(this.form, template)
+      this.form = Object.assign({}, this.form,template)
       this.form.brand = template.devBrand;
       this.form.version = template.devVersion;
       this.form.volume = template.devVolume;
@@ -574,14 +573,14 @@ export default {
       console.log(`handleSelect`, item);
     },
     unbindLocationTag() {
-      coolApi.unbindDeviceTagRelation(this.form.locationTagId,this.form.id,"2").then(res => {
+      coolApi.unbindDeviceTagRelation(this.form.locationTagId, this.form.id, "2").then(res => {
         this.form.locationTagId = '';
         this.showUnbindLocationTag = false;
         this.$message.success('解绑成功')
       })
     },
     unbindEnergyTag() {
-      coolApi.unbindDeviceTagRelation(this.form.energyTagId,this.form.id,"1").then(res => {
+      coolApi.unbindDeviceTagRelation(this.form.energyTagId, this.form.id, "1").then(res => {
         this.form.energyTagId = '';
         this.showUnbindEnergyTag = false;
         this.$message.success('解绑成功')

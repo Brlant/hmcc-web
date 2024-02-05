@@ -51,9 +51,14 @@ $labelWidth: 180px;
               <el-input v-model="sensor.areaName" placeholder="请输入区域" clearable></el-input>
             </el-form-item>
           </el-col>
+          <el-col :span="4">
+            <el-form-item label="是否启用" :prop="`sensorList.${index}.isOpen`">
+              <el-switch v-model="sensor.isOpen" :active-value="1" :inactive-value="0"></el-switch>
+            </el-form-item>
+          </el-col>
           <el-col :span="7">
             <el-form-item label="冷链标签" :prop="`sensorList.${index}.sensorId`">
-              <el-select :remote-method="queryProbeList" @focus="queryProbeList('')" filterable
+              <el-select :remote-method="queryProbeList" @focus="queryProbeList('')" filterable clearable
                          placeholder="请输入名称搜索冷链标签" remote v-model="sensor.sensorId">
                 <el-option :key="item.id" :label="item.name" :value="item.id"
                            v-for="item in probeList"></el-option>
@@ -62,18 +67,15 @@ $labelWidth: 180px;
           </el-col>
           <el-col :span="5">
             <el-form-item label="温度类型" :prop="`sensorList.${index}.temperatureType`"
-                          :rules="[{ required: true, message: '请选择温度类型', trigger: 'change' }]">
+                          :rules="[{ required: true, message: '请选择温度类型', trigger: 'change' }]"
+                          v-if="sensor.sensorId.length>0">
               <el-radio-group size="small" v-model="sensor.temperatureType">
                 <el-radio-button label="0">冷藏</el-radio-button>
                 <el-radio-button label="1">冷冻</el-radio-button>
               </el-radio-group>
             </el-form-item>
           </el-col>
-          <el-col :span="4">
-            <el-form-item label="是否启用" :prop="`sensorList.${index}.isOpen`">
-              <el-switch v-model="sensor.isOpen" :active-value="1" :inactive-value="0"></el-switch>
-            </el-form-item>
-          </el-col>
+
           <el-col :span="2" style="margin-bottom: 22px;line-height: 40px">
             <des-btn @click="addSensor()" icon="plus"></des-btn>
             <des-btn class="ml-10" @click="delSensor(sensor)" icon="minus"
@@ -114,7 +116,7 @@ export default {
           {required: true, message: '请选择冷链设备', trigger: 'change'}
         ],
         sensorList: [
-          {required: true, type: 'array', message: '冷链标签', trigger: 'change'}
+          {required: true, type: 'array', message: '冷链标签不能为空', trigger: 'change'}
         ]
       },
       actionType: '添加',
