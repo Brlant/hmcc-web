@@ -108,6 +108,10 @@ export default {
     ruleConfig(item) {
       this.currentItemId = item;
       this.$store.commit('initUnitId', item);
+    },
+    hasPerm: function (perm) {
+      if (perm === 'show') return true;
+      return this.$store.state.permissions.indexOf(perm) !== -1;
     }
   }
 };

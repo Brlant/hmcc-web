@@ -223,6 +223,27 @@ export default [
             label: '定位标签',
             parentId: 'iot-tag-manager',
             sort: '2',
+            children: [
+              {
+                id: 'locate-view',
+                label: '查看定位标签',
+                parentId: 'locate-label'
+              },
+              {
+                id: 'locate-add',
+                label: '新增定位标签',
+                parentId: 'sensor-label'
+              },
+              {
+                id: 'locate-edit',
+                label: '编辑定位标签',
+                parentId: 'sensor-label'
+              },  {
+                id: 'locate-del',
+                label: '删除定位标签',
+                parentId: 'sensor-label'
+              },
+            ]
           },
           {
             id: 'energy-consumption-label',
@@ -302,7 +323,29 @@ export default [
             id: 'basestation-manager',
             label: '基站管理',
             parentId: 'gateway-basestation-manager',
-            sort: '2'
+            sort: '2',
+            children: [
+              {
+                id: 'basestation-view',
+                label: '查看基站详情',
+                parentId: 'basestation-manager'
+              },
+              {
+                id: 'basestation-add',
+                label: '新增基站',
+                parentId: 'basestation-manager'
+              },
+              {
+                id: 'basestation-edit',
+                label: '编辑基站',
+                parentId: 'basestation-manager'
+              },
+              {
+                id: 'basestation-del',
+                label: '删除基站',
+                parentId: 'basestation-manager'
+              },
+            ]
           },
         ]
       },
