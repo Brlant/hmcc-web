@@ -22,7 +22,7 @@
           </el-form-item>
         </el-col>
         <el-col :span="2">
-          <el-button type="primary" v-has="'system-depart-manage-add'" icon="el-icon-plus" @click="addDepart">添加科室</el-button>
+          <el-button type="primary" v-has="'system-depart-manager-add'" icon="el-icon-plus" @click="addDepart">添加科室</el-button>
         </el-col>
       </el-row>
     </el-form>
@@ -37,8 +37,8 @@
       </el-table-column>
       <el-table-column label="操作" prop="" align="center">
         <template v-slot="{row}">
-          <el-button type="primary" icon="el-icon-edit" v-has="'system-depart-manage-edit'" size="mini" @click="detailEdit(row)" circle ></el-button>
-          <el-button type="danger" icon="el-icon-delete" v-has="'system-depart-manage-delete'" size="mini" @click="remove(row)" circle></el-button>
+          <el-button type="primary" icon="el-icon-edit" v-has="'system-depart-manager-edit'" size="mini" @click="detailEdit(row)" circle ></el-button>
+          <el-button type="danger" icon="el-icon-delete" v-has="'system-depart-manager-delete'" size="mini" @click="remove(row)" circle></el-button>
         </template>
       </el-table-column>
     </el-table>

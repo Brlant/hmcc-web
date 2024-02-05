@@ -19,7 +19,7 @@ import EnergyTag from './energy-tag';
 
 export default {
   // 物联网标签管理
-  name: 'IotTagManagement',
+  name: 'IotTagmanagerment',
   components: {
     LocateTag,
     CoolTag,

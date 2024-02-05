@@ -31,7 +31,7 @@
             <a href="#" class="btn-circle" @click.stop.prevent="showSearch=(!showSearch)" v-show="!showSearch">
                 <i class="el-icon-t-search"></i>
             </a>
-            <des-btn v-has="'system-setting-account-manage-add'" icon="plus" @click="add"></des-btn>
+            <des-btn v-has="'system-setting-account-manager-add'" icon="plus" @click="add"></des-btn>
         </span>
           <table class="table table-hover">
             <thead>
@@ -76,14 +76,14 @@
                 <dict :dict-group="'orgUserStatus'" :dict-key="formatStatus(row.status)"></dict>
               </td>
               <td class="list-op">
-                <a v-has="'system-setting-account-manage-edit'" href="#" @click.stop.prevent="edit(row)"><i
+                <a v-has="'system-setting-account-manager-edit'" href="#" @click.stop.prevent="edit(row)"><i
                   class="el-icon-t-edit"></i>编辑</a>
-                <oms-forbid v-has="'system-setting-account-manage-stop'"
+                <oms-forbid v-has="'system-setting-account-manager-stop'"
                             :item="row" @forbided="forbid" :tips='"确认停用用户\""+row.name+"\"?"'
                             v-show="row.status !== '2' ">
                   <i class="el-icon-t-forbidden"></i>停用
                 </oms-forbid>
-                <oms-forbid v-has="'system-setting-account-manage-start'"
+                <oms-forbid v-has="'system-setting-account-manager-start'"
                             :item="row" @forbided="useNormal" :tips='"确认启用用户\""+row.name+"\"?"'
                             v-show="row.status=== '2' "><i class="el-icon-t-start" v-show="!row.adminFlag"></i>启用
                 </oms-forbid>

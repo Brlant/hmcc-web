@@ -104,7 +104,7 @@ import queryApi from '@/api/query/query'
 
 export default {
   // 冷链设备管理
-  name: 'CoolManagement',
+  name: 'Coolmanagerment',
   components: {
     SearchPart
   },

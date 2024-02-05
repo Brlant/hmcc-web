@@ -112,7 +112,7 @@
     <div class="container">
       <div :class="{up:!showSearch}" class="opera-btn-group">
         <div class="opera-icon">
-          <des-btn v-has="'org-relation-manage-add'" class="pull-right mr-10" icon="plus" @click="add">添加</des-btn>
+          <des-btn v-has="'org-relation-manager-add'" class="pull-right mr-10" icon="plus" @click="add">添加</des-btn>
           <span class="pull-left switching-icon" @click="showSearch = !showSearch">
             <i class="el-icon-arrow-up"></i>
             <span v-show="showSearch">收起筛选</span>
@@ -223,7 +223,7 @@
                 <dict :dict-group="'orgRelation'" :dict-key="item.type"></dict>
               </el-col>
               <el-col :span="4" class="opera-btn-bidder">
-                <des-btn v-has="'org-relation-manage-delete'" icon="remove" @click="remove(item)" class="mr-10">删除
+                <des-btn v-has="'org-relation-manager-delete'" icon="remove" @click="remove(item)" class="mr-10">删除
                 </des-btn>
               </el-col>
             </el-row>
