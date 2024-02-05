@@ -28,7 +28,7 @@
   </dialog-template>
 </template>
 <script>
-import {coolApi} from '@/resources';
+import {ColdChainLabelApi} from '@/resources';
 import methodsMixin from '@/mixins/methodsMixin';
 
 export default {
@@ -102,7 +102,7 @@ export default {
           });
           if (!this.form.id) {
             this.doing = true;
-            this.$httpRequestOpera(coolApi.save(this.form), {
+            this.$httpRequestOpera(ColdChainLabelApi.save(this.form), {
               errorTitle: '添加失败',
               success: res => {
                 if (res.code === 200) {
@@ -118,7 +118,7 @@ export default {
               }
             });
           } else {
-            this.$httpRequestOpera(coolApi.update(this.form), {
+            this.$httpRequestOpera(ColdChainLabelApi.update(this.form), {
               errorTitle: '修改失败',
               success: res => {
                 if (res.code === 200) {

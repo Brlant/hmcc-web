@@ -11,6 +11,7 @@ let proxyTargets = {
   yj: 'http://192.168.5.13:8083',
 }
 let proxyTarget = process.env.npm_config_url || proxyTargets.yj;
+let pathRewrite = process.env.npm_config_path || '';
 console.log('当前代理地址：', proxyTarget)
 module.exports = {
   devServer: {
@@ -31,7 +32,7 @@ module.exports = {
         target: 'https://data-analysis.tracentsure.com',
         changOrigin: true,
         pathRewrite: {
-          '/hengshi': ''
+          '/hengshi': pathRewrite
         }
       }
     }

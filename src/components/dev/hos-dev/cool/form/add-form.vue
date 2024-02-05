@@ -21,7 +21,7 @@
             <el-col :span="8">
               <el-form-item label="设备类型" prop="type">
                 <el-select placeholder="请选择设备类型" v-model="form.type" popper-class="selects--custom"
-                           @change="getTempList">
+                           @change="devTypeChangeHandler">
                   <el-option :key="item.key" :label="item.label" :value="item.key"
                              v-for="(item, index) in coolDevType">
                   </el-option>
@@ -225,20 +225,6 @@
               </el-col>
               <el-col :span="10">
                 <el-form-item label="标签sn号" prop="locationTagId">
-                  <!--<el-input placeholder="输入搜索标签sn号" type="input" v-model="form.name"/>-->
-                  <!--<el-autocomplete-->
-                  <!--  v-model="form.locationTagId"-->
-                  <!--  :fetch-suggestions="searchLocationTagSn"-->
-                  <!--  placeholder="输入搜索标签sn号"-->
-                  <!--  :trigger-on-focus="false"-->
-                  <!--  :validate-event="false"-->
-                  <!--  @select=" handleSelect"-->
-                  <!--&gt;-->
-                  <!--  <template v-slot="{ item }">-->
-                  <!--    <span style="float: left">{{ item.tagSnNumber }}</span>-->
-                  <!--    <span style="float: right; color: #8492a6; font-size: 13px">{{ item.tagName }}</span>-->
-                  <!--  </template>-->
-                  <!--</el-autocomplete>-->
                   <el-select
                     v-model="form.locationTagId"
                     :disabled="showUnbindLocationTag"
@@ -313,7 +299,7 @@
 import omsUploadPicture from '@/components/common/upload/upload.picture';
 import methodsMixin from '@/mixins/methodsMixin';
 
-import {coolApi, medicalApi} from '@/resources';
+import {coolApi} from '@/resources';
 
 export default {
   mixins: [methodsMixin],
@@ -382,8 +368,8 @@ export default {
       energyTags: [],
       loadingLocationTag: false,
       loadingEnergyTag: false,
-      showUnbindLocationTag:!!(this.formItem.id && this.formItem.tagSnNumber),
-      showUnbindEnergyTag:!!(this.formItem.id && this.formItem.energyTagSnNumber),
+      showUnbindLocationTag: !!(this.formItem.id && this.formItem.tagSnNumber),
+      showUnbindEnergyTag: !!(this.formItem.id && this.formItem.energyTagSnNumber),
     };
   },
   props: {
@@ -486,11 +472,16 @@ export default {
         devType: this.form.type
       };
 
-      this.form.templateId = '';
       this.tempList = [];
       this.$http.get('/template/queryByType', {params}).then(res => {
         this.tempList = res.data;
       });
+    },
+    devTypeChangeHandler(val) {
+      this.form.templateId = '';
+      if (val) {
+        this.getTempList();
+      }
     },
     // 查询定位标签
     searchLocationTagSn(keyword) {
@@ -522,8 +513,7 @@ export default {
     },
     setTempData(templateId) {
       let template = this.tempList.find(i => i.templateId == templateId);
-      console.log('当前模板：', template)
-      Object.assign(this.form, template)
+      this.form = Object.assign({}, this.form,template)
       this.form.brand = template.devBrand;
       this.form.version = template.devVersion;
       this.form.volume = template.devVolume;
@@ -574,14 +564,14 @@ export default {
       console.log(`handleSelect`, item);
     },
     unbindLocationTag() {
-      coolApi.unbindDeviceTagRelation(this.form.locationTagId,this.form.id,"2").then(res => {
+      coolApi.unbindDeviceTagRelation(this.form.locationTagId, this.form.id, "2").then(res => {
         this.form.locationTagId = '';
         this.showUnbindLocationTag = false;
         this.$message.success('解绑成功')
       })
     },
     unbindEnergyTag() {
-      coolApi.unbindDeviceTagRelation(this.form.energyTagId,this.form.id,"1").then(res => {
+      coolApi.unbindDeviceTagRelation(this.form.energyTagId, this.form.id, "1").then(res => {
         this.form.energyTagId = '';
         this.showUnbindEnergyTag = false;
         this.$message.success('解绑成功')
