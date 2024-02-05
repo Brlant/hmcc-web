@@ -385,7 +385,7 @@ export default {
       return this.$store.state.doorDevType;
     },
     coolDevType() {
-      return this.$getDict('coolDevType')
+      return this.$getDict('deviceTemplateStatus')
     },
   },
   watch: {
@@ -481,6 +481,14 @@ export default {
       this.tempList = [];
       this.$http.get('/template/queryByType', {params}).then(res => {
         this.tempList = res.data;
+        if (!this.form.templateId) {
+          return;
+        }
+
+        let has = this.tempList.some(t => t.templateId === this.form.templateId);
+        if (!has) {
+          this.tempList.push(this.form)
+        }
       });
     },
     devTypeChangeHandler(val) {

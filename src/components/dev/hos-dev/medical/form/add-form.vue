@@ -473,9 +473,19 @@ export default {
       this.tempList = [];
       this.$http.get('/template/queryByType', {params}).then(res => {
         this.tempList = res.data;
+        // console.log('getTempList:',this.form);
+        if (!this.form.templateId) {
+          return;
+        }
+
+        let has = this.tempList.some(t => t.templateId === this.form.templateId);
+        if (!has) {
+          this.tempList.push(this.form)
+        }
       });
     },
     devTypeChangeHandler(val) {
+      debugger
       this.form.templateId = '';
       if (val) {
         this.getTempList();
