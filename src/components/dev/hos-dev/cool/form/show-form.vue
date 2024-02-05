@@ -30,7 +30,7 @@
                 <oms-col :isShow="true" :rowSpan="8" :colSpan="8" label="所属单位">{{ form.orgName }}</oms-col>
                 <oms-col :isShow="true" :rowSpan="8" :colSpan="8" label="设备启用时间">{{ form.startUsingTime }}</oms-col>
                 <oms-col :isShow="true" :rowSpan="8" :colSpan="8" label="型号">{{ form.version }}</oms-col>
-                <oms-col :isShow="true" :rowSpan="8" :colSpan="8" label="状态">{{ form.status }}</oms-col>
+                <oms-col :isShow="true" :rowSpan="8" :colSpan="8" label="状态">{{ formatStatus(form.status, statusType) }}</oms-col>
                 <oms-col :isShow="true" :rowSpan="8" :colSpan="8" label="是否医用设备">
                   {{ formatDictLabel(form.medicalFlag, medicalDevType) }}
                 </oms-col>
@@ -192,13 +192,14 @@
 </template>
 <script>
 import {formatDictLabel} from '@/tools/utils'
-
+import commonMixin from '@/mixins/commonMixin'
 export default {
   props: {
     index: Number,
     formItem: Object,
     statusType: Object
   },
+  mixins: [commonMixin],
   data() {
     return {
       span: 8,
@@ -213,7 +214,33 @@ export default {
       currentIndex: -1,
       parent: this.$parent.$parent,
       formatDictLabel,
-      form: {}
+      form: {
+        no: '',
+        name: '',
+        type: '',
+        templateId: '',
+        departmentId: '',
+        orgId: '',
+        startUsingTime: '',
+        version: '',
+        status: '',
+        medicalFlag: '',
+        volume: '',
+        remark: '',
+        doorSheetType: '',
+        brand: '',
+        standardWorkingHours: '',
+        workStatus: '',
+        idleStateRangeStart: 0.00,
+        idleStateRangeEnd: '',
+        standardVoltageRangeStart: '',
+        standardVoltageRangeEnd: '',
+        standbyStatusRangeStart: '',
+        standbyStatusRangeEnd: '',
+        firstStatusType: 0,
+        locationTagId: '',
+        energyTagId: '',
+      }
     };
   },
   computed: {

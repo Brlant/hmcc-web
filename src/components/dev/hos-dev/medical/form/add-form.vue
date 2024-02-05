@@ -383,6 +383,8 @@ export default {
     index(val) {
       if (this.formItem.id) {
         this.actionType = '编辑医疗设备';
+        this.showUnbindLocationTag = !!(this.formItem.id && this.formItem.tagSnNumber);
+        this.showUnbindEnergyTag = !!(this.formItem.id && this.formItem.energyTagSnNumber);
         this.getDetail(this.formItem.id)
       } else {
         this.form = {};
@@ -409,6 +411,8 @@ export default {
       medicalApi.queryById(id).then(res => {
         this.form = res.data;
         this.getTempList();
+        this.searchLocationTagSn(this.form.locationTagId);
+        this.searchEnergyTagSn(this.form.energyTagId);
       }).catch(err => {
         this.$notify.error(err.response && err.response.data && err.response.data.msg || '详情接口异常，请联系管理员');
       })
@@ -529,7 +533,6 @@ export default {
           if (tagCode == 0) {
             callback();
           } else {
-            debugger
             callback(new Error(tip));
           }
         })
@@ -570,8 +573,6 @@ export default {
   },
   mounted() {
     this.queryDeptList();
-    this.searchLocationTagSn(this.form.locationTagId);
-    this.searchEnergyTagSn(this.form.energyTagId);
   }
 };
 </script>

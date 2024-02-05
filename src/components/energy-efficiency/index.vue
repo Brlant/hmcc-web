@@ -181,7 +181,6 @@ export default {
       return classes[item.status] || 'bg-green'
     },
     handleDevMonitorClick(item) {
-      // debugger
       this.$router.push({
         path: '/energy-efficiency/analysis',
         query: {

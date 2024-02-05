@@ -89,6 +89,7 @@
       <div>
         <el-upload drag action="#"
                    :auto-upload="false"
+                   :file-list="fileList"
                    :on-change="fileChangeHandler"
                    :on-error="importErrorHandler"
         >
@@ -128,6 +129,7 @@ export default {
       },
       defaultPageRight: {'width': '700px', 'padding': 0},
       importOrderDialogShowFlag: false,
+      fileList:[],
     };
   },
   computed: {
@@ -242,6 +244,8 @@ export default {
       download(`/tag/downloadTemplate?type=2`, {}, `能耗标签导入模板_${new Date().getTime()}.xlsx`)
     },
     fileChangeHandler(file) {
+      this.fileList  = []
+      this.fileList.push(file)
       let formData = new FormData()
       formData.append('file', file.raw)
       EnergyTagApi.batchImport(formData).then((res) => {

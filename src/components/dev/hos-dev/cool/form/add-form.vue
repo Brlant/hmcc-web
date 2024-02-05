@@ -395,8 +395,12 @@ export default {
           {name: this.formItem.orgName, id: this.formItem.orgId}
         ];
         this.form = Object.assign({}, this.formItem);
+        this.showUnbindLocationTag = !!(this.formItem.id && this.formItem.tagSnNumber);
+        this.showUnbindEnergyTag = !!(this.formItem.id && this.formItem.energyTagSnNumber);
         this.actionType = '编辑冷链设备';
         this.getTempList();
+        this.searchLocationTagSn(this.form.locationTagId);
+        this.searchEnergyTagSn(this.form.energyTagId);
       } else {
         this.form = {};
         this.actionType = '添加冷链设备';
@@ -488,6 +492,7 @@ export default {
       let params = {
         tagSnNumber: keyword,
         type: '1',
+        tagId: this.form.locationTagId
       };
 
       this.loadingLocationTag = true;
@@ -502,6 +507,7 @@ export default {
       let params = {
         tagSnNumber: keyword,
         type: '2',
+        tagId: this.form.energyTagId
       };
 
       this.loadingEnergyTag = true;
@@ -513,7 +519,7 @@ export default {
     },
     setTempData(templateId) {
       let template = this.tempList.find(i => i.templateId == templateId);
-      this.form = Object.assign({}, this.form,template)
+      this.form = Object.assign({}, this.form, template)
       this.form.brand = template.devBrand;
       this.form.version = template.devVersion;
       this.form.volume = template.devVolume;
@@ -539,7 +545,6 @@ export default {
           if (tagCode == 0) {
             callback();
           } else {
-            debugger
             callback(new Error(tip));
           }
         })
@@ -578,12 +583,9 @@ export default {
       })
     },
   },
-  mounted() {
+  created() {
     this.queryDeptList();
     this.queryAllOrg();
-
-    this.searchLocationTagSn(this.form.locationTagId);
-    this.searchEnergyTagSn(this.form.energyTagId);
   }
 };
 </script>
