@@ -161,6 +161,11 @@ export default {
         formData.sensorList = this.formItem.sensorDataList.map(i => ({
           sensorId: i.id,
           temperatureType: i.temperatureType,
+          areaName: i.areaName,
+          monitorTargetId: this.formItem.monitorTargetId,
+          monitorTargetName: this.formItem.monitorTargetName,
+          orgId: this.formItem.orgId,
+          orgName: this.formItem.orgName,
           isOpen: 0
         }));
         this.form = formData;
