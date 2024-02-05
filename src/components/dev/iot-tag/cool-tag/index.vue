@@ -89,6 +89,7 @@
       <div>
         <el-upload drag action="#"
                    :auto-upload="false"
+                   :file-list="fileList"
                    :on-change="fileChangeHandler"
                    :on-error="importErrorHandler"
         >
@@ -128,6 +129,7 @@ export default {
       },
       defaultPageRight: {'width': '700px', 'padding': 0},
       importOrderDialogShowFlag: false,
+      fileList:[],
     };
   },
   computed: {
@@ -171,7 +173,6 @@ export default {
     queryList(pageNo) {
       const http = ColdChainLabelApi.query;
       const params = this.queryUtil(http, pageNo);
-      // this.queryStatusNum(params);
     },
     queryStatusNum(params) {
       const pm = Object.assign({}, params, {status: null});
@@ -243,6 +244,8 @@ export default {
       download(`/tag/downloadTemplate?type=1`, {}, `冷链标签导入模板_${new Date().getTime()}.xlsx`)
     },
     fileChangeHandler(file) {
+      this.fileList  = []
+      this.fileList.push(file)
       let formData = new FormData()
       formData.append('file', file.raw)
       ColdChainLabelApi.batchImport(formData).then((res) => {

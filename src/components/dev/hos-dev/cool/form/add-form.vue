@@ -492,6 +492,7 @@ export default {
       let params = {
         tagSnNumber: keyword,
         type: '1',
+        tagId: this.form.locationTagId
       };
 
       this.loadingLocationTag = true;
@@ -506,6 +507,7 @@ export default {
       let params = {
         tagSnNumber: keyword,
         type: '2',
+        tagId: this.form.energyTagId
       };
 
       this.loadingEnergyTag = true;
