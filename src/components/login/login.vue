@@ -181,7 +181,7 @@ export default {
             //   this.$router.replace('/');
             // });
             this.$emit('login');
-            // this.queryWeChat();
+            this.queryWeChat();
           }, error => {
             let data = error.response.data;
             this.$notify.error({

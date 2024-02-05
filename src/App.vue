@@ -141,6 +141,7 @@
       window.localStorage.removeItem('noticeError');
       if (!this.$store.state.user || !this.$store.state.user.userId) {
         Auth.checkLogin().then(() => {
+          debugger
           this.queryPermissions(this.$route);
           let data = window.localStorage.getItem('user');
           if (!data) {
@@ -151,13 +152,9 @@
           }
           data = JSON.parse(data);
           this.$store.commit('initUser', data);
-          this.$getDict('coolDevType');
           this.queryWeChat();
-        }).catch(() => {
-          Auth.logout().then(() => {
-            this.$router.addRoutes(ErrorPage);
-            this.$router.replace('/login');
-          });
+        }).catch((err) => {
+          // console.log('state.user.userId is null',{...err},this.$store)
         });
       }
     }

@@ -38,24 +38,24 @@ export default [
         ]
       },
       {
-        id: 'org-licences-manager',
+        id: 'licences-manager',
         label: '单位证照管理',
         sort: 1,
         children: [
           {
-            id: 'org-licences-manager-query',
+            id: 'licences-manager-query',
             label: '查看单位证照'
           },
           {
-            id: 'org-licences-manager-add',
+            id: 'licences-manager-add',
             label: '添加单位证照'
           },
           {
-            id: 'org-licences-manager-edit',
+            id: 'licences-manager-edit',
             label: '编辑单位证照'
           },
           {
-            id: 'org-licences-manager-delete',
+            id: 'licences-manager-delete',
             label: '删除单位证照'
           }
         ]
