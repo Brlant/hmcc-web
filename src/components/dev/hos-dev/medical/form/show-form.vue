@@ -187,6 +187,7 @@
 </template>
 <script>
 import {formatDictLabel} from '@/tools/utils'
+import {medicalApi} from '@/resources'
 
 export default {
   props: {
@@ -208,7 +209,33 @@ export default {
       currentIndex: -1,
       parent: this.$parent.$parent,
       formatDictLabel,
-      form: {}
+      form: {
+        devNo: '',
+        devName: '',
+        devType: '',
+        templateId: '',
+        supplier: '',
+        manufacturer: '',
+        departmentId: '',
+        productTime: '',
+        discardTime: '',
+        firstUserTime: '',
+        manufacturerRegistrationNumber: '',
+        productionLicenseNumber: '',
+        maintenanceCycle: '',
+        registrationCertificateNumber: '',
+        workStatus: '',
+        standardWorkingHours: '',
+        idleStateRangeStart: 0.00,
+        idleStateRangeEnd: '',
+        standardVoltageRangeStart: '',
+        standardVoltageRangeEnd: '',
+        standbyStatusRangeStart: '',
+        standbyStatusRangeEnd: '',
+        firstStatusType: 0,
+        locationTagId: '',
+        energyTagId: '',
+      }
     };
   },
   computed: {
@@ -241,7 +268,7 @@ export default {
         this.currentIndex = val;
       });
 
-      this.form = Object.assign({}, this.formItem);
+      this.getDetail(this.formItem.id)
     },
     'form.type': function (val) {
       if (!val) {
@@ -253,11 +280,23 @@ export default {
     }
   },
   methods: {
+    getDetail(id) {
+      if (!id) {
+        return
+      }
+
+      medicalApi.queryById(id).then(res => {
+        this.form = res.data;
+        this.getTempList();
+      }).catch(err => {
+        this.$notify.error(err.response && err.response.data && err.response.data.msg || '详情接口异常，请联系管理员');
+      })
+    },
     // 查询模板
     getTempList() {
       let params = {
-        templateType: '1',
-        devType: this.form.type
+        templateType: '2',
+        devType: this.form.devType
       };
 
       this.tempList = [];

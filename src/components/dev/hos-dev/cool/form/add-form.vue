@@ -399,6 +399,8 @@ export default {
         this.showUnbindEnergyTag = !!(this.formItem.id && this.formItem.energyTagSnNumber);
         this.actionType = '编辑冷链设备';
         this.getTempList();
+        this.searchLocationTagSn(this.form.locationTagId);
+        this.searchEnergyTagSn(this.form.energyTagId);
       } else {
         this.form = {};
         this.actionType = '添加冷链设备';
@@ -541,7 +543,6 @@ export default {
           if (tagCode == 0) {
             callback();
           } else {
-            debugger
             callback(new Error(tip));
           }
         })
@@ -580,12 +581,9 @@ export default {
       })
     },
   },
-  mounted() {
+  created() {
     this.queryDeptList();
     this.queryAllOrg();
-
-    this.searchLocationTagSn(this.form.locationTagId);
-    this.searchEnergyTagSn(this.form.energyTagId);
   }
 };
 </script>
