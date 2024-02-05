@@ -21,7 +21,7 @@
             <el-col :span="8">
               <el-form-item label="设备类型" prop="devType">
                 <el-select placeholder="请选择设备类型" v-model="form.devType" popper-class="selects--custom"
-                           @change="getTempList">
+                           @change="devTypeChangeHandler">
                   <el-option :key="item.key" :label="item.label" :value="item.key"
                              v-for="(item, index) in devTypes">
                   </el-option>
@@ -314,6 +314,7 @@ export default {
         productionLicenseNumber: '',
         maintenanceCycle: '',
         registrationCertificateNumber: '',
+        workStatus: '',
         standardWorkingHours: '',
         idleStateRangeStart: 0.00,
         idleStateRangeEnd: '',
@@ -321,7 +322,6 @@ export default {
         standardVoltageRangeEnd: '',
         standbyStatusRangeStart: '',
         standbyStatusRangeEnd: '',
-        workStatus: '',
         firstStatusType: 0,
         locationTagId: '',
         energyTagId: '',
@@ -359,8 +359,8 @@ export default {
       energyTags: [],
       loadingLocationTag: false,
       loadingEnergyTag: false,
-      showUnbindLocationTag:!!(this.formItem.id && this.formItem.tagSnNumber),
-      showUnbindEnergyTag:!!(this.formItem.id && this.formItem.energyTagSnNumber),
+      showUnbindLocationTag: !!(this.formItem.id && this.formItem.tagSnNumber),
+      showUnbindEnergyTag: !!(this.formItem.id && this.formItem.energyTagSnNumber),
     };
   },
   props: {
@@ -380,15 +380,15 @@ export default {
     },
   },
   watch: {
-    index: function (val) {
+    index(val) {
       if (this.formItem.id) {
         this.actionType = '编辑医疗设备';
-        this.getTempList();
         this.getDetail(this.formItem.id)
       } else {
         this.form = {};
         this.actionType = '添加医疗设备';
       }
+
       this.$nextTick(() => {
         this.$refs['tempForm'] && this.$refs['tempForm'].clearValidate();
       });
@@ -402,12 +402,13 @@ export default {
   },
   methods: {
     getDetail(id) {
-      if (!id){
+      if (!id) {
         return
       }
 
       medicalApi.queryById(id).then(res => {
         this.form = res.data;
+        this.getTempList();
       }).catch(err => {
         this.$notify.error(err.response && err.response.data && err.response.data.msg || '详情接口异常，请联系管理员');
       })
@@ -465,11 +466,16 @@ export default {
         devType: this.form.devType
       };
 
-      this.form.templateId = '';
       this.tempList = [];
       this.$http.get('/template/queryByType', {params}).then(res => {
         this.tempList = res.data;
       });
+    },
+    devTypeChangeHandler(val) {
+      this.form.templateId = '';
+      if (val) {
+        this.getTempList();
+      }
     },
     // 查询定位标签
     searchLocationTagSn(keyword) {
@@ -501,7 +507,7 @@ export default {
     },
     setTempData(templateId) {
       let template = this.tempList.find(i => i.templateId == templateId);
-      this.form = Object.assign({}, this.form,template)
+      this.form = Object.assign({}, this.form, template)
       this.form.firstUserTime = template.devStartUsingTime;
     },
     checkTag(id, type, cb) {
@@ -548,14 +554,14 @@ export default {
       console.log(`handleSelect`, item);
     },
     unbindLocationTag() {
-      medicalApi.unbindDeviceTagRelation(this.form.locationTagId,this.form.id,"2").then(res => {
+      medicalApi.unbindDeviceTagRelation(this.form.locationTagId, this.form.id, "2").then(res => {
         this.form.locationTagId = '';
         this.showUnbindLocationTag = false;
         this.$message.success('解绑成功')
       })
     },
     unbindEnergyTag() {
-      medicalApi.unbindDeviceTagRelation(this.form.energyTagId,this.form.id,"1").then(res => {
+      medicalApi.unbindDeviceTagRelation(this.form.energyTagId, this.form.id, "1").then(res => {
         this.form.energyTagId = '';
         this.showUnbindEnergyTag = false;
         this.$message.success('解绑成功')
