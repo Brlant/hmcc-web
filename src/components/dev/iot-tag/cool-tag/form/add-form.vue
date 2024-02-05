@@ -28,7 +28,7 @@
   </dialog-template>
 </template>
 <script>
-import {probe} from '@/resources';
+import {coolApi} from '@/resources';
 import methodsMixin from '@/mixins/methodsMixin';
 
 export default {
@@ -102,7 +102,7 @@ export default {
           });
           if (!this.form.id) {
             this.doing = true;
-            this.$httpRequestOpera(probe.save(this.form), {
+            this.$httpRequestOpera(coolApi.save(this.form), {
               errorTitle: '添加失败',
               success: res => {
                 if (res.code === 200) {
@@ -118,7 +118,7 @@ export default {
               }
             });
           } else {
-            this.$httpRequestOpera(probe.update(this.form), {
+            this.$httpRequestOpera(coolApi.update(this.form), {
               errorTitle: '修改失败',
               success: res => {
                 if (res.code === 200) {

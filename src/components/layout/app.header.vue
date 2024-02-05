@@ -369,7 +369,7 @@ a:focus {
 </template>
 
 <script>
-import {Auth} from '../../resources';
+import {Auth} from '@/resources';
 import logo_pic from '@/assets/img/logo_pic.png';
 import omsUploadPicture from '@/components/common/upload/upload.user.picture.vue';
 
