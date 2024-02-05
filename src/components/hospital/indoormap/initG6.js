@@ -136,7 +136,7 @@ export default ({
   let showTemp = false;
   let nodeTemp = null;
 
-  let modes = ['drag-canvas', 'zoom-canvas'];
+  let modes = ['drag-canvas'];
   if (nodeMove) {
     modes.push('drag-node');
   }
