@@ -18,22 +18,22 @@
         </el-select>
       </el-col>
       <el-col :span="7">
-        <el-button type="primary" icon="el-icon-search" @click="query">搜索</el-button>
+        <el-button type="primary" icon="el-icon-search" @click="queryList(1)">搜索</el-button>
         <el-button icon="el-icon-refresh" @click="reset">重置</el-button>
       </el-col>
       <el-col :span="7" style="text-align: right;">
-        <el-button v-has="permPage.addBasestation"  type="primary" icon="el-icon-plus" @click="create">添加基站</el-button>
+        <el-button v-has="permPage.addBasestation" type="primary" icon="el-icon-plus" @click="create">添加基站</el-button>
       </el-col>
     </el-row>
 
     <!-- 列表 -->
-    <el-table ref="listTbl" :data="data" :empty-text="emptyText" height="100%">
+    <el-table ref="listTbl" :data="dataList" style="width: 100%">
       <el-table-column type="index" align="center">
         <template slot="header">序号</template>
       </el-table-column>
       <el-table-column label="基站名称" prop="stationName"/>
-      <el-table-column label="基站SN号" prop="tagSn" />
-      <el-table-column label="MAC地址" prop="macAddr" />
+      <el-table-column label="基站SN号" prop="tagSn"/>
+      <el-table-column label="MAC地址" prop="macAddr"/>
       <el-table-column label="基站类型" align="center">
         <template v-slot="scope">
           {{ formatDictLabel(scope.row.stationType, baseStationTypes) }}
@@ -49,17 +49,28 @@
       <el-table-column label="基站位置" min-width="200" prop="pointName" align="center"/>
       <el-table-column label="操作" align="center">
         <template v-slot="scope">
-          <el-button v-has="permPage.viewBasestation" icon="el-icon-search" size="mini" circle @click.stop="detail(scope.row)"></el-button>
-          <el-button v-has="permPage.editBasestation" type="primary" icon="el-icon-edit" size="mini" circle @click.stop="modify(scope.row)"></el-button>
-          <el-button v-has="permPage.delBasestation" type="danger" icon="el-icon-delete" size="mini" circle @click.stop="remove(scope.row)"></el-button>
+          <el-button v-has="permPage.viewBasestation" icon="el-icon-search" size="mini" circle
+                     @click.stop="detail(scope.row)"></el-button>
+          <el-button v-has="permPage.editBasestation" type="primary" icon="el-icon-edit" size="mini" circle
+                     @click.stop="modify(scope.row)"></el-button>
+          <el-button v-has="permPage.delBasestation" type="danger" icon="el-icon-delete" size="mini" circle
+                     @click.stop="remove(scope.row)"></el-button>
         </template>
       </el-table-column>
     </el-table>
-    <el-pagination :current-page.sync="page" :total="total" background
-                   layout="prev, pager, next" @current-change="query"/>
 
+    <div class="text-center" v-show="dataList.length>0">
+      <el-pagination :current-page="pager.currentPage" :page-size="pager.pageSize"
+                     :page-sizes="[10,20,50,100]"
+                     :total="pager.count" @current-change="handleCurrentChange"
+                     @size-change="handleSizeChange"
+                     layout="total, sizes, prev, pager, next, jumper">
+      </el-pagination>
+    </div>
     <!-- 弹框 -->
-    <structure-form :show.sync="show" :edit="edit" :form="form" @refresh="refresh"/>
+    <structure-form :show.sync="show" :edit="edit" :form="form"
+                    :title="formTitle"
+                    @refresh="refresh"/>
   </div>
 </template>
 
@@ -79,14 +90,12 @@ export default {
         stationType: null,
         status: null
       },
-      total: 0,
-      data: [],
-      page: 1,
+      dataList: [],
       form: null,
+      formTitle: '',
       show: false,
       edit: false,
       updateRow: null,
-      emptyText: '加载中...'
     };
   },
   computed: {
@@ -98,27 +107,26 @@ export default {
     }
   },
   created() {
-    this.query();
+    this.queryList(1);
   },
   mounted() {
-    console.log(this.dict);
+    // console.log(this.dict);
   },
   methods: {
     refresh() {
-      this.pageNum = 1;
-      this.query();
+      this.queryList(1);
     },
-    query() {
-      this.emptyText = '基站加载中...';
-      queryBaseStation({
-        ...this.search
-      }).then(res => {
-        this.data = res.data.list;
-        this.total = res.data.total;
-      }).finally(() => {
-        setTimeout(() => {
-          this.emptyText = '暂无基站数据';
-        }, 300);
+
+    queryList(pageNo) {
+      let params = Object.assign({}, this.search, {
+        pageNo: pageNo,
+        pageSize: this.pager.pageSize
+      });
+
+      // console.log(params,'list.params')
+      queryBaseStation(params).then(res => {
+        this.dataList = res.data.list;
+        this.pager.count = res.data.total;
       });
     },
     reset() {
@@ -133,16 +141,19 @@ export default {
       this.form = null;
       this.show = true;
       this.edit = true;
+      this.formTitle = '添加基站';
     },
     detail(row) {
       this.form = row;
       this.show = true;
       this.edit = false;
+      this.formTitle = '基站详情';
     },
     modify(row, updateRow) {
       this.form = row;
       this.show = true;
       this.edit = true;
+      this.formTitle = '修改基站';
       this.updateRow = updateRow;
     },
     remove(row, updateRow) {

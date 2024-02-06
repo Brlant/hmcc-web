@@ -1,5 +1,5 @@
 <template>
-  <el-dialog title="基站详情" :visible.sync="visible" width="450px" :close-on-click-modal="false" @open="open" @closed="cloesd">
+  <el-dialog :title="title" :visible.sync="visible" width="450px" :close-on-click-modal="false" @open="open" @closed="cloesd">
     <el-form ref="form" :model="model" :rules="rules" :disabled="!edit" label-width="90px">
       <el-form-item label="产品类型" prop="productId">
         <el-select v-model="model.productId" placeholder="产品类型">
@@ -123,7 +123,8 @@
         default: false
       },
       edit: Boolean,
-      form: Object
+      form: Object,
+      title:''
     },
     name: 'BaseStationForm',
     data() {
