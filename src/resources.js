@@ -743,6 +743,9 @@ export const OrgGoods = resource('/org/goods', http, {
 
 // 货主-基本信息
 export const BaseInfo = resource('/orgs', http, {
+  queryPager(params) {
+    return http.get('/orgs/pager', {params});
+  },
   // 查询数量
   queryStateNum: (params) => {
     return http.get('/orgs/count', {params});
