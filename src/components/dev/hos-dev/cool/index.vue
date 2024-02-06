@@ -60,9 +60,10 @@
             <el-col :span="2">{{ item.startUsingTime | time }}</el-col>
             <el-col :span="2">
               <span v-if="item.deviceStatus === 'ONLINE'" style="color: green">开机</span>
-              <span v-if="item.deviceStatus === 'OFFLINE'" style="color: grey">关机</span>
-              <span v-if="item.deviceStatus === 'ALARM'" style="color: red">异常</span>
-              <span v-if="item.deviceStatus === 'FAILURE'" style="color: yellow">故障</span>
+              <span v-else-if="item.deviceStatus === 'OFFLINE'" style="color: grey">关机</span>
+              <span v-else-if="item.deviceStatus === 'ALARM'" style="color: red">异常</span>
+              <span v-else-if="item.deviceStatus === 'FAILURE'" style="color: yellow">故障</span>
+              <span v-else>--</span>
             </el-col>
             <el-col :span="2">
               {{ formatDictLabel(item.status, statusList) }}
@@ -205,11 +206,11 @@ export default {
     /* 定位 */
     devicesPosition(row) {
       this.$router.push({
-        path: '/device-position/position',
-        query: {
+        name: 'DevicePosition',
+        params: {
           id: row.id,
-          devNo:row.no,
-          devName:row.name
+          devNo: row.no,
+          devName: row.name
         },
       });
     },

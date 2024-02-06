@@ -110,7 +110,7 @@
 
     computed: {
       bodyLeft: function () {
-        return this.$store.state.bodySize['left'];
+        return this.$store.state.bodySize['left'] || '220px';
       },
       updatePassFlag() {
         return this.$store.state.user['updatePassFlag'];

@@ -8,13 +8,13 @@
       <el-col :span="3">
         <el-select v-model="search.stationType" placeholder="基站类型">
           <el-option v-for="item in baseStationTypes"
-                     :key="item.value" :value="item.value" :label="item.label"/>
+                     :key="item.key" :value="item.key" :label="item.label"/>
         </el-select>
       </el-col>
       <el-col :span="3">
         <el-select v-model="search.status" placeholder="基站状态">
           <el-option v-for="item in baseStationStatus"
-                     :key="item.value" :value="item.value" :label="item.label"/>
+                     :key="item.key" :value="item.key" :label="item.label"/>
         </el-select>
       </el-col>
       <el-col :span="7">

@@ -75,7 +75,7 @@
     </page-right>
 
     <!-- 导入对话框-->
-    <el-dialog :visible.sync="importOrderDialogShowFlag" title="导入" width="410px" center>
+    <el-dialog :visible.sync="batchAddDialogShowFlag" title="导入" width="410px" center>
       <div style="margin-bottom: 22px;">
         <el-button
           type="primary"
@@ -128,7 +128,7 @@ export default {
         1: showForm
       },
       defaultPageRight: {'width': '700px', 'padding': 0},
-      importOrderDialogShowFlag: false,
+      batchAddDialogShowFlag: false,
       fileList:[],
     };
   },
@@ -185,7 +185,8 @@ export default {
       this.showPart(0);
     },
     batchAdd() {
-      this.importOrderDialogShowFlag = true;
+      this.fileList = [];
+      this.batchAddDialogShowFlag = true;
     },
     edit(item) {
       this.currentItem = item;
@@ -254,6 +255,7 @@ export default {
           message: '导入成功'
         })
 
+        this.batchAddDialogShowFlag = false;
         this.getList()
       }).catch((err) => {
         console.log({...err}, '导入失败')

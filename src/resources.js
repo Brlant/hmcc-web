@@ -36,7 +36,7 @@ http.interceptors.response.use(response => {
         return response.data;
       case 401:
         window.location.href = '#/login';
-        return Promise.reject({response});
+        break;
       case 403:
         Notification.error({
           message: '您没有权限请求信息，请联系管理员。',
@@ -44,12 +44,11 @@ http.interceptors.response.use(response => {
             window.localStorage.removeItem('noticeError');
           }
         });
-        return Promise.reject({response});
-      case 400:
-        return Promise.reject({response});
-      default:
-        return Promise.reject({response});
+        break;
+      case 500:
+        Notification.error(response.data.msg || '接口请求异常，请稍后再试');
     }
+    return Promise.reject({response});
   } else {
     return response;
   }
@@ -743,6 +742,9 @@ export const OrgGoods = resource('/org/goods', http, {
 
 // 货主-基本信息
 export const BaseInfo = resource('/orgs', http, {
+  queryPager(params) {
+    return http.get('/orgs/pager', {params});
+  },
   // 查询数量
   queryStateNum: (params) => {
     return http.get('/orgs/count', {params});
