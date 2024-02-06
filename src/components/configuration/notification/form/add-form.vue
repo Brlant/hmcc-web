@@ -374,13 +374,13 @@
       save(formName) {
         this.$refs[formName].validate((valid) => {
           if (valid && this.doing === false) {
-            console.log(JSON.parse(JSON.stringify(this.form)));
+            // console.log(JSON.parse(JSON.stringify(this.form)));
             if (this.checkContactWayWhenSave()) return;
             // // 微信模式的校验
             if (this.checkWeChatWay()) return;
             // 拼装给后台的数据
             const form = JSON.parse(JSON.stringify(this.form));
-            console.log(form);
+            // console.log(form);
             form.levelOneAlarmObjectList.forEach(i => {
               i.alarmLevel = '1';
             });

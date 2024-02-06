@@ -109,7 +109,7 @@ export default {
           this.departList = res.data.list;
         })
       } catch (error) {
-        console.log(error)
+        // console.log(error)
       }
     },
     /*添加科室*/

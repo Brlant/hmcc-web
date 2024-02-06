@@ -211,7 +211,7 @@ export default {
           this.detailForm = res.data;
           this.edit = false;
         }
-        console.log(res)
+        // console.log(res)
       }).catch(err => {
 
       })
@@ -221,10 +221,10 @@ export default {
         if (res.code === 200) {
           this.addEditVisible = true;
           this.detailForm = res.data;
-          console.log(this.detailForm, '参数')
+          // console.log(this.detailForm, '参数')
           this.edit = true;
         }
-        console.log(res)
+        // console.log(res)
       }).catch(err => {
 
       })

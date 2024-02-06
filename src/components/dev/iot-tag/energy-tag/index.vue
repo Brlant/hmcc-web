@@ -254,12 +254,13 @@ export default {
         this.batchAddDialogShowFlag = false;
         this.getList()
       }).catch((err) => {
-        console.log({...err}, '导入失败')
-        this.$message.error(err.response.data.msg || "导入失败")
+        // console.log({...err}, '导入失败')
+        this.$message.error(err.response && err.response.data && err.response.data.msg || "导入失败")
       })
     },
     importErrorHandler(err, file) {
-      console.log('导入冷链标签失败：', ...err)
+      // console.log('导入冷链标签失败：', ...err)
+      this.$message.error(err.response && err.response.data && err.response.data.msg || "导入失败")
     }
   }
 };

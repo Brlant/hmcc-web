@@ -704,7 +704,7 @@ export default {
       //     departmentId: this.departmentId
       //   }
       // })
-      console.log('点了 ', status)
+      // console.log('点了 ', status)
     },
     handleClick(tab, event) {
       // console.log(tab, event);

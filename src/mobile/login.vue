@@ -120,7 +120,6 @@
         });
       },
       check() {
-        console.log(1);
         // 为空时, 不用做判断
         if (!this.user.username) return;
         this.$http.post('/login/check', {username: this.trim(this.user.username)}).catch(error => {

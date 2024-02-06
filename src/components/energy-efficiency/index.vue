@@ -157,18 +157,18 @@ export default {
       EnergyEffciencyApi.getStatisticInfo({departmentId: this.listParams.departmentId}).then(res => {
         this.statisticInfo = res.data;
       }).catch(err => {
-        console.log('查询设备数量接口异常：', {...err})
+        // console.log('查询设备数量接口异常：', {...err})
       })
     },
     queryList(pageNo = 1) {
       this.listParams.pageNo = pageNo;
       this.listParams.pageSize = this.pager.pageSize;
       EnergyEffciencyApi.getDevMonitorList(this.listParams).then(res => {
-        console.log(res, '设备监控列表')
+        // console.log(res, '设备监控列表')
         this.devMonitorList = res.data.list;
         this.pager.count = res.data.total
       }).catch(err => {
-        console.log('查询设备监控列表接口异常：', {...err})
+        // console.log('查询设备监控列表接口异常：', {...err})
       })
     },
     // 样式查询

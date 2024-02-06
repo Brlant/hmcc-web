@@ -163,7 +163,7 @@ export default ({
         type: 'position',
         form: { ...item.get('model').form }
       });
-      console.log(evt);
+      // console.log(evt);
       nodeTemp?.toFront();
     } else {
       typeof nodeClick === 'function' && nodeClick(evt.item);

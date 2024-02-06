@@ -98,7 +98,7 @@
         }).then(() => {
           this.$router.replace("/resetpsw")
         }).catch(err => {
-          console.log("加载alert异常", err)
+          // console.log("加载alert异常", err)
         });
 
         this.needCheck = false;
@@ -143,7 +143,7 @@
         // 定义那些页面不需要安全提示
         let ext = hash.indexOf('login') !== -1 || hash.indexOf('resetpsw') !== -1 || hash.indexOf('forget') !== -1;
         if (ext) {
-          console.log("popstate.location.hash", hash);
+          // console.log("popstate.location.hash", hash);
           return;
         }
 
