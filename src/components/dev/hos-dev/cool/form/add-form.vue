@@ -385,7 +385,7 @@ export default {
       return this.$store.state.doorDevType;
     },
     coolDevType() {
-      return this.$getDict('deviceTemplateStatus')
+      return this.$getDict('coolDevType')
     },
   },
   watch: {

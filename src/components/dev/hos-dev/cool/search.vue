@@ -103,8 +103,7 @@ export default {
         type: "",
         // 所属科室id
         departmentId: '',
-        // 设备状态
-        status: "1",
+        // 运行状态
         deviceStatus: "",
       },
       showSearch: false,
@@ -146,7 +145,6 @@ export default {
         departmentId: '',
         // 设备状态
         deviceStatus: "",
-        status: "1",
       };
       this.$emit('search', this.searchCondition);
     },
