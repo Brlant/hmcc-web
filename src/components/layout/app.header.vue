@@ -389,7 +389,7 @@ export default {
   },
   computed: {
     menuWidth: function () {
-      return this.$store.state.bodySize.left;
+      return this.$store.state.bodySize.left || '220px';
     },
     user: function () {
       return Object.assign({}, {userName: '', userAccount: '', userLastLoginTime: 0}, this.$store.state.user);
