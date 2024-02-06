@@ -132,7 +132,6 @@ export default {
         {title: '车辆', id: '1'},
         {title: '冷柜', id: '2'}
       ],
-      formatDictLabel
     };
   },
   computed: {

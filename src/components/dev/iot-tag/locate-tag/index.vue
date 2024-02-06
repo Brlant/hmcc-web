@@ -107,7 +107,8 @@
       <el-pagination :current-page="pager.currentPage"
                      :page-size="pager.pageSize"
                      :page-sizes="[10,20,50,100]"
-                     :total="pager.count" @current-change="handleCurrentChange"
+                     :total="pager.count"
+                     @current-change="handleCurrentChange"
                      @size-change="handleSizeChange"
                      layout="total, sizes, prev, pager, next, jumper">
       </el-pagination>
@@ -286,10 +287,9 @@ export default {
       this.getLabelQueryList();
     },
     queryList(pageNo) {
-      this.queryParams.pageNo = pageNo;
-      this.getLabelQueryList();
+      this.getLabelQueryList(pageNo);
     },
-    getLabelQueryList() {
+    getLabelQueryList(pageNo=1) {
       if (this.loading) {
         return
       }

@@ -60,8 +60,8 @@ $labelWidth: 180px;
             <el-form-item label="冷链标签" :prop="`sensorList.${index}.sensorId`">
               <el-select :remote-method="queryProbeList" @focus="queryProbeList('')" filterable clearable
                          placeholder="请输入名称搜索冷链标签" remote v-model="sensor.sensorId">
-                <el-option :key="item.id" :label="item.name" :value="item.id"
-                           v-for="item in probeList"></el-option>
+                <el-option v-for="(item,i) in probeList" :key="i" :label="item.name" :value="item.id"
+                ></el-option>
               </el-select>
             </el-form-item>
           </el-col>
@@ -78,8 +78,8 @@ $labelWidth: 180px;
 
           <el-col :span="2" style="margin-bottom: 22px;line-height: 40px">
             <des-btn @click="addSensor()" icon="plus"></des-btn>
-            <des-btn class="ml-10" @click="delSensor(sensor)" icon="minus"
-                     v-show="form.sensorList.length > 1"></des-btn>
+            <des-btn class="ml-10" @click="delSensor(sensor)" icon="minus" v-
+                     v-show="sensor.delFlag"></des-btn>
           </el-col>
         </el-row>
       </el-form>
@@ -160,16 +160,23 @@ export default {
           ];
         }
         let formData = JSON.parse(JSON.stringify(this.formItem));
-        formData.sensorList = this.formItem.sensorDataList.map(i => ({
-          sensorId: i.id,
-          temperatureType: i.temperatureType,
-          areaName: i.areaName,
-          monitorTargetId: this.formItem.monitorTargetId,
-          monitorTargetName: this.formItem.monitorTargetName,
-          orgId: this.formItem.orgId,
-          orgName: this.formItem.orgName,
-          isOpen: 0
-        }));
+        if (formData.sensorDataList.length){
+          formData.sensorList = formData.sensorDataList.map(i => ({
+            sensorId: i.id,
+            temperatureType: i.temperatureType,
+            areaId: i.areaId ,
+            areaName: i.areaName,
+            monitorTargetId: this.formItem.monitorTargetId,
+            monitorTargetName: this.formItem.monitorTargetName,
+            orgId: this.formItem.orgId,
+            orgName: this.formItem.orgName,
+            isOpen: 0,
+            // 未绑定标签的才能删除
+            delFlag: !i.id
+          }));
+        }
+
+        formData.sensorDataList = null;
         this.form = formData;
       } else {
         this.resetForm();
@@ -214,9 +221,17 @@ export default {
     },
     addSensor() {
       this.form.sensorList.push({
+        monitorTargetId: this.formItem.monitorTargetId,
+        monitorTargetName: this.formItem.monitorTargetName,
+        orgId: this.formItem.orgId,
+        orgName: this.formItem.orgName,
         sensorId: '',
         temperatureType: '',
-        isOpen: 0
+        areaId: '' ,
+        areaName: '',
+        isOpen: 0,
+        // 手动添加的可以删除
+        delFlag: true
       });
     },
     delSensor(item) {
@@ -253,7 +268,7 @@ export default {
                   this.$notify.success({message: '添加成功'});
                 }
               },
-              error: () => {
+              error: (err) => {
                 this.doing = false;
               }
             });

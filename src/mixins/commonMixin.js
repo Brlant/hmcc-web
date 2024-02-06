@@ -50,6 +50,7 @@ export default {
       this.queryList(1);
     },
     handleCurrentChange(val) {
+      this.pager.currentPage = val;
       this.queryList(val);
     },
     queryStatusNumUtil(http, params, statusType, response) {
