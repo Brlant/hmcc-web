@@ -1,8 +1,8 @@
 <template>
   <el-row class="app-container">
     <el-col :span="4">
-      <el-tree :data="floors" lazy :load="loadChildren" :props="treeProps" node-key="id"
-        :expand-on-click-node="false" highlight-current @node-click="clickNode"/>
+      <el-tree ref="floorTree" :data="floors" lazy :load="loadChildren" :props="treeProps" node-key="id" :default-expanded-keys="expandedKeys"
+        :expand-on-click-node="false" highlight-current @current-change="currentChange"/>
     </el-col>
     <el-col :span="20">
       <IndoorMap :map="map" :storey="storey" :action="action" :headers="headers"
@@ -38,6 +38,9 @@
           parentId: null,
           name: null
         },
+        first: true,
+        second: true,
+        expandedKeys: [],
         action: `${process.env.VUE_APP_API}/omsAttachment`,
       };
     },
@@ -57,13 +60,34 @@
           type: node.level > 0 ? 2 : 1,
           upFloor: node.data?.id
         }).then(res => {
+          if (this.first) {
+            this.first = false;
+            this.expandedKeys.push(res.data[0]?.id);
+          } else {
+            if (this.second) {
+              this.second = false;
+              this.$nextTick(() => {
+                this.loadFirstStorey(res.data[0]);
+              })
+            }
+          }
           resolve(res.data);
         }).catch(err => {
           resolve([]);
           console.error(err);
         })
       },
-      clickNode(item, node) {
+      loadFirstStorey(data) {
+        let id = data?.id;
+        let tree = this.$refs.floorTree;
+        if (!id) {
+          return;
+        }
+        let node = tree.getNode(id);
+        this.currentChange(data, node);
+        tree.setCurrentKey(id);
+      },
+      currentChange(item, node) {
         const data = node.data;
         const parent = node.parent.data;
         if (item.type !== 1) {
@@ -123,6 +147,7 @@
             return this.$message.error(r.msg || '地图创建失败');
           }
           this.map.url = res.url;
+          this.map.points = [];
         });
       },
       uploadError(err) {

@@ -392,6 +392,12 @@
                 </template>
               </el-table-column>
               <el-table-column label="告警发生时间" align="center" prop="alarmTime"/>
+              <el-table-column label="操作" align="center" prop="">
+                <template v-slot="{row}">
+                  <el-button type="primary" size="mini" icon="el-icon-location-outline" circle
+                    @click="devicesPosition(row)"></el-button>
+                </template>
+              </el-table-column>
             </el-table>
           </div>
         </el-tab-pane>
@@ -583,8 +589,8 @@ export default {
     /* 定位 */
     devicesPosition(row) {
       this.$router.push({
-        path: 'device-position/position',
-        params: {...row}
+        name: 'DevicePosition',
+        params: { ...row }
       });
       // queryApi.queryAddressPos({deviceId:row.id}).then(res=>{
       //   if(res.data.length>0){
