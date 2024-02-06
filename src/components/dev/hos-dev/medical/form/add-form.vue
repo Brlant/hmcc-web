@@ -411,8 +411,8 @@ export default {
       medicalApi.queryById(id).then(res => {
         this.form = res.data;
         this.getTempList();
-        this.searchLocationTagSn(this.form.locationTagId);
-        this.searchEnergyTagSn(this.form.energyTagId);
+        this.searchLocationTagSn(this.form.tagSnNumber);
+        this.searchEnergyTagSn(this.form.energyTagSnNumber);
       }).catch(err => {
         this.$notify.error(err.response && err.response.data && err.response.data.msg || '详情接口异常，请联系管理员');
       })
@@ -485,7 +485,6 @@ export default {
       });
     },
     devTypeChangeHandler(val) {
-      debugger
       this.form.templateId = '';
       if (val) {
         this.getTempList();

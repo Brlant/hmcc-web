@@ -401,8 +401,9 @@ export default {
         this.form = Object.assign({}, this.formItem);
         this.actionType = '编辑冷链设备';
         this.getTempList();
-        this.searchLocationTagSn(this.form.locationTagId);
-        this.searchEnergyTagSn(this.form.energyTagId);
+
+        this.searchLocationTagSn(this.form.tagSnNumber);
+        this.searchEnergyTagSn(this.form.energyTagSnNumber);
       } else {
         this.form = {};
         this.actionType = '添加冷链设备';

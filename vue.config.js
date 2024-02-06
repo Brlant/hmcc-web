@@ -25,7 +25,7 @@ module.exports = {
         target: proxyTarget,
         changOrigin: true,
         pathRewrite: {
-          '/api': ''
+          '/api': pathRewrite
         }
       },
       '/hengshi': {
