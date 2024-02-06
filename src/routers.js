@@ -71,7 +71,22 @@ export const routes = [
             meta: {
               moduleId: 'dev', title: '物联网标签管理', perm: 'iot-tag-manager',
               type: 1,
-              permPage: {add: 'sensor-add', edit: 'sensor-edit', start: 'sensor-active', stop: 'sensor-disable'}
+              permPage: {
+                add: 'sensor-add',
+                edit: 'sensor-edit',
+                start: 'sensor-active',
+                stop: 'sensor-disable',
+                locateAdd:'locate-add',
+                locateEdit:'locate-edit',
+                locateDel:'locate-del',
+                locateView:'locate-view',
+                energyAdd:'energy-consumption-add',
+                energyEdit:'energy-consumption-edit',
+                energyDel:'energy-consumption-del',
+                energyView:'energy-consumption-scan',
+                energyEnable:'energy-consumption-active',
+                energyDisable:'energy-consumption-disable',
+              }
             }
           },
           {
@@ -84,7 +99,11 @@ export const routes = [
                 add: 'gateway-dev-add',
                 edit: 'gateway-dev-edit',
                 start: 'gateway-dev-active',
-                stop: 'gateway-dev-disable'
+                stop: 'gateway-dev-disable',
+                addBasestation: 'basestation-add',
+                editBasestation: 'basestation-edit',
+                viewBasestation: 'basestation-view',
+                delBasestation: 'basestation-del'
               }
             }
           },

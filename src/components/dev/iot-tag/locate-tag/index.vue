@@ -54,6 +54,7 @@
         </el-col>
         <el-col :span="2">
           <el-button
+            v-has="permPage.locateAdd"
             type="primary"
             icon="el-icon-plus"
             @click="addLabel"
@@ -95,9 +96,9 @@
       <el-table-column label="最后位置" prop="lastPositionStr" align="center"></el-table-column>
       <el-table-column label="操作" prop="" align="center">
         <template v-slot="{row}">
-          <el-button icon="el-icon-search" size="mini" circle @click="detail(row)"></el-button>
-          <el-button type="primary" icon="el-icon-edit" size="mini" @click="detailEdit(row)" circle></el-button>
-          <el-button type="danger" icon="el-icon-delete" size="mini" circle @click="remove(row)"></el-button>
+          <el-button v-has="permPage.locateView" icon="el-icon-search" size="mini" circle @click="detail(row)"></el-button>
+          <el-button v-has="permPage.locateEdit" type="primary" icon="el-icon-edit" size="mini" @click="detailEdit(row)" circle></el-button>
+          <el-button v-has="permPage.locateDel" type="danger" icon="el-icon-delete" size="mini" circle @click="remove(row)"></el-button>
         </template>
       </el-table-column>
     </el-table>

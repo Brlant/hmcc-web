@@ -77,8 +77,7 @@ body {
         <el-form label-position="top" ref="loginForm" label-width="80px" :model="user" :rules="rules"
                  @submit.prevent="done" onsubmit="return false">
           <el-form-item label="账号" prop="username">
-            <oms-input v-model="user.username" :showFocus="isFocus === 2" placeholder="手机号/邮箱/用户名"
-                       @blur="check()"></oms-input>
+            <oms-input v-model="user.username" :showFocus="isFocus === 2" placeholder="手机号/邮箱/用户名"></oms-input>
           </el-form-item>
           <el-form-item label="密码" style="position:relative" prop="password">
             <oms-input v-model="user.password" :showFocus="isFocus === 3" type="password"

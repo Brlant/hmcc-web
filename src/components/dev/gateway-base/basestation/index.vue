@@ -22,7 +22,7 @@
         <el-button icon="el-icon-refresh" @click="reset">重置</el-button>
       </el-col>
       <el-col :span="7" style="text-align: right;">
-        <el-button type="primary" icon="el-icon-plus" @click="create">添加基站</el-button>
+        <el-button v-has="permPage.addBasestation"  type="primary" icon="el-icon-plus" @click="create">添加基站</el-button>
       </el-col>
     </el-row>
 
@@ -49,9 +49,9 @@
       <el-table-column label="基站位置" min-width="200" prop="pointName" align="center"/>
       <el-table-column label="操作" align="center">
         <template v-slot="scope">
-          <el-button icon="el-icon-search" size="mini" circle @click.stop="detail(scope.row)"></el-button>
-          <el-button type="primary" icon="el-icon-edit" size="mini" circle @click.stop="modify(scope.row)"></el-button>
-          <el-button type="danger" icon="el-icon-delete" size="mini" circle @click.stop="remove(scope.row)"></el-button>
+          <el-button v-has="permPage.viewBasestation" icon="el-icon-search" size="mini" circle @click.stop="detail(scope.row)"></el-button>
+          <el-button v-has="permPage.editBasestation" type="primary" icon="el-icon-edit" size="mini" circle @click.stop="modify(scope.row)"></el-button>
+          <el-button v-has="permPage.delBasestation" type="danger" icon="el-icon-delete" size="mini" circle @click.stop="remove(scope.row)"></el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -66,11 +66,12 @@
 <script>
 import StructureForm from './form';
 import {deleteBaseStation, queryBaseStation} from '@/api/hospital/equipment';
-import {formatDictLabel} from '@/tools/utils'
+import CommonMixin from '@/mixins/commonMixin'
 
 export default {
   name: 'BaseStation',
   components: {StructureForm},
+  mixins: [CommonMixin],
   data() {
     return {
       search: {
@@ -84,9 +85,8 @@ export default {
       form: null,
       show: false,
       edit: false,
-      uprow: null,
-      emptyText: '加载中...',
-      formatDictLabel
+      updateRow: null,
+      emptyText: '加载中...'
     };
   },
   computed: {
@@ -139,14 +139,14 @@ export default {
       this.show = true;
       this.edit = false;
     },
-    modify(row, uprow) {
+    modify(row, updateRow) {
       this.form = row;
       this.show = true;
       this.edit = true;
-      this.uprow = uprow;
+      this.updateRow = updateRow;
     },
-    remove(row, uprow) {
-      this.uprow = uprow;
+    remove(row, updateRow) {
+      this.updateRow = updateRow;
       this.$confirm('确定删除该条记录？', '删除', {
         type: 'warning',
         cancelButtonText: '取消',

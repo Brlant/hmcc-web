@@ -251,7 +251,7 @@ export default {
       return this.$store.state.doorDevType;
     },
     coolDevType() {
-      return this.$getDict('coolDevType')
+      return this.$getDict('deviceTemplateStatus')
     },
     templateName() {
       if (!this.tempList) {
@@ -295,6 +295,14 @@ export default {
       this.tempList = [];
       this.$http.get('/template/queryByType', {params}).then(res => {
         this.tempList = res.data;
+        if (!this.form.templateId) {
+          return;
+        }
+
+        let has = this.tempList.some(t => t.templateId === this.form.templateId);
+        if (!has) {
+          this.tempList.push(this.form)
+        }
       });
     },
     handlePreview: function (id) {
