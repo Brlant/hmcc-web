@@ -220,7 +220,7 @@
             <el-row :gutter="10">
               <el-col :span="7">
                 <el-form-item label="设备状态监控" prop="firstStatusType">
-                  <el-switch v-model.number="form.firstStatusType" :active-value="1" :inactive-value="0"></el-switch>
+                  <el-switch v-model.number="form.firstStatusType" :active-value="1" :inactive-value="null"></el-switch>
                 </el-form-item>
               </el-col>
               <el-col :span="10">
@@ -259,7 +259,7 @@
             <el-row :gutter="10">
               <el-col :span="7">
                 <el-form-item label="设备状态监控" prop="firstStatusType">
-                  <el-switch v-model.number="form.firstStatusType" :active-value="2" :inactive-value="0"></el-switch>
+                  <el-switch v-model.number="form.firstStatusType" :active-value="2" :inactive-value="null"></el-switch>
                 </el-form-item>
               </el-col>
               <el-col :span="10">
@@ -385,18 +385,20 @@ export default {
       return this.$store.state.doorDevType;
     },
     coolDevType() {
-      return this.$getDict('coolDevType')
+      return this.$getDict('deviceTemplateStatus')
     },
   },
   watch: {
     index: function (val) {
+      this.showUnbindLocationTag = !!(this.formItem.id && this.formItem.tagSnNumber);
+      this.showUnbindEnergyTag = !!(this.formItem.id && this.formItem.energyTagSnNumber);
+
       if (this.formItem.id) {
         this.orgList = [
           {name: this.formItem.orgName, id: this.formItem.orgId}
         ];
+
         this.form = Object.assign({}, this.formItem);
-        this.showUnbindLocationTag = !!(this.formItem.id && this.formItem.tagSnNumber);
-        this.showUnbindEnergyTag = !!(this.formItem.id && this.formItem.energyTagSnNumber);
         this.actionType = '编辑冷链设备';
         this.getTempList();
         this.searchLocationTagSn(this.form.locationTagId);
@@ -479,6 +481,14 @@ export default {
       this.tempList = [];
       this.$http.get('/template/queryByType', {params}).then(res => {
         this.tempList = res.data;
+        if (!this.form.templateId) {
+          return;
+        }
+
+        let has = this.tempList.some(t => t.templateId === this.form.templateId);
+        if (!has) {
+          this.tempList.push(this.form)
+        }
       });
     },
     devTypeChangeHandler(val) {

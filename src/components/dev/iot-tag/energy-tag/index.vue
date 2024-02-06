@@ -2,11 +2,7 @@
   <div class="order-page">
     <search-part @search="searchResult">
       <template slot="btn">
-        <!--<el-button @click="add" plain size="small" v-has="permPage.add">-->
-        <!--  <f-a class="icon-small" name="plus"></f-a>-->
-        <!--  添加-->
-        <!--</el-button>-->
-        <el-button @click="batchAdd" plain size="small" v-has="permPage.add">
+        <el-button @click="batchAdd" plain size="small" v-has="permPage.energyAdd">
           <f-a class="icon-small" name="plus"></f-a>
           批量导入
         </el-button>
@@ -49,10 +45,10 @@
             </el-col>
             <el-col :span="4">{{ item.calibrationTime | date }}</el-col>
             <el-col :span="3" class="opera-btn">
-              <des-btn @click="edit(item)" icon="edit" v-has="permPage.edit">编辑</des-btn>
-              <des-btn icon="forbidden" v-show="item.status === '1'" v-has="permPage.stop" @click="stop(item)">停用
+              <des-btn @click="edit(item)" icon="edit" v-has="permPage.energyEdit">编辑</des-btn>
+              <des-btn icon="forbidden" v-show="item.status === '1'" v-has="permPage.energyDisable" @click="stop(item)">停用
               </des-btn>
-              <des-btn icon="start" v-has="permPage.start" v-show="item.status === '0'" @click="start(item)">启用
+              <des-btn icon="start" v-has="permPage.energyEnable" v-show="item.status === '0'" @click="start(item)">启用
               </des-btn>
             </el-col>
           </el-row>

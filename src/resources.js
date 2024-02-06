@@ -643,9 +643,9 @@ export const Auth = {
   permission: () => {
     return http.get('/oms/access/permissions', {params: {objectId: 'hmcc-system'}}); //
   },
-  // queryWeChatInfo() {
-  //   return http.get('/wechat/user/wechat');
-  // },
+  queryWeChatInfo() {
+    return http.get('/wechat/user/wechat');
+  },
   unBindWeChat() {
     return http.put('/wechat/unbind/wechat');
   }

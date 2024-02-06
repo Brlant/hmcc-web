@@ -210,7 +210,7 @@
             <el-row :gutter="10">
               <el-col :span="7">
                 <el-form-item label="设备状态监控" prop="firstStatusType">
-                  <el-switch v-model.number="form.firstStatusType" :active-value="1" :inactive-value="0"></el-switch>
+                  <el-switch v-model.number="form.firstStatusType" :active-value="1" :inactive-value="null"></el-switch>
                 </el-form-item>
               </el-col>
               <el-col :span="10">
@@ -249,7 +249,7 @@
             <el-row :gutter="10">
               <el-col :span="7">
                 <el-form-item label="设备状态监控" prop="firstStatusType">
-                  <el-switch v-model.number="form.firstStatusType" :active-value="2" :inactive-value="0"></el-switch>
+                  <el-switch v-model.number="form.firstStatusType" :active-value="2" :inactive-value="null"></el-switch>
                 </el-form-item>
               </el-col>
               <el-col :span="10">
@@ -322,7 +322,7 @@ export default {
         standardVoltageRangeEnd: '',
         standbyStatusRangeStart: '',
         standbyStatusRangeEnd: '',
-        firstStatusType: 0,
+        firstStatusType: '',
         locationTagId: '',
         energyTagId: '',
       },
@@ -381,10 +381,10 @@ export default {
   },
   watch: {
     index(val) {
+      this.showUnbindLocationTag = !!(this.formItem.id && this.formItem.tagSnNumber);
+      this.showUnbindEnergyTag = !!(this.formItem.id && this.formItem.energyTagSnNumber);
       if (this.formItem.id) {
         this.actionType = '编辑医疗设备';
-        this.showUnbindLocationTag = !!(this.formItem.id && this.formItem.tagSnNumber);
-        this.showUnbindEnergyTag = !!(this.formItem.id && this.formItem.energyTagSnNumber);
         this.getDetail(this.formItem.id)
       } else {
         this.form = {};
@@ -473,9 +473,19 @@ export default {
       this.tempList = [];
       this.$http.get('/template/queryByType', {params}).then(res => {
         this.tempList = res.data;
+        // console.log('getTempList:',this.form);
+        if (!this.form.templateId) {
+          return;
+        }
+
+        let has = this.tempList.some(t => t.templateId === this.form.templateId);
+        if (!has) {
+          this.tempList.push(this.form)
+        }
       });
     },
     devTypeChangeHandler(val) {
+      debugger
       this.form.templateId = '';
       if (val) {
         this.getTempList();
@@ -486,6 +496,7 @@ export default {
       let params = {
         tagSnNumber: keyword,
         type: '1',
+        tagId:this.form.locationTagId
       };
 
       this.loadingLocationTag = true;
@@ -500,6 +511,7 @@ export default {
       let params = {
         tagSnNumber: keyword,
         type: '2',
+        tagId:this.form.energyTagId
       };
 
       this.loadingEnergyTag = true;

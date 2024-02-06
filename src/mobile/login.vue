@@ -23,7 +23,7 @@
       <!--  <oms-input :showFocus="isFocus === 1" v-model="user.orgCode"></oms-input>-->
       <!--</el-form-item>-->
       <el-form-item label="用户名" prop="username">
-        <oms-input :showFocus="isFocus === 2" @blur="check()" placeholder="手机号/邮箱/用户名"
+        <oms-input :showFocus="isFocus === 2" placeholder="手机号/邮箱/用户名"
                    v-model="user.username"></oms-input>
       </el-form-item>
       <el-form-item label="密码" prop="password" style="position:relative">
