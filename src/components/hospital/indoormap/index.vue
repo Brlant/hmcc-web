@@ -14,19 +14,21 @@
         :show-file-list="false"
         style="float: right;"
       >
-        <el-button type="primary" class="el-upload" slot="trigger"
-          icon="el-icon-reading">上传地图</el-button>
+        <el-button type="primary" class="el-upload"
+          slot="trigger"><icon :style="iconStyle"/>上传地图</el-button>
         <div slot="tip">地图上传将替换原有地图，原有标点将失效</div>
       </oms-el-upload>
     </div>
 
     <!-- 地图 -->
     <div ref="floorMap" :class="floorClass">
-      <div v-if="!map || !map.url">暂无数据</div>
+      <div v-if="!map || !map.url">
+        <img src="@/assets/img/map_icon.png" style="height: 30vh;"/>
+      </div>
     </div>
 
     <!-- 工具 -->
-    <div @click="indoorToolbar"
+    <div v-if="map && map.url" @click="indoorToolbar"
       class="indoor-toolbar">
       <el-icon name="zoom-in"/>
       <el-icon name="zoom-out"/>
@@ -82,6 +84,7 @@
 
 <script>
   import initG6 from './initG6'
+  import mapIcon from '@/assets/img/map_icon.png';
   import OmsElUpload from '@/components/common/upload/upload/src/index.vue';
   import { createFloorPlatPoint, modifyFloorPlatPoint, deleteFloorPlatPoint } from '@/api/hospital/equipment';
 
@@ -146,7 +149,15 @@
         relationPoints: [],
         floorClass: 'floor-empty',
         mapzoom: 1,
-        ratio: 0.01
+        ratio: 0.01,
+        iconStyle: {
+          width: '16px',
+          height: '16px',
+          display: 'inline-block',
+          verticalAlign: 'top',
+          marginRight: '5px',
+          background: `url(${mapIcon}) center/100% 100%`
+        }
       };
     },
     computed: {
