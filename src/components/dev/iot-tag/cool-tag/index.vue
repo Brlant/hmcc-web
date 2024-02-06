@@ -129,7 +129,7 @@ export default {
       },
       defaultPageRight: {'width': '700px', 'padding': 0},
       batchAddDialogShowFlag: false,
-      fileList:[],
+      fileList: [],
     };
   },
   computed: {
@@ -245,7 +245,7 @@ export default {
       download(`/tag/downloadTemplate?type=1`, {}, `冷链标签导入模板_${new Date().getTime()}.xlsx`)
     },
     fileChangeHandler(file) {
-      this.fileList  = []
+      this.fileList = []
       this.fileList.push(file)
       let formData = new FormData()
       formData.append('file', file.raw)
@@ -258,12 +258,13 @@ export default {
         this.batchAddDialogShowFlag = false;
         this.getList()
       }).catch((err) => {
-        console.log({...err}, '导入失败')
-        this.$message.error(err.response.data.msg || "导入失败")
+        // console.log({...err}, '导入失败')
+        this.$message.error(err.response && err.response.data && err.response.data.msg || "导入失败")
       })
     },
     importErrorHandler(err, file) {
-      console.log('导入冷链标签失败：', ...err)
+      // console.log('导入冷链标签失败：', ...err)
+      this.$message.error(err.response && err.response.data && err.response.data.msg || "导入失败")
     }
   }
 };

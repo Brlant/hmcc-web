@@ -566,7 +566,7 @@ export default {
       }
     },
     handleSelect(item) {
-      console.log(`handleSelect`, item);
+      // console.log(`handleSelect`, item);
     },
     unbindLocationTag() {
       medicalApi.unbindDeviceTagRelation(this.form.locationTagId, this.form.id, "2").then(res => {

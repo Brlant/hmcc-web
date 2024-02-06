@@ -12,7 +12,7 @@ let proxyTargets = {
 }
 let proxyTarget = process.env.npm_config_url || proxyTargets.yj;
 let pathRewrite = process.env.npm_config_path || '';
-console.log('当前代理地址：', proxyTarget)
+// console.log('当前代理地址：', proxyTarget)
 module.exports = {
   devServer: {
     open: true,

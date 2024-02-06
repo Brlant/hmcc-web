@@ -4,12 +4,13 @@
     <el-form :model="search" inline>
       <el-form-item>
         <el-date-picker v-model="daterange"
-          type="daterange"
+          type="datetimerange"
           unlink-panels
-          value-format="yyyy-MM-dd"
+          value-format="yyyy-MM-dd HH:mm:ss"
           range-separator="至"
           start-placeholder="开始日期"
           end-placeholder="结束日期"
+          :picker-options="pickerOptions"
         />
       </el-form-item>
       <el-form-item>
@@ -39,7 +40,7 @@
 
     <div class="trajectory-container">
       <el-radio-group v-model="floor" @input="floorInput" class="floor-tabs">
-        <el-radio-button v-for="(item, index) in data" :label="index">{{ item.floorName }}</el-radio-button>
+        <el-radio-button v-for="(item, index) in data" :key="index" :label="index">{{ item.floorName }}</el-radio-button>
       </el-radio-group>
       <IndoorMap :map="map" style="border: none;"/>
     </div>
@@ -79,6 +80,11 @@
           url: null,
           points: null,
           edges: null
+        },
+        pickerOptions: {
+          start: '00:00',
+          step: '00:01',
+          end: '23:59'
         }
       };
     },

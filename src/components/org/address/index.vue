@@ -601,7 +601,7 @@ export default {
       });
     },
     edit: function (item) {
-      console.log('列表值',item)
+      // console.log('列表值',item)
       this.action = 'edit';
       this.activeId = item.id;
       this.form = JSON.parse(JSON.stringify(item));
