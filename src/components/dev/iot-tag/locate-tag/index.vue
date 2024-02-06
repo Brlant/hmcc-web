@@ -104,7 +104,8 @@
     </el-table>
 
     <div class="text-center" v-show="labelList.length>0">
-      <el-pagination :current-page="pager.currentPage" :page-size="pager.pageSize"
+      <el-pagination :current-page="pager.currentPage"
+                     :page-size="pager.pageSize"
                      :page-sizes="[10,20,50,100]"
                      :total="pager.count" @current-change="handleCurrentChange"
                      @size-change="handleSizeChange"
@@ -300,14 +301,13 @@ export default {
         devNo: this.queryParams.devNo,                 //绑定设备编号
         status: this.queryParams.status,                //标签状态 1在线 2不在线 3脱落
 
-        pageNo: this.queryParams.pageNo,
-        pageSize: this.queryParams.pageSize,
+        pageNo: this.pager.currentPage,
+        pageSize: this.pager.pageSize,
       };
 
       labelTagList.listTagLabel(params).then(res => {
         if (res.code === 200) {
           this.loading = false;
-          this.queryParams.total = res.data.total;
           this.pager.count = res.data.total;
           this.labelList = res.data.list;
         }
