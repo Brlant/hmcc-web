@@ -523,7 +523,7 @@ export default {
     setTempData(templateId) {
       let template = this.tempList.find(i => i.templateId == templateId);
       this.form = Object.assign({}, this.form, template)
-      this.form.firstUserTime = template.devStartUsingTime;
+      // this.form.firstUserTime = template.devStartUsingTime;
     },
     checkTag(id, type, cb) {
       let deviceId = this.form.id

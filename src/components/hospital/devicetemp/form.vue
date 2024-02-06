@@ -202,6 +202,7 @@
     watch: {
       formData(obj) {
         if (!obj.templateId) {
+          this.detail = {};
           return;
         }
         this.$http.get(`/template/queryById?templateId=${obj.templateId}`).then(res => {
@@ -209,7 +210,7 @@
           if (res.code !== 200) {
             return this.$message.error(res.msg || '获取设备类型模板详情失败');
           }
-          Object.assign(this.detail, res.data);
+          this.detail = Object.assign({}, res.data);
         });
       }
     },
