@@ -211,6 +211,7 @@ export const routes = [
         meta: {moduleId: 'device-position', title: '设备定位管理', icon: 'didian', perm: 'device-position'},
         children: [
           {
+            name: 'DevicePosition',
             path: '/device-position/position',
             component: () => import('./components/hospital/equipment/position/index'),
             meta: {moduleId: 'permission', title: '设备定位', perm: 'device-position-query'}

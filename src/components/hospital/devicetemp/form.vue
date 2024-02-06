@@ -302,13 +302,13 @@
         }).then(res => {
           if (res.code === 200) {
             this.$message.success(res.msg || '设备类型模板保存成功');
-            this.formBack();
+            this.$emit('formBack', true);
           }
         })
       },
       formBack() {
         this.$emit('formBack');
-      },
+      }
     }
   };
 </script>

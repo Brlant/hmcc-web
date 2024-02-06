@@ -201,8 +201,11 @@
           });
         });
       },
-      formBack() {
+      formBack(refresh) {
         this.showIndex = -1;
+        if (refresh) {
+          this.query();
+        }
       },
       rightClose() {
         this.showIndex = -1;

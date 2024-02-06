@@ -226,12 +226,8 @@ export default {
     /* 定位 */
     devicesPosition(row) {
       this.$router.push({
-        path: '/device-position/position',
-        query: {
-          id: row.id,
-          devNo:row.devNo,
-          devName:row.devName
-        },
+        name: 'DevicePosition',
+        params: { ...row },
       });
     },
     /* 删除设备 */

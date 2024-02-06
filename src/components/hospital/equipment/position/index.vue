@@ -131,23 +131,23 @@ export default {
     });
 
     // //页面跳转获取参数
-    this.pageParameters();
+    // this.pageParameters();
   },
   methods: {
     /* 定位 */
-    pageParameters() {
-      //页面跳转的传参
-      console.log(this.$route, '路由定位')
-      let device = this.$route.query;
-      if (!device) {
-        return;
-      }
-
-      this.devices = [];
-      this.devices.push(device);
-      this.search.deviceId = this.devices[0].id;
-      this.query();
-    },
+    // pageParameters() {
+    //   //页面跳转的传参
+    //   console.log(this.$route, '路由定位')
+    //   let device = this.$route.query;
+    //   if (!device) {
+    //     return;
+    //   }
+    //
+    //   this.devices = [];
+    //   this.devices.push(device);
+    //   this.search.deviceId = this.devices[0].id;
+    //   this.query();
+    // },
     loadFloor(callback) {
       queryFloorStructure({
         type: 1
@@ -197,6 +197,7 @@ export default {
               devNo: item.devNo,
               status: item.status,
               tagSnNumber: item.tagSnNumber,
+              departmentName: item.departmentName,
               collectionTime: item.collectionTime
             }
           });

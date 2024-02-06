@@ -205,11 +205,11 @@ export default {
     /* 定位 */
     devicesPosition(row) {
       this.$router.push({
-        path: '/device-position/position',
-        query: {
+        name: 'DevicePosition',
+        params: {
           id: row.id,
-          devNo:row.no,
-          devName:row.name
+          devNo: row.no,
+          devName: row.name
         },
       });
     },
