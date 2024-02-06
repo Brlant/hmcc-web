@@ -275,6 +275,13 @@ export const coolApi = resource('/freezer-dev', http, {
     };
     return http.get('/freezer-dev/unbindDeviceTagRelation', {params});
   },
+  deleteById(id) {
+    let params = {
+      id
+    };
+
+    return http.get(`/device/deleteById`, {params});
+  },
 });
 
 //医疗设备管理
