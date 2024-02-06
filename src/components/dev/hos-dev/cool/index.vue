@@ -14,15 +14,16 @@
     <div class="order-list" style="margin-top: 20px">
       <el-row class="order-list-header">
         <el-col :span="1">序号</el-col>
-        <el-col :span="3">设备名称</el-col>
+        <el-col :span="2">设备名称</el-col>
         <el-col :span="2">设备编号</el-col>
-        <el-col :span="3">所属科室</el-col>
+        <el-col :span="2">所属科室</el-col>
         <el-col :span="2">设备分类</el-col>
         <el-col :span="2">定位标签</el-col>
         <el-col :span="2">能耗标签</el-col>
-        <el-col :span="3">启用时间</el-col>
+        <el-col :span="2">启用时间</el-col>
         <el-col :span="2">运行状态</el-col>
         <el-col :span="2">设备状态</el-col>
+        <el-col :span="3">最后位置</el-col>
         <el-col :span="2">操作</el-col>
       </el-row>
       <el-row v-if="loading">
@@ -45,18 +46,18 @@
             <el-col :span="1" class="R">
               {{ index + 1 }}
             </el-col>
-            <el-col :span="3" class="R">
+            <el-col :span="2" class="R">
               {{ item.name }}
             </el-col>
             <el-col :span="2" class="R">{{ item.no }}</el-col>
-            <el-col :span="3" class="R">{{ item.departmentName }}</el-col>
+            <el-col :span="2" class="R">{{ item.departmentName }}</el-col>
             <el-col :span="2" class="R">
-              {{ formatDictLabel(item.type, coolDevType) }}
+              {{ formatDictLabel(item.type, deviceTypes) }}
             </el-col>
             <el-col :span="2" class="R">{{ item.tagSnNumber }}</el-col>
             <el-col :span="2" class="R">{{ item.energyTagSnNumber }}</el-col>
 
-            <el-col :span="3">{{ item.startUsingTime | date }}</el-col>
+            <el-col :span="2">{{ item.startUsingTime | time }}</el-col>
             <el-col :span="2">
               <span v-if="item.deviceStatus === 'ONLINE'" style="color: green">开机</span>
               <span v-if="item.deviceStatus === 'OFFLINE'" style="color: grey">关机</span>
@@ -64,10 +65,19 @@
               <span v-if="item.deviceStatus === 'FAILURE'" style="color: yellow">故障</span>
             </el-col>
             <el-col :span="2">
-              {{ formatStatus(item.status, statusType) }}
+              {{ formatDictLabel(item.status, statusList) }}
+            </el-col>
+            <el-col :span="3">
+              {{ item.lastPositionStr }}
             </el-col>
             <el-col :span="2" class="opera-btn">
+               <span @click.prevent.stop="devicesPosition(item)" class="des-btn">
+               <a href="#" class="btn-circle" @click.prevent=""><i
+                 :class="'el-icon-location-outline'"></i></a>
+                定位
+              </span>
               <des-btn @click="edit(item)" icon="edit" v-has="permPage.editCool">编辑</des-btn>
+              <!--<des-btn @click="remove(item)" icon="delete" v-has="permPage.delCool">删除</des-btn>-->
             </el-col>
           </el-row>
           <!--<div class="order-list-item-bg"></div>-->
@@ -94,16 +104,18 @@
 
 <script>
 
-import utils from '@/tools/utils';
-import {coolApi} from '@/resources';
 import SearchPart from './search';
+import CommonMixin from '@/mixins/commonMixin';
+import utils from '@/tools/utils';
+
 import addForm from './form/add-form.vue';
 import showForm from './form/show-form.vue';
-import CommonMixin from '@/mixins/commonMixin';
-import queryApi from '@/api/query/query'
+
+
+import queryApi from '@/api/query/query';
+import {coolApi} from '@/resources';
 
 export default {
-  // 冷链设备管理
   name: 'CoolDev',
   components: {
     SearchPart
@@ -135,10 +147,17 @@ export default {
       defaultPageRight: {'width': '1500px', 'padding': 0},
       // 所属科室
       deviceDeptList: [],
+      // 设备总数
+      totalNumberDevices: {
+        totalCount: '',     // 设备总数
+        onlineCount: '',    // 开机数
+        offlineCount: '',   // 关机数
+        alarmCount: ''      // 异常数
+      },
     }
   },
   computed: {
-    coolDevType() {
+    deviceTypes() {
       return this.$getDict('coolDevType')
     },
     deviceStatus() {
@@ -147,6 +166,9 @@ export default {
     alarmStatus() {
       return this.$getDict('alarm_status')
     },
+    statusList() {
+      return this.$getDict('deviceTemplateStatus')
+    }
   },
   watch: {
     filters: {
@@ -183,8 +205,12 @@ export default {
     /* 定位 */
     devicesPosition(row) {
       this.$router.push({
-        name: 'position',
-        params: {...row}
+        path: '/device-position/position',
+        query: {
+          id: row.id,
+          devNo:row.no,
+          devName:row.name
+        },
       });
     },
     /* 删除设备 */
@@ -194,7 +220,7 @@ export default {
         cancelButtonText: '取消',
         confirmButtonText: '确认删除'
       }).then(() => {
-        coolApi.filesDeleteList({id: row.id}).then(() => {
+        coolApi.deleteById(row.id).then(() => {
           this.$notify.success('删除成功')
           this.queryList(1);
         })
@@ -254,4 +280,24 @@ export default {
 </script>
 
 <style scoped>
+.totalNumberDevices {
+  display: flex;
+  margin: 10px 0;
+}
+
+.deviceStyle {
+  margin-right: 30px;
+}
+
+.deviceStyleNumber {
+  margin-left: 20px;
+}
+
+.vertical-line {
+  margin: 4px 40px 0 0;
+  width: 1px;
+  height: 15px;
+  background-color: grey;
+}
+
 </style>

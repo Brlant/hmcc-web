@@ -191,7 +191,7 @@
   </dialog-template>
 </template>
 <script>
-import {formatDictLabel} from '@/tools/utils'
+
 import commonMixin from '@/mixins/commonMixin'
 export default {
   props: {
@@ -213,7 +213,6 @@ export default {
       tempList: [],
       currentIndex: -1,
       parent: this.$parent.$parent,
-      formatDictLabel,
       form: {
         no: '',
         name: '',

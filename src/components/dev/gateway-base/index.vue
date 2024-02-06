@@ -1,9 +1,9 @@
 <template>
   <el-tabs v-model="activeName" @tab-click="handleClick">
-    <el-tab-pane label="网关管理" name="first" v-if="hasPerm('gateway-dev-scan')">
+    <el-tab-pane label="网关管理" name="0" v-if="hasPerm('gateway-dev-scan')">
       <gateway/>
     </el-tab-pane>
-    <el-tab-pane label="基站管理" name="second" v-if="hasPerm('basestation-view')">
+    <el-tab-pane label="基站管理" name="1" v-if="hasPerm('basestation-view')">
       <base-station/>
     </el-tab-pane>
   </el-tabs>

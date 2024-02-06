@@ -12,7 +12,7 @@
     <div class="totalNumberDevices">
       <div class="deviceStyle">
         <span>设备总数</span>
-        <span class="deviceStyleNumber">{{ totalNumberDevices.totalCount  || 0 }}</span>
+        <span class="deviceStyleNumber">{{ totalNumberDevices.totalCount || 0 }}</span>
       </div>
       <div class="vertical-line"></div>
       <div class="deviceStyle">
@@ -39,15 +39,16 @@
     <div class="order-list" style="margin-top: 20px">
       <el-row class="order-list-header">
         <el-col :span="1">序号</el-col>
-        <el-col :span="3">设备名称</el-col>
+        <el-col :span="2">设备名称</el-col>
         <el-col :span="2">设备编号</el-col>
-        <el-col :span="3">所属科室</el-col>
+        <el-col :span="2">所属科室</el-col>
         <el-col :span="2">设备分类</el-col>
         <el-col :span="2">定位标签</el-col>
         <el-col :span="2">能耗标签</el-col>
-        <!--<el-col :span="2">启用时间</el-col>-->
+        <el-col :span="2">启用时间</el-col>
         <el-col :span="2">运行状态</el-col>
-        <el-col :span="4">最后位置</el-col>
+        <!--<el-col :span="2">设备状态</el-col>-->
+        <el-col :span="3">最后位置</el-col>
         <el-col :span="3">操作</el-col>
       </el-row>
       <el-row v-if="loading">
@@ -70,31 +71,34 @@
             <el-col :span="1" class="R">
               {{ index + 1 }}
             </el-col>
-            <el-col :span="3" class="R">
+            <el-col :span="2" class="R">
               {{ item.devName }}
             </el-col>
             <el-col :span="2" class="R">{{ item.devNo }}</el-col>
-            <el-col :span="3" class="R">{{ item.departmentName }}</el-col>
+            <el-col :span="2" class="R">{{ item.departmentName }}</el-col>
             <el-col :span="2" class="R">
               {{ formatDictLabel(item.devType, deviceTypes) }}
             </el-col>
             <el-col :span="2" class="R">{{ item.tagSnNumber }}</el-col>
             <el-col :span="2" class="R">{{ item.energyTagSnNumber }}</el-col>
 
-            <!--<el-col :span="3">{{ item.startUsingTime | date }}</el-col>-->
+            <el-col :span="2">{{ item.firstUserTime | time }}</el-col>
             <el-col :span="2">
               <span v-if="item.deviceStatus === 'ONLINE'" style="color: green">开机</span>
               <span v-if="item.deviceStatus === 'OFFLINE'" style="color: grey">关机</span>
               <span v-if="item.deviceStatus === 'ALARM'" style="color: red">异常</span>
               <span v-if="item.deviceStatus === 'FAILURE'" style="color: yellow">故障</span>
             </el-col>
-            <el-col :span="4">
+            <!--<el-col :span="2">-->
+            <!--  {{ formatDictLabel(item.status, statusList) }}-->
+            <!--</el-col>-->
+            <el-col :span="3">
               {{ item.lastPositionStr }}
             </el-col>
             <el-col :span="3" class="opera-btn">
-              <span @click="devicesPosition(item)" class="des-btn">
-               <a href="#" class="btn-circle" @click.prevent=""><i
-                 :class="'el-icon-location-outline'"></i></a>
+              <span @click.prevent.stop="devicesPosition(item)" class="des-btn">
+               <a href="#" class="btn-circle" @click.prevent="">
+                 <i :class="'el-icon-location-outline'"></i></a>
                 定位
               </span>
               <des-btn @click="edit(item)" icon="edit" v-has="permPage.editMedical">编辑</des-btn>
@@ -116,7 +120,7 @@
     </div>
 
     <page-right :css="defaultPageRight" :show="showIndex !== -1" @right-close="resetRightBox">
-      <component :formItem="form" :index="showIndex" :is="currentPart" @change="change"
+      <component :formItem="form" :statusType="statusType" :index="showIndex" :is="currentPart" @change="change"
                  @right-close="resetRightBox"/>
     </page-right>
   </div>
@@ -124,16 +128,18 @@
 
 <script>
 
-import SearchPart from './search'
+import SearchPart from './search';
 import CommonMixin from '@/mixins/commonMixin';
-import addForm from './form/add-form'
-import showForm from './form/show-form'
-import queryApi from '@/api/query/query'
-import {medicalApi} from '@/resources'
+import utils from '@/tools/utils';
+
+import addForm from './form/add-form.vue';
+import showForm from './form/show-form.vue';
+
+import queryApi from '@/api/query/query';
+import {medicalApi} from '@/resources';
 
 export default {
-  // 医疗设备管理
-  name: 'Healthmanagerment',
+  name: 'MedicalDev',
   components: {
     SearchPart
   },
@@ -153,8 +159,7 @@ export default {
         devType: "",
         // 所属科室id
         departmentId: '',
-        // 设备状态
-        status: "",
+        deviceStatus: "",
       },
       dialogComponents: {
         0: addForm,
@@ -182,10 +187,13 @@ export default {
     alarmStatus() {
       return this.$getDict('alarm_status')
     },
+    statusList(){
+      return this.$getDict('deviceTemplateStatus')
+    }
   },
   watch: {
     filters: {
-      handler: function (val) {
+      handler(val) {
         this.queryList(1);
       },
       deep: true
@@ -198,7 +206,7 @@ export default {
     this.queryList(1);
   },
   methods: {
-    searchResult: function (search) {
+    searchResult(search) {
       this.filters = Object.assign({}, this.filters, search);
     },
     checkStatus(item, key) {
@@ -219,7 +227,11 @@ export default {
     devicesPosition(row) {
       this.$router.push({
         path: '/device-position/position',
-        params: {...row}
+        query: {
+          id: row.id,
+          devNo:row.devNo,
+          devName:row.devName
+        },
       });
     },
     /* 删除设备 */
