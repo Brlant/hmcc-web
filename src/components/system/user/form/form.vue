@@ -6,29 +6,29 @@
 <template>
   <div>
     <h2 class="clearfix">{{title}}</h2>
-    <el-form ref="accountform" :model="form" label-width="100px" :rules="rules"
-             @submit.prevent="onSubmit('accountform')" onsubmit="return false">
+    <el-form ref="userForm" :model="form" label-width="100px" :rules="rules"
+             @submit.prevent="onSubmit('userForm')" onsubmit="return false">
       <el-form-item label="姓名" prop="name">
         <oms-input type="text" v-model="form.name" placeholder="请输入姓名"></oms-input>
       </el-form-item>
       <el-form-item label="手机号码" prop="phone" class="contact-check">
         <oms-input type="text" v-model="form.phone" placeholder="请输入手机号码"></oms-input>
       </el-form-item>
-      <el-form-item label="Email">
+      <el-form-item label="Email" prop="email">
         <oms-input type="text" v-model="form.email" placeholder="请输入邮箱"></oms-input>
       </el-form-item>
-      <el-form-item label="所属科室">
+      <el-form-item label="所属科室" prop="departmentId">
         <el-select v-model="form.departmentId" placeholder="请选择所属科室" clearable  class="contact-check">
           <el-option v-for="(item,index) in departmentList" :key="index" :value="item.departmentId" :label="item.departmentName"/>
         </el-select>
       </el-form-item>
-      <el-form-item label="用户角色">
+      <el-form-item label="用户角色" prop="list">
         <el-select placeholder="请选择用户角色" v-model="form.list" multiple filterable clearable>
           <el-option :label="item.title" :value="item.id" :key="item.id" v-for="item in roleSelect"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item label-width="100px">
-        <el-button type="primary" @click="onSubmit('accountform')" native-type="submit" :disabled="doing">保存</el-button>
+        <el-button type="primary" @click="onSubmit('userForm')" native-type="submit" :disabled="doing">保存</el-button>
         <el-button @click="doClose">取消</el-button>
       </el-form-item>
     </el-form>
@@ -36,7 +36,7 @@
 </template>
 
 <script>
-import {indexApi, OrgUser, User} from '../../../../resources';
+import {indexApi, OrgUser, User} from '@/resources';
 
   export default {
     name: 'editForm',
@@ -121,7 +121,7 @@ import {indexApi, OrgUser, User} from '../../../../resources';
             {required: true, message: '请输入用户角色', trigger: 'blur'}
           ],
           list: [
-            {required: true, type: 'array', message: '请选择用户角色', trigger: 'blur'}
+            {required: true, type: 'array', message: '请选择用户角色', trigger: 'change'}
           ]
         },
         roleSelect: [],
@@ -141,7 +141,7 @@ import {indexApi, OrgUser, User} from '../../../../resources';
     },
     watch: {
       formItem: function (val) {
-        this.$refs['accountform'].clearValidate();
+        this.$refs['userForm'].clearValidate();
         if (val.id) {
           this.form = this.formItem;
           this.form.list = this.formItem.list.map(m => m.roleId);
@@ -156,7 +156,7 @@ import {indexApi, OrgUser, User} from '../../../../resources';
       },
       showRight: function (val) {
         if (!val) {
-          this.$refs['accountform'].resetFields();
+          this.$refs['userForm'].resetFields();
         }
       },
       user(val) {
@@ -252,7 +252,7 @@ import {indexApi, OrgUser, User} from '../../../../resources';
       },
       doClose: function () {
         this.$emit('close');
-        this.$refs['accountform'].resetFields();
+        this.$refs['userForm'].resetFields();
       }
     }
   };
