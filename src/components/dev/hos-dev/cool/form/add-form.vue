@@ -405,7 +405,33 @@ export default {
         this.searchLocationTagSn(this.form.tagSnNumber);
         this.searchEnergyTagSn(this.form.energyTagSnNumber);
       } else {
-        this.form = {};
+        this.form = {
+          no: '',
+          name: '',
+          type: '',
+          templateId: '',
+          departmentId: '',
+          orgId: '',
+          startUsingTime: '',
+          version: '',
+          status: '',
+          medicalFlag: '',
+          volume: '',
+          remark: '',
+          doorSheetType: '',
+          brand: '',
+          standardWorkingHours: '',
+          workStatus: '',
+          idleStateRangeStart: 0.00,
+          idleStateRangeEnd: '',
+          standardVoltageRangeStart: '',
+          standardVoltageRangeEnd: '',
+          standbyStatusRangeStart: '',
+          standbyStatusRangeEnd: '',
+          firstStatusType: 0,
+          locationTagId: '',
+          energyTagId: '',
+        };
         this.actionType = '添加冷链设备';
       }
       this.$nextTick(() => {
@@ -535,7 +561,7 @@ export default {
       this.form.version = template.devVersion;
       this.form.volume = template.devVolume;
       this.form.medicalFlag = template.devMedicalFlag;
-      this.form.startUsingTime = template.devStartUsingTime;
+      // this.form.startUsingTime = template.devStartUsingTime;
     },
     checkTag(id, type, cb) {
       let deviceId = this.form.id

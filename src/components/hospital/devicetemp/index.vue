@@ -4,7 +4,8 @@
       <template slot="title">设备类型模板查询</template>
       <template slot="btn">
         <el-button @click="create" plain size="small">
-          <f-a class="icon-small" name="plus"></f-a>添加
+          <f-a class="icon-small" name="plus"></f-a>
+          添加
         </el-button>
       </template>
       <template slot="content">
@@ -45,15 +46,16 @@
         </el-col>
       </el-row>
       <div class="order-list-body flex-list-dom" v-else>
-        <div :class="[{'active':currentItemId===item.id}]" @click.stop.prevent="checkItem(item)"
-          class="order-list-item no-pointer order-list-item-bg" v-for="(item, index) in dataList">
+        <div :class="[{'active':currentItemId===item.id}]"
+             @click.stop.prevent="detail(item)"
+             class="order-list-item order-list-item-bg" v-for="(item, index) in dataList">
           <el-row>
             <el-col :span="2">{{ index + 1 }}</el-col>
             <el-col :span="9">{{ item.templateName }}</el-col>
             <el-col :span="5">{{ templateTypes[item.templateType] }}</el-col>
             <el-col :span="5">{{ item.templateType === '1' ? coolDevs[item.devType] : medicals[item.devType] }}</el-col>
             <el-col :span="3">
-              <el-button icon="el-icon-search" size="mini" circle @click.stop="detail(item)"></el-button>
+              <!--<el-button icon="el-icon-search" size="mini" circle @click.stop="detail(item)"></el-button>-->
               <el-button type="primary" icon="el-icon-edit" size="mini" circle @click.stop="modify(item)"></el-button>
               <el-button type="danger" icon="el-icon-delete" size="mini" circle @click.stop="remove(item)"></el-button>
             </el-col>
@@ -62,159 +64,165 @@
       </div>
     </div>
 
-    <div class="text-right" v-show="(dataList.length || pager.currentPage !== 1) && !loadingData">
-      <el-pagination :current-page="search.pageNo" :page-size="search.pageSize"
-        :total="total" @current-change="handleCurrentChange"
-        layout="prev, pager, next">
+    <div class="text-center" v-show="dataList.length">
+      <el-pagination :current-page="pager.currentPage" :page-size="pager.pageSize"
+                     :page-sizes="[10,20,50,100]"
+                     :total="pager.count" @current-change="handleCurrentChange"
+                     @size-change="handleSizeChange"
+                     layout="total, sizes, prev, pager, next, jumper">
       </el-pagination>
     </div>
-
     <page-right :css="{'width':'700px','padding':0}" :show="showIndex !== -1" @right-close="rightClose">
       <form-part :formData="formData" :editable="editable" @formBack="formBack"/>
     </page-right>
   </div>
 </template>
 <script>
-  import FormPart from './form';
-  import { sinopharmDictDataType } from '@/api/system/dict/data';
-  import CommonMixin from '@/mixins/commonMixin';
+import FormPart from './form';
+import {sinopharmDictDataType} from '@/api/system/dict/data';
+import CommonMixin from '@/mixins/commonMixin';
 
-  export default {
-    mixins: [CommonMixin],
-    components: { FormPart },
-    data() {
-      return {
-        dataList: [],
-        total: 0,
-        search: {
-          templateName: null,
-          templateType: null,
-          devType: null,
-          pageNo: 1,
-          pageSize: 10
-        },
-        editable: true,
-        formData: null,
-        showIndex: -1,
-        coolDevs: {},
-        medicals: {},
-        templateTypes: {},
-      };
-    },
-    computed: {
-      deviceWithTemplate: {
-        get() {
-          if (this.search.templateType && this.search.devType) {
-            return `${this.search.templateType}-${this.search.devType}`;
-          }
-          return null;
-        },
-        set(val) {
-          if (val) {
-            let arr = val.split('-');
-            this.search.templateType = arr[0];
-            this.search.devType = arr[1];
-          } else {
-            this.search.templateType = null;
-            this.search.devType = null;
-          }
+export default {
+  mixins: [CommonMixin],
+  components: {FormPart},
+  data() {
+    return {
+      dataList: [],
+      total: 0,
+      search: {
+        templateName: null,
+        templateType: null,
+        devType: null,
+      },
+      editable: true,
+      formData: null,
+      showIndex: -1,
+      coolDevs: {},
+      medicals: {},
+      templateTypes: {},
+    };
+  },
+  computed: {
+    deviceWithTemplate: {
+      get() {
+        if (this.search.templateType && this.search.devType) {
+          return `${this.search.templateType}-${this.search.devType}`;
+        }
+        return null;
+      },
+      set(val) {
+        if (val) {
+          let arr = val.split('-');
+          this.search.templateType = arr[0];
+          this.search.devType = arr[1];
+        } else {
+          this.search.templateType = null;
+          this.search.devType = null;
         }
       }
-    },
-    created() {
-      this.queryPage();
-      this.getDeviceType();
-      this.getCoolDevType();
-      this.getDeviceTemplateType();
-    },
-    methods: {
-      getDeviceTemplateType() {
-        sinopharmDictDataType('deviceTemplateType').then(res => {
-          res.data.forEach(item => {
-            this.$set(this.templateTypes, item.key, item.label);
-          });
-        });
-      },
-      getCoolDevType() {
-        sinopharmDictDataType('coolDevType').then(res => {
-          res.data.forEach(item => {
-            this.$set(this.coolDevs, item.key, item.label);
-          });
-        });
-      },
-      getDeviceType() {
-        sinopharmDictDataType('device_type').then(res => {
-          res.data.forEach(item => {
-            this.$set(this.medicals, item.key, item.label);
-          });
-        });
-      },
-      queryPage() {
-        this.$http.post('/template/queryListByPage', {
-          ...this.search
-        }).then(res => {
-          if (res.code === 200) {
-            this.total = res.data.total;
-            this.dataList = res.data.list;
-          }
-        })
-      },
-      query() {
-        this.queryPage((this.search.pageNo = 1));
-      },
-      reset() {
-        this.search = {
-          templateName: null,
-          templateType: null,
-          devType: null,
-          pageNo: 1,
-          pageSize: 10
-        };
-        this.queryPage();
-      },
-      create() {
-        this.editable = true;
-        this.showIndex = 0;
-      },
-      detail(item) {
-        this.editable = false;
-        this.formData = item;
-        this.showIndex = 0;
-      },
-      modify(item) {
-        this.editable = true;
-        this.formData = item;
-        this.showIndex = 0;
-      },
-      remove(item) {
-        this.$confirm('确定删除该条记录？', '删除', {
-          type: 'warning',
-          cancelButtonText: '取消',
-          confirmButtonText: '确定'
-        }).then(() => {
-          this.$http.get(`/template/deleteById?templateId=${item.templateId}`).then(res => {
-            if (res.code === 200) {
-              this.queryPage((this.search.pageNo = 1));
-              return this.$message.success(res.msg || '设备类型模板删除成功');
-            }
-            this.$message.error(res.msg || '设备类型模板删除失败');
-          });
-        });
-      },
-      formBack(refresh) {
-        this.showIndex = -1;
-        if (refresh) {
-          this.query();
-        }
-      },
-      rightClose() {
-        this.showIndex = -1;
-      },
     }
-  };
+  },
+  created() {
+    this.queryList();
+    this.getDeviceType();
+    this.getCoolDevType();
+    this.getDeviceTemplateType();
+  },
+  methods: {
+    getDeviceTemplateType() {
+      sinopharmDictDataType('deviceTemplateType').then(res => {
+        res.data.forEach(item => {
+          this.$set(this.templateTypes, item.key, item.label);
+        });
+      });
+    },
+    getCoolDevType() {
+      sinopharmDictDataType('coolDevType').then(res => {
+        res.data.forEach(item => {
+          this.$set(this.coolDevs, item.key, item.label);
+        });
+      });
+    },
+    getDeviceType() {
+      sinopharmDictDataType('device_type').then(res => {
+        res.data.forEach(item => {
+          this.$set(this.medicals, item.key, item.label);
+        });
+      });
+    },
+    queryList(pageNo = 1) {
+      let params = {
+        ...this.search,
+        pageNo: pageNo,
+        pageSize: this.pager.pageSize
+      }
+
+      this.$http.post('/template/queryListByPage', params).then(res => {
+        if (res.code === 200) {
+          this.pager.count = res.data.total;
+          this.dataList = res.data.list;
+        }
+      })
+    },
+    query() {
+      this.queryList((this.search.pageNo = 1));
+    },
+    reset() {
+      this.search = {
+        templateName: null,
+        templateType: null,
+        devType: null,
+        pageNo: 1,
+        pageSize: 10
+      };
+      this.queryList();
+    },
+    create() {
+      this.editable = true;
+      this.showIndex = 0;
+    },
+    detail(item) {
+      this.editable = false;
+      this.formData = item;
+      this.showIndex = 0;
+    },
+    modify(item) {
+      this.editable = true;
+      this.formData = item;
+      this.showIndex = 0;
+    },
+    remove(item) {
+      this.$confirm('确定删除该条记录？', '删除', {
+        type: 'warning',
+        cancelButtonText: '取消',
+        confirmButtonText: '确定'
+      }).then(() => {
+        this.$http.get(`/template/deleteById?templateId=${item.templateId}`).then(res => {
+          if (res.code === 200) {
+            this.queryList((this.search.pageNo = 1));
+            return this.$message.success(res.msg || '设备类型模板删除成功');
+          }
+          this.$message.error(res.msg || '设备类型模板删除失败');
+        });
+      });
+    },
+    formBack(refresh) {
+      this.showIndex = -1;
+      if (refresh) {
+        this.query();
+      }
+
+      this.formData = {};
+    },
+    rightClose() {
+      this.showIndex = -1;
+      this.formData = {};
+    },
+  }
+};
 </script>
 <style lang="scss" scoped>
-  .oms-form-row:not(:first-child) {
-    margin-left: 10px;
-  }
+.oms-form-row:not(:first-child) {
+  margin-left: 10px;
+}
 </style>
