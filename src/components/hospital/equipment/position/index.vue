@@ -240,7 +240,8 @@ export default {
     },
     treeSelect(node) {
       queryDeviceCountByFloor({
-        floorId: node.id
+        floorId: node.id,
+        deviceId: this.search.deviceId,
       }).then(res => {
         this.statistics.total = res.data?.totalCount || 0;
         this.statistics.opened = res.data?.onlineCount || 0;
