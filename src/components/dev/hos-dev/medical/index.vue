@@ -233,7 +233,7 @@ export default {
     },
     /* 删除设备 */
     remove(row) {
-      this.$confirm('确定删除该设备吗？删除后设备将无法回复，标签将释放', '删除确认', {
+      this.$confirm('确定删除该设备吗？删除后设备将无法恢复，标签将释放', '删除确认', {
         type: 'warning',
         cancelButtonText: '取消',
         confirmButtonText: '确认删除'
