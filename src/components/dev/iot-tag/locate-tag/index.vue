@@ -91,6 +91,7 @@
           <div v-if="labelStateFilter(row.status) === '在线'" style="color:green">在线</div>
           <div v-if="labelStateFilter(row.status) === '不在线'" style="color:grey">不在线</div>
           <div v-if="labelStateFilter(row.status) === '未知'" style="color: black">未知</div>
+          <div v-if="labelStateFilter(row.status) === '--'" style="color: black">--</div>
         </template>
       </el-table-column>
       <el-table-column label="最后位置" prop="lastPositionStr" align="center"></el-table-column>
@@ -178,6 +179,8 @@ export default {
   methods: {
     labelStateFilter(value) {
       switch (value) {
+        case 0:
+          return '--';
         case 1:
           return '在线';
         case 2:
