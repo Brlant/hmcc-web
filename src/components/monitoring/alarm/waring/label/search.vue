@@ -36,7 +36,7 @@
                   v-for="(item,index) in deviceTypeList"
                   :key="index"
                   :label="item.label"
-                  :value="item.key"
+                  :value="item.value"
                 />
               </el-select>
             </oms-form-row>

@@ -10,7 +10,7 @@
         <el-table-column label="设备类型" prop="devType" align="center">
           <template v-slot="{row}">
             <div v-for="(item,index) in deviceTypeList" :key="index">
-              <span v-if="Number(row.devType)===item.value">{{ item.label }}</span>
+              <span v-if="row.devType===item.value">{{ item.label }}</span>
             </div>
           </template>
         </el-table-column>
