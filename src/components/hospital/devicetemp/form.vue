@@ -141,35 +141,36 @@
       return {
         loading: false,
         currentTab: {},
+        //null值修改成空字符串
         detail: {
-          templateId: null,
-          templateName: null,
-          templateType: null, // int类型
-          devType: null,
-          manufacturerRegistrationNumber: null,
-          registrationCertificateNumber: null,
-          productionLicenseNumber: null,
-          supplier: null,
-          manufacturer: null,
-          devStartUsingTime: null,
-          departmentId: null, // int类型
-          orgId: null,
-          orgName: null,
+          templateId: "",
+          templateName: "",
+          templateType: "", // int类型
+          devType: "",
+          manufacturerRegistrationNumber: "",
+          registrationCertificateNumber: "",
+          productionLicenseNumber: "",
+          supplier: "",
+          manufacturer: "",
+          devStartUsingTime: "",
+          departmentId: "", // int类型
+          orgId: "",
+          orgName: "",
           devMedicalFlag: 0,
           doorSheetType: 0,
-          devVersion: null,
-          devBrand: null,
-          devVolume: null,
-          status: null,
-          remark: null,
-          standardWorkingHours: null, // decimal
-          idleStateRangeStart: null, // decimal
-          idleStateRangeEnd: null, // decimal
-          standbyStatusRangeStart: null, // decimal
-          standbyStatusRangeEnd: null, // decimal
-          workStatus: null, // decimal
-          standardVoltageRangeStart: null, // decimal
-          standardVoltageRangeEnd: null // decimal
+          devVersion: "",
+          devBrand: "",
+          devVolume: "",
+          status: "",
+          remark: "",
+          standardWorkingHours: "", // decimal
+          idleStateRangeStart: "", // decimal
+          idleStateRangeEnd: "", // decimal
+          standbyStatusRangeStart: "", // decimal
+          standbyStatusRangeEnd: "", // decimal
+          workStatus: "", // decimal
+          standardVoltageRangeStart: "", // decimal
+          standardVoltageRangeEnd: "" // decimal
         },
         medicalFlags: [{
           value: '0',
@@ -202,11 +203,40 @@
     watch: {
       formData(obj) {
         if (!obj.templateId) {
-          this.detail = {};
+          this.detail = {
+            templateId: "",
+            templateName: "",
+            templateType: "", // int类型
+            devType: "",
+            manufacturerRegistrationNumber: "",
+            registrationCertificateNumber: "",
+            productionLicenseNumber: "",
+            supplier: "",
+            manufacturer: "",
+            devStartUsingTime: "",
+            departmentId: "", // int类型
+            orgId: "",
+            orgName: "",
+            devMedicalFlag: 0,
+            doorSheetType: 0,
+            devVersion: "",
+            devBrand: "",
+            devVolume: "",
+            status: "",
+            remark: "",
+            standardWorkingHours: "", // decimal
+            idleStateRangeStart: "", // decimal
+            idleStateRangeEnd: "", // decimal
+            standbyStatusRangeStart: "", // decimal
+            standbyStatusRangeEnd: "", // decimal
+            workStatus: "", // decimal
+            standardVoltageRangeStart: "", // decimal
+            standardVoltageRangeEnd: "" // decimal
+          };
           return;
         }
         this.$http.get(`/template/queryById?templateId=${obj.templateId}`).then(res => {
-          // console.log(res);
+          console.log(res.data)
           if (res.code !== 200) {
             return this.$message.error(res.msg || '获取设备类型模板详情失败');
           }
@@ -294,13 +324,15 @@
         this.detail.orgName = this.organizations.find(item => item.id === val)?.name;
       },
       saveData() {
+        const params = {
+          ...this.detail,
+        };
+        console.log(params,'编辑')
         let url = '/template/insert'
         if (this.detail.templateId) {
           url = '/template/edit';
         }
-        this.$http.post(url, {
-          ...this.detail
-        }).then(res => {
+        this.$http.post(url, params).then(res => {
           if (res.code === 200) {
             this.$message.success(res.msg || '设备类型模板保存成功');
             this.$emit('formBack', true);

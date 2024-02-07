@@ -189,7 +189,7 @@ export const NotifyRecord = resource('/alarm-notice-record', http, {
 // 告警事件
 export const alarmEvent = resource('/alarm-event', http, {
   query(params) {
-    return http.post('/alarm-event/page', params);
+    return http.post('/alarm-event/list', params);
   },
   batchConfirmItem(obj) {
     return http.put('/alarm-event/handle', obj);

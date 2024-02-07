@@ -119,7 +119,7 @@ export default {
 
     queryList(pageNo) {
       let params = Object.assign({}, this.search, {
-        pageNo: pageNo,
+        page: pageNo,
         pageSize: this.pager.pageSize
       });
 
