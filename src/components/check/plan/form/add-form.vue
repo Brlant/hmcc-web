@@ -91,7 +91,7 @@
           keyWord: query
         };
         let orgId = this.$store.state.user.userCompanyAddress;
-        this.$http.get(`/erp-org/${orgId}/users`, params).then(res => {
+        this.$http.get(`/erp-org/${orgId}/users`, {params}).then(res => {
           this.userList = res.data.list;
         });
       },
