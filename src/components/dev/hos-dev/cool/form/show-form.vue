@@ -22,13 +22,13 @@
                 <oms-col :isShow="true" :rowSpan="8" :colSpan="8" label="设备编号">{{ form.no }}</oms-col>
                 <oms-col :isShow="true" :rowSpan="8" :colSpan="8" label="设备名称">{{ form.name }}</oms-col>
                 <oms-col :isShow="true" :rowSpan="8" :colSpan="8" label="设备类型">
-                  {{ formatDictLabel(form.type, coolDevType) }}
+                  {{ formatDictLabel(form.type, deviceTypes) }}
                 </oms-col>
                 <oms-col :isShow="true" :rowSpan="8" :colSpan="8" label="设备类型模板">{{ templateName }}</oms-col>
                 <oms-col :isShow="true" :rowSpan="8" :colSpan="8" label="所属科室">{{ form.departmentName }}</oms-col>
                 <oms-col :isShow="true" :rowSpan="8" :colSpan="8" label="所属科室">{{ form.departmentName }}</oms-col>
                 <oms-col :isShow="true" :rowSpan="8" :colSpan="8" label="所属单位">{{ form.orgName }}</oms-col>
-                <oms-col :isShow="true" :rowSpan="8" :colSpan="8" label="设备启用时间">{{ form.startUsingTime }}</oms-col>
+                <oms-col :isShow="true" :rowSpan="8" :colSpan="8" label="设备启用时间">{{ form.startUsingTime | time }}</oms-col>
                 <oms-col :isShow="true" :rowSpan="8" :colSpan="8" label="型号">{{ form.version }}</oms-col>
                 <oms-col :isShow="true" :rowSpan="8" :colSpan="8" label="状态">{{ formatStatus(form.status, statusType) }}</oms-col>
                 <oms-col :isShow="true" :rowSpan="8" :colSpan="8" label="是否医用设备">
@@ -249,8 +249,8 @@ export default {
     doorDevType() {
       return this.$store.state.doorDevType;
     },
-    coolDevType() {
-      return this.$getDict('deviceTemplateStatus')
+    deviceTypes() {
+      return this.$getDict('coolDevType')
     },
     templateName() {
       if (!this.tempList) {
