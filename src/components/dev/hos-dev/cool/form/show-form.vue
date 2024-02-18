@@ -152,7 +152,7 @@
                     <el-col :span="7">
                       <el-form-item label="设备状态监控" prop="firstStatusType">
                         <el-switch v-model.number="form.firstStatusType" :active-value="1"
-                                   :inactive-value="0" disabled></el-switch>
+                                   :inactive-value="null" disabled></el-switch>
                       </el-form-item>
                     </el-col>
                     <el-col :span="10">
@@ -171,7 +171,7 @@
                     <el-col :span="7">
                       <el-form-item label="设备状态监控" prop="firstStatusType">
                         <el-switch v-model.number="form.firstStatusType" :active-value="2"
-                                   :inactive-value="0"
+                                   :inactive-value="null"
                                    disabled></el-switch>
                       </el-form-item>
                     </el-col>

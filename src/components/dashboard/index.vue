@@ -522,7 +522,7 @@ export default {
     },
     formatReportListByDay(data) {
       const dateList = [];
-      data.list.forEach(i => {
+      data.forEach(i => {
         let date = this.$moment(i.occurrenceTime).format('YYYY-MM-DD');
         !dateList.includes(date) && dateList.push(date);
         i.modifyTime = i.occurrenceTime;
