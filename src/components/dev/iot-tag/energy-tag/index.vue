@@ -252,7 +252,7 @@ export default {
         })
 
         this.batchAddDialogShowFlag = false;
-        this.getList()
+        this.queryList(1)
       }).catch((err) => {
         // console.log({...err}, '导入失败')
         this.$message.error(err.response && err.response.data && err.response.data.msg || "导入失败")
