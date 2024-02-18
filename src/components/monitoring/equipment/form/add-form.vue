@@ -68,7 +68,7 @@ $labelWidth: 180px;
           <el-col :span="5">
             <el-form-item label="温度类型" :prop="`sensorList.${index}.temperatureType`"
                           :rules="[{ required: true, message: '请选择温度类型', trigger: 'change' }]"
-                          v-if="sensor.sensorId.length>0">
+                          v-if="sensor.sensorId">
               <el-radio-group size="small" v-model="sensor.temperatureType">
                 <el-radio-button label="0">冷藏</el-radio-button>
                 <el-radio-button label="1">冷冻</el-radio-button>
@@ -78,7 +78,7 @@ $labelWidth: 180px;
 
           <el-col :span="2" style="margin-bottom: 22px;line-height: 40px">
             <des-btn @click="addSensor()" icon="plus"></des-btn>
-            <des-btn class="ml-10" @click="delSensor(sensor)" icon="minus" v-
+            <des-btn class="ml-10" @click="delSensor(sensor)" icon="minus"
                      v-show="sensor.delFlag"></des-btn>
           </el-col>
         </el-row>
@@ -140,25 +140,30 @@ export default {
       this.editProbeList = [];
       if (this.formItem.id) {
         this.actionType = '编辑';
+
         this.probeList = this.formItem.sensorDataList.map(i => ({
           id: i.id,
           name: i.name
         }));
+
         this.editProbeList = this.formItem.sensorDataList.map(i => ({
           id: i.id,
           name: i.name
         }));
+
         this.coolList = [
           {
             id: this.formItem.monitorTargetId,
             name: this.formItem.monitorTargetName
           }
         ];
+
         if (this.type === 2) {
           this.povList = [
             {id: this.formItem.orgId, name: this.formItem.orgName}
           ];
         }
+
         let formData = JSON.parse(JSON.stringify(this.formItem));
         if (formData.sensorDataList.length){
           formData.sensorList = formData.sensorDataList.map(i => ({
@@ -170,7 +175,7 @@ export default {
             monitorTargetName: this.formItem.monitorTargetName,
             orgId: this.formItem.orgId,
             orgName: this.formItem.orgName,
-            isOpen: 0,
+            isOpen: i.isOpen || 0,
             // 未绑定标签的才能删除
             delFlag: !i.id
           }));
