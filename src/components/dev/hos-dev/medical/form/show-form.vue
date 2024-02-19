@@ -193,7 +193,7 @@ export default {
   props: {
     index: Number,
     formItem: Object,
-    statusType: Object
+    statusType: Array
   },
   data() {
     return {
