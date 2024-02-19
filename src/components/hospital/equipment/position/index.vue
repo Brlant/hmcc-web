@@ -49,6 +49,10 @@
           <el-icon name="location-information" style="color: #d8001b"/>
           <span>异常数：{{ statistics.abnormal }}</span>
         </div>
+        <div>
+          <el-icon name="location-information" style="color: yellow"/>
+          <span>故障数：{{ statistics.faultCount}}</span>
+        </div>
       </div>
     </el-form>
 
@@ -80,7 +84,8 @@ export default {
         total: 0,
         opened: 0,
         closed: 0,
-        abnormal: 0
+        abnormal: 0,
+        faultCount: 0,
       },
       map: {
         id: null,
@@ -128,6 +133,7 @@ export default {
       }
       const first = this.stores[0];
       this.loadStorey(first, callback);
+      this.treeSelect(first)
     });
 
     // //页面跳转获取参数
@@ -247,6 +253,7 @@ export default {
         this.statistics.opened = res.data?.onlineCount || 0;
         this.statistics.closed = res.data?.offlineCount || 0;
         this.statistics.abnormal = res.data?.alarmCount || 0;
+        this.statistics.faultCount = res.data?.faultCount || 0;
       });
     },
     indoorToolbar(event) {
