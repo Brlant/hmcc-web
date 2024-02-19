@@ -1079,6 +1079,14 @@ export const departmentApi = {
       data: data
     })
   },
+  //启停
+  enableDepartment(data) {
+    return http({
+      url: `/department/enableDepartment`,
+      method: 'post',
+      data: data
+    })
+  },
 }
 
 // 能耗监控接口

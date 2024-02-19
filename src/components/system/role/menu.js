@@ -727,8 +727,12 @@ export default [
             label: '编辑科室'
           },
           {
-            id: 'system-depart-manager-delete',
-            label: '删除科室'
+            id: 'system-depart-manager-enabled',
+            label: '启用科室'
+          },
+          {
+            id: 'system-depart-manager-disabled',
+            label: '停用科室'
           },
         ]
       },
