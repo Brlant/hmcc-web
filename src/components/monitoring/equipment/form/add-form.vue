@@ -132,13 +132,15 @@ export default {
   },
   watch: {
     index: function (val) {
+      if (val !== 0) {
+        return;
+      }
+
       this.coolList = [];
       this.probeList = [];
-      if (val !== 0) return;
-      this.$refs['tempForm'].resetFields();
       this.form.devIds = [];
-      this.probeList = [];
-      this.queryProbeList('');
+      this.$refs['tempForm'].resetFields();
+
       if (this.formItem.id) {
         this.actionType = '编辑';
 
@@ -179,6 +181,8 @@ export default {
         this.actionType = '添加';
         this.addSensor();
       }
+
+      this.querySensorList('');
     }
   },
   methods: {
@@ -194,7 +198,7 @@ export default {
       this.form.sensorList = [];
       this.addSensor();
     },
-    queryProbeList(query) {
+    querySensorList(query) {
       if (this.type === 2 && !this.form.orgId) {
         return;
       }
@@ -206,7 +210,7 @@ export default {
       };
 
       this.$http.post('/sensor/without-monitor', params).then(res => {
-        this.probeList = res.data.list;
+        this.probeList = res.data || [];
       });
     },
     addSensor() {
