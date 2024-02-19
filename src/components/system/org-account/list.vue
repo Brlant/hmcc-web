@@ -1,19 +1,19 @@
 <style lang="scss" scoped>
 
-  .el-form .el-select {
-    display: block;
-  }
+.el-form .el-select {
+  display: block;
+}
 
-  .d-table-right {
-    .org-name-h2 {
-      font-size: 16px;
-      font-weight: bold;
-    }
+.d-table-right {
+  .org-name-h2 {
+    font-size: 16px;
+    font-weight: bold;
   }
+}
 
-  .d-table-col-wrap {
-    overflow: auto;
-  }
+.d-table-col-wrap {
+  overflow: auto;
+}
 
 </style>
 <template>
@@ -39,10 +39,10 @@
               <li v-for="item in showTypeList" class="list-item" @click="showType(item)"
                   :class="{'active':item.id==currentItem.id}">
                 <div class="minor-part" v-show="item.manufacturerCode">
-                  系统代码{{item.manufacturerCode }}
+                  系统代码{{ item.manufacturerCode }}
                 </div>
                 <div>
-                  {{item.name }}
+                  {{ item.name }}
                 </div>
               </li>
             </ul>
@@ -90,17 +90,17 @@
               <tbody>
               <tr v-for="row in dataRows">
                 <td>
-                  {{row.name}}
+                  {{ row.name }}
                   <el-tag type="success" v-show="row.adminFlag">主账号</el-tag>
                 </td>
                 <td>
                   {{ row.list | formatRole }}
                 </td>
                 <td>
-                  {{row.phone}}
+                  {{ row.phone }}
                 </td>
                 <td>
-                  {{row.email}}
+                  {{ row.email }}
                 </td>
                 <td style="width: 50px">
                   <dict :dict-group="'orgUserStatus'" :dict-key="formatStatus(row.status)"></dict>
@@ -143,206 +143,206 @@
 
 </template>
 <script>
-  import {BaseInfo, orgRelation, OrgUser, User} from '../../../resources';
-  import editForm from './form/form.vue';
+import {BaseInfo, OrgUser, User} from '../../../resources';
+import editForm from './form/form.vue';
 
-  export default {
-    components: {
-      editForm
-    },
-    data: function () {
-      return {
-        showRight: false,
-        showTypeSearch: false,
-        showSearch: false,
-        dataRows: [],
-        showTypeList: [],
-        typeTxt: '',
-        keyTxt: '',
-        filters: {
-          orgId: ''
-        },
-        form: {list: [{roleId: ''}]},
-        formTitle: '新增',
-        oldItem: {},
-        action: 'add',
-        pager: {
-          currentPage: 1,
-          count: 0,
-          pageSize: 20,
-          totalPage: 1
-        },
-        typePager: {
-          currentPage: 1,
-          count: 0,
-          pageSize: 20,
-          totalPage: 1
-        },
-        requestTime: 0,
-        loading1: false,
-        loadingLeft: false,
-        orgName: '', // 货主名称
-        currentItem: {} //  左边列表点击时，添加样式class
-      };
-    },
-    filters: {
-      formatRole: function (list) {
-        return list.map(m => m.title).join('，');
-      }
-    },
-    computed: {
-      bodyHeight: function () {
-        let height = parseInt(this.$store.state.bodyHeight, 10);
-        height = (height + 50) + 'px';
-        return height;
-      }
-    },
-    mounted() {
+export default {
+  components: {
+    editForm
+  },
+  data: function () {
+    return {
+      showRight: false,
+      showTypeSearch: false,
+      showSearch: false,
+      dataRows: [],
+      showTypeList: [],
+      typeTxt: '',
+      keyTxt: '',
+      filters: {
+        orgId: ''
+      },
+      form: {list: []},
+      formTitle: '新增',
+      oldItem: {},
+      action: 'add',
+      pager: {
+        currentPage: 1,
+        count: 0,
+        pageSize: 20,
+        totalPage: 1
+      },
+      typePager: {
+        currentPage: 1,
+        count: 0,
+        pageSize: 20,
+        totalPage: 1
+      },
+      requestTime: 0,
+      loading1: false,
+      loadingLeft: false,
+      orgName: '', // 货主名称
+      currentItem: {} //  左边列表点击时，添加样式class
+    };
+  },
+  filters: {
+    formatRole: function (list) {
+      return list.map(m => m.title).join('，');
+    }
+  },
+  computed: {
+    bodyHeight: function () {
+      let height = parseInt(this.$store.state.bodyHeight, 10);
+      height = (height + 50) + 'px';
+      return height;
+    }
+  },
+  mounted() {
+    this.getOrgsList(1);
+  },
+  watch: {
+    'typeTxt': function () {
+      this.dataRows = [];
+      this.orgName = '';
       this.getOrgsList(1);
     },
-    watch: {
-      'typeTxt': function () {
-        this.dataRows = [];
-        this.orgName = '';
-        this.getOrgsList(1);
-      },
-      'keyTxt': function () {
+    'keyTxt': function () {
+      this.getPageList(1);
+    },
+    filters: {
+      handler: function () {
         this.getPageList(1);
       },
-      filters: {
-        handler: function () {
-          this.getPageList(1);
-        },
-        deep: true
-      }
-    },
-    methods: {
-      scrollLoadingData(event) {
-        this.$scrollLoadingData(event);
-      },
-      resetRightBox: function () {
-        this.showRight = false;
-      },
-      addType: function () {
-        this.showTypeRight = true;
-      },
-      searchType: function () {
-        this.showTypeSearch = !this.showTypeSearch;
-      },
-      getOrgsList: function (pageNo, isContinue = false) {
-        this.typePager.currentPage = pageNo;
-        let params = Object.assign({}, {
-          pageNo: pageNo,
-          pageSize: this.pager.pageSize,
-          keyWord: this.typeTxt
-        });
-        let rTime = Date.now();
-        this.requestTime = rTime;
-        this.loadingLeft = true;
-        BaseInfo.query(params).then(res => {
-          if (this.requestTime > rTime) return;
-          this.loadingLeft = false;
-          this.$store.commit('initBottomLoading', false);
-          if (isContinue) {
-            this.showTypeList = this.showTypeList.concat(res.data.list);
-          } else {
-            this.showTypeList = res.data.list;
-            if (this.showTypeList.length !== 0) {
-              this.currentItem = res.data.list[0];
-              this.orgName = this.showTypeList[0].name;
-              this.filters.orgId = this.currentItem.id;
-              this.getPageList(1);
-            } else {
-              this.currentItem = Object.assign({'id': ''});
-              this.filters.orgId = '';
-            }
-          }
-          this.typePager.totalPage = res.data.length;
-        });
-
-      },
-      getOrgMore: function () {
-        this.getOrgsList(this.typePager.currentPage + 1, true);
-      },
-      getPageList: function (pageNo) {
-        if (!this.filters.orgId) return;
-        this.pager.currentPage = pageNo;
-        let data = Object.assign({}, {
-          pageNo: pageNo,
-          pageSize: this.pager.pageSize,
-          keyWord: this.keyTxt,
-          systemObjectId: 'hmcc-system'
-        });
-        this.loading1 = true;
-        OrgUser.queryUsers(this.filters.orgId, data).then(res => {
-          this.loading1 = false;
-          this.dataRows = res.data.list;
-          this.pager.count = res.data.count;
-        });
-      },
-      add: function () {
-        this.action = 'add';
-        this.formTitle = '新增 ' + this.orgName + '用户';
-        this.form = {
-          list: [{roleId: ''}],
-          orgId: this.filters.orgId
-        };
-        this.showRight = true;
-      },
-      edit: function (item) {
-        this.action = 'edit';
-        this.formTitle = '编辑 ' + this.orgName + '用户';
-        this.oldItem = item;
-        this.form = JSON.parse(JSON.stringify(item));
-        this.showRight = true;
-      },
-      remove: function () {
-
-      },
-      forbid: function (item) {
-        let itemTemp = JSON.parse(JSON.stringify(item));
-        itemTemp.status = '2';
-        User.stopUser(itemTemp.id).then(() => {
-          item.status = '2';
-          this.$notify.success({
-            title: '成功',
-            message: '已成功停用单位用户"' + itemTemp.name + '"'
-          });
-        });
-      },
-      useNormal: function (item) {
-        let itemTemp = JSON.parse(JSON.stringify(item));
-        itemTemp.status = '0';
-        User.enableUser(itemTemp.id).then(() => {
-          item.status = '0';
-          this.$notify.success({
-            title: '成功',
-            message: '已成功启用单位用户"' + item.name + '"'
-          });
-        });
-      },
-      removeType: function (item) {
-        BaseInfo.delete(item.id).then(() => {
-          this.getOrgsList();
-          this.$notify.success({
-            title: '成功',
-            message: '已成功删除单位用户"' + item.name + '"'
-          });
-        });
-      },
-      showType: function (item) {
-        this.filters.orgId = item.id;
-        this.orgName = item.name;
-        this.currentItem = item;
-      },
-      itemChange: function (item) {
-        this.getPageList(this.pager.currentPage);
-        this.showRight = false;
-      },
-      formatStatus: function (value) {
-        if (!value) return '';
-        return value.toString();
-      }
+      deep: true
     }
-  };
+  },
+  methods: {
+    scrollLoadingData(event) {
+      this.$scrollLoadingData(event);
+    },
+    resetRightBox: function () {
+      this.showRight = false;
+    },
+    addType: function () {
+      this.showTypeRight = true;
+    },
+    searchType: function () {
+      this.showTypeSearch = !this.showTypeSearch;
+    },
+    getOrgsList: function (pageNo, isContinue = false) {
+      this.typePager.currentPage = pageNo;
+      let params = Object.assign({}, {
+        pageNo: pageNo,
+        pageSize: this.pager.pageSize,
+        keyWord: this.typeTxt
+      });
+      let rTime = Date.now();
+      this.requestTime = rTime;
+      this.loadingLeft = true;
+      BaseInfo.query(params).then(res => {
+        if (this.requestTime > rTime) return;
+        this.loadingLeft = false;
+        this.$store.commit('initBottomLoading', false);
+        if (isContinue) {
+          this.showTypeList = this.showTypeList.concat(res.data.list);
+        } else {
+          this.showTypeList = res.data.list;
+          if (this.showTypeList.length !== 0) {
+            this.currentItem = res.data.list[0];
+            this.orgName = this.showTypeList[0].name;
+            this.filters.orgId = this.currentItem.id;
+            this.getPageList(1);
+          } else {
+            this.currentItem = Object.assign({'id': ''});
+            this.filters.orgId = '';
+          }
+        }
+        this.typePager.totalPage = res.data.length;
+      });
+
+    },
+    getOrgMore: function () {
+      this.getOrgsList(this.typePager.currentPage + 1, true);
+    },
+    getPageList: function (pageNo) {
+      if (!this.filters.orgId) return;
+      this.pager.currentPage = pageNo;
+      let data = Object.assign({}, {
+        pageNo: pageNo,
+        pageSize: this.pager.pageSize,
+        keyWord: this.keyTxt,
+        systemObjectId: 'hmcc-system'
+      });
+      this.loading1 = true;
+      OrgUser.queryUsers(this.filters.orgId, data).then(res => {
+        this.loading1 = false;
+        this.dataRows = res.data.list;
+        this.pager.count = res.data.count;
+      });
+    },
+    add: function () {
+      this.action = 'add';
+      this.formTitle = '新增 ' + this.orgName + '用户';
+      this.form = {
+        list: [],
+        orgId: this.filters.orgId
+      };
+      this.showRight = true;
+    },
+    edit: function (item) {
+      this.action = 'edit';
+      this.formTitle = '编辑 ' + this.orgName + '用户';
+      this.oldItem = item;
+      this.form = JSON.parse(JSON.stringify(item));
+      this.showRight = true;
+    },
+    remove: function () {
+
+    },
+    forbid: function (item) {
+      let itemTemp = JSON.parse(JSON.stringify(item));
+      itemTemp.status = '2';
+      User.stopUser(itemTemp.id).then(() => {
+        item.status = '2';
+        this.$notify.success({
+          title: '成功',
+          message: '已成功停用单位用户"' + itemTemp.name + '"'
+        });
+      });
+    },
+    useNormal: function (item) {
+      let itemTemp = JSON.parse(JSON.stringify(item));
+      itemTemp.status = '0';
+      User.enableUser(itemTemp.id).then(() => {
+        item.status = '0';
+        this.$notify.success({
+          title: '成功',
+          message: '已成功启用单位用户"' + item.name + '"'
+        });
+      });
+    },
+    removeType: function (item) {
+      BaseInfo.delete(item.id).then(() => {
+        this.getOrgsList();
+        this.$notify.success({
+          title: '成功',
+          message: '已成功删除单位用户"' + item.name + '"'
+        });
+      });
+    },
+    showType: function (item) {
+      this.filters.orgId = item.id;
+      this.orgName = item.name;
+      this.currentItem = item;
+    },
+    itemChange: function (item) {
+      this.getPageList(this.pager.currentPage);
+      this.showRight = false;
+    },
+    formatStatus: function (value) {
+      if (!value) return '';
+      return value.toString();
+    }
+  }
+};
 </script>

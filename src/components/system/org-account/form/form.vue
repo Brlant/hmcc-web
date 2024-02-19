@@ -19,7 +19,10 @@
       </el-form-item>
       <el-form-item label="用户角色" prop="list">
         <el-select placeholder="请选择用户角色" v-model="form.list" multiple filterable :clearable="true">
-          <el-option :label="item.title" :value="item.id" :key="item.id" v-for="item in roleSelect"></el-option>
+          <el-option v-for="item in roleSelect"
+                     :key="item.id"
+                     :label="item.title"
+                     :value="item.id"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item label-width="100px">
@@ -98,7 +101,7 @@ export default {
     };
     return {
       roleId: '',
-      form: Object.assign({}, this.formItem),
+      form: Object.assign({list: []}, this.formItem),
       rules: {
         name: [
           {required: true, message: '请输入用户名', trigger: 'blur'}
@@ -111,7 +114,7 @@ export default {
           {validator: checkEmail, trigger: 'blur'}
         ],
         list: [
-            {required: true, type: 'array', message: '请选择用户角色', trigger: 'change'}
+          {required: true, type: 'array', message: '请选择用户角色', trigger: 'change'}
         ]
       },
       roleSelect: [],
