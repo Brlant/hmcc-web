@@ -133,7 +133,6 @@ export default {
       }
       const first = this.stores[0];
       this.loadStorey(first, callback);
-      this.treeSelect(first)
     });
 
     // //页面跳转获取参数
@@ -178,7 +177,7 @@ export default {
         callback && callback();
       });
     },
-    query() {
+    queryDevicePosition(){
       queryDevicePosition({
         ...this.search
       }).then(res => {
@@ -209,6 +208,10 @@ export default {
           });
         });
       });
+    },
+    query() {
+      this.queryDevicePosition();
+      this.queryDeviceCountByFloor()
     },
     covertState(status) {
       switch (status) {
@@ -247,6 +250,18 @@ export default {
     treeSelect(node) {
       queryDeviceCountByFloor({
         floorId: node.id,
+        deviceId: this.search.deviceId,
+      }).then(res => {
+        this.statistics.total = res.data?.totalCount || 0;
+        this.statistics.opened = res.data?.onlineCount || 0;
+        this.statistics.closed = res.data?.offlineCount || 0;
+        this.statistics.abnormal = res.data?.alarmCount || 0;
+        this.statistics.faultCount = res.data?.faultCount || 0;
+      });
+    },
+    queryDeviceCountByFloor() {
+      queryDeviceCountByFloor({
+        floorId: this.search.storeyId,
         deviceId: this.search.deviceId,
       }).then(res => {
         this.statistics.total = res.data?.totalCount || 0;
