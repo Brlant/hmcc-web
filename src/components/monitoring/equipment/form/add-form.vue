@@ -165,11 +165,11 @@ export default {
         }
 
         let formData = JSON.parse(JSON.stringify(this.formItem));
-        if (formData.sensorDataList.length){
+        if (formData.sensorDataList.length) {
           formData.sensorList = formData.sensorDataList.map(i => ({
             sensorId: i.id,
             temperatureType: i.temperatureType,
-            areaId: i.areaId ,
+            areaId: i.areaId,
             areaName: i.areaName,
             monitorTargetId: this.formItem.monitorTargetId,
             monitorTargetName: this.formItem.monitorTargetName,
@@ -204,16 +204,25 @@ export default {
       this.addSensor();
     },
     queryProbeList(query) {
-      if (this.type === 2 && !this.form.orgId) return;
+      if (!query) {
+        return;
+      }
+
+      if (this.type === 2 && !this.form.orgId) {
+        return;
+      }
+
       if (!this.form.monitorTargetId) {
         return this.$notify.info({message: '请选择冷链设备'});
       }
+
       let params = {
         keyWord: query,
-        orgId: this.form.orgId || this.$store.state.user.userCompanyAddress,
-        freezerDevId: this.form.monitorTargetId
+        orgId: this.form.orgId || this.$store.state.user.userCompanyAddress || '',
+        freezerDevId: this.form.monitorTargetId || ''
       };
-      this.$http.post('/sensor/page-without-monitor', params).then(res => {
+
+      this.$http.post('/sensor/without-monitor', params).then(res => {
         this.editProbeList.forEach(i => {
           if (i.id && !res.data.list.find(f => f.id === i.id)) {
             let item = this.editProbeList.find(f => f.id === i.id);
@@ -232,7 +241,7 @@ export default {
         orgName: this.formItem.orgName,
         sensorId: '',
         temperatureType: '',
-        areaId: '' ,
+        areaId: '',
         areaName: '',
         isOpen: 0,
         // 手动添加的可以删除

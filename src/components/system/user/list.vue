@@ -40,6 +40,7 @@
               <th>角色</th>
               <th>手机号码</th>
               <th>邮箱</th>
+              <th>所属科室</th>
               <th>状态</th>
               <th></th>
             </tr>
@@ -69,9 +70,11 @@
                 {{row.phone}}
               </td>
               <td>
-                {{row.email}}
+                {{row.email || '--'}}
               </td>
-
+              <td>
+                {{row.companyDepartmentName || '--'}}
+              </td>
               <td>
                 <dict :dict-group="'orgUserStatus'" :dict-key="formatStatus(row.status)"></dict>
               </td>

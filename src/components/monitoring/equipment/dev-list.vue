@@ -35,8 +35,8 @@
 }
 </style>
 <template>
-  <div>
-    <el-row class="dev-list" v-for="(row,index) in rowList" :key="index">
+  <div style="padding: 0 10px">
+    <el-row class="dev-list" v-for="(row,index) in rowList" :key="index" :gutter="25">
       <el-col class="item" :span="12" :key="i+'_'+item.id" v-for="(item,i) in row">
         <div class="content">
           <el-row>

@@ -62,7 +62,7 @@ import {indexApi, OrgUser, User} from '@/resources';
     data: function () {
       let checkEmail = (rule, value, callback) => {
         if (value === '') {
-          callback(new Error('请输入邮箱'));
+          callback();
         } else {
           let re = /^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/ig;
           if (!re.test(value)) {
