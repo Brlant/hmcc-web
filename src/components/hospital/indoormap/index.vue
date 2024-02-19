@@ -196,6 +196,8 @@
             return '开机'
           case 'ALARM':
             return '异常'
+          case 'FAILURE':
+            return '故障'
           default:
             return '设备';
         }
@@ -208,6 +210,8 @@
             return 'indoor-formtips green'
           case 'ALARM':
             return 'indoor-formtips red'
+          case 'FAILURE':
+            return 'indoor-formtips yellow'
           default:
             return 'indoor-formtips blue';
         }
@@ -580,6 +584,14 @@
 
         .el-form-item:first-child {
           background-color: #3765ff;
+        }
+      }
+
+      &.yellow {
+        border: 1px solid #bfc24b;
+
+        .el-form-item:first-child {
+          background-color: #bfc24b;
         }
       }
 

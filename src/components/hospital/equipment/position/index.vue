@@ -50,7 +50,7 @@
           <span>异常数：{{ statistics.abnormal }}</span>
         </div>
         <div>
-          <el-icon name="location-information" style="color: yellow"/>
+          <el-icon name="location-information" style="color: #bfc24b"/>
           <span>故障数：{{ statistics.faultCount}}</span>
         </div>
       </div>

@@ -59,10 +59,10 @@
 
             <el-col :span="2">{{ item.startUsingTime | time }}</el-col>
             <el-col :span="2">
-              <span v-if="item.deviceStatus === 'ONLINE'" style="color: green">开机</span>
-              <span v-else-if="item.deviceStatus === 'OFFLINE'" style="color: grey">关机</span>
-              <span v-else-if="item.deviceStatus === 'ALARM'" style="color: red">异常</span>
-              <span v-else-if="item.deviceStatus === 'FAILURE'" style="color: yellow">故障</span>
+              <span v-if="item.deviceStatus === 'ONLINE'" style="color: #95f202">开机</span>
+              <span v-else-if="item.deviceStatus === 'OFFLINE'" style="color: #aaaaaa">关机</span>
+              <span v-else-if="item.deviceStatus === 'ALARM'" style="color: #d8001b">异常</span>
+              <span v-else-if="item.deviceStatus === 'FAILURE'" style="color: #bfc24b">故障</span>
               <span v-else>--</span>
             </el-col>
             <el-col :span="2">

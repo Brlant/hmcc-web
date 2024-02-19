@@ -37,10 +37,10 @@
   const model = {
     id: null,
     type: 1,
-    upFloor: null,
-    floorName: null,
-    sort: null,
-    memo: null
+    upFloor: 0,
+    floorName: '',
+    sort: '',
+    memo: ''
   };
 
   const rules = {

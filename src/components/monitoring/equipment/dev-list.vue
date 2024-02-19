@@ -36,7 +36,7 @@
 </style>
 <template>
   <div style="padding: 0 10px">
-    <el-row class="dev-list" v-for="(row,index) in rowList" :key="index" :gutter="25">
+    <el-row class="dev-list" v-for="(row,index) in rowList" :key="index" :gutter="10">
       <el-col class="item" :span="12" :key="i+'_'+item.id" v-for="(item,i) in row">
         <div class="content">
           <el-row>
@@ -135,7 +135,7 @@ export default {
       }
 
       let sensorDataList = this.devItem.sensorDataList || [];
-      // 把数据转换一下，每两条放一行
+      // 数据过滤，没有标签的不显示
       return this.rowListHandler(sensorDataList);
     }
   },
@@ -162,11 +162,7 @@ export default {
         }
 
         cols.push(item);
-        let rowFlag = len === 1 || i % 2 === 1 || i == len -1;
-        if (rowFlag) {
-          rows.push(cols)
-          cols = [];
-        }
+        rows.push(cols)
       }
 
       return rows;
