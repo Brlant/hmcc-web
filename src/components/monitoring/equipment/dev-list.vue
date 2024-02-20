@@ -149,6 +149,7 @@ export default {
     rowListHandler(sensorDataList) {
       let rows = [];
 
+      sensorDataList = sensorDataList.filter(item => item.id);
       if (!sensorDataList) {
         return rows;
       }
@@ -157,12 +158,13 @@ export default {
       let cols = [];
       for (let i = 0; i < len; i++) {
         let item = sensorDataList[i];
-        if (!item.id){
-          continue;
-        }
 
         cols.push(item);
-        rows.push(cols)
+        let rowFlag = len === 1 || i % 2 === 1 || i == len -1;
+        if (rowFlag) {
+          rows.push(cols)
+          cols = [];
+        }
       }
 
       return rows;
