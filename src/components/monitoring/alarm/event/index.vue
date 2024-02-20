@@ -164,8 +164,8 @@
         // 清空数据
         this.checkList = [];
         this.warnRecordIdList = [];
-        const http = alarmEvent.query;
-        const params = this.queryUtil(http, pageNo);
+        const http = alarmEvent.queryPage;
+        this.queryUtil(http, pageNo);
       },
       resetRightBox() {
         this.$router.push('/alarm/record');

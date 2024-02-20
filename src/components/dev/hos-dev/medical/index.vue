@@ -131,7 +131,6 @@
 
 import SearchPart from './search';
 import CommonMixin from '@/mixins/commonMixin';
-import utils from '@/tools/utils';
 
 import addForm from './form/add-form.vue';
 import showForm from './form/show-form.vue';

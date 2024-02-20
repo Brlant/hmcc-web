@@ -72,19 +72,22 @@
                      layout="total, sizes, prev, pager, next, jumper">
       </el-pagination>
     </div>
-    <page-right :css="{'width':'700px','padding':0}" :show="showIndex !== -1" @right-close="rightClose">
-      <form-part :formData="formData" :editable="editable" @formBack="formBack"/>
+    <page-right :css="defaultPageRight" :show="showIndex !== -1" @right-close="resetRightBox">
+      <component :formItem="form" :statusType="statusType" :index="showIndex" :is="currentPart" @change="change"
+                 @right-close="resetRightBox"/>
     </page-right>
   </div>
 </template>
 <script>
-import FormPart from './form';
 import {sinopharmDictDataType} from '@/api/system/dict/data';
 import CommonMixin from '@/mixins/commonMixin';
 
+import addForm from './form/add-form.vue';
+import showForm from './form/show-form.vue';
+
 export default {
+  name: 'DeviceTemplate',
   mixins: [CommonMixin],
-  components: {FormPart},
   data() {
     return {
       dataList: [],
@@ -95,8 +98,12 @@ export default {
         devType: null,
       },
       editable: true,
-      // formData: null,
-      formData: {},
+      dialogComponents: {
+        0: addForm,
+        1: showForm
+      },
+      defaultPageRight: {'width': '1500px', 'padding': 0},
+      form: {},
       showIndex: -1,
       coolDevs: {},
       medicals: {},
@@ -184,12 +191,41 @@ export default {
     },
     detail(item) {
       this.editable = false;
-      this.formData = item;
+      this.form = item;
       this.showIndex = 0;
+    },
+    add() {
+      this.form = {};
+      this.showPart(0);
+    },
+    edit(item) {
+      this.currentItem = item;
+      this.currentItemId = item.id;
+      this.form = item;
+      this.showPart(0);
+    },
+    showItemDetail(item) {
+      this.currentItem = item;
+      this.currentItemId = item.id;
+      this.showPart(1);
+      this.defaultPageRight.width = '1500px';
+      this.$nextTick(() => {
+        this.form = item;
+      });
+    },
+    resetRightBox() {
+      this.defaultPageRight.width = '1500px';
+      this.showIndex = -1;
+    },
+    showPart(index) {
+      this.currentPart = this.dialogComponents[index];
+      this.$nextTick(() => {
+        this.showIndex = index;
+      });
     },
     modify(item) {
       this.editable = true;
-      this.formData = item;
+      this.form = item;
       this.showIndex = 0;
     },
     remove(item) {
@@ -213,11 +249,11 @@ export default {
         this.query();
       }
 
-      this.formData = {};
+      this.form = {};
     },
     rightClose() {
       this.showIndex = -1;
-      this.formData = {};
+      this.form = {};
     },
   }
 };
