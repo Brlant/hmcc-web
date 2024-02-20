@@ -102,7 +102,7 @@
             </el-col>
             <el-col :span="8">
               <el-form-item label="备注">
-                <oms-input placeholder="请输入型号" type="textarea" v-model="form.remark"/>
+                <oms-input placeholder="请输入备注" type="textarea" v-model="form.remark"/>
               </el-form-item>
             </el-col>
           </el-row>

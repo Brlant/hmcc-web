@@ -3,7 +3,7 @@
     <search-template :isShowAdvance="false" @search="query" @reset="reset">
       <template slot="title">设备类型模板查询</template>
       <template slot="btn">
-        <el-button @click="create" plain size="small">
+        <el-button @click="add" plain size="small">
           <f-a class="icon-small" name="plus"></f-a>
           添加
         </el-button>
@@ -47,7 +47,7 @@
       </el-row>
       <div class="order-list-body flex-list-dom" v-else>
         <div :class="[{'active':currentItemId===item.id}]"
-             @click.stop.prevent="detail(item)"
+             @click="showItemDetail(item)"
              class="order-list-item order-list-item-bg" v-for="(item, index) in dataList">
           <el-row>
             <el-col :span="2">{{ index + 1 }}</el-col>
@@ -55,9 +55,8 @@
             <el-col :span="5">{{ templateTypes[item.templateType] }}</el-col>
             <el-col :span="5">{{ item.templateType === '1' ? coolDevs[item.devType] : medicals[item.devType] }}</el-col>
             <el-col :span="3">
-              <!--<el-button icon="el-icon-search" size="mini" circle @click.stop="detail(item)"></el-button>-->
-              <el-button type="primary" icon="el-icon-edit" size="mini" circle @click.stop="modify(item)"></el-button>
-              <el-button type="danger" icon="el-icon-delete" size="mini" circle @click.stop="remove(item)"></el-button>
+              <el-button type="primary" icon="el-icon-edit" size="mini" circle @click.stop.prevent="edit(item)"></el-button>
+              <el-button type="danger" icon="el-icon-delete" size="mini" circle @click.stop.prevent="remove(item)"></el-button>
             </el-col>
           </el-row>
         </div>
@@ -73,7 +72,7 @@
       </el-pagination>
     </div>
     <page-right :css="defaultPageRight" :show="showIndex !== -1" @right-close="resetRightBox">
-      <component :formItem="form" :statusType="statusType" :index="showIndex" :is="currentPart" @change="change"
+      <component :formItem="currentItem" :index="showIndex" :is="currentPart" @change="change"
                  @right-close="resetRightBox"/>
     </page-right>
   </div>
@@ -103,8 +102,6 @@ export default {
         1: showForm
       },
       defaultPageRight: {'width': '1500px', 'padding': 0},
-      form: {},
-      showIndex: -1,
       coolDevs: {},
       medicals: {},
       templateTypes: {},
@@ -131,6 +128,8 @@ export default {
     }
   },
   created() {
+    this.showIndex = -1;
+
     this.queryList();
     this.getDeviceType();
     this.getCoolDevType();
@@ -185,23 +184,14 @@ export default {
       };
       this.queryList();
     },
-    create() {
-      this.editable = true;
-      this.showIndex = 0;
-    },
-    detail(item) {
-      this.editable = false;
-      this.form = item;
-      this.showIndex = 0;
-    },
     add() {
-      this.form = {};
+      this.currentItem = {};
       this.showPart(0);
     },
     edit(item) {
       this.currentItem = item;
       this.currentItemId = item.id;
-      this.form = item;
+
       this.showPart(0);
     },
     showItemDetail(item) {
@@ -209,27 +199,23 @@ export default {
       this.currentItemId = item.id;
       this.showPart(1);
       this.defaultPageRight.width = '1500px';
-      this.$nextTick(() => {
-        this.form = item;
-      });
+    },
+    change() {
+      this.resetRightBox();
+      this.queryList(this.pager.currentPage);
     },
     resetRightBox() {
       this.defaultPageRight.width = '1500px';
       this.showIndex = -1;
+      this.currentItem = {};
+      this.currentItemId = ''
     },
     showPart(index) {
       this.currentPart = this.dialogComponents[index];
-      this.$nextTick(() => {
-        this.showIndex = index;
-      });
-    },
-    modify(item) {
-      this.editable = true;
-      this.form = item;
-      this.showIndex = 0;
+      this.showIndex = index;
     },
     remove(item) {
-      this.$confirm('确定删除该条记录？', '删除', {
+      this.$confirm('确定删除当前模板？', '删除', {
         type: 'warning',
         cancelButtonText: '取消',
         confirmButtonText: '确定'
@@ -249,11 +235,11 @@ export default {
         this.query();
       }
 
-      this.form = {};
+      this.currentItem = {};
     },
     rightClose() {
       this.showIndex = -1;
-      this.form = {};
+      this.currentItem = {};
     },
   }
 };

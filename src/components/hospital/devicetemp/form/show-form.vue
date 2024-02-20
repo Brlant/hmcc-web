@@ -8,7 +8,7 @@
       <div v-if="loading">
         <oms-loading :loading="loading"></oms-loading>
       </div>
-      <div class="empty-info" v-else-if="!formItem.id">暂无数据</div>
+      <div class="empty-info" v-else-if="!formItem.templateId">暂无数据</div>
       <div v-else>
         <el-form :model="form" label-width="140px" ref="tempForm">
           <div class="form-header-part">
@@ -19,22 +19,43 @@
             </div>
             <div class="content">
               <div>
-                <oms-col :isShow="true" :rowSpan="8" :colSpan="8" label="设备编号">{{ form.devNo }}</oms-col>
-                <oms-col :isShow="true" :rowSpan="8" :colSpan="8" label="设备名称">{{ form.devName }}</oms-col>
-                <oms-col :isShow="true" :rowSpan="8" :colSpan="8" label="设备类型">
-                  {{ formatDictLabel(form.devType, deviceTypes) }}
+                <oms-col :isShow="true" :rowSpan="8" :colSpan="8" label="模板名称">{{ form.templateName }}</oms-col>
+                <oms-col :isShow="true" :rowSpan="8" :colSpan="8" label="模板分类">
+                  {{ form.templateType == '1' ? '冷链设备' : '医疗设备' }}
                 </oms-col>
-                <oms-col :isShow="true" :rowSpan="8" :colSpan="8" label="设备类型模板">{{ templateName }}</oms-col>
-                <oms-col :isShow="true" :rowSpan="8" :colSpan="8" label="供应商">{{ form.supplier }}</oms-col>
-                <oms-col :isShow="true" :rowSpan="8" :colSpan="8" label="生产厂商">{{ form.manufacturer }}</oms-col>
-                <oms-col :isShow="true" :rowSpan="8" :colSpan="8" label="所属科室">{{ form.departmentName }}</oms-col>
-                <oms-col :isShow="true" :rowSpan="8" :colSpan="8" label="生产日期">{{ form.productTime }}</oms-col>
-                <oms-col :isShow="true" :rowSpan="8" :colSpan="8" label="报废时间">{{ form.discardTime }}</oms-col>
-                <oms-col :isShow="true" :rowSpan="8" :colSpan="8" label="首次投入使用时间">{{ form.firstUserTime }}</oms-col>
-                <oms-col :isShow="true" :rowSpan="8" :colSpan="8" label="厂商备案凭证号">{{ form.manufacturerRegistrationNumber }}</oms-col>
-                <oms-col :isShow="true" :rowSpan="8" :colSpan="8" label="生产许可证号">{{ form.productionLicenseNumber }}</oms-col>
-                <oms-col :isShow="true" :rowSpan="8" :colSpan="8" label="维保周期">{{ form.maintenanceCycle }}</oms-col>
-                <oms-col :isShow="true" :rowSpan="8" :colSpan="8" label="注册证号/备案凭证号">{{ form.registrationCertificateNumber }}</oms-col>
+                <oms-col :isShow="true" :rowSpan="8" :colSpan="8" label="设备类型">
+                  {{ formatDictLabel(form.devType, tempDevTypes) }}
+                </oms-col>
+
+                <div v-show="form.templateType === '1'">
+                  <oms-col :isShow="true" :rowSpan="8" :colSpan="8" label="是否医用设备">
+                    {{ formatDictLabel(form.medicalFlag, medicalDevType) }}
+                  </oms-col>
+                  <oms-col :isShow="true" :rowSpan="8" :colSpan="8" label="容积">{{ form.volume }}</oms-col>
+                  <oms-col :isShow="true" :rowSpan="8" :colSpan="8" label="备注">{{ form.remark }}</oms-col>
+                  <oms-col :isShow="true" :rowSpan="8" :colSpan="8" label="门板类型">
+                    {{ formatDictLabel(form.doorSheetType, doorDevType) }}
+                  </oms-col>
+                  <oms-col :isShow="true" :rowSpan="8" :colSpan="8" label="品牌">{{ form.brand }}</oms-col>
+                  <oms-col :isShow="true" :rowSpan="8" :colSpan="8" label="型号">{{ form.version }}</oms-col>
+                </div>
+
+                <div v-show="form.templateType === '2'">
+                  <oms-col :isShow="true" :rowSpan="8" :colSpan="8" label="注册证号/备案凭证号">
+                    {{ form.registrationCertificateNumber }}
+                  </oms-col>
+                  <oms-col :isShow="true" :rowSpan="8" :colSpan="8" label="供应商">{{ form.supplier }}</oms-col>
+                  <oms-col :isShow="true" :rowSpan="8" :colSpan="8" label="生产厂商">{{ form.manufacturer }}</oms-col>
+                  <oms-col :isShow="true" :rowSpan="8" :colSpan="8" label="厂商备案凭证号">{{
+                      form.manufacturerRegistrationNumber
+                    }}
+                  </oms-col>
+                  <oms-col :isShow="true" :rowSpan="8" :colSpan="8" label="生产许可证号">{{
+                      form.productionLicenseNumber
+                    }}
+                  </oms-col>
+                </div>
+
               </div>
             </div>
             <div class="header">
@@ -46,11 +67,23 @@
               <div>
                 <el-row :gutter="10">
                   <el-col :span="12">
-                    <el-form-item label="标准工作时长" prop="standardWorkingHours">
-                      <!--{{ form.standardWorkingHours || '' }} 小时-->
-                      <el-input placeholder="请输入数字" type="number" v-model.number="form.standardWorkingHours" disabled>
-                        <template slot="append">小时</template>
-                      </el-input>
+                    <el-form-item label="关机状态范围">
+                      <el-row :gutter="10">
+                        <el-col :span="10">
+                          <el-form-item prop="shutdownStatusStart">
+                            <el-input placeholder="请输入数字" type="number"
+                                      v-model.number="form.shutdownStatusStart" disabled></el-input>
+                          </el-form-item>
+                        </el-col>
+                        <el-col class="line" :span="1">至</el-col>
+                        <el-col :span="10">
+                          <el-form-item prop="shutdownStatusEnd">
+                            <el-input placeholder="请输入数字" type="number"
+                                      v-model.number="form.shutdownStatusEnd" disabled></el-input>
+                          </el-form-item>
+                        </el-col>
+                        <el-col class="line" :span="2">mA</el-col>
+                      </el-row>
                     </el-form-item>
                   </el-col>
                   <el-col :span="12">
@@ -62,121 +95,6 @@
                     </el-form-item>
                   </el-col>
                 </el-row>
-                <el-row :gutter="10">
-                  <el-col :span="12">
-                    <el-form-item label="闲置状态范围">
-                      <el-row :gutter="10">
-                        <el-col :span="10">
-                          <el-form-item prop="idleStateRangeStart">
-                            <el-input placeholder="请输入数字" type="number"
-                                      v-model.number="form.idleStateRangeStart" disabled></el-input>
-                          </el-form-item>
-                        </el-col>
-                        <el-col class="line" :span="1">至</el-col>
-                        <el-col :span="10">
-                          <el-form-item prop="idleStateRangeEnd">
-                            <el-input placeholder="请输入数字" type="number"
-                                      v-model.number="form.idleStateRangeEnd" disabled></el-input>
-                          </el-form-item>
-                        </el-col>
-                        <el-col class="line" :span="2">mA</el-col>
-                      </el-row>
-                    </el-form-item>
-                  </el-col>
-                  <el-col :span="12">
-                    <el-form-item label="标准电压范围">
-                      <el-row :gutter="10">
-                        <el-col :span="10">
-                          <el-form-item prop="standardVoltageRangeStart">
-                            <el-input placeholder="请输入数字" type="number"
-                                      v-model.number="form.standardVoltageRangeStart"
-                                      disabled></el-input>
-                          </el-form-item>
-                        </el-col>
-                        <el-col class="line" :span="1">至</el-col>
-                        <el-col :span="10">
-                          <el-form-item prop="standardVoltageRangeEnd">
-                            <el-input placeholder="请输入数字" type="number"
-                                      v-model.number="form.standardVoltageRangeEnd"
-                                      disabled></el-input>
-                          </el-form-item>
-                        </el-col>
-                        <el-col class="line" :span="2">V</el-col>
-                      </el-row>
-                    </el-form-item>
-                  </el-col>
-                </el-row>
-                <el-row :gutter="10">
-                  <el-col :span="12">
-                    <el-form-item label="待机状态范围">
-                      <el-row :gutter="10">
-                        <el-col :span="10">
-                          <el-form-item prop="standbyStatusRangeStart">
-                            <el-input placeholder="请输入数字" type="number"
-                                      v-model.number="form.standbyStatusRangeStart"
-                                      disabled></el-input>
-                          </el-form-item>
-                        </el-col>
-                        <el-col class="line" :span="1">至</el-col>
-                        <el-col :span="10">
-                          <el-form-item prop="standbyStatusRangeEnd">
-                            <el-input placeholder="请输入数字" type="number"
-                                      v-model.number="form.standbyStatusRangeEnd"
-                                      disabled></el-input>
-                          </el-form-item>
-                        </el-col>
-                        <el-col class="line" :span="2">mA</el-col>
-                      </el-row>
-                    </el-form-item>
-                  </el-col>
-                </el-row>
-              </div>
-            </div>
-            <div class="header">
-              <div class="sign f-dib"></div>
-              <h3 :class="{active: pageSets[2].key === currentTab.key}" class="tit f-dib index-tit">
-                {{ pageSets[2].name }}</h3>
-            </div>
-            <div class="content">
-              <div>
-                <el-form-item label="定位标签">
-                  <template slot="label">
-                    <span style="font-size: 1.17em">定位标签</span>
-                  </template>
-                  <el-row :gutter="10">
-                    <el-col :span="7">
-                      <el-form-item label="设备状态监控" prop="firstStatusType">
-                        <el-switch v-model.number="form.firstStatusType" :active-value="1"
-                                   inactive-value="" disabled></el-switch>
-                      </el-form-item>
-                    </el-col>
-                    <el-col :span="10">
-                      <el-form-item label="标签sn号" prop="locationTagId">
-                        <!--<el-input placeholder="输入搜索标签sn号" type="input" v-model="form.name"/>-->
-                        {{ form.tagSnNumber }}
-                      </el-form-item>
-                    </el-col>
-                  </el-row>
-                </el-form-item>
-                <el-form-item label="能耗标签">
-                  <template slot="label">
-                    <span style="font-size: 1.17em">能耗标签</span>
-                  </template>
-                  <el-row :gutter="10">
-                    <el-col :span="7">
-                      <el-form-item label="设备状态监控" prop="firstStatusType">
-                        <el-switch v-model.number="form.firstStatusType" :active-value="2"
-                                   :inactive-value="0"
-                                   disabled></el-switch>
-                      </el-form-item>
-                    </el-col>
-                    <el-col :span="10">
-                      <el-form-item label="标签sn号" prop="energyTagId">
-                        {{ form.energyTagSnNumber }}
-                      </el-form-item>
-                    </el-col>
-                  </el-row>
-                </el-form-item>
               </div>
             </div>
           </div>
@@ -187,13 +105,11 @@
 </template>
 <script>
 import {formatDictLabel} from '@/tools/utils'
-import {medicalApi} from '@/resources'
 
 export default {
   props: {
     index: Number,
-    formItem: Object,
-    statusType: Array
+    formItem: Object
   },
   data() {
     return {
@@ -202,10 +118,8 @@ export default {
       pageSets: [
         {name: '基本信息', key: 0},
         {name: '能耗信息设置', key: 1},
-        {name: '标签绑定', key: 2},
       ],
       currentTab: {},
-      tempList: [],
       currentIndex: -1,
       parent: this.$parent.$parent,
       formatDictLabel,
@@ -226,8 +140,8 @@ export default {
         registrationCertificateNumber: '',
         workStatus: '',
         standardWorkingHours: '',
-        idleStateRangeStart: 0.00,
-        idleStateRangeEnd: '',
+        shutdownStatusStart: 0.00,
+        shutdownStatusEnd: '',
         standardVoltageRangeStart: '',
         standardVoltageRangeEnd: '',
         standbyStatusRangeStart: '',
@@ -245,20 +159,20 @@ export default {
     doorDevType() {
       return this.$store.state.doorDevType;
     },
-    deviceTypes() {
+    medicalDevTypes() {
       return this.$getDict('device_type')
     },
-    templateName() {
-      if (!this.tempList) {
-        return ''
+    coolDevTypes() {
+      return this.$getDict('coolDevType')
+    },
+    tempDevTypes(){
+      if (this.form.templateType === '1'){
+        return this.coolDevTypes;
+      }else if (this.form.templateType === '2'){
+        return this.medicalDevTypes;
+      }else {
+        return [];
       }
-
-      let temp = this.tempList.find(item => item.templateId === this.form.templateId);
-      if (!temp) {
-        return '';
-      }
-
-      return temp.templateName;
     }
   },
   watch: {
@@ -268,52 +182,24 @@ export default {
         this.currentIndex = val;
       });
 
-      this.getDetail(this.formItem.id)
+      this.getDetail(this.formItem.templateId)
     },
-    'form.type': function (val) {
-      if (!val) {
-        return;
-      }
-
-      // 拿到设备类型后，调用设备模板查询接口获取设备类型模板
-      this.getTempList();
-    }
   },
   methods: {
-    getDetail(id) {
-      if (!id) {
+    getDetail(templateId) {
+      if (!templateId) {
         return
       }
 
-      medicalApi.queryById(id).then(res => {
+      let params = {templateId};
+      this.$http.get('/template/queryById', {params}).then(res => {
         this.form = res.data;
-        this.getTempList();
       }).catch(err => {
         this.$notify.error(err.response && err.response.data && err.response.data.msg || '详情接口异常，请联系管理员');
       })
     },
-    // 查询模板
-    getTempList() {
-      let params = {
-        templateType: '2',
-        devType: this.form.devType
-      };
-
-      this.tempList = [];
-      this.$http.get('/template/queryByType', {params}).then(res => {
-        this.tempList = res.data;
-        if (!this.form.templateId) {
-          return;
-        }
-
-        let has = this.tempList.some(t => t.templateId === this.form.templateId);
-        if (!has) {
-          this.tempList.push(this.form)
-        }
-      });
-    },
-    handlePreview: function (id) {
-      this.$store.commit('changeAttachment', id);
+    handlePreview: function (attachmentId) {
+      this.$store.commit('changeAttachment', attachmentId);
     },
     showRecordDate: function (data) {
       return data ? this.$moment(data).format('YYYY-MM-DD HH:mm:ss') : '';
@@ -327,6 +213,11 @@ export default {
     addBindRelation() {
       this.$refs['bindRelation'].isShowAddForm = true;
     }
+  },
+  mounted() {
+    if (this.formItem.templateId) {
+      this.getDetail(this.formItem.templateId)
+    }
   }
-};
+}
 </script>
