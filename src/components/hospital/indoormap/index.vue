@@ -76,7 +76,7 @@
       <el-form-item :label="tipTitle" label-width="40px">{{ form.collectionTime }}</el-form-item>
       <el-form-item label="设备名称：">{{ form.devName }}</el-form-item>
       <el-form-item label="设备编号：">{{ form.devNo }}</el-form-item>
-      <el-form-item label="标签SN号：">{{ form.tagSnNumber }}</el-form-item>
+      <!--<el-form-item label="标签SN号：">{{ form.tagSnNumber }}</el-form-item>-->
       <el-form-item label="所属科室：">{{ form.departmentName }}</el-form-item>
     </el-form>
   </div>

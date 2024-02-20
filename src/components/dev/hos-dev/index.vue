@@ -4,14 +4,14 @@
       <cool-dev></cool-dev>
     </el-tab-pane>
     <el-tab-pane label="医疗设备" name="1" v-if="hasPerm('medical-dev-scan')">
-      <healths></healths>
+      <medical-dev></medical-dev>
     </el-tab-pane>
   </el-tabs>
 </template>
 
 <script>
 import CoolDev from './cool';
-import Healths from './medical';
+import MedicalDev from './medical';
 import Perm from '@/components/common/perm'
 import CommonMixin from '@/mixins/commonMixin'
 
@@ -21,7 +21,7 @@ export default {
   components: {
     Perm,
     CoolDev,
-    Healths
+    MedicalDev
   },
   mixins: [CommonMixin],
   data() {

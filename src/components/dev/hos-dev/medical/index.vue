@@ -65,8 +65,8 @@
       </el-row>
       <div class="order-list-body flex-list-dom" v-else>
         <div :class="[{'active':currentItemId===item.id}]"
-             @click="showItemDetail(item)" class="order-list-item order-list-item-bg"
-             v-for="(item,index) in dataList">
+             @click.stop.prevent="showItemDetail(item)"
+             class="order-list-item order-list-item-bg" v-for="(item, index) in dataList">
           <el-row>
             <el-col :span="1" class="R">
               {{ index + 1 }}
@@ -111,7 +111,7 @@
       </div>
     </div>
 
-    <div class="text-center" v-show="(dataList.length || pager.currentPage !== 1) && !loading">
+    <div class="text-center" v-show="dataList.length">
       <el-pagination :current-page="pager.currentPage" :page-size="pager.pageSize"
                      :page-sizes="[10,20,50,100]"
                      :total="pager.count" @current-change="handleCurrentChange"
@@ -131,7 +131,6 @@
 
 import SearchPart from './search';
 import CommonMixin from '@/mixins/commonMixin';
-import utils from '@/tools/utils';
 
 import addForm from './form/add-form.vue';
 import showForm from './form/show-form.vue';

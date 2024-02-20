@@ -202,7 +202,7 @@ export default {
     enabled: function (item) {
       let params = {
         id: item.id,
-        status: '1'
+        status: '0'
       };
       departmentApi.enableDepartment(params).then(() => {
         this.queryList(1);

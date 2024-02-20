@@ -77,7 +77,7 @@
                  :class="'el-icon-location-outline'"></i></a>
                 定位
               </span>
-              <des-btn @click="edit(item)" icon="edit" v-has="permPage.editCool">编辑</des-btn>
+              <des-btn @click.prevent.stop="edit(item)" icon="edit" v-has="permPage.editCool">编辑</des-btn>
               <!--<des-btn @click="remove(item)" icon="delete" v-has="permPage.delCool">删除</des-btn>-->
             </el-col>
           </el-row>

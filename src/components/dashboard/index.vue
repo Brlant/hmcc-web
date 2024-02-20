@@ -320,11 +320,11 @@
           </el-row>
           <el-table :data="reportList">
             <el-table-column label="发生时间" header-align="center" prop="modifyTime" width="110" class-name="time-line">
-              <template v-slot="props">
+              <template v-slot="{row}">
                 <div class="time-cell">
-                  <span>{{ formatModifyTime(props.row) }}</span>
-                  <div class="timeline-item timeline-item-date" v-if="props.row.isIntegralDate"></div>
-                  <div class="timeline-item timeline-item-time" v-else-if="props.row.isIntegralTime"></div>
+                  <span>{{ formatModifyTime(row) }}</span>
+                  <div class="timeline-item timeline-item-date" v-if="row.isIntegralDate"></div>
+                  <div class="timeline-item timeline-item-time" v-else-if="row.isIntegralTime"></div>
                   <div class="timeline-item timeline-item-normal" v-else></div>
                 </div>
               </template>
@@ -392,12 +392,6 @@
                 </template>
               </el-table-column>
               <el-table-column label="告警发生时间" align="center" prop="alarmTime"/>
-              <el-table-column label="操作" align="center" prop="">
-                <template v-slot="{row}">
-                  <el-button type="primary" size="mini" icon="el-icon-location-outline" circle
-                    @click="devicesPosition(row)"></el-button>
-                </template>
-              </el-table-column>
             </el-table>
           </div>
         </el-tab-pane>
@@ -512,6 +506,7 @@ export default {
       return utils.formatMsToTime(recoveryTime - occurrenceTime);
     },
     formatModifyTime(item) {
+      console.log(item,'item')
       if (item.isIntegralDate) {
         if (item.modifyTime === this.$moment().format('YYYY-MM-DD')) return '今天';
         return item.modifyTime;
@@ -521,6 +516,10 @@ export default {
       return this.$moment(item.modifyTime).format('HH:mm:ss');
     },
     formatReportListByDay(data) {
+      if (!data) {
+        return [];
+      }
+
       const dateList = [];
       data.forEach(i => {
         let date = this.$moment(i.occurrenceTime).format('YYYY-MM-DD');
@@ -529,7 +528,7 @@ export default {
         i.modifyTimeType = this.$moment(i.occurrenceTime).format('YYYY-MM-DD HH:mm:ss');
         i.isIntegralDate = false;
       });
-      let totalList = [].concat(data.list, dateList.map(d => {
+      let totalList = [].concat(data, dateList.map(d => {
         return {
           modifyTime: d,
           modifyTimeType: this.$moment(d).format('YYYY-MM-DD HH:mm:ss'),
@@ -542,7 +541,7 @@ export default {
       const params = {
         handlingStatus: '0'
       };
-      alarmEvent.query(params).then(res => {
+      alarmEvent.queryList(params).then(res => {
         if (res.code === 200) {
           this.reportList = this.formatReportListByDay(res.data);
           if (!this.cycle) return;
@@ -579,7 +578,7 @@ export default {
     },
     change() {
       const params = {handlingStatus: '0'};
-      alarmEvent.query(params).then(res => {
+      alarmEvent.queryList(params).then(res => {
         if (res.code === 200) {
           this.reportList = this.formatReportListByDay(res.data);
         }
