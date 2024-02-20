@@ -31,7 +31,7 @@
           </el-row>
           <el-row :gutter="10">
             <el-col :span="8">
-              <el-form-item label="设备类型模板">
+              <el-form-item label="设备类型模板" prop="templateId">
                 <el-select placeholder="请先选择设备类型"
                            v-model="form.templateId"
                            @change="setTempData"
@@ -336,6 +336,9 @@ export default {
         ],
         orgId: [
           {required: true, message: '请选择所属单位', trigger: 'change'}
+        ],
+        templateId: [
+          {required: true, message: '请选择模板', trigger: 'change'}
         ],
         departmentId: [
           {required: true, message: '请选择所属科室', trigger: 'change'}
