@@ -58,8 +58,9 @@ $labelWidth: 180px;
           </el-col>
           <el-col :span="7">
             <el-form-item label="冷链标签" :prop="`sensorList.${index}.sensorId`">
-              <el-select :remote-method="queryProbeList" @focus="queryProbeList('')" filterable clearable
-                         placeholder="请输入名称搜索冷链标签" remote v-model="sensor.sensorId">
+              <el-select v-model="sensor.sensorId"
+                         filterable clearable
+                         placeholder="请输入名称搜索冷链标签" >
                 <el-option v-for="(item,i) in probeList" :key="i" :label="item.name" :value="item.id"
                 ></el-option>
               </el-select>
@@ -121,8 +122,7 @@ export default {
       },
       actionType: '添加',
       coolList: [],
-      probeList: [],
-      editProbeList: []
+      probeList: []
     };
   },
   computed: {
@@ -132,24 +132,17 @@ export default {
   },
   watch: {
     index: function (val) {
+      if (val !== 0) {
+        return;
+      }
+
       this.coolList = [];
       this.probeList = [];
-      if (val !== 0) return;
-      this.$refs['tempForm'].resetFields();
       this.form.devIds = [];
-      this.editProbeList = [];
+      this.$refs['tempForm'].resetFields();
+
       if (this.formItem.id) {
         this.actionType = '编辑';
-
-        this.probeList = this.formItem.sensorDataList.map(i => ({
-          id: i.id,
-          name: i.name
-        }));
-
-        this.editProbeList = this.formItem.sensorDataList.map(i => ({
-          id: i.id,
-          name: i.name
-        }));
 
         this.coolList = [
           {
@@ -165,11 +158,11 @@ export default {
         }
 
         let formData = JSON.parse(JSON.stringify(this.formItem));
-        if (formData.sensorDataList.length){
+        if (formData.sensorDataList.length) {
           formData.sensorList = formData.sensorDataList.map(i => ({
             sensorId: i.id,
             temperatureType: i.temperatureType,
-            areaId: i.areaId ,
+            areaId: i.areaId,
             areaName: i.areaName,
             monitorTargetId: this.formItem.monitorTargetId,
             monitorTargetName: this.formItem.monitorTargetName,
@@ -188,6 +181,8 @@ export default {
         this.actionType = '添加';
         this.addSensor();
       }
+
+      this.querySensorList('');
     }
   },
   methods: {
@@ -203,25 +198,19 @@ export default {
       this.form.sensorList = [];
       this.addSensor();
     },
-    queryProbeList(query) {
-      if (this.type === 2 && !this.form.orgId) return;
-      if (!this.form.monitorTargetId) {
-        return this.$notify.info({message: '请选择冷链设备'});
+    querySensorList(query) {
+      if (this.type === 2 && !this.form.orgId) {
+        return;
       }
+
       let params = {
         keyWord: query,
-        orgId: this.form.orgId || this.$store.state.user.userCompanyAddress,
-        freezerDevId: this.form.monitorTargetId
+        orgId: this.form.orgId || this.$store.state.user.userCompanyAddress || '',
+        freezerDevId: this.form.monitorTargetId || ''
       };
-      this.$http.post('/sensor/page-without-monitor', params).then(res => {
-        this.editProbeList.forEach(i => {
-          if (i.id && !res.data.list.find(f => f.id === i.id)) {
-            let item = this.editProbeList.find(f => f.id === i.id);
-            if (!item) return;
-            res.data.list.push(item);
-          }
-        });
-        this.probeList = res.data.list;
+
+      this.$http.post('/sensor/without-monitor', params).then(res => {
+        this.probeList = res.data || [];
       });
     },
     addSensor() {
@@ -232,7 +221,7 @@ export default {
         orgName: this.formItem.orgName,
         sensorId: '',
         temperatureType: '',
-        areaId: '' ,
+        areaId: '',
         areaName: '',
         isOpen: 0,
         // 手动添加的可以删除

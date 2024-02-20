@@ -49,6 +49,10 @@
           <el-icon name="location-information" style="color: #d8001b"/>
           <span>异常数：{{ statistics.abnormal }}</span>
         </div>
+        <div>
+          <el-icon name="location-information" style="color: #bfc24b"/>
+          <span>故障数：{{ statistics.faultCount}}</span>
+        </div>
       </div>
     </el-form>
 
@@ -80,7 +84,8 @@ export default {
         total: 0,
         opened: 0,
         closed: 0,
-        abnormal: 0
+        abnormal: 0,
+        faultCount: 0,
       },
       map: {
         id: null,
@@ -172,7 +177,7 @@ export default {
         callback && callback();
       });
     },
-    query() {
+    queryDevicePosition(){
       queryDevicePosition({
         ...this.search
       }).then(res => {
@@ -203,6 +208,10 @@ export default {
           });
         });
       });
+    },
+    query() {
+      this.queryDevicePosition();
+      this.queryDeviceCountByFloor()
     },
     covertState(status) {
       switch (status) {
@@ -247,6 +256,19 @@ export default {
         this.statistics.opened = res.data?.onlineCount || 0;
         this.statistics.closed = res.data?.offlineCount || 0;
         this.statistics.abnormal = res.data?.alarmCount || 0;
+        this.statistics.faultCount = res.data?.faultCount || 0;
+      });
+    },
+    queryDeviceCountByFloor() {
+      queryDeviceCountByFloor({
+        floorId: this.search.storeyId,
+        deviceId: this.search.deviceId,
+      }).then(res => {
+        this.statistics.total = res.data?.totalCount || 0;
+        this.statistics.opened = res.data?.onlineCount || 0;
+        this.statistics.closed = res.data?.offlineCount || 0;
+        this.statistics.abnormal = res.data?.alarmCount || 0;
+        this.statistics.faultCount = res.data?.faultCount || 0;
       });
     },
     indoorToolbar(event) {

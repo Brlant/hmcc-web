@@ -17,6 +17,15 @@
             </el-input>
           </el-form-item>
           <el-form-item>
+            <el-select
+              v-model="queryParams.status"
+              placeholder="状态"
+              clearable>
+              <el-option label="启用" value="0"/>
+              <el-option label="停用" value="1"/>
+            </el-select>
+          </el-form-item>
+          <el-form-item>
             <el-button type="primary" icon="el-icon-search" @click="search">搜索</el-button>
             <el-button icon="el-icon-refresh" @click="reset">重置</el-button>
           </el-form-item>
@@ -36,12 +45,30 @@
           <span>{{ row.buildFloorName }},{{ row.centerFloorName }}</span>
         </template>
       </el-table-column>
+      <el-table-column label="状态" prop="status" align="center">
+        <template v-slot="{row}">
+          <span v-if="row.status ==='0'">启用</span>
+          <span v-else>停用</span>
+        </template>
+      </el-table-column>
       <el-table-column label="操作" prop="" align="center">
         <template v-slot="{row}">
-          <el-button type="primary" icon="el-icon-edit" v-has="'system-depart-manager-edit'" size="mini"
-                     @click="detailEdit(row)" circle></el-button>
-          <el-button type="danger" icon="el-icon-delete" v-has="'system-depart-manager-delete'" size="mini"
-                     @click="remove(row)" circle></el-button>
+          <!--<el-button type="primary" icon="el-icon-edit" v-has="'system-depart-manager-edit'" size="mini"-->
+          <!--           @click="detailEdit(row)" circle></el-button>-->
+          <!--<el-button type="danger" icon="el-icon-delete" v-has="'system-depart-manager-delete'" size="mini"-->
+          <!--           @click="remove(row)" circle></el-button>-->
+          <a v-has="'system-setting-account-manager-edit'" href="#" @click.stop.prevent="detailEdit(row)"><i
+            class="el-icon-t-edit"></i>编辑</a>
+          <oms-forbid v-has="'system-depart-manager-enabled'"
+                      :item="row" @forbided="forbid" :tips='"确认停用科室\""+row.departmentName+"\"?"'
+                      v-show="row.status === '0'">
+            <i class="el-icon-t-forbidden"></i>停用
+          </oms-forbid>
+          <oms-forbid v-has="'system-depart-manager-disabled'"
+                      :item="row" @forbided="enabled" :tips='"确认启用科室\""+row.departmentName+"\"?"'
+                      v-show="row.status === '1'">
+            <i class="el-icon-t-start"></i>启用
+          </oms-forbid>
         </template>
       </el-table-column>
     </el-table>
@@ -62,7 +89,7 @@
 </template>
 
 <script>
-import {departmentApi} from '@/resources';
+import {departmentApi, User} from '@/resources';
 import commonMixin from '@/mixins/commonMixin'
 import editForm from './form';
 
@@ -97,20 +124,17 @@ export default {
   },
   methods: {
     //查询列表
-    async queryList(pageNo) {
-      try {
-        let params = {
-          page: pageNo,
-          size: this.pager.pageSize,
-          departmentName: this.queryParams.departmentName
-        }
-        departmentApi.getDeptQueryList(params).then(res => {
-          this.pager.count = res.data.total;
-          this.departList = res.data.list;
-        })
-      } catch (error) {
-        // console.log(error)
+    queryList(pageNo = 1) {
+      let params = {
+        ...this.queryParams,
+        page: pageNo,
+        size: this.pager.pageSize
       }
+
+      departmentApi.getDeptQueryList(params).then(res => {
+        this.pager.count = res.data.total;
+        this.departList = res.data.list;
+      })
     },
     /*添加科室*/
     addDepart() {
@@ -161,7 +185,33 @@ export default {
       this.addEditVisible = false;
       this.titleDetail = '添加科室';
       this.queryList(1);
-    }
+    },
+    forbid: function (item) {
+      let params = {
+        id: item.id,
+        status: '1'
+      };
+      departmentApi.enableDepartment(params).then(() => {
+        this.$notify.success({
+          title: '成功',
+          message: '已经停用科室"' + item.departmentName + '"'
+        });
+        this.queryList(1);
+      });
+    },
+    enabled: function (item) {
+      let params = {
+        id: item.id,
+        status: '1'
+      };
+      departmentApi.enableDepartment(params).then(() => {
+        this.queryList(1);
+        this.$notify.success({
+          title: '成功',
+          message: '已成功启用科室"' + item.departmentName + '"'
+        });
+      });
+    },
   }
 }
 </script>

@@ -42,7 +42,7 @@
       <el-button v-if="!edit" @click="visible = false">关闭</el-button>
       <template v-else>
         <el-button type="info" @click="visible = false">取消</el-button>
-        <el-button type="primary" @click="submit">提交</el-button>
+        <el-button :loading="loading" type="primary" @click="submit">提交</el-button>
       </template>
     </template>
   </el-dialog>
@@ -134,7 +134,8 @@
         floors: [],
         storeys: [],
         products: [],
-        points: []
+        points: [],
+        loading: false
       };
     },
     computed: {
@@ -238,6 +239,7 @@
       },
       async submit() {
         try {
+          this.loading = true;
           await this.$refs.form.validate();
           if (this.model.id) {
             await modifyBaseStation(this.model);
@@ -249,6 +251,8 @@
           this.visible = false;
         } catch (error) {
           console.error(error);
+        } finally {
+          this.loading = false;
         }
       }
     }

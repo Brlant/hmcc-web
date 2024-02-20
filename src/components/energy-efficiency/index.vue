@@ -2,15 +2,23 @@
   <div class="dashboard">
     <!--科室筛选-->
     <div class="warning-list-part bar-part">
-      <div style="display: flex;justify-content: space-between;">
-        <el-select v-model="listParams.departmentId" placeholder="请选择科室" clearable @change="deptChangeHandler">
-          <el-option v-for="(item,index) in departmentList"
-                     :key="index"
-                     :value="item.id"
-                     :label="item.departmentName"
-          />
-        </el-select>
-      </div>
+      <el-row :gutter="10">
+        <el-col :span="2">
+          <el-select v-model="listParams.departmentId" placeholder="请选择科室" clearable @change="deptChangeHandler">
+            <el-option v-for="(item,index) in departmentList"
+                       :key="index"
+                       :value="item.id"
+                       :label="item.departmentName"
+            />
+          </el-select>
+        </el-col>
+        <el-col :span="4">
+          <el-input v-model="listParams.keyWord" placeholder="请输入设备编号/名称" clearable @keyup.enter.native="search"/>
+        </el-col>
+        <el-col :span="1">
+          <el-button type="primary" icon="el-icon-search" @click="search">搜索</el-button>
+        </el-col>
+      </el-row>
     </div>
 
     <div class="warning-list-part bar-part" style="margin-top: 45px;">
@@ -55,7 +63,7 @@
     </div>
 
     <div style="padding: 20px">
-      <el-row v-if="devMonitorList.length > 0" :gutter="100">
+      <el-row v-if="devMonitorList.length > 0" :gutter="80">
         <el-col :xs="24" :sm="12" :md="8" :lg="6" :xl="4"
                 v-for="(item,index) in devMonitorList" :key="index">
           <div class="dev-monitor" @click="handleDevMonitorClick(item)">
@@ -126,6 +134,10 @@ export default {
   },
   methods: {
     deptChangeHandler() {
+      this.queryList(1);
+      this.getDevCount();
+    },
+    search() {
       this.queryList(1);
       this.getDevCount();
     },
