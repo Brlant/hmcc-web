@@ -120,8 +120,7 @@
       <!--新增标签-->
       <form-label :titleDetail="titleDetail"
                   :detailForm="detailForm"
-                  :addEditVisible="addEditVisible"
-                  :edit="edit"
+                  :index="showIndex"
                   @closeDetail="closeDetail"></form-label>
     </page-right>
   </div>
@@ -144,7 +143,6 @@ export default {
       edit: false,
       showSearch: true,
       titleDetail: '添加标签',
-      addEditVisible: false,
       //详情信息
       detailForm: {},
       queryParams: {
@@ -218,10 +216,9 @@ export default {
     detail(row) {
       labelTagList.detailTagLabel({id: row.id}).then(res => {
         if (res.code === 200) {
-          this.addEditVisible = true;
           this.detailForm = res.data;
           this.edit = false;
-          this.showIndex = 0;
+          this.showIndex = 2;
         }
         // console.log(res)
       }).catch(err => {
@@ -232,11 +229,9 @@ export default {
       labelTagList.detailTagLabel({id: row.id}).then(res => {
         if (res.code === 200) {
           this.titleDetail = '编辑标签'
-          this.addEditVisible = true;
           this.detailForm = res.data;
-          // console.log(this.detailForm, '参数')
           this.edit = true;
-          this.showIndex = 0;
+          this.showIndex = 1;
         }
         // console.log(res)
       }).catch(err => {
@@ -332,8 +327,8 @@ export default {
     /* 添加标签 */
     addLabel() {
       this.titleDetail = '添加标签'
-      this.addEditVisible = true;
-      this.edit = true;
+      this.edit = false;
+      this.showIndex = 0;
     },
     /* 关闭弹框 */
     closeDetail() {

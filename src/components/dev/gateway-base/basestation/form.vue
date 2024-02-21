@@ -17,7 +17,7 @@
         <el-input v-model="model.stationName" maxlength="20" placeholder="基站名称"/>
       </el-form-item>
       <el-form-item label="标签SN号" prop="tagSn">
-        <el-input v-model="model.tagSn" maxlength="20" placeholder="标签SN号" :disabled="edit"/>
+        <el-input v-model="model.tagSn" maxlength="20" placeholder="标签SN号" :disabled="index === 1"/>
       </el-form-item>
       <el-form-item label="MAC地址" prop="macAddr">
         <el-input v-model="model.macAddr" maxlength="12" placeholder="MAC地址"/>
@@ -124,7 +124,11 @@
       },
       edit: Boolean,
       form: Object,
-      title:''
+      title:'',
+      index: {
+        type: Number,
+        default: 0
+      }
     },
     name: 'BaseStationForm',
     data() {

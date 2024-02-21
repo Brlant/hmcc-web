@@ -2,7 +2,7 @@
   <dialog-template :btnSavePosition="100">
     <template slot="title">{{ titleDetail }}</template>
     <template slot="btnSave">
-      <el-button v-if="!edit" @click="closeDetail">关闭</el-button>
+      <el-button v-if="index==2" @click="closeDetail">关闭</el-button>
       <template v-else>
         <el-button type="primary" @click="submit" :loading="doing">提交</el-button>
         <el-button @click="closeDetail">返回</el-button>
@@ -46,7 +46,7 @@
         </el-form-item>
         <el-form-item label="标签SN号" prop="tagSnNumber">
           <el-input v-model="formData.tagSnNumber" maxlength="20" show-word-limit placeholder="请输入标签SN号"
-                    @change="handleTagSnNumberMacAddress($event,1)" :disabled="edit"></el-input>
+                    @change="handleTagSnNumberMacAddress($event,1)" :disabled="index===1"></el-input>
         </el-form-item>
         <el-form-item label="MAC地址" prop="macAddress">
           <el-input v-model="formData.macAddress" maxlength="12" show-word-limit placeholder="请输入MAC地址"
@@ -61,6 +61,7 @@
 import {sinopharmDictDataType} from '@/api/system/dict/data'
 import labelTagList from '@/api/label/label'
 import methodsMixin from '@/mixins/methodsMixin';
+
 export default {
   name: 'formLabel',
   mixins: [methodsMixin],
@@ -68,13 +69,11 @@ export default {
     titleDetail: {
       type: String,
     },
-    addEditVisible: {
-      type: Boolean,
-    },
     detailForm: {
       type: Object
     },
     edit: Boolean,
+    index: Number,
   },
   watch: {
     detailForm: {
