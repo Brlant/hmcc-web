@@ -151,7 +151,7 @@
             </el-col>
             <el-col :span="12">
               <el-form-item label="工作状态" prop="workStatus">
-                <el-input placeholder="请输入数字" type="number" v-model.number="form.workStatus">
+                <el-input placeholder="请输入数字" type="number" v-model.number="form.workStatus" disabled>
                   <template slot="prepend">大于</template>
                   <template slot="append">mA</template>
                 </el-input>
@@ -463,8 +463,8 @@ export default {
     'form.idleStateRangeEnd': function (val) {
       this.form.standbyStatusRangeStart = this.form.idleStateRangeEnd;
     },
-    'form.standbyStatusRangeEnd': function (val) {
-      this.form.workStatus = this.form.standbyStatusRangeEnd;
+    'form.shutdownStatusEnd': function (val) {
+      this.form.workStatus = val;
     },
   },
   methods: {
@@ -584,6 +584,9 @@ export default {
       this.form.medicalFlag = template.devMedicalFlag;
       this.form.remark = template.remark;
       this.form.doorSheetType = template.doorSheetType;
+      this.form.shutdownStatusStart = template.shutdownStatusStart || 0;
+      this.form.shutdownStatusEnd = template.shutdownStatusEnd;
+      this.form.workStatus = template.workStatus || 0;
     },
     checkTag(id, type, cb) {
       let deviceId = this.form.id
