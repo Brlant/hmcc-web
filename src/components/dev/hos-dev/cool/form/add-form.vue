@@ -419,7 +419,6 @@ export default {
           this.form.shutdownStatusStart = 0;
         }
 
-        console.log(this.form.shutdownStatusStart)
         this.actionType = '编辑冷链设备';
         this.getTempList();
 

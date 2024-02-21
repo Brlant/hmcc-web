@@ -1,66 +1,69 @@
 <template>
-  <el-dialog :title="titleDetail" :visible="addEditVisible" width="450px" :close-on-click-modal="false"
-             :before-close="closeDetail">
-    <el-form :model="formData" ref="form" :rules="rules" :disabled="!edit">
-      <el-form-item label="产品类型" prop="productType" label-width="80px">
-        <el-select v-model="formData.productType"
-                   placeholder="请选择产品类型"
-                   remote
-                   filterable
-                   :remote-method="getProductTypeList"
-                   @clear="clearProductTypeList"
-                   clearable>
-          <el-option
-            v-for="(item,index) in productTypeList"
-            :key="index"
-            :label="item.productName"
-            :value="item.productKey"
-          />
-          <!--&lt;!&ndash;          如果productTypeList循环对比的值是空值，需要在el-option中添加 :label="productName" &ndash;&gt;-->
-          <!--          <el-option v-if="!productTypeList.some(list=> list.productKey === formData.productType)"-->
-          <!--                     :value="formData.productType"-->
-          <!--                     :label="productNameKey"-->
-          <!--          ></el-option>-->
-        </el-select>
-      </el-form-item>
-      <el-form-item label="标签类型" prop="tagType" label-width="80px">
-        <el-select v-model="formData.tagType" placeholder="请选择产品类型" clearable>
-          <el-option
-            v-for="(item,index) in labelTypeList"
-            :key="index"
-            :label="item.label"
-            :value="item.key"
-          />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="标签名称" prop="tagName" label-width="80px">
-        <el-input v-model="formData.tagName" maxlength="20" show-word-limit placeholder="请输入标签名称"></el-input>
-      </el-form-item>
-      <el-form-item label="标签SN号" prop="tagSnNumber" label-width="80px">
-        <el-input v-model="formData.tagSnNumber" maxlength="20" show-word-limit placeholder="请输入标签SN号"
-                  @change="handleTagSnNumberMacAddress($event,1)"></el-input>
-      </el-form-item>
-      <el-form-item label="MAC地址" prop="macAddress" label-width="80px">
-        <el-input v-model="formData.macAddress" maxlength="12" show-word-limit placeholder="请输入MAC地址"
-                  @change="handleTagSnNumberMacAddress($event,2)"></el-input>
-      </el-form-item>
-    </el-form>
-    <div slot="footer">
+  <dialog-template :btnSavePosition="100">
+    <template slot="title">{{ titleDetail }}</template>
+    <template slot="btnSave">
       <el-button v-if="!edit" @click="closeDetail">关闭</el-button>
       <template v-else>
-        <el-button type="primary" @click="submit">提交</el-button>
+        <el-button type="primary" @click="submit" :loading="doing">提交</el-button>
         <el-button @click="closeDetail">返回</el-button>
       </template>
-    </div>
-  </el-dialog>
+    </template>
+    <template slot="content">
+      <el-form :model="formData" ref="form" :rules="rules" :disabled="!edit" label-width="140px">
+        <el-form-item label="产品类型" prop="productType">
+          <el-select v-model="formData.productType"
+                     placeholder="请选择产品类型"
+                     remote
+                     filterable
+                     :remote-method="getProductTypeList"
+                     @clear="clearProductTypeList"
+                     clearable>
+            <el-option
+              v-for="(item,index) in productTypeList"
+              :key="index"
+              :label="item.productName"
+              :value="item.productKey"
+            />
+            <!--&lt;!&ndash;          如果productTypeList循环对比的值是空值，需要在el-option中添加 :label="productName" &ndash;&gt;-->
+            <!--          <el-option v-if="!productTypeList.some(list=> list.productKey === formData.productType)"-->
+            <!--                     :value="formData.productType"-->
+            <!--                     :label="productNameKey"-->
+            <!--          ></el-option>-->
+          </el-select>
+        </el-form-item>
+        <el-form-item label="标签类型" prop="tagType">
+          <el-select v-model="formData.tagType" placeholder="请选择产品类型" clearable>
+            <el-option
+              v-for="(item,index) in labelTypeList"
+              :key="index"
+              :label="item.label"
+              :value="item.key"
+            />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="标签名称" prop="tagName">
+          <el-input v-model="formData.tagName" maxlength="20" show-word-limit placeholder="请输入标签名称"></el-input>
+        </el-form-item>
+        <el-form-item label="标签SN号" prop="tagSnNumber">
+          <el-input v-model="formData.tagSnNumber" maxlength="20" show-word-limit placeholder="请输入标签SN号"
+                    @change="handleTagSnNumberMacAddress($event,1)" :disabled="edit"></el-input>
+        </el-form-item>
+        <el-form-item label="MAC地址" prop="macAddress">
+          <el-input v-model="formData.macAddress" maxlength="12" show-word-limit placeholder="请输入MAC地址"
+                    @change="handleTagSnNumberMacAddress($event,2)"></el-input>
+        </el-form-item>
+      </el-form>
+    </template>
+  </dialog-template>
 </template>
 
 <script>
 import {sinopharmDictDataType} from '@/api/system/dict/data'
 import labelTagList from '@/api/label/label'
-
+import methodsMixin from '@/mixins/methodsMixin';
 export default {
   name: 'formLabel',
+  mixins: [methodsMixin],
   props: {
     titleDetail: {
       type: String,
@@ -88,6 +91,7 @@ export default {
   },
   data() {
     return {
+      doing: false,
       tagSnNumberMacError: '',
       formData: {
         id: '',
@@ -214,13 +218,6 @@ export default {
       })
     },
     closeDetail() {
-      this.formData = {
-        productType: '',
-        tagType: "",
-        tagName: "",
-        tagSnNumber: "",
-        macAddress: ""
-      }
       this.$refs.form.resetFields();
       this.$emit('closeDetail')
     },
@@ -262,44 +259,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.el-form .el-form-item ::v-deep .el-form-item__content {
-  .el-select {
-    width: 100%;
 
-    .el-input.is-disabled .el-input__suffix .el-select__caret {
-      cursor: default;
-    }
-  }
-
-  input[disabled], .el-radio .el-radio__label {
-    cursor: default;
-    color: #606266;
-    background-color: #ffffff;
-  }
-
-  .el-input-number.is-disabled {
-
-    > span {
-      cursor: default;
-    }
-  }
-
-  .el-radio .el-radio__input.is-disabled {
-
-    cursor: default;
-    color: #606266;
-    background-color: #ffffff;
-
-    .el-radio__inner {
-      cursor: default;
-      color: #606266;
-      background-color: #ffffff;
-
-      &:after {
-        cursor: default;
-        background-color: #606266;
-      }
-    }
-  }
-}
 </style>
