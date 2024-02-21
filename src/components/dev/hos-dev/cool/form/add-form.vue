@@ -578,12 +578,12 @@ export default {
     },
     setTempData(templateId) {
       let template = this.tempList.find(i => i.templateId == templateId);
-      this.form = Object.assign({}, this.form, template)
       this.form.brand = template.devBrand;
       this.form.version = template.devVersion;
       this.form.volume = template.devVolume;
       this.form.medicalFlag = template.devMedicalFlag;
-      // this.form.startUsingTime = template.devStartUsingTime;
+      this.form.remark = template.remark;
+      this.form.doorSheetType = template.doorSheetType;
     },
     checkTag(id, type, cb) {
       let deviceId = this.form.id

@@ -33,36 +33,6 @@
           </el-row>
           <el-row :gutter="10" v-show="form.templateType === '1'">
             <el-col :span="8">
-              <el-form-item label="注册证号/备案凭证号" prop="registrationCertificateNumber">
-                <oms-input placeholder="请输入注册证号/备案凭证号" v-model="form.registrationCertificateNumber"/>
-              </el-form-item>
-            </el-col>
-            <el-col :span="8">
-              <el-form-item label="供应商" prop="supplier">
-                <oms-input placeholder="请输入供应商" type="input" v-model="form.supplier"/>
-              </el-form-item>
-            </el-col>
-            <el-col :span="8">
-              <el-form-item label="生产厂商" prop="manufacturer">
-                <oms-input placeholder="请输入生产厂商" type="input" v-model="form.manufacturer"/>
-              </el-form-item>
-            </el-col>
-          </el-row>
-          <el-row :gutter="10" v-show="form.templateType === '1'">
-            <el-col :span="8">
-              <el-form-item label="厂商备案凭证号" prop="manufacturerRegistrationNumber">
-                <oms-input placeholder="请输入厂商备案凭证号" v-model="form.manufacturerRegistrationNumber"/>
-              </el-form-item>
-            </el-col>
-            <el-col :span="8">
-              <el-form-item label="生产许可证号" prop="productionLicenseNumber">
-                <oms-input placeholder="请输入厂商备案凭证号" v-model="form.productionLicenseNumber"/>
-              </el-form-item>
-            </el-col>
-          </el-row>
-
-          <el-row :gutter="10" v-show="form.templateType === '2'">
-            <el-col :span="8">
               <el-form-item label="是否医用设备">
                 <el-radio-group v-model="form.medicalFlag">
                   <el-radio :label="item.key" v-for="item in medicalDevType" :key="item.key">{{ item.label }}</el-radio>
@@ -80,7 +50,7 @@
               </el-form-item>
             </el-col>
           </el-row>
-          <el-row :gutter="10" v-show="form.templateType === '2'">
+          <el-row :gutter="10" v-show="form.templateType === '1'">
             <el-col :span="8">
               <el-form-item label="门板类型">
                 <el-radio-group v-model="form.doorSheetType">
@@ -96,6 +66,36 @@
             <el-col :span="8">
               <el-form-item label="型号">
                 <oms-input placeholder="请输入型号" v-model="form.version"/>
+              </el-form-item>
+            </el-col>
+          </el-row>
+
+          <el-row :gutter="10" v-show="form.templateType === '2'">
+            <el-col :span="8">
+              <el-form-item label="注册证号/备案凭证号" prop="registrationCertificateNumber">
+                <oms-input placeholder="请输入注册证号/备案凭证号" v-model="form.registrationCertificateNumber"/>
+              </el-form-item>
+            </el-col>
+            <el-col :span="8">
+              <el-form-item label="供应商" prop="supplier">
+                <oms-input placeholder="请输入供应商" type="input" v-model="form.supplier"/>
+              </el-form-item>
+            </el-col>
+            <el-col :span="8">
+              <el-form-item label="生产厂商" prop="manufacturer">
+                <oms-input placeholder="请输入生产厂商" type="input" v-model="form.manufacturer"/>
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <el-row :gutter="10" v-show="form.templateType === '2'">
+            <el-col :span="8">
+              <el-form-item label="厂商备案凭证号" prop="manufacturerRegistrationNumber">
+                <oms-input placeholder="请输入厂商备案凭证号" v-model="form.manufacturerRegistrationNumber"/>
+              </el-form-item>
+            </el-col>
+            <el-col :span="8">
+              <el-form-item label="生产许可证号" prop="productionLicenseNumber">
+                <oms-input placeholder="请输入厂商备案凭证号" v-model="form.productionLicenseNumber"/>
               </el-form-item>
             </el-col>
           </el-row>

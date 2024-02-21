@@ -34,6 +34,11 @@
         <span>故障数</span>
         <span class="deviceStyleNumber">{{ totalNumberDevices.faultCount || 0 }}</span>
       </div>
+      <div class="vertical-line"></div>
+      <div class="deviceStyle">
+        <span>未知数</span>
+        <span class="deviceStyleNumber">{{ totalNumberDevices.otherCount || 0 }}</span>
+      </div>
     </div>
 
     <div class="order-list" style="margin-top: 20px">
@@ -48,8 +53,8 @@
         <el-col :span="2">启用时间</el-col>
         <el-col :span="2">运行状态</el-col>
         <!--<el-col :span="2">设备状态</el-col>-->
-        <el-col :span="3">最后位置</el-col>
-        <el-col :span="3">操作</el-col>
+        <el-col :span="4">最后位置</el-col>
+        <el-col :span="2">操作</el-col>
       </el-row>
       <el-row v-if="loading">
         <el-col :span="24">
@@ -88,22 +93,47 @@
               <span v-else-if="item.deviceStatus === 'OFFLINE'" style="color: #aaaaaa">关机</span>
               <span v-else-if="item.deviceStatus === 'ALARM'" style="color: #d8001b">异常</span>
               <span v-else-if="item.deviceStatus === 'FAILURE'" style="color: #bfc24b">故障</span>
-              <span v-else>--</span>
+              <span v-else>未知</span>
             </el-col>
             <!--<el-col :span="2">-->
             <!--  {{ formatDictLabel(item.status, statusList) }}-->
             <!--</el-col>-->
-            <el-col :span="3">
+            <el-col :span="4">
               {{ item.lastPositionStr }}
             </el-col>
-            <el-col :span="3" class="opera-btn">
-              <span @click.prevent.stop="devicesPosition(item)" class="des-btn">
-               <a href="#" class="btn-circle" @click.prevent="">
-                 <i :class="'el-icon-location-outline'"></i></a>
-                定位
-              </span>
-              <des-btn @click="edit(item)" icon="edit" v-has="permPage.editMedical">编辑</des-btn>
-              <des-btn @click="remove(item)" icon="delete" v-has="permPage.delMedical">删除</des-btn>
+            <el-col :span="2">
+              <!--<span @click.prevent.stop="devicesPosition(item)" class="des-btn">-->
+              <!-- <a href="#" class="btn-circle" @click.prevent="">-->
+              <!--   <i :class="'el-icon-location-outline'"></i></a>-->
+              <!--  定位-->
+              <!--</span>-->
+              <!--<des-btn @click="edit(item)" icon="edit" v-has="permPage.editMedical">编辑</des-btn>-->
+              <!--<des-btn @click="remove(item)" icon="delete" v-has="permPage.delMedical">删除</des-btn>-->
+
+              <el-button @click.prevent.stop="devicesPosition(item)"
+                         icon="el-icon-location-outline"
+                         circle
+                         size="small"
+                         :disabled="!item.lastPositionStr"
+                         title="定位"
+              ></el-button>
+
+              <el-button v-has="permPage.editMedical"
+                         type="primary"
+                         @click.prevent.stop="edit(item)"
+                         icon="el-icon-edit"
+                         circle
+                         size="small"
+                         title="编辑"
+              ></el-button>
+              <el-button v-has="permPage.delMedical"
+                         type="danger"
+                         @click.prevent.stop="remove(item)"
+                         icon="el-icon-delete"
+                         circle
+                         size="small"
+                         title="删除"
+              ></el-button>
             </el-col>
           </el-row>
           <!--<div class="order-list-item-bg"></div>-->
@@ -173,7 +203,8 @@ export default {
         totalCount: '',     // 设备总数
         onlineCount: '',    // 开机数
         offlineCount: '',   // 关机数
-        alarmCount: ''      // 异常数
+        alarmCount: '' ,     // 异常数
+        otherCount: ''      // 未知数
       },
     }
   },
@@ -262,6 +293,7 @@ export default {
         this.totalNumberDevices.offlineCount = res.data.offlineCount;
         this.totalNumberDevices.alarmCount = res.data.alarmCount;
         this.totalNumberDevices.faultCount = res.data.faultCount;
+        this.totalNumberDevices.otherCount = res.data.otherCount;
 
         this.loading = false;
       }).catch(err => {
