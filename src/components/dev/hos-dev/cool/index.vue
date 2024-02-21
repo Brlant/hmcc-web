@@ -63,7 +63,7 @@
               <span v-else-if="item.deviceStatus === 'OFFLINE'" style="color: #aaaaaa">关机</span>
               <span v-else-if="item.deviceStatus === 'ALARM'" style="color: #d8001b">异常</span>
               <span v-else-if="item.deviceStatus === 'FAILURE'" style="color: #bfc24b">故障</span>
-              <span v-else>--</span>
+              <span v-else>未知</span>
             </el-col>
             <el-col :span="2">
               {{ formatDictLabel(item.status, statusList) }}

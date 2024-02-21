@@ -34,6 +34,11 @@
         <span>故障数</span>
         <span class="deviceStyleNumber">{{ totalNumberDevices.faultCount || 0 }}</span>
       </div>
+      <div class="vertical-line"></div>
+      <div class="deviceStyle">
+        <span>未知数</span>
+        <span class="deviceStyleNumber">{{ totalNumberDevices.otherCount || 0 }}</span>
+      </div>
     </div>
 
     <div class="order-list" style="margin-top: 20px">
@@ -88,7 +93,7 @@
               <span v-else-if="item.deviceStatus === 'OFFLINE'" style="color: #aaaaaa">关机</span>
               <span v-else-if="item.deviceStatus === 'ALARM'" style="color: #d8001b">异常</span>
               <span v-else-if="item.deviceStatus === 'FAILURE'" style="color: #bfc24b">故障</span>
-              <span v-else>--</span>
+              <span v-else>未知</span>
             </el-col>
             <!--<el-col :span="2">-->
             <!--  {{ formatDictLabel(item.status, statusList) }}-->
@@ -173,7 +178,8 @@ export default {
         totalCount: '',     // 设备总数
         onlineCount: '',    // 开机数
         offlineCount: '',   // 关机数
-        alarmCount: ''      // 异常数
+        alarmCount: '' ,     // 异常数
+        otherCount: ''      // 未知数
       },
     }
   },
@@ -262,6 +268,7 @@ export default {
         this.totalNumberDevices.offlineCount = res.data.offlineCount;
         this.totalNumberDevices.alarmCount = res.data.alarmCount;
         this.totalNumberDevices.faultCount = res.data.faultCount;
+        this.totalNumberDevices.otherCount = res.data.otherCount;
 
         this.loading = false;
       }).catch(err => {
