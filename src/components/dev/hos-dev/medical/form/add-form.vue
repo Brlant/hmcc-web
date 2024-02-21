@@ -64,6 +64,7 @@
                              :key="item.id"
                              :label="item.departmentName"
                              :value="item.id"
+                             :disabled="item.status === '1'"
                   >
                   </el-option>
                 </el-select>
