@@ -333,7 +333,7 @@
           }
         }
         curr.color = 'blue';
-        console.log(nodes)
+        // console.log(nodes)
         this.mapRef.highlightTrajectory(nodes);
       }
     }

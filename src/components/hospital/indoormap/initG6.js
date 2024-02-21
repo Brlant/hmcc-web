@@ -69,7 +69,7 @@ G6.registerNode('position', {
   draw(cfg, group) {
     let fill = this.options.stateStyles[cfg.state]
       || this.options.stateStyles.default;
-    console.log(cfg, fill)
+    // console.log(cfg, fill)
     return group.addShape('text', {
       attrs: {
         ...this.options.style,
@@ -378,7 +378,7 @@ export default ({
         prev = item;
       });
       graph.getEdges().forEach(edge => {
-        console.log(edge)
+        // console.log(edge)
         let model = edge.getModel();
         if (edges.has(`${model.source}-${model.target}`)) {
           edge.update({
