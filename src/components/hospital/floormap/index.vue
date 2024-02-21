@@ -4,21 +4,112 @@
       <el-tree ref="floorTree" :data="floors" lazy :load="loadChildren" :props="treeProps" node-key="id" :default-expanded-keys="expandedKeys"
         :expand-on-click-node="false" highlight-current @current-change="currentChange"/>
     </el-col>
-    <el-col :span="20">
-      <IndoorMap :map="map" :storey="storey" :action="action" :headers="headers"
-        editable @upload-success="uploadSuccess" @upload-error="uploadError"/>
+    <el-col :span="20" style="border: 1px solid #e6ebf5; border-radius: 5px; overflow: hidden;">
+
+      <!-- 按钮 -->
+      <div class="indoor-button">
+        <el-button type="primary"
+          icon="el-icon-location-information"
+          :disabled="!img"
+          @click="markPoint">标点</el-button>
+        <oms-el-upload
+          accept="image/*"
+          :action="action"
+          :on-error="uploadError"
+          :on-success="uploadSuccess"
+          :show-file-list="false"
+          style="float: right;"
+        >
+          <el-button type="primary" class="el-upload"
+            slot="trigger"><i :style="iconStyle"/>上传地图</el-button>
+          <div slot="tip">地图上传将替换原有地图，原有标点将失效</div>
+        </oms-el-upload>
+      </div>
+
+      <div style="height: calc(100% - 66px)">
+        <IndoorMap ref="indoorMap" :img="img" :data="mapData" :nodeClick="nodeClick" :canvasClick="canvasClick"/>
+      </div>
     </el-col>
+
+    <!-- 表单 -->
+    <el-form :model="form" :class="editClass">
+      <el-form-item :label="detail ? '详情' : '标点'">
+        <el-button type="text" icon="el-icon-close" @click="closeFrom"></el-button>
+      </el-form-item>
+      <el-form-item v-if="storey" label="所在楼层：">
+        {{ storey.name }}
+      </el-form-item>
+      <el-form-item label="点位类型：">
+        <el-radio-group v-model="form.pointType" :disabled="form.id && detail">
+          <el-radio :label="0">定位点</el-radio>
+          <el-radio :label="1">途径点</el-radio>
+        </el-radio-group>
+      </el-form-item>
+      <el-form-item label="横轴坐标：" label-width="82px">
+        <el-input v-model.number="form.xPoint" readonly/>
+      </el-form-item>
+      <el-form-item label="纵轴坐标：" label-width="82px">
+        <el-input v-model.number="form.yPoint" readonly/>
+      </el-form-item>
+      <el-form-item label="标注区域（点位）名称：">
+        <el-input v-model="form.pointName" :readonly="form.id && detail" maxlength="10" placeholder="标注区域（点位）名称"/>
+      </el-form-item>
+      <el-form-item>
+        <template v-if="form.id && detail">
+          <el-button type="danger" @click="delPoint" style="float: left">删除</el-button>
+          <el-button type="primary" @click="detail = false">编辑</el-button>
+        </template>
+        <template v-else>
+          <el-button :type="relating ? 'info' : 'success'" @click="relateMark"
+            style="float: left">{{ relating ? '结束标注' : '关联标注'}}</el-button>
+          <el-button @click="closeFrom">取消</el-button>
+          <el-button type="primary" @click="savePoint">保存</el-button>
+        </template>
+      </el-form-item>
+    </el-form>
   </el-row>
 </template>
 
 <script>
   import { mapState } from 'vuex'
   import IndoorMap from '../indoormap/index';
-  import { createFloorPlat, findFloorPlat, queryFloorStructure } from '@/api/hospital/equipment';
+  import mapIcon from '@/assets/img/map_icon.png';
+  import {
+    createFloorPlat,
+    findFloorPlat,
+    queryFloorStructure,
+    createFloorPlatPoint,
+    modifyFloorPlatPoint,
+    deleteFloorPlatPoint
+  } from '@/api/hospital/equipment';
+  import OmsElUpload from '@/components/common/upload/upload/src/index.vue';
+
+  const loadTime = Date.now();
+  const tempNode = 'Temp_node';
+
+  const formModel = {
+    id: null,
+    platId: null,
+    xPoint: 0,
+    yPoint: 0,
+    pointType: 0,
+    pointName: null,
+    contactPoints: []
+  };
+
+  const nodes = [{
+    id: tempNode, // String，该节点存在则必须，节点的唯一标识
+    x: 0, // Number，节点位置的 x 值
+    y: 0, // Number，节点位置的 y 值
+    visible: false,
+    type: 'position',
+    state: 'default',
+    data: { ...formModel }
+  }];
 
   export default {
     name: 'FloorMap',
-    components: { IndoorMap },
+    components: { IndoorMap, OmsElUpload },
     data() {
       return {
         floors: [],
@@ -28,15 +119,27 @@
             return data.type !== 1;
           }
         },
-        map: {
-          id: null,
-          url: null,
-          points: null
+        img: null,
+        mapId: null,
+        mapData: {
+          nodes: []
         },
+        nodeId: null,
+        form: { ...formModel },
         storey: {
           id: null,
-          parentId: null,
+          pid: null,
           name: null
+        },
+        detail: true,
+        relating: false,
+        iconStyle: {
+          width: '16px',
+          height: '16px',
+          display: 'inline-block',
+          verticalAlign: 'top',
+          marginRight: '5px',
+          background: `url(${mapIcon}) center/100% 100%`
         },
         first: true,
         second: true,
@@ -50,11 +153,71 @@
         return {
           token: this.user.token
         };
+      },
+      editClass() {
+        if (this.form.xPoint && this.form.yPoint) {
+          return 'indoor-formedit opened';
+        } else {
+          return 'indoor-formedit closed';
+        }
+      },
+      mapRef() {
+        return this.$refs.indoorMap;
+      },
+      mapWidth() {
+        return this.mapRef.width;
+      },
+      mapHeight() {
+        return this.mapRef.height;
+      },
+      relationPoints() {
+        let strs = this.form.contactPoints?.map(id => `${id}`);
+        return Array.isArray(strs) ? strs: [];
+      }
+    },
+    watch: {
+      relationPoints(nval, oval) {
+        const narr = Array.isArray(nval);
+        const oarr = Array.isArray(oval);
+        if (narr) {
+          if (oarr) {
+            nval.filter(v => oval.indexOf(v) < 0).forEach(v => {
+              this.mapRef.updateState(v, 'lightblue');
+            });
+          } else {
+            nval.forEach(v => {
+              this.mapRef.updateState(v, 'lightblue');
+            });
+          }
+        }
+        if (oarr) {
+          if (narr) {
+            oval.filter(v => nval.indexOf(v) < 0).forEach(v => {
+              this.mapRef.updateState(v, 'blue');
+            });
+          } else {
+            oval.forEach(v => {
+              this.mapRef.updateState(v, 'blue');
+            });
+          }
+        }
       }
     },
     created() {
+      document.addEventListener('contextmenu', evt => {
+        if (this.findClass(evt.target, 'indoor-map')) {
+          evt.preventDefault();
+        }
+      });
     },
     methods: {
+      findClass(elm, cls) {
+        if (elm.nodeName.toLowerCase() === 'body') {
+          return false;
+        }
+        return elm.classList.contains(cls)
+          || this.findClass(elm.parentElement, cls);
+      },
       loadChildren(node, resolve) {
         queryFloorStructure({
           type: node.level > 0 ? 2 : 1,
@@ -91,48 +254,93 @@
         const data = node.data;
         const parent = node.parent.data;
         if (item.type !== 1) {
-
           findFloorPlat(data.id).then(res => {
             if (res.code !== 200) {
               return this.$message.error(res.msg || '服务端异常');
             }
-            this.map = {
-              id: res.data?.id,
-              url: res.data?.mapUrl,
-              points: res.data?.floorPlatPoint?.map(it => ({
-                id: `${it.id}`,
-                x: it.xPoint,
-                y: it.yPoint,
+            if (!res.data) {
+              return;
+            }
+            this.img = res.data.mapUrl;
+            this.mapId = res.data.id;
+            this.mapData.nodes = [ ...nodes ];
+            res.data.floorPlatPoint?.forEach(item => {
+              this.mapData.nodes.push({
+                id: `${item.id}`,
+                x: item.xPoint,
+                y: item.yPoint,
                 type: 'position',
                 state: 'blue',
-                form: {
-                  id: it.id,
-                  platId: it.platId,
-                  pointType: it.pointType,
-                  pointName: it.pointName,
-                  contactPoints: it.contactPoints
-                }
-              }))
-            }
+                data: { ...item }
+              });
+            });
           });
-
           this.storey = {
             id: data?.id,
-            parentId: parent?.id,
-            name: `${parent?.floorName}${data?.floorName}`
+            pid: parent?.id,
+            name: `${parent?.floorName}-${data?.floorName}`
           }
         } else {
-          this.map = {
-            id: null,
-            url: null,
-            points: null
-          };
+          this.img = null;
+          this.mapData.nodes = [];
           this.storey = {
             id: null,
-            parentId: null,
+            pid: null,
             name: null
           };
         }
+        this.closeFrom();
+      },
+      nodeClick(evt) {
+        const node = evt.item;
+        const model = node.getModel();
+        if (this.relating) {
+          this.relateNode(node, model);
+        } else {
+          this.modifyNode(node, model);
+        }
+      },
+      relateNode(node, model) {
+        let nodeId = node.get('id');
+        if (nodeId?.startsWith(tempNode)
+          || this.nodeId === nodeId) {
+          return;
+        }
+        this.form.contactPoints.push(model.data.id);
+      },
+      modifyNode(node, model) {
+        this.nodeId = node.get('id');
+        if (this.nodeId === tempNode) {
+          this.mapRef.addNode({
+            id: `${tempNode}_${loadTime - Date.now()}`,
+            x: model.x,
+            y: model.y,
+            type: 'position',
+            data: Object.assign({ ...model.data }, {
+              platId: this.mapId,
+              xPoint: (model.x / this.mapWidth).toFixed(4),
+              yPoint: (model.y / this.mapHeight).toFixed(4)
+            })
+          });
+        } else {
+          this.form = model.data;
+        }
+        node.toFront();
+      },
+      canvasClick() {
+        this.closeFrom();
+      },
+      closeFrom() {
+        this.form = { ...formModel };
+        this.detail = true;
+        this.relating = false;
+      },
+      markPoint() {
+        this.mapRef.changeVisibility(tempNode);
+      },
+      uploadError(err) {
+        console.error(err);
+        return this.$message.error('地图上传失败,请联系管理员');
       },
       uploadSuccess(res) {
         if (res.state !== 'SUCCESS') {
@@ -141,19 +349,65 @@
         createFloorPlat({
           mapUrl: res.attachmentId,
           storeyId: this.storey.id,
-          floorId: this.storey.parentId
+          floorId: this.storey.pid
         }).then(r => {
           if (r.code !== 200) {
             return this.$message.error(r.msg || '地图创建失败');
           }
-          this.map.url = res.url;
-          this.map.points = [];
+          this.img = res.url;
+          this.mapData.nodes = [ ...nodes ];
         });
       },
-      uploadError(err) {
-        console.error(err);
-        return this.$message.error('地图上传失败,请联系管理员');
+      relateMark() {
+        this.relating = !this.relating;
       },
+      async savePoint() {
+        let res;
+        try {
+          if (this.form.id) {
+            res = await modifyFloorPlatPoint(this.form);
+          } else {
+            res = await createFloorPlatPoint(this.form);
+          }
+          if (res.code !== 200) {
+            return this.$message.error(res.msg || '标点保存失败');
+          }
+          if (res.data) {
+            this.mapRef.removeItem(this.nodeId);
+            this.mapRef.addNode({
+              id: (this.nodeId = `${res.data.id}`),
+              x: this.mapWidth * res.data.xPoint,
+              y: this.mapHeight * res.data.yPoint,
+              ox: this.mapWidth * res.data.xPoint - this.mapWidth / 2,
+              oy: this.mapHeight * res.data.yPoint - this.mapHeight / 2,
+              type: 'position',
+              state: 'blue',
+              data: Object.assign(this.form, res.data)
+            });
+          }
+          this.$message.success('标点保存成功');
+        } catch (err) {
+          console.error(err);
+        }
+      },
+      delPoint() {
+        this.$confirm('确定删除该标点？', '删除', {
+          type: 'warning',
+          cancelButtonText: '取消',
+          confirmButtonText: '确定'
+        }).then(() => {
+          deleteFloorPlatPoint({
+            id: this.form.id
+          }).then(res => {
+            if (res.code !== 200) {
+              return this.$message.error(res.msg || '标点删除失败');
+            }
+            this.closeFrom();
+            this.mapRef.removeItem(this.nodeId);
+            this.$message.success('标点删除成功');
+          });
+        });
+      }
     }
   }
 </script>
@@ -166,6 +420,75 @@
 
     .el-col {
       height: 100%;
+
+      .indoor-button {
+        padding: 15px;
+
+        ::v-deep .el-upload {
+          float: right;
+          & + div {
+            float: left;
+            line-height: 36px;
+            margin-right: 10px;
+            color: #d8001b;
+          }
+        }
+      }
+    }
+
+    .indoor-formedit {
+      width: 350px;
+      position: absolute;
+      top: 81px;
+      right: 15px;
+      display: none;
+      background-color: #ffffff;
+      border: 1px solid #797979;
+      border-radius: 5px;
+      box-shadow: 0 0 3px 3px #797979;
+
+      .el-form-item {
+        padding: 0 15px;
+
+        &:first-child {
+          padding-right: 0;
+          border-top-left-radius: 3px;
+          border-top-right-radius: 3px;
+          background-color: #3765ff;
+
+          ::v-deep {
+
+            & > label {
+              color: #ffffff;
+              line-height: 40px;
+              font-size: 18px;
+            }
+
+            .el-button {
+              float: right;
+              padding: 0;
+              display: block;
+
+              & > i {
+                color: #ffffff;
+                font-size: 38px;
+              }
+            }
+          }
+        }
+
+        &:last-child {
+          text-align: right;
+        }
+      }
+
+      &.opened {
+        display: block;
+      }
+
+      &.closed {
+        display: none;
+      }
     }
   }
 </style>

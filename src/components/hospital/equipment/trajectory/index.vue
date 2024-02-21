@@ -42,14 +42,26 @@
       <el-radio-group v-model="floor" @input="floorInput" class="floor-tabs">
         <el-radio-button v-for="(item, index) in data" :key="index" :label="index">{{ item.floorName }}</el-radio-button>
       </el-radio-group>
-      <IndoorMap :map="map" style="border: none;"/>
+
+      <IndoorMap ref="indoorMap" :img="img" :data="mapData"/>
+
+      <el-timeline class="node-timeline">
+        <el-timeline-item v-for="(activity, index) in activities" v-if="activity.index > 0"
+          :key="index" :timestamp="activity.timestamp" hide-timestamp>
+          <template slot="dot">
+            <div :class="['node-timeline-dot', activity.color]">{{ activity.index }}</div>
+          </template>
+          <div style="padding-top: 7px; cursor: pointer;" @click="timelineClick(activity, index)">
+            <div>
+              {{ activity.content }}
+            </div>
+            <div style="color: #cfd3d5; padding-top: 5px; font-size: 13px;">
+              {{ activity.timestamp }}
+            </div>
+          </div>
+        </el-timeline-item>
+      </el-timeline>
     </div>
-
-
-
-<!--    <div style="height: calc(100% - 60px)">-->
-<!--      <IndoorMap :map="map" :storey="storey"/>-->
-<!--    </div>-->
   </div>
 </template>
 
@@ -63,23 +75,23 @@
     components: { IndoorMap },
     data() {
       return {
+        activities: [],
         search: {
-          startDate: null,
-          endDate: null,
+          startDate: '2024-02-20 00:00:00',
+          endDate: '2024-02-29 00:00:00',
           devType: null,
           deviceId: null,
           storeyId: null
         },
         devices: [],
-        deviceTypes:[],
+        coolDevs: [],
+        medicals: [],
         storeies: [],
         data: [],
         floor: null,
-        map: {
-          id: null,
-          url: null,
-          points: null,
-          edges: null
+        img: null,
+        mapData: {
+          nodes: []
         },
         pickerOptions: {
           start: '00:00',
@@ -100,10 +112,17 @@
           this.search.startDate = values[0];
           this.search.endDate = values[1];
         }
+      },
+      deviceTypes() {
+        return this.coolDevs.concat(this.medicals);
+      },
+      mapRef() {
+        return this.$refs.indoorMap;
       }
     },
     created() {
       this.getDeviceTypes();
+      this.getCoolDevType();
       queryFloorStructure({
         type: 1
       }).then(res => {
@@ -115,22 +134,33 @@
       });
     },
     methods: {
+      getCoolDevType() {
+        sinopharmDictDataType('coolDevType').then(res => {
+          this.coolDevs = res.data?.map(item => ({
+            key: `1-${item.key}`,
+            label: item.label
+          }));
+        });
+      },
       getDeviceTypes(){
         sinopharmDictDataType('device_type').then(res=>{
-          this.deviceTypes = res.data.map(item=>{
-            return {
-              key:item.key,
-              label:item.label
-            }
+          this.medicals = res.data?.map(item => ({
+            key: `2-${item.key}`,
+            label: item.label
+          }));
+          this.medicals.push({
+            key: '2-4',
+            label: '【主流程】医疗设备类型'
           })
         })
       },
-      typeChange(typeId) {
-        if (!typeId) {
+      typeChange(deviceType) {
+        if (!deviceType) {
           this.search.deviceId = null;
           return (this.devices = []);
         }
-        queryDeviceByType({ typeId }).then(res => {
+        const [deviceMode, typeId] = deviceType.split('-');
+        queryDeviceByType({ deviceMode, typeId }).then(res => {
           this.devices = res.data.map(item => ({
             value: item.id,
             label: item.devName
@@ -176,52 +206,135 @@
             edges: null
           });
         }
-        this.map.id = storey.id;
-        this.map.url = storey.mapUrl;
-        this.map.points = [];
-        this.map.edges = [];
+        this.img = storey.mapUrl;
+        this.activities = [];
+        this.mapData.nodes = [];
+        this.mapData.edges = [];
         const nodes = new Set();
         const edges = new Set();
         let prev;
+        let idx = 1, timeIdx = 1;
         this.data[val]?.locationPointLocusList?.forEach(item => {
-          if (prev) {
-            let leid = `${prev.nowPoint}-${item.nowPoint}`;
-            let reid = `${item.nowPoint}-${prev.nowPoint}`;
-            if (!edges.has(leid) && !edges.has(reid)) {
-              edges.add(leid);
-              edges.add(reid);
-              this.map.edges.push({
-                source: `${prev.nowPoint}`,
-                target: `${item.nowPoint}`,
-                style: {
-                  stroke: '#d8001b',
-                  lineWidth: 4
-                }
-              })
+          if (item.pointType === 0) {
+            this.activities.push({
+              id: `${item.nowPoint}`,
+              index: timeIdx++,
+              color: 'lightgray',
+              content: item.pointName,
+              timestamp: item.createdTime,
+            });
+          } else {
+            this.activities.push({
+              id: `${item.nowPoint}`,
+              color: 'lightgray',
+              content: item.pointName,
+              timestamp: item.createdTime,
+            });
+          }
+          if (prev && prev.nowPoint !== item.nowPoint) {
+            let edgeId = `${prev.nowPoint}-${item.nowPoint}`;
+            if (!edges.has(edgeId)) {
+              edges.add(edgeId);
+              if (item.pointType === 0) {
+                this.mapData.edges.push({
+                  source: `${prev.nowPoint}`,
+                  target: `${item.nowPoint}`,
+                  style: {
+                    stroke: '#aadef8',
+                    lineWidth: 4
+                  }
+                })
+              } else {
+                this.mapData.edges.push({
+                  source: `${prev.nowPoint}`,
+                  target: `${item.nowPoint}`,
+                  style: {
+                    stroke: '#aadef8',
+                    lineWidth: 4,
+                    endArrow: false
+                  }
+                })
+              }
             }
           }
-          // if (!nodes.has(item.beforePoint)) {
-          //   nodes.add(item.beforePoint);
-          //   this.map.points.push({
-          //     id: `${item.beforePoint}`,
-          //     x: item.beforePointX,
-          //     y: item.beforePointY,
-          //     type: 'solidpoint',
-          //     state: 'red'
-          //   });
-          // }
           if (!nodes.has(item.nowPoint)) {
             nodes.add(item.nowPoint);
-            this.map.points.push({
-              id: `${item.nowPoint}`,
-              x: item.nowPointX,
-              y: item.nowPointY,
-              type: 'solidpoint',
-              state: 'red'
-            });
+            if (item.pointType === 0) {
+              this.mapData.nodes.push({
+                id: `${item.nowPoint}`,
+                x: item.nowPointX,
+                y: item.nowPointY,
+                type: 'circle',
+                size: 25,
+                label: `${idx++}`,
+                style: {
+                  fill: '#aadef8',
+                  stroke: '#aadef8'
+                },
+                labelCfg: {
+                  position: 'center',
+                  style: {
+                    fill: '#ffffff'
+                  }
+                }
+              });
+            } else {
+              this.mapData.nodes.push({
+                id: `${item.nowPoint}`,
+                x: item.nowPointX,
+                y: item.nowPointY,
+                type: 'circle',
+                size: 3,
+                style: {
+                  fill: '#aadef8',
+                  stroke: '#aadef8'
+                }
+              });
+            }
           }
           prev = item;
         });
+      },
+      timelineClick(curr, index) {
+        let length = this.activities.length;
+        let item = null, nodes = [];
+        let flag = true;
+        if (length === index) {
+          nodes.push(this.activities[index]);
+          for (let i = index - 1; i > 0; i--) {
+            item = this.activities[i];
+            if (flag) {
+              nodes.push(item);
+              if (item.index > 0) {
+                flag = false;
+                item.color = 'blue';
+              }
+            } else {
+              if (item.index > 0) {
+                item.color = 'lightgray';
+              }
+            }
+          }
+        } else {
+          nodes.push(curr);
+          for (let i = 0; i < length; i++) {
+            item = this.activities[i];
+            if (i > index && flag) {
+              nodes.push(item);
+              if (item.index > 0) {
+                flag = false;
+                item.color = 'blue';
+              }
+            } else {
+              if (item.index > 0) {
+                item.color = 'lightgray';
+              }
+            }
+          }
+        }
+        curr.color = 'blue';
+        console.log(nodes)
+        this.mapRef.highlightTrajectory(nodes);
       }
     }
   }
@@ -253,6 +366,32 @@
         top: 15px;
         left: 15px;
         z-index: 1;
+      }
+
+      .node-timeline {
+        position: absolute;
+        left: 30px;
+        bottom: 30px;
+        max-height: 70%;
+        padding: 0 10px;
+        overflow-y: auto;
+
+        .node-timeline-dot {
+          width: 25px;
+          color: #ffffff;
+          border-radius: 13px;
+          margin-left: -8px;
+          text-align: center;
+          line-height: 25px;
+
+          &.blue {
+            background-color: #01a7f0;
+          }
+
+          &.lightgray {
+            background-color: #cfd3d5;
+          }
+        }
       }
     }
   }
