@@ -147,7 +147,7 @@ export default {
   data() {
     return {
       loading: false,
-      statusType: [],
+      statusType: {},
       filters: {
         // 设备编号和名称
         text: '',
