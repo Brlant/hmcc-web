@@ -69,6 +69,7 @@
     </div>
     <!-- 弹框 -->
     <structure-form :show.sync="show" :edit="edit" :form="form"
+                    :index="showIndex"
                     :title="formTitle"
                     @refresh="refresh"/>
   </div>
@@ -142,12 +143,14 @@ export default {
       this.show = true;
       this.edit = true;
       this.formTitle = '添加基站';
+      this.showIndex = 0;
     },
     detail(row) {
       this.form = row;
       this.show = true;
       this.edit = false;
       this.formTitle = '基站详情';
+      this.showIndex = 2;
     },
     modify(row, updateRow) {
       this.form = row;
@@ -155,6 +158,7 @@ export default {
       this.edit = true;
       this.formTitle = '修改基站';
       this.updateRow = updateRow;
+      this.showIndex = 1;
     },
     remove(row, updateRow) {
       this.updateRow = updateRow;
