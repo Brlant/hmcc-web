@@ -172,12 +172,14 @@
   <div class="dashboard">
     <div class="warning-list-part bar-part">
       <div style="display: flex;justify-content: space-between;">
-        <el-select v-model="departmentId" placeholder="全部" clearable @change="handleFloorChange($event)">
+        <el-select v-model="departmentId" placeholder="全部" clearable filterable @change="handleFloorChange($event)">
           <el-option v-for="(item,index) in deptList"
                      :key="index"
                      :value="item.id"
-                     :label="item.departmentName"
-          />
+                     :label="item.departmentName">
+            <span style="float: left">{{ item.departmentName }}</span>
+            <span style="float: right; color: #8492a6; font-size: 13px">{{ item.status === '1'?'停用':'启用' }}</span>
+          </el-option>
         </el-select>
         <div style="color:#d1d1d1;margin-top: 10px;">更新时间: {{ lastUpdateTime }}</div>
       </div>
@@ -648,7 +650,8 @@ export default {
           return {
             departmentName: item.departmentName,
             departmentPosition: item.departmentPosition,
-            id: item.id
+            id: item.id,
+            status: item.status
           }
         })
       })

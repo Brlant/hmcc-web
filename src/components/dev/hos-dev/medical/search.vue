@@ -57,7 +57,9 @@
           </el-col>
           <el-col :span="7">
             <oms-form-row label="所属科室" :span="7">
-              <el-select v-model="searchCondition.departmentId" placeholder="请选择设备所属科室" clearable>
+              <el-select v-model="searchCondition.departmentId"
+                         placeholder="请选择设备所属科室"
+                         clearable filterable>
                 <el-option
                   v-for="(item,index) in deviceDeptList"
                   :key="index"
@@ -162,7 +164,8 @@ export default {
             departmentName: item.departmentName,
             departmentPosition: item.departmentPosition,
             id: item.id,
-            departmentId: item.id
+            departmentId: item.id,
+            status: item.status
           }
         })
       })

@@ -4,12 +4,16 @@
     <div class="warning-list-part bar-part">
       <el-row :gutter="10">
         <el-col :span="2">
-          <el-select v-model="listParams.departmentId" placeholder="请选择科室" clearable @change="deptChangeHandler">
+          <el-select v-model="listParams.departmentId" placeholder="请选择科室" clearable
+                     filterable
+                     @change="deptChangeHandler">
             <el-option v-for="(item,index) in departmentList"
                        :key="index"
                        :value="item.id"
-                       :label="item.departmentName"
-            />
+                       :label="item.departmentName">
+              <span style="float: left">{{ item.departmentName }}</span>
+              <span style="float: right; color: #8492a6; font-size: 13px">{{ item.status === '1'?'停用':'启用' }}</span>
+            </el-option>
           </el-select>
         </el-col>
         <el-col :span="4">
@@ -154,7 +158,8 @@ export default {
         this.departmentList = res.data.map(item => {
           return {
             id: item.id,
-            departmentName: item.departmentName
+            departmentName: item.departmentName,
+            status: item.status,
           }
         })
 

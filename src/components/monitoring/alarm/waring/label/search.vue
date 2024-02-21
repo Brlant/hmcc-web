@@ -45,7 +45,9 @@
         <el-row>
           <el-col :span="7">
             <oms-form-row :span="6" label="所属科室">
-              <el-select  placeholder="所属科室" v-model="searchCondition.departmentId" clearable>
+              <el-select  placeholder="请选择所属科室"
+                          v-model="searchCondition.departmentId"
+                          clearable filterable>
                 <el-option
                   v-for="(item,index) in deviceDeptList"
                   :key="index"
@@ -141,7 +143,8 @@
             return {
               departmentName: item.departmentName,
               departmentPosition: item.departmentPosition,
-              id: item.id
+              id: item.id,
+              status: item.status,
             }
           })
         })

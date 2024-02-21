@@ -57,14 +57,18 @@
           </el-col>
           <el-col :span="7">
             <oms-form-row label="所属科室" :span="7">
-              <el-select v-model="searchCondition.departmentId" placeholder="请选择设备所属科室" clearable>
+              <el-select v-model="searchCondition.departmentId"
+                         placeholder="请选择设备所属科室"
+                         clearable filterable>
                 <el-option
                   v-for="(item,index) in deviceDeptList"
                   :key="index"
                   :value="item.id"
                   :label="item.departmentName">
                   <span style="float: left">{{ item.departmentName }}</span>
-                  <span style="float: right; color: #8492a6; font-size: 13px">{{ item.status === '1'?'停用':'启用' }}</span>
+                  <span style="float: right; color: #8492a6; font-size: 13px">{{
+                      item.status === '1' ? '停用' : '启用'
+                    }}</span>
                 </el-option>
               </el-select>
             </oms-form-row>
@@ -162,7 +166,8 @@ export default {
             departmentName: item.departmentName,
             departmentPosition: item.departmentPosition,
             id: item.id,
-            departmentId: item.id
+            departmentId: item.id,
+            status: item.status
           }
         })
       })
