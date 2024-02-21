@@ -141,7 +141,7 @@
             </el-col>
             <el-col :span="12">
               <el-form-item label="工作状态" prop="workStatus">
-                <el-input placeholder="请输入数字" type="number" v-model.number="form.workStatus">
+                <el-input placeholder="请输入数字" type="number" v-model.number="form.workStatus" disabled>
                   <template slot="prepend">大于</template>
                   <template slot="append">mA</template>
                 </el-input>
@@ -414,6 +414,9 @@ export default {
       this.$nextTick(() => {
         this.$refs['tempForm'] && this.$refs['tempForm'].clearValidate();
       });
+    },
+    'form.shutdownStatusEnd': function (val) {
+      this.form.workStatus = val;
     },
     // 'form.idleStateRangeEnd': function (val) {
     //   this.form.standbyStatusRangeStart = this.form.idleStateRangeEnd;

@@ -6,6 +6,9 @@
     </template>
     <template slot="content">
       <el-form :model="form" :rules="rules" label-width="140px" ref="tempForm">
+        <el-form-item label="编号" prop="no">
+          <oms-input placeholder="请输入设备编号" type="input" v-model="form.no" disabled/>
+        </el-form-item>
         <el-form-item label="名称" prop="name">
           <oms-input placeholder="请输入名称" type="text" v-model="form.name"/>
         </el-form-item>
@@ -13,9 +16,6 @@
           <org-select :list="orgList"
                       :remoteMethod="queryAllOrg"
                       placeholder="请输入名称搜索单位" v-model="form.orgId"></org-select>
-        </el-form-item>
-        <el-form-item label="编号" prop="no">
-          <oms-input placeholder="请输入设备编号" type="input" v-model="form.no"/>
         </el-form-item>
         <el-form-item label="型号" prop="type">
           <oms-input placeholder="请输入型号" type="textarea" v-model="form.type"/>
