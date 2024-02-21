@@ -19,7 +19,11 @@
       </el-form-item>
       <el-form-item label="所属科室" prop="departmentId">
         <el-select v-model="form.departmentId" placeholder="请选择所属科室" clearable  class="contact-check">
-          <el-option v-for="(item,index) in departmentList" :key="index" :value="item.departmentId" :label="item.departmentName"/>
+          <el-option v-for="(item,index) in departmentList"
+                     :key="index"
+                     :value="item.departmentId"
+                     :label="item.departmentName"
+                     :disabled="item.status === '1'"/>
         </el-select>
       </el-form-item>
       <el-form-item label="用户角色" prop="list">

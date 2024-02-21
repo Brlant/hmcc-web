@@ -115,9 +115,15 @@
       </el-pagination>
     </div>
 
-    <!--新增标签-->
-    <form-label :titleDetail="titleDetail" :detailForm="detailForm" :addEditVisible="addEditVisible" :edit="edit"
-                @closeDetail="closeDetail"></form-label>
+
+    <page-right :css="defaultPageRight" :show="showIndex !== -1" @right-close="resetRightBox">
+      <!--新增标签-->
+      <form-label :titleDetail="titleDetail"
+                  :detailForm="detailForm"
+                  :addEditVisible="addEditVisible"
+                  :edit="edit"
+                  @closeDetail="closeDetail"></form-label>
+    </page-right>
   </div>
 </template>
 
@@ -165,6 +171,7 @@ export default {
       ],//标签状态
 
       labelList: [],
+      defaultPageRight: {'width': '700px', 'padding': 0},
     }
   },
   created() {
@@ -214,6 +221,7 @@ export default {
           this.addEditVisible = true;
           this.detailForm = res.data;
           this.edit = false;
+          this.showIndex = 0;
         }
         // console.log(res)
       }).catch(err => {
@@ -223,10 +231,12 @@ export default {
     detailEdit(row) {
       labelTagList.detailTagLabel({id: row.id}).then(res => {
         if (res.code === 200) {
+          this.titleDetail = '编辑标签'
           this.addEditVisible = true;
           this.detailForm = res.data;
           // console.log(this.detailForm, '参数')
           this.edit = true;
+          this.showIndex = 0;
         }
         // console.log(res)
       }).catch(err => {
@@ -327,12 +337,14 @@ export default {
     },
     /* 关闭弹框 */
     closeDetail() {
-      this.addEditVisible = false;
+      this.resetRightBox();
+    },
+    resetRightBox() {
+      this.defaultPageRight.width = '700px';
+      this.showIndex = -1;
       this.getLabelQueryList();
-    }
-
+    },
   }
-
 }
 </script>
 

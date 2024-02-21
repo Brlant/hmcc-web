@@ -196,7 +196,7 @@ export default {
   props: {
     index: Number,
     formItem: Object,
-    statusType: Array
+    statusType: Object
   },
   mixins: [commonMixin],
   data() {

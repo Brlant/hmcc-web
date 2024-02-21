@@ -52,6 +52,7 @@
                              :key="item.id"
                              :label="item.departmentName"
                              :value="item.id"
+                             :disabled="item.status === '1'"
                   >
                   </el-option>
                 </el-select>
@@ -129,84 +130,97 @@
           <h3>能耗信息设置</h3>
           <el-row :gutter="10">
             <el-col :span="12">
-              <el-form-item label="标准工作时长" prop="standardWorkingHours">
-                <el-input placeholder="请输入数字" type="number" v-model.number="form.standardWorkingHours">
-                  <template slot="append">小时</template>
-                </el-input>
+              <el-form-item label="关机状态范围">
+                <el-row :gutter="10">
+                  <el-col :span="10">
+                    <el-form-item prop="shutdownStatusStart">
+                      <el-input placeholder="请输入数字" type="number"
+                                v-model.number="form.shutdownStatusStart" disabled></el-input>
+                    </el-form-item>
+                  </el-col>
+                  <el-col class="line" :span="1">至</el-col>
+                  <el-col :span="10">
+                    <el-form-item prop="shutdownStatusEnd">
+                      <el-input placeholder="请输入数字" type="number"
+                                v-model.number="form.shutdownStatusEnd"></el-input>
+                    </el-form-item>
+                  </el-col>
+                  <el-col class="line" :span="2">mA</el-col>
+                </el-row>
               </el-form-item>
             </el-col>
             <el-col :span="12">
               <el-form-item label="工作状态" prop="workStatus">
-                <el-input placeholder="请输入数字" type="number" v-model.number="form.workStatus" disabled>
+                <el-input placeholder="请输入数字" type="number" v-model.number="form.workStatus">
                   <template slot="prepend">大于</template>
                   <template slot="append">mA</template>
                 </el-input>
               </el-form-item>
             </el-col>
           </el-row>
-          <el-row :gutter="10">
-            <el-col :span="12">
-              <el-form-item label="闲置状态范围">
-                <el-row :gutter="10">
-                  <el-col :span="10">
-                    <el-form-item prop="idleStateRangeStart">
-                      <el-input placeholder="请输入数字" type="number" v-model.number="form.idleStateRangeStart"
-                                disabled></el-input>
-                    </el-form-item>
-                  </el-col>
-                  <el-col class="line" :span="1">至</el-col>
-                  <el-col :span="10">
-                    <el-form-item prop="idleStateRangeEnd">
-                      <el-input placeholder="请输入数字" type="number" v-model.number="form.idleStateRangeEnd"></el-input>
-                    </el-form-item>
-                  </el-col>
-                  <el-col class="line" :span="2">mA</el-col>
-                </el-row>
-              </el-form-item>
-            </el-col>
-            <el-col :span="12">
-              <el-form-item label="标准电压范围">
-                <el-row :gutter="10">
-                  <el-col :span="10">
-                    <el-form-item prop="standardVoltageRangeStart">
-                      <el-input placeholder="请输入数字" type="number"
-                                v-model.number="form.standardVoltageRangeStart"></el-input>
-                    </el-form-item>
-                  </el-col>
-                  <el-col class="line" :span="1">至</el-col>
-                  <el-col :span="10">
-                    <el-form-item prop="standardVoltageRangeEnd">
-                      <el-input placeholder="请输入数字" type="number"
-                                v-model.number="form.standardVoltageRangeEnd"></el-input>
-                    </el-form-item>
-                  </el-col>
-                  <el-col class="line" :span="2">V</el-col>
-                </el-row>
-              </el-form-item>
-            </el-col>
-          </el-row>
-          <el-row :gutter="10">
-            <el-col :span="12">
-              <el-form-item label="待机状态范围">
-                <el-row :gutter="10">
-                  <el-col :span="10">
-                    <el-form-item prop="standbyStatusRangeStart">
-                      <el-input placeholder="请输入数字" type="number"
-                                v-model.number="form.standbyStatusRangeStart" disabled></el-input>
-                    </el-form-item>
-                  </el-col>
-                  <el-col class="line" :span="1">至</el-col>
-                  <el-col :span="10">
-                    <el-form-item prop="standbyStatusRangeEnd">
-                      <el-input placeholder="请输入数字" type="number"
-                                v-model.number="form.standbyStatusRangeEnd"></el-input>
-                    </el-form-item>
-                  </el-col>
-                  <el-col class="line" :span="2">mA</el-col>
-                </el-row>
-              </el-form-item>
-            </el-col>
-          </el-row>
+          <!--<el-row :gutter="10">-->
+          <!--  <el-col :span="12">-->
+          <!--    <el-form-item label="闲置状态范围">-->
+          <!--      <el-row :gutter="10">-->
+          <!--        <el-col :span="10">-->
+          <!--          <el-form-item prop="idleStateRangeStart">-->
+          <!--            <el-input placeholder="请输入数字" type="number" v-model.number="form.idleStateRangeStart"-->
+          <!--                      disabled></el-input>-->
+          <!--          </el-form-item>-->
+          <!--        </el-col>-->
+          <!--        <el-col class="line" :span="1">至</el-col>-->
+          <!--        <el-col :span="10">-->
+          <!--          <el-form-item prop="idleStateRangeEnd">-->
+          <!--            <el-input placeholder="请输入数字" type="number" v-model.number="form.idleStateRangeEnd"></el-input>-->
+          <!--          </el-form-item>-->
+          <!--        </el-col>-->
+          <!--        <el-col class="line" :span="2">mA</el-col>-->
+          <!--      </el-row>-->
+          <!--    </el-form-item>-->
+          <!--  </el-col>-->
+          <!--  <el-col :span="12">-->
+          <!--    <el-form-item label="标准电压范围">-->
+          <!--      <el-row :gutter="10">-->
+          <!--        <el-col :span="10">-->
+          <!--          <el-form-item prop="standardVoltageRangeStart">-->
+          <!--            <el-input placeholder="请输入数字" type="number"-->
+          <!--                      v-model.number="form.standardVoltageRangeStart"></el-input>-->
+          <!--          </el-form-item>-->
+          <!--        </el-col>-->
+          <!--        <el-col class="line" :span="1">至</el-col>-->
+          <!--        <el-col :span="10">-->
+          <!--          <el-form-item prop="standardVoltageRangeEnd">-->
+          <!--            <el-input placeholder="请输入数字" type="number"-->
+          <!--                      v-model.number="form.standardVoltageRangeEnd"></el-input>-->
+          <!--          </el-form-item>-->
+          <!--        </el-col>-->
+          <!--        <el-col class="line" :span="2">V</el-col>-->
+          <!--      </el-row>-->
+          <!--    </el-form-item>-->
+          <!--  </el-col>-->
+          <!--</el-row>-->
+          <!--<el-row :gutter="10">-->
+          <!--  <el-col :span="12">-->
+          <!--    <el-form-item label="待机状态范围">-->
+          <!--      <el-row :gutter="10">-->
+          <!--        <el-col :span="10">-->
+          <!--          <el-form-item prop="standbyStatusRangeStart">-->
+          <!--            <el-input placeholder="请输入数字" type="number"-->
+          <!--                      v-model.number="form.standbyStatusRangeStart" disabled></el-input>-->
+          <!--          </el-form-item>-->
+          <!--        </el-col>-->
+          <!--        <el-col class="line" :span="1">至</el-col>-->
+          <!--        <el-col :span="10">-->
+          <!--          <el-form-item prop="standbyStatusRangeEnd">-->
+          <!--            <el-input placeholder="请输入数字" type="number"-->
+          <!--                      v-model.number="form.standbyStatusRangeEnd"></el-input>-->
+          <!--          </el-form-item>-->
+          <!--        </el-col>-->
+          <!--        <el-col class="line" :span="2">mA</el-col>-->
+          <!--      </el-row>-->
+          <!--    </el-form-item>-->
+          <!--  </el-col>-->
+          <!--</el-row>-->
         </div>
         <div>
           <el-divider/>
@@ -378,7 +392,7 @@ export default {
   props: {
     formItem: Object,
     index: Number,
-    statusType: Array
+    statusType: Object
   },
   computed: {
     medicalDevType() {
@@ -402,6 +416,10 @@ export default {
         ];
 
         this.form = Object.assign({}, this.formItem);
+        if (!this.form.shutdownStatusStart) {
+          this.form.shutdownStatusStart = 0;
+        }
+
         this.actionType = '编辑冷链设备';
         this.getTempList();
 
@@ -409,6 +427,7 @@ export default {
         this.searchEnergyTagSn(this.form.energyTagSnNumber);
       } else {
         this.form = {
+          shutdownStatusStart: 0,
           no: '',
           name: '',
           type: '',

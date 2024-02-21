@@ -17,7 +17,7 @@
         <el-input v-model="model.stationName" maxlength="20" placeholder="基站名称"/>
       </el-form-item>
       <el-form-item label="标签SN号" prop="tagSn">
-        <el-input v-model="model.tagSn" maxlength="20" placeholder="标签SN号"/>
+        <el-input v-model="model.tagSn" maxlength="20" placeholder="标签SN号" :disabled="edit"/>
       </el-form-item>
       <el-form-item label="MAC地址" prop="macAddr">
         <el-input v-model="model.macAddr" maxlength="12" placeholder="MAC地址"/>
@@ -260,44 +260,4 @@
 </script>
 
 <style lang="scss" scoped>
-  .el-form .el-form-item ::v-deep .el-form-item__content {
-    .el-select {
-      width: 100%;
-
-      .el-input.is-disabled .el-input__suffix .el-select__caret{
-        cursor: default;
-      }
-    }
-
-    input[disabled], .el-radio .el-radio__label {
-      cursor: default;
-      color: #606266;
-      background-color: #ffffff;
-    }
-
-    .el-input-number.is-disabled {
-
-      > span {
-        cursor: default;
-      }
-    }
-
-    .el-radio .el-radio__input.is-disabled {
-
-      cursor: default;
-      color: #606266;
-      background-color: #ffffff;
-
-      .el-radio__inner {
-        cursor: default;
-        color: #606266;
-        background-color: #ffffff;
-
-        &:after {
-          cursor: default;
-          background-color: #606266;
-        }
-      }
-    }
-  }
 </style>

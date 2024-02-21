@@ -51,7 +51,10 @@
                   :key="index"
                   :label="item.departmentName"
                   :value="item.id"
-                />
+                >
+                  <span style="float: left">{{ item.departmentName }}</span>
+                  <span style="float: right; color: #8492a6; font-size: 13px">{{ item.status === '1'?'停用':'启用' }}</span>
+                </el-option>
               </el-select>
             </oms-form-row>
           </el-col>
