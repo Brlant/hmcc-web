@@ -53,8 +53,8 @@
         <el-col :span="2">启用时间</el-col>
         <el-col :span="2">运行状态</el-col>
         <!--<el-col :span="2">设备状态</el-col>-->
-        <el-col :span="3">最后位置</el-col>
-        <el-col :span="3">操作</el-col>
+        <el-col :span="4">最后位置</el-col>
+        <el-col :span="2">操作</el-col>
       </el-row>
       <el-row v-if="loading">
         <el-col :span="24">
@@ -98,17 +98,42 @@
             <!--<el-col :span="2">-->
             <!--  {{ formatDictLabel(item.status, statusList) }}-->
             <!--</el-col>-->
-            <el-col :span="3">
+            <el-col :span="4">
               {{ item.lastPositionStr }}
             </el-col>
-            <el-col :span="3" class="opera-btn">
-              <span @click.prevent.stop="devicesPosition(item)" class="des-btn">
-               <a href="#" class="btn-circle" @click.prevent="">
-                 <i :class="'el-icon-location-outline'"></i></a>
-                定位
-              </span>
-              <des-btn @click="edit(item)" icon="edit" v-has="permPage.editMedical">编辑</des-btn>
-              <des-btn @click="remove(item)" icon="delete" v-has="permPage.delMedical">删除</des-btn>
+            <el-col :span="2">
+              <!--<span @click.prevent.stop="devicesPosition(item)" class="des-btn">-->
+              <!-- <a href="#" class="btn-circle" @click.prevent="">-->
+              <!--   <i :class="'el-icon-location-outline'"></i></a>-->
+              <!--  定位-->
+              <!--</span>-->
+              <!--<des-btn @click="edit(item)" icon="edit" v-has="permPage.editMedical">编辑</des-btn>-->
+              <!--<des-btn @click="remove(item)" icon="delete" v-has="permPage.delMedical">删除</des-btn>-->
+
+              <el-button @click.prevent.stop="devicesPosition(item)"
+                         icon="el-icon-location-outline"
+                         circle
+                         size="small"
+                         :disabled="!item.lastPositionStr"
+                         title="定位"
+              ></el-button>
+
+              <el-button v-has="permPage.editMedical"
+                         type="primary"
+                         @click.prevent.stop="edit(item)"
+                         icon="el-icon-edit"
+                         circle
+                         size="small"
+                         title="编辑"
+              ></el-button>
+              <el-button v-has="permPage.delMedical"
+                         type="danger"
+                         @click.prevent.stop="remove(item)"
+                         icon="el-icon-delete"
+                         circle
+                         size="small"
+                         title="删除"
+              ></el-button>
             </el-col>
           </el-row>
           <!--<div class="order-list-item-bg"></div>-->

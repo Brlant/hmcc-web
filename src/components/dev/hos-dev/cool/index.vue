@@ -72,13 +72,28 @@
               {{ item.lastPositionStr }}
             </el-col>
             <el-col :span="2" class="opera-btn">
-               <span @click.prevent.stop="devicesPosition(item)" class="des-btn">
-               <a href="#" class="btn-circle" @click.prevent=""><i
-                 :class="'el-icon-location-outline'"></i></a>
-                定位
-              </span>
-              <des-btn @click="edit(item)" icon="edit" v-has="permPage.editCool">编辑</des-btn>
+              <!-- <span @click.prevent.stop="devicesPosition(item)" :class="{'des-btn':!!item.lastPositionStr}">-->
+              <!-- <a href="#" class="btn-circle" @click.prevent="" disabled><i-->
+              <!--   :class="'el-icon-location-outline'"></i></a>-->
+              <!--  定位-->
+              <!--</span>-->
+              <!--<des-btn @click="edit(item)" icon="edit" v-has="permPage.editCool">编辑</des-btn>-->
               <!--<des-btn @click="remove(item)" icon="delete" v-has="permPage.delCool">删除</des-btn>-->
+              <el-button @click.prevent.stop="devicesPosition(item)"
+                         icon="el-icon-location-outline"
+                         circle
+                         size="small"
+                         :disabled="!item.lastPositionStr"
+                         title="定位"
+              ></el-button>
+
+              <el-button @click.prevent.stop="edit(item)"
+                         type="primary"
+                         icon="el-icon-edit"
+                         circle
+                         size="small"
+                         title="编辑"
+              ></el-button>
             </el-col>
           </el-row>
           <!--<div class="order-list-item-bg"></div>-->
