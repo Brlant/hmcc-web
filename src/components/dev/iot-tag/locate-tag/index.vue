@@ -120,6 +120,7 @@
       <!--新增标签-->
       <form-label :titleDetail="titleDetail"
                   :detailForm="detailForm"
+                  :edit="edit"
                   :index="showIndex"
                   @closeDetail="closeDetail"></form-label>
     </page-right>
@@ -327,7 +328,7 @@ export default {
     /* 添加标签 */
     addLabel() {
       this.titleDetail = '添加标签'
-      this.edit = false;
+      this.edit = true;
       this.showIndex = 0;
     },
     /* 关闭弹框 */
