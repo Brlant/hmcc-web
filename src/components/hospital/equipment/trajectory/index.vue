@@ -170,10 +170,6 @@
             key: `2-${item.key}`,
             label: item.label
           }));
-          this.medicals.push({
-            key: '2-4',
-            label: '【主流程】医疗设备类型'
-          })
         })
       },
       focusDaterange() {
