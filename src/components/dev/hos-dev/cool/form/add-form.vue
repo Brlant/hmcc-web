@@ -475,6 +475,7 @@ export default {
       }
     },
     save(formName) {
+      this.form.deviceStatus = '';
       this.$refs[formName].validate((valid) => {
         if (valid && this.doing === false) {
           // this.form.createTime = this.form.createTime ? this.$moment(this.form.createTime).format('YYYY-MM-DD') : '';

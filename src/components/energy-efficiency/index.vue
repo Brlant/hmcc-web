@@ -63,6 +63,14 @@
           <el-badge is-dot type="danger"></el-badge>
           异常数 {{ statisticInfo.alarmCount }}
         </el-col>
+        <el-col :span="2" :offset="1">
+          <el-badge is-dot type="warning"></el-badge>
+          故障数 {{ statisticInfo.faultCount }}
+        </el-col>
+        <el-col :span="2" :offset="1">
+          <el-badge is-dot type="primary"></el-badge>
+          未知数 {{ statisticInfo.otherCount }}
+        </el-col>
       </el-row>
     </div>
 
@@ -121,6 +129,8 @@ export default {
         onlineCount: '',    //开机数
         offlineCount: '',   //关机数
         alarmCount: '',     //异常数
+        faultCount: '',     //故障数
+        otherCount: '',     //未知数
         electricityTotalCount: '', // 今日总用电量
         electricityAvgCount: '', // 今日设备平均用电量
       },
@@ -193,7 +203,9 @@ export default {
       let classes = {
         'ONLINE': 'bg-green',
         'OFFLINE': 'bg-grey',
-        'ALARM': 'bg-red'
+        'ALARM': 'bg-red',
+        'FAULT': 'bg-yellow',
+        '--': 'bg-other',
       }
       return classes[item.status] || 'bg-green'
     },
@@ -394,6 +406,12 @@ export default {
 .bg-red {
   background-color: #F56C6C;
 }
+.bg-yellow {
+  background-color: #E6A23C;
+}
+.bg-other {
+  background-color: #7142FF;
+}
 
 .grid-content {
   border-radius: 4px;
@@ -430,7 +448,7 @@ export default {
 
   .dev-monitor-elec-title {
     font-size: 14px;
-    color: #eeeeee;
+    color: #606266;
     line-height: 30px;
   }
 
