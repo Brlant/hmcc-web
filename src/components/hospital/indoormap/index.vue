@@ -43,7 +43,7 @@
         height: 600,
         ratio: 0.01,
         mapzoom: 1,
-        showEmpty: false,
+        showEmpty: true,
         floorClass: 'floor-empty'
       };
     },

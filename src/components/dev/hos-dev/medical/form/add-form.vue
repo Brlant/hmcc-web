@@ -452,6 +452,7 @@ export default {
       }
     },
     save(formName) {
+      this.form.status = '';
       this.$refs[formName].validate((valid) => {
         if (valid && this.doing === false) {
           if (!this.form.id) {
