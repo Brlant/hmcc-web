@@ -50,15 +50,23 @@
           <span>异常数：{{ statistics.abnormal }}</span>
         </div>
         <div>
-          <el-icon name="location-information" style="color: #bfc24b"/>
+          <el-icon name="location-information" style="color: #ffdf25"/>
           <span>故障数：{{ statistics.faultCount}}</span>
         </div>
       </div>
     </el-form>
 
-    <div style="height: calc(100% - 60px)">
-      <IndoorMap :map="map" :storey="storey"/>
+    <div style="height: calc(100% - 60px); position: relative;">
+      <IndoorMap ref="indoorMap" :img="img" :data="mapData" :nodeMouseenter="nodeMouseenter" :nodeMouseleave="nodeMouseleave"/>
+      <!-- 详情 -->
+      <el-form :model="form" :class="tipClass" :style="tipPosition">
+        <el-form-item :label="tipTitle" label-width="40px">{{ form.collectionTime }}</el-form-item>
+        <el-form-item label="设备名称：">{{ form.devName }}</el-form-item>
+        <el-form-item label="设备编号：">{{ form.devNo }}</el-form-item>
+        <el-form-item label="所属科室：">{{ form.departmentName }}</el-form-item>
+      </el-form>
     </div>
+
   </div>
 </template>
 
@@ -70,6 +78,15 @@ import {
   queryDevicePosition,
   queryFloorStructure
 } from '@/api/hospital/equipment';
+
+const formModel = {
+  deviceId: null,
+  status: null,
+  devNo: null,
+  devName: null,
+  departmentName: null,
+  collectionTime: null,
+};
 
 export default {
   name: 'EquipmentPosition',
@@ -87,72 +104,65 @@ export default {
         abnormal: 0,
         faultCount: 0,
       },
-      map: {
-        id: null,
-        url: null,
-        points: null
+
+      img: null,
+      mapData: {
+        nodes: []
       },
-      storey: {
-        id: null,
-        parentId: null,
-        name: null
-      },
-      total: 10,
-      data: [],
+      tipX: 0,
+      tipY: 0,
+      form: { ...formModel },
+
       loading: false,
       stores: [],
-      devices: [],
-      loadTable: false,
-      indoorZoom: 100
+      devices: []
     };
   },
   computed: {
-    indoorSize() {
-      return `${this.indoorZoom}% ${this.indoorZoom}%`
+    tipTitle() {
+      switch (this.form.status) {
+        case 'OFFLINE':
+          return '关机'
+        case 'ONLINE':
+          return '开机'
+        case 'ALARM':
+          return '异常'
+        default:
+          return '设备';
+      }
+    },
+    tipClass() {
+      switch (this.form.status) {
+        case 'OFFLINE':
+          return 'indoor-formtips lightgray';
+        case 'ONLINE':
+          return 'indoor-formtips green';
+        case 'ALARM':
+          return 'indoor-formtips red';
+        case 'FAILURE':
+          return 'indoor-formtips lightyellow';
+        default:
+          return 'indoor-formtips blue';
+      }
+    },
+    tipPosition() {
+      return {
+        left: `${this.tipX}px`,
+        top: `${this.tipY}px`,
+        display: this.tipX && this.tipY ? 'block' : 'none'
+      }
     }
   },
   created() {
-    let callback = () => {
-      const first = this.stores[0];
-      if (!Array.isArray(first.children) || first.children.length < 1) {
-        return;
-      }
-      this.search.storeyId = first.children[0].id;
-      this.query();
-    };
-    if (this.$route.params?.id) {
-      callback = () => {
-        this.devices.push({...this.$route.params});
-        this.search.deviceId = this.$route.params?.id;
-        this.query();
-      }
-    }
     this.loadFloor(() => {
-      if (!Array.isArray(this.stores) || this.stores.length < 1) {
-        return;
+      if (this.$route.params?.id) {
+        this.loadByRouter();
+      } else if (Array.isArray(this.stores)) {
+        this.loadDefault();
       }
-      const first = this.stores[0];
-      this.loadStorey(first, callback);
     });
-
-    // //页面跳转获取参数
-    // this.pageParameters();
   },
   methods: {
-    /* 定位 */
-    // pageParameters() {
-    //   //页面跳转的传参
-    //   console.log(this.$route, '路由定位')
-    //   let device = this.$route.query;
-    //   if (!device) {
-    //     return;
-    //   }
-    //
-    //   this.devices = [];
-    //   this.devices.push(device);
-    //   this.search.deviceId = this.devices[0].id;
-    //   this.query();
-    // },
     loadFloor(callback) {
       queryFloorStructure({
         type: 1
@@ -166,6 +176,13 @@ export default {
       });
     },
     loadStorey(node, callback) {
+      if (!node) {
+        return;
+      }
+      if (Array.isArray(node.children)
+        && node.children.length > 0) {
+        return callback && callback();
+      }
       queryFloorStructure({
         type: 2,
         upFloor: node.id
@@ -177,40 +194,52 @@ export default {
         callback && callback();
       });
     },
-    queryDevicePosition(){
+    loadDefault() {
+      const first = this.stores[0];
+      this.loadStorey(first, () => {
+        if (Array.isArray(first.children)
+          && first.children.length > 0) {
+          this.search.storeyId = first.children[0].id;
+          this.query();
+        }
+      });
+    },
+    loadByRouter() {
+      this.devices.push({...this.$route.params});
+      this.search.deviceId = this.$route.params?.id;
+      this.query(this.singleStoreyBack);
+    },
+    singleStoreyBack(single) {
+      let storey = this.stores?.find(item => item.id === single.floorId);
+      if (storey) {
+        this.loadStorey(storey, () => {
+          this.search.storeyId = single.storeyId;
+        });
+      }
+    },
+    queryDevicePosition(singleBack){
       queryDevicePosition({
         ...this.search
       }).then(res => {
-        this.map.id = null;
-        this.map.url = null;
-        this.map.points = [];
+        this.mapData.nodes = [];
         res.data?.forEach(item => {
-          this.map.id = item.platId;
-          this.map.url = item.mapUrl;
-          this.map.points.push({
+          this.img = item.mapUrl;
+          this.mapData.nodes.push({
             id: `${item.deviceId}`,
             x: item.xPoint,
             y: item.yPoint,
             type: 'position',
             state: this.covertState(item.status),
-            form: {
-              id: item.pointId,
-              platId: item.platId,
-              pointType: 0,
-              pointName: item.place,
-              devName: item.devName,
-              devNo: item.devNo,
-              status: item.status,
-              tagSnNumber: item.tagSnNumber,
-              departmentName: item.departmentName,
-              collectionTime: item.collectionTime
-            }
+            data: { ...item }
           });
         });
+        if (res.data.length === 1) {
+          singleBack && singleBack(res.data[0]);
+        }
       });
     },
-    query() {
-      this.queryDevicePosition();
+    query(singleBack) {
+      this.queryDevicePosition(singleBack);
       this.queryDeviceCountByFloor()
     },
     covertState(status) {
@@ -221,6 +250,8 @@ export default {
           return 'green'
         case 'ALARM':
           return 'red'
+        case 'FAILURE':
+          return 'lightyellow'
       }
     },
     reset() {
@@ -271,15 +302,18 @@ export default {
         this.statistics.faultCount = res.data?.faultCount || 0;
       });
     },
-    indoorToolbar(event) {
-      const className = event.target?.className;
-      if (className === 'el-icon-zoom-in') {
-        this.indoorZoom = this.indoorZoom * 1.01;
-      } else if (className === 'el-icon-zoom-out') {
-        this.indoorZoom = this.indoorZoom * 0.99;
-      } else {
-        this.indoorZoom = 100;
-      }
+    nodeMouseenter(evt) {
+      let item = evt.item;
+      let model = item.getModel()
+      let bbox = item.get('group').getCanvasBBox();
+      this.form = model.data;
+      this.tipX = bbox.x + 36;
+      this.tipY = bbox.y;
+    },
+    nodeMouseleave() {
+      this.tipX = 0;
+      this.tipY = 0;
+      this.form = { ...formModel };
     }
   }
 }
@@ -313,6 +347,84 @@ export default {
       width: auto;
       height: 36px;
       line-height: 36px;
+    }
+  }
+
+  .indoor-formtips {
+    width: 300px;
+    position: absolute;
+    background-color: #ffffff;
+    border-radius: 5px;
+
+    &.green {
+      border: 1px solid #95f202;
+
+      .el-form-item:first-child {
+        background-color: #95f202;
+      }
+    }
+
+    &.red {
+      border: 1px solid #d8001b;
+
+      .el-form-item:first-child {
+        background-color: #d8001b;
+      }
+    }
+
+    &.lightgray {
+      border: 1px solid #aaaaaa;
+
+      .el-form-item:first-child {
+        background-color: #aaaaaa;
+      }
+    }
+
+    &.blue {
+      border: 1px solid #3765ff;
+
+      .el-form-item:first-child {
+        background-color: #3765ff;
+      }
+    }
+
+    &.lightyellow {
+      border: 1px solid #ffdf25;
+
+      .el-form-item:first-child {
+        background-color: #ffdf25;
+      }
+    }
+
+    .el-form-item {
+      padding: 0 15px;
+      margin-bottom: 5px;
+
+      &:not(:first-child) {
+        margin-bottom: 0;
+      }
+
+      &:first-child {
+        padding-right: 0;
+        border-top-left-radius: 3px;
+        border-top-right-radius: 3px;
+
+        ::v-deep {
+
+          & > label {
+            color: #ffffff;
+            line-height: 40px;
+            font-size: 14px;
+          }
+
+          .el-form-item__content {
+            float: right;
+            display: block;
+            padding-right: 10px;
+            color: #ffffff;
+          }
+        }
+      }
     }
   }
 }

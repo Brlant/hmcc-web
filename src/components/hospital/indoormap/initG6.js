@@ -1,8 +1,35 @@
 import G6 from '@antv/g6';
+import { createDom } from "@antv/dom-util";
 
+const fontSize = 30;
 const tempNode = 'temp_node';
 
-const loadTime = Date.now();
+class Grid extends G6.Grid {
+  constructor(cfg) {
+    super(cfg);
+  }
+
+  init() {
+    let graph = this.get('graph');
+    let graphContainer = graph.get('container');
+    let canvas = graph.get('canvas').get('el');
+    let map = this.get('map');
+    let width = map.width ? `${map.width}px` : '100%';
+    let height = map.height ? `${map.height}px` : '100%';
+    let bkimg = `url('${map.img}')`;
+    let style = `width:${width};height:${height};position:absolute;overflow:hidden;z-index:-1;`;
+    let container = createDom(`<div class="g6-grid-container" style="${style}"></div>`);
+    let gridContainer = createDom(`<div class="g6-grid" style="background-image:${bkimg};user-select:none;"></div>`);
+    this.set('container', container);
+    this.set('gridContainer', gridContainer);
+    container.appendChild(gridContainer);
+    graphContainer.insertBefore(container, canvas);
+  }
+
+  updateGrid(param) {
+    super.updateGrid(param);
+  }
+}
 
 G6.registerNode('position', {
   options: {
@@ -10,7 +37,7 @@ G6.registerNode('position', {
       x: 0,
       y: 0,
       text: '\ue707',
-      fontSize: 36,
+      fontSize: fontSize,
       textAlign: 'center',
       fontFamily: 'element-icons',
       textBaseline: 'middle',
@@ -33,12 +60,16 @@ G6.registerNode('position', {
       },
       lightblue: {
         fill: '#add8e6'
+      },
+      lightyellow: {
+        fill: '#ffdf25'
       }
     }
   },
   draw(cfg, group) {
     let fill = this.options.stateStyles[cfg.state]
       || this.options.stateStyles.default;
+    // console.log(cfg, fill)
     return group.addShape('text', {
       attrs: {
         ...this.options.style,
@@ -70,7 +101,7 @@ G6.registerNode('solidpoint', {
       x: 0,
       y: 0,
       text: '●',
-      fontSize: 36,
+      fontSize: fontSize,
       textAlign: 'center',
       textBaseline: 'middle',
     },
@@ -91,16 +122,17 @@ G6.registerNode('solidpoint', {
         fill: '#d8001b'
       },
       lightblue: {
-        fill: '#add8e6'
+        fill: '#aadef8'
       }
     }
   },
   draw(cfg, group) {
     let fill = this.options.stateStyles[cfg.state]
       || this.options.stateStyles.default;
+    let style = Object.assign({}, this.options.style, cfg.style);
     return group.addShape('text', {
       attrs: {
-        ...this.options.style,
+        ...style,
         ...fill
       },
       name: 'text-shape'
@@ -129,44 +161,43 @@ G6.registerNode('solidpoint', {
 });
 
 export default ({
-  elm, width, height, map, data, canvasClick, nodeClick, nodeMove, nodeMouseenter, nodeMouseleave
+  elm, map, width, height, canvasClick, nodeClick, nodeMove, nodeMouseenter, nodeMouseleave
 }) => {
 
-  let maporigin = { x: width / 2, y: height / 2 }
-  let showTemp = false;
+  let fi = null;
+  let iw = map.width || width;
+  let ih = map.height || height;
+  let maporigin = { x: iw / 2, y: ih / 2 }
   let nodeTemp = null;
+  let showTemp = false;
 
-  let modes = ['drag-canvas'];
+  let modes = ['drag-canvas', {
+    type: 'zoom-canvas',
+    maxZoom: 2,
+    minZoom: 0.5,
+    sensitivity: 1
+  }];
   if (nodeMove) {
     modes.push('drag-node');
   }
 
-  const grid = new G6.Grid({ img: map });
+  const grid = new Grid({ map });
   const graph = new G6.Graph({
     container: elm,
     width: width,
     height: height,
     plugins: [ grid ],
+    linkCenter: true,
     modes: {
       default: modes,
     },
-  });
-  graph.on('node:click', evt => {
-    const item = evt.item;
-    if (item.get('id') === tempNode) {
-      graph.addItem('node', {
-        id: `temp${loadTime - Date.now()}`,
-        x: evt.x,
-        y: evt.y,
-        ox: evt.x - maporigin.x,
-        oy: evt.y - maporigin.y,
-        type: 'position',
-        form: { ...item.get('model').form }
-      });
-      // console.log(evt);
-      nodeTemp?.toFront();
-    } else {
-      typeof nodeClick === 'function' && nodeClick(evt.item);
+    defaultEdge: {
+      style: {
+        endArrow: {
+          lineWidth: 5,
+          path: G6.Arrow.triangle(10, 15, 8)
+        },
+      }
     }
   });
 
@@ -192,8 +223,6 @@ export default ({
     });
   });
 
-  typeof canvasClick === 'function' && graph.on('canvas:click', canvasClick);
-
   graph.on('node:mousemove', evt => {
     if (!showTemp) {
       return;
@@ -214,20 +243,53 @@ export default ({
     nodeMove(item);
   });
 
-  typeof nodeMouseenter === 'function' && graph.on('node:mouseenter', evt => {
-    nodeMouseenter(evt.item);
+  typeof nodeClick === 'function' && graph.on('node:click', nodeClick);
+
+  typeof canvasClick === 'function' && graph.on('canvas:click', canvasClick);
+
+  typeof nodeMouseenter === 'function' && graph.on('node:mouseenter', nodeMouseenter);
+
+  typeof nodeMouseleave === 'function' && graph.on('node:mouseleave', nodeMouseleave);
+
+  graph.on('wheelzoom', () => {
+    const zoom = graph.getZoom();
+    updateNodePosition(zoom);
   });
 
-  typeof nodeMouseleave === 'function' && graph.on('node:mouseleave', evt => {
-    nodeMouseleave(evt.item);
-  });
-
-  graph.data(data);
-  graph.render();
+  const updateNodePosition = toRatio => {
+    maporigin.x = iw / toRatio / 2;
+    maporigin.y = ih / toRatio / 2;
+    graph.getNodes().forEach(node => {
+      const model = node.getModel();
+      node.update({
+        x: model.ox + maporigin.x,
+        y: model.oy + maporigin.y,
+        style: {
+          fontSize: fontSize / toRatio
+        }
+      });
+    });
+    graph.getEdges().forEach(edge => {
+      edge.refresh();
+    });
+  };
 
   return {
-    changeVisibility() {
-      nodeTemp = graph.findById(tempNode);
+    destroy() {
+      graph.destroy();
+    },
+    render(data) {
+      graph.data(data);
+      graph.render();
+    },
+    addNode(node) {
+      graph.addItem('node', Object.assign({
+        ox: node.x - maporigin.x,
+        oy: node.y - maporigin.y
+      }, node));
+    },
+    changeVisibility(nodeId) {
+      nodeTemp = graph.findById(nodeId);
       nodeTemp?.updatePosition({
         x: Number.MAX_VALUE,
         y: Number.MAX_VALUE
@@ -235,42 +297,104 @@ export default ({
       nodeTemp?.toFront();
       nodeTemp?.changeVisibility((showTemp = !showTemp));
     },
-    destroy() {
-      graph.destroy();
+    update(itemId, model) {
+      graph.update(itemId, model);
     },
-    update(item, model) {
-      graph.update(item, model);
-    },
-    updateState(item, state) {
+    updateState(itemId, state) {
       try {
-        graph.setItemState(item, state, true);
+        graph.setItemState(itemId, state, true);
       } catch (err) {
-        console.error(item, err);
+        console.error(itemId, err);
       }
     },
-    removeItem(item) {
-      graph.removeItem(item)
+    removeItem(itemId) {
+      graph.removeItem(itemId)
     },
     zoomTo(toRatio) {
-      maporigin.x = width / toRatio / 2;
-      maporigin.y = height / toRatio / 2;
       graph.zoomTo(toRatio);
+      updateNodePosition(toRatio);
+    },
+    focusItem(item) {
+      if (!item) {
+        return graph.fitCenter();
+      }
+      graph.focusItem(item);
+      graph.setItemState(item,'focus', true);
+      if (fi) {
+        graph.setItemState(fi, 'focus', false);
+      }
+      fi = item;
+    },
+    highlightTrajectory(nodes) {
+      let idx = 0;
       graph.getNodes().forEach(node => {
-        const model = node.getModel();
-        node.update({
-          x: model.ox + maporigin.x,
-          y: model.oy + maporigin.y,
-          style: {
-            fontSize: 36 / toRatio
+        let model = node.getModel();
+        let nodeId = node.get('id');
+        let curr = nodes.find(item => item.id === nodeId);
+        if (curr) {
+          if (curr.index > 0) {
+            idx++
+            node.update({
+              label: `${curr.index}`,
+              style: {
+                fill: '#01a7f0',
+                stroke: '#01a7f0'
+              },
+            });
+          } else {
+            node.update({
+              style: {
+                fill: '#01a7f0',
+                stroke: '#01a7f0'
+              },
+            });
           }
-        });
+        } else {
+          if (model.label) {
+            idx++
+            node.update({
+              label: `${idx}`,
+              style: {
+                fill: '#aadef8',
+                stroke: '#aadef8'
+              },
+            });
+          } else {
+            node.update({
+              style: {
+                fill: '#aadef8',
+                stroke: '#aadef8'
+              },
+            });
+          }
+        }
+      });
+      let prev = null;
+      let edges = new Set();
+      nodes.forEach(item => {
+        if (prev) {
+          edges.add(`${prev.id}-${item.id}`);
+        }
+        prev = item;
       });
       graph.getEdges().forEach(edge => {
-        edge.refresh();
+        // console.log(edge)
+        let model = edge.getModel();
+        if (edges.has(`${model.source}-${model.target}`)) {
+          edge.update({
+            style: {
+              stroke: '#01a7f0'
+            }
+          });
+          edge.toFront();
+        } else {
+          edge.update({
+            style: {
+              stroke: '#aadef8'
+            }
+          });
+        }
       });
-    },
-    getZoom() {
-      return graph.getZoom();
     }
   };
 };

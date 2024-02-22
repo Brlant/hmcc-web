@@ -18,7 +18,7 @@
         <oms-input type="text" v-model="form.email" placeholder="请输入邮箱"></oms-input>
       </el-form-item>
       <el-form-item label="所属科室" prop="departmentId">
-        <el-select v-model="form.departmentId" placeholder="请选择所属科室" clearable  class="contact-check">
+        <el-select v-model="form.departmentId" placeholder="请选择所属科室" clearable filterable  class="contact-check">
           <el-option v-for="(item,index) in departmentList"
                      :key="index"
                      :value="item.departmentId"
@@ -175,7 +175,8 @@ import {indexApi, OrgUser, User} from '@/resources';
             return {
               departmentName: item.departmentName,
               departmentPosition: item.departmentPosition,
-              departmentId: item.id
+              departmentId: item.id,
+              status: item.status
             }
           })
         })

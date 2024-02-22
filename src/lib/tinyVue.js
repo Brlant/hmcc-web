@@ -67,6 +67,11 @@ import locale from 'element-ui/lib/locale';
 import CollapseTransition from 'element-ui/lib/transitions/collapse-transition';
 import Divider from 'element-ui/lib/divider';
 import ElForm from 'element-ui/lib/form';
+
+import TimeLine from 'element-ui/lib/timeline';
+import TimeLineItem from 'element-ui/lib/timeline-item';
+
+
 import {
   compressedImg,
   CuPagination,
@@ -86,8 +91,6 @@ import {
   Remove,
   Scrollbar,
   statusList,
-  TimeLine,
-  TimeLineItem,
   TinyCol,
   TinyInput,
   TinyLoading,
