@@ -317,7 +317,8 @@
                 labelCfg: {
                   position: 'center',
                   style: {
-                    fill: '#ffffff'
+                    fill: '#ffffff',
+                    fontSize: 15
                   }
                 }
               });

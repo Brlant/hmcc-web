@@ -196,7 +196,7 @@ export default ({
         endArrow: {
           lineWidth: 5,
           path: G6.Arrow.triangle(10, 15, 8)
-        },
+        }
       }
     }
   });
@@ -261,18 +261,43 @@ export default ({
     maporigin.y = ih / toRatio / 2;
     graph.getNodes().forEach(node => {
       const model = node.getModel();
-      node.update({
+      let cfg = {
         x: model.ox + maporigin.x,
-        y: model.oy + maporigin.y,
-        style: {
+        y: model.oy + maporigin.y
+      };
+      if (model.type === 'circle') {
+        if (model.label) {
+          cfg.size = 25 / toRatio;
+          cfg.labelCfg = {
+            style: {
+              fontSize: 15 / toRatio
+            }
+          }
+        } else {
+          cfg.size = 3 / toRatio;
+        }
+      } else {
+        cfg.style = {
           fontSize: fontSize / toRatio
         }
-      });
+      }
+      node.update(cfg);
     });
     graph.getEdges().forEach(edge => {
-      edge.refresh();
+      const model = edge.getModel();
+      let cfg = { ...model };
+      cfg.style.lineWidth = 4 / toRatio;
+      if (model.style.endArrow) {
+        cfg.style.endArrow = {
+          lineWidth: 5 / toRatio,
+          path: G6.Arrow.triangle(10 / toRatio, 15 / toRatio, 8 / toRatio)
+        }
+      }
+      edge.update(cfg);
     });
   };
+
+  window.graph = graph;
 
   return {
     destroy() {
@@ -380,20 +405,14 @@ export default ({
       graph.getEdges().forEach(edge => {
         // console.log(edge)
         let model = edge.getModel();
+        let cfg = { ...model };
         if (edges.has(`${model.source}-${model.target}`)) {
-          edge.update({
-            style: {
-              stroke: '#01a7f0'
-            }
-          });
           edge.toFront();
+          cfg.style.stroke = '#01a7f0';
         } else {
-          edge.update({
-            style: {
-              stroke: '#aadef8'
-            }
-          });
+          cfg.style.stroke = '#aadef8'
         }
+        edge.update(cfg);
       });
     }
   };
