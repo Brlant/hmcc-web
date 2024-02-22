@@ -297,8 +297,6 @@ export default ({
     });
   };
 
-  window.graph = graph;
-
   return {
     destroy() {
       graph.destroy();
@@ -336,6 +334,9 @@ export default ({
       graph.removeItem(itemId)
     },
     zoomTo(toRatio) {
+      if (toRatio === 1) {
+        graph.fitCenter();
+      }
       graph.zoomTo(toRatio);
       updateNodePosition(toRatio);
     },
