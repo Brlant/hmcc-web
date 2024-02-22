@@ -83,6 +83,19 @@ export default {
           if (this.formData.productType) {
             this.getProductTypeByKey(this.formData.productType);
           }
+        }else{
+          this.formData = {
+            id: '',
+            productType: '',           //产品类型
+            tagType: "",               //标签类型
+            tagName: "",               //标签名称
+            tagSnNumber: "",           //SN号
+            macAddress: ""             //MAC地址
+          }
+
+          this.$nextTick(() => {
+            this.$refs.form.clearValidate()
+          });
         }
       },
       immediate: true
@@ -222,6 +235,7 @@ export default {
     },
     /* 提交 */
     submit() {
+      this.doing = true;
       this.$refs.form.validate((validate) => {
         if (validate) {
           this.submitMsg();
@@ -238,19 +252,29 @@ export default {
           if (res.code === 200) {
             this.$notify.success('编辑成功');
             this.closeDetail();
+          } else {
+            this.$notify.error(res.msg);
           }
+        }).catch(err => {
+          debugger
+          this.$notify.error(err.response.data.msg || '提交失败');
+        }).finally(() => {
+          this.doing = false;
         })
       } else {
         labelTagList.addTagLabel(params).then(res => {
           if (res.code === 200) {
             this.$notify.success('新增成功');
             this.closeDetail();
+          } else {
+            this.$notify.error(res.msg);
           }
         }).catch(err => {
-
+          this.$notify.error(err.response.data.msg || '提交失败');
+        }).finally(() => {
+          this.doing = false;
         })
       }
-
     }
   }
 

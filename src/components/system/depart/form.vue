@@ -78,7 +78,10 @@ export default {
             buildFloorId:'',
             centerFloorId:'',
           }
-          this.$refs.form.resetFields();
+
+          this.$nextTick(() => {
+            this.$refs.form.clearValidate()
+          });
         }
       }
     }
