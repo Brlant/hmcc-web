@@ -43,7 +43,7 @@
 
     <div class="trajectory-container">
       <el-radio-group v-model="floor" @input="floorInput" class="floor-tabs">
-        <el-radio-button v-for="(item, index) in data" :key="index" :label="index">{{ item.floorName }}</el-radio-button>
+        <el-radio-button v-for="(item, index) in radios" :key="index" :label="index">{{ item.floorName }}</el-radio-button>
       </el-radio-group>
 
       <IndoorMap ref="indoorMap" :img="img" :data="mapData"/>
@@ -91,11 +91,12 @@
         coolDevs: [],
         medicals: [],
         storeies: [],
-        data: [],
+        radios: [],
         floor: null,
         img: null,
         mapData: {
-          nodes: []
+          nodes: [],
+          edges: []
         },
         minDate: 0,
         maxDate: Date.now(),
@@ -207,7 +208,24 @@
       },
       query() {
         queryDeviceTrack(this.search).then(res => {
-          this.data = res.data;
+          this.radios = res.data;
+          this.radios?.forEach(storey => {
+            let result = [], prev;
+            storey.locationPointLocusList.forEach(item => {
+              if (prev) {
+                if (prev.nowPoint === item.nowPoint) {
+                  prev = item;
+                } else {
+                  result.push(prev);
+                  prev = item;
+                }
+              } else {
+                prev = item;
+              }
+              prev = item;
+            });
+            storey.locationPointLocusList = result;
+          });
           this.floorInput((this.floor = 0));
         });
       },
@@ -222,14 +240,13 @@
         this.devices = [];
       },
       floorInput(val) {
-        const storey = this.data[val];
+        const storey = this.radios[val];
         if (!storey) {
-          return (this.map = {
-            id: null,
-            url: null,
-            points: null,
-            edges: null
-          });
+          this.mapData = {
+            nodes: [],
+            edges: []
+          }
+          return (this.img = null);
         }
         this.img = storey.mapUrl;
         this.activities = [];
@@ -239,7 +256,8 @@
         const edges = new Set();
         let prev;
         let idx = 1, timeIdx = 1;
-        this.data[val]?.locationPointLocusList?.forEach(item => {
+
+        this.radios[val]?.locationPointLocusList?.forEach(item => {
           if (item.pointType === 0) {
             this.activities.push({
               id: `${item.nowPoint}`,
