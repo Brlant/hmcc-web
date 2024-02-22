@@ -6,11 +6,14 @@
         <el-date-picker v-model="daterange"
           type="datetimerange"
           unlink-panels
+          :editable="false"
           value-format="yyyy-MM-dd HH:mm:ss"
+          :default-value="defaultDate"
           range-separator="至"
           start-placeholder="开始日期"
           end-placeholder="结束日期"
           :picker-options="pickerOptions"
+          @focus="focusDaterange"
         />
       </el-form-item>
       <el-form-item>
@@ -66,6 +69,7 @@
 </template>
 
 <script>
+  import moment from 'moment';
   import IndoorMap from '../../indoormap/index';
   import { sinopharmDictDataType } from '@/api/system/dict/data';
   import { queryDeviceByType, queryFloorStructure, queryDeviceTrack } from '@/api/hospital/equipment';
@@ -77,8 +81,8 @@
       return {
         activities: [],
         search: {
-          startDate: '2024-02-20 00:00:00',
-          endDate: '2024-02-29 00:00:00',
+          startDate: null,
+          endDate: null,
           devType: null,
           deviceId: null,
           storeyId: null
@@ -93,11 +97,28 @@
         mapData: {
           nodes: []
         },
+        minDate: 0,
+        maxDate: Date.now(),
         pickerOptions: {
           start: '00:00',
           step: '00:01',
-          end: '23:59'
-        }
+          end: '23:59',
+          onPick: ({minDate}) => {
+            let min = 0, max = Date.now();
+            if (minDate) {
+              min = minDate.getTime() - this.searchRange;
+              max = minDate.getTime() + this.searchRange;
+            }
+            this.minDate = min;
+            this.maxDate = max;
+          },
+          disabledDate: date => {
+            let timestamp = date.getTime();
+            return timestamp < this.minDate || timestamp > this.maxDate;
+          }
+        },
+        defaultDate: moment().subtract(1, "month").toDate(),
+        searchRange: 1000 * 60 * 60 * 24 * 7
       };
     },
     computed: {
@@ -109,15 +130,15 @@
           return [];
         },
         set(values) {
-          this.search.startDate = values[0];
-          this.search.endDate = values[1];
+          this.search.startDate = values?.[0] || null;
+          this.search.endDate = values?.[1] || null;
         }
-      },
-      deviceTypes() {
-        return this.coolDevs.concat(this.medicals);
       },
       mapRef() {
         return this.$refs.indoorMap;
+      },
+      deviceTypes() {
+        return this.coolDevs.concat(this.medicals);
       }
     },
     created() {
@@ -153,6 +174,10 @@
             label: '【主流程】医疗设备类型'
           })
         })
+      },
+      focusDaterange() {
+        this.minDate = 0;
+        this.maxDate = Date.now();
       },
       typeChange(deviceType) {
         if (!deviceType) {
