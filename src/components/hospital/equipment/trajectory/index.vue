@@ -9,6 +9,7 @@
           :editable="false"
           value-format="yyyy-MM-dd HH:mm:ss"
           :default-value="defaultDate"
+          :default-time="['00:00:00', '23:59:59']"
           range-separator="至"
           start-placeholder="开始日期"
           end-placeholder="结束日期"
@@ -49,17 +50,17 @@
       <IndoorMap ref="indoorMap" :img="img" :data="mapData"/>
 
       <el-timeline class="node-timeline">
-        <el-timeline-item v-for="(activity, index) in activities" v-if="activity.index > 0"
-          :key="index" :timestamp="activity.timestamp" hide-timestamp>
+        <el-timeline-item v-for="(item, index) in timelines"
+          :key="index" :timestamp="item.timestamp" hide-timestamp>
           <template slot="dot">
-            <div :class="['node-timeline-dot', activity.color]">{{ activity.index }}</div>
+            <div :class="['node-timeline-dot', item.color]">{{ item.index }}</div>
           </template>
-          <div style="padding-top: 7px; cursor: pointer;" @click="timelineClick(activity, index)">
+          <div style="padding-top: 7px; cursor: pointer;" @click="timelineClick(index)">
             <div>
-              {{ activity.content }}
+              {{ item.content }}
             </div>
             <div style="color: #cfd3d5; padding-top: 5px; font-size: 13px;">
-              {{ activity.timestamp }}
+              {{ item.timestamp }}
             </div>
           </div>
         </el-timeline-item>
@@ -79,7 +80,7 @@
     components: { IndoorMap },
     data() {
       return {
-        activities: [],
+        nodepoints: [],
         search: {
           startDate: null,
           endDate: null,
@@ -101,9 +102,6 @@
         minDate: 0,
         maxDate: Date.now(),
         pickerOptions: {
-          start: '00:00',
-          step: '00:01',
-          end: '23:59',
           onPick: ({minDate}) => {
             let min = 0, max = Date.now();
             if (minDate) {
@@ -140,6 +138,9 @@
       },
       deviceTypes() {
         return this.coolDevs.concat(this.medicals);
+      },
+      timelines() {
+        return this.nodepoints.filter(item => item.index > 0);
       }
     },
     created() {
@@ -203,22 +204,32 @@
         });
       },
       query() {
+        this.nodepoints = [];
         queryDeviceTrack(this.search).then(res => {
           this.radios = res.data;
           this.radios?.forEach(storey => {
             let result = [], prev;
+            let i = 0, j = storey.locationPointLocusList.length;
             storey.locationPointLocusList.forEach(item => {
+              i++;
               if (prev) {
                 if (prev.nowPoint === item.nowPoint) {
                   prev = item;
                 } else {
                   result.push(prev);
-                  prev = item;
+                  if (i === j) {
+                    result.push(item);
+                  } else {
+                    prev = item;
+                  }
                 }
               } else {
-                prev = item;
+                if (i === j) {
+                  result.push(item);
+                } else {
+                  prev = item;
+                }
               }
-              prev = item;
             });
             storey.locationPointLocusList = result;
           });
@@ -245,7 +256,7 @@
           return (this.img = null);
         }
         this.img = storey.mapUrl;
-        this.activities = [];
+        this.nodepoints = [];
         this.mapData.nodes = [];
         this.mapData.edges = [];
         const nodes = new Set();
@@ -255,7 +266,7 @@
 
         this.radios[val]?.locationPointLocusList?.forEach(item => {
           if (item.pointType === 0) {
-            this.activities.push({
+            this.nodepoints.push({
               id: `${item.nowPoint}`,
               index: timeIdx++,
               color: 'lightgray',
@@ -263,7 +274,7 @@
               timestamp: item.createdTime,
             });
           } else {
-            this.activities.push({
+            this.nodepoints.push({
               id: `${item.nowPoint}`,
               color: 'lightgray',
               content: item.pointName,
@@ -335,16 +346,25 @@
           prev = item;
         });
       },
-      timelineClick(curr, index) {
-        let length = this.activities.length;
+      timelineClick(tlIndex) {
+        let flag = true, curr, index = 0, cnt = 0;
+        let length = this.nodepoints.length;
+        for (; index < length; index++) {
+          curr = this.nodepoints[index];
+          if (!curr.index) {
+            continue;
+          }
+          if (cnt++ === tlIndex) {
+            break;
+          }
+        }
         let item = null, nodes = [];
-        let flag = true;
-        if (length === index) {
-          nodes.push(this.activities[index]);
+        if (length === index + 1) {
+          nodes.push(this.nodepoints[index]);
           for (let i = index - 1; i > 0; i--) {
-            item = this.activities[i];
+            item = this.nodepoints[i];
             if (flag) {
-              nodes.push(item);
+              nodes.splice(0,0, item);
               if (item.index > 0) {
                 flag = false;
                 item.color = 'blue';
@@ -358,7 +378,7 @@
         } else {
           nodes.push(curr);
           for (let i = 0; i < length; i++) {
-            item = this.activities[i];
+            item = this.nodepoints[i];
             if (i > index && flag) {
               nodes.push(item);
               if (item.index > 0) {
@@ -373,7 +393,6 @@
           }
         }
         curr.color = 'blue';
-        // console.log(nodes)
         this.mapRef.highlightTrajectory(nodes);
       }
     }
