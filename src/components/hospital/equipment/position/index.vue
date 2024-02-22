@@ -154,27 +154,12 @@ export default {
     }
   },
   created() {
-    let callback = () => {
-      const first = this.stores[0];
-      if (!Array.isArray(first.children) || first.children.length < 1) {
-        return;
-      }
-      this.search.storeyId = first.children[0].id;
-      this.query();
-    };
-    if (this.$route.params?.id) {
-      callback = () => {
-        this.devices.push({...this.$route.params});
-        this.search.deviceId = this.$route.params?.id;
-        this.query();
-      }
-    }
     this.loadFloor(() => {
-      if (!Array.isArray(this.stores) || this.stores.length < 1) {
-        return;
+      if (this.$route.params?.id) {
+        this.loadByRouter();
+      } else if (Array.isArray(this.stores)) {
+        this.loadDefault();
       }
-      const first = this.stores[0];
-      this.loadStorey(first, callback);
     });
   },
   methods: {
@@ -191,6 +176,13 @@ export default {
       });
     },
     loadStorey(node, callback) {
+      if (!node) {
+        return;
+      }
+      if (Array.isArray(node.children)
+        && node.children.length > 0) {
+        return callback && callback();
+      }
       queryFloorStructure({
         type: 2,
         upFloor: node.id
@@ -202,7 +194,30 @@ export default {
         callback && callback();
       });
     },
-    queryDevicePosition(){
+    loadDefault() {
+      const first = this.stores[0];
+      this.loadStorey(first, () => {
+        if (Array.isArray(first.children)
+          && first.children.length > 0) {
+          this.search.storeyId = first.children[0].id;
+          this.query();
+        }
+      });
+    },
+    loadByRouter() {
+      this.devices.push({...this.$route.params});
+      this.search.deviceId = this.$route.params?.id;
+      this.query(this.singleStoreyBack);
+    },
+    singleStoreyBack(single) {
+      let storey = this.stores?.find(item => item.id === single.floorId);
+      if (storey) {
+        this.loadStorey(storey, () => {
+          this.search.storeyId = single.storeyId;
+        });
+      }
+    },
+    queryDevicePosition(singleBack){
       queryDevicePosition({
         ...this.search
       }).then(res => {
@@ -218,10 +233,13 @@ export default {
             data: { ...item }
           });
         });
+        if (res.data.length === 1) {
+          singleBack && singleBack(res.data[0]);
+        }
       });
     },
-    query() {
-      this.queryDevicePosition();
+    query(singleBack) {
+      this.queryDevicePosition(singleBack);
       this.queryDeviceCountByFloor()
     },
     covertState(status) {
