@@ -339,7 +339,7 @@
     methods: {
       queryNotifyListNew(query) {
         if (!this.form.sensorId) return;
-        let item = this.probeList.find(f => f.id === this.form.sensorId);
+        let item = this.coolTags.find(f => f.id === this.form.sensorId);
         let params = {
           orgId: item.orgId,
           keyWord: query
@@ -408,6 +408,7 @@
                     this.$emit('change', res.data);
                   } else {
                     this.doing = false;
+                    this.$notify.error({message: res.msg});
                   }
                 },
                 error: () => {
