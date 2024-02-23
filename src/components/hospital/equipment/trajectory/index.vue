@@ -208,27 +208,12 @@
         queryDeviceTrack(this.search).then(res => {
           this.radios = res.data;
           this.radios?.forEach(storey => {
-            let result = [], prev;
-            let i = 0, j = storey.locationPointLocusList.length;
+            let i = 0, result = [];
             storey.locationPointLocusList.forEach(item => {
-              i++;
-              if (prev) {
-                if (prev.nowPoint === item.nowPoint) {
-                  prev = item;
-                } else {
-                  result.push(prev);
-                  if (i === j) {
-                    result.push(item);
-                  } else {
-                    prev = item;
-                  }
-                }
+              if (result[i]?.nowPoint === item.nowPoint) {
+                result[i] = item;
               } else {
-                if (i === j) {
-                  result.push(item);
-                } else {
-                  prev = item;
-                }
+                result[++i] = item;
               }
             });
             storey.locationPointLocusList = result;
