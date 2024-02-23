@@ -587,7 +587,7 @@ export default {
       this.form.doorSheetType = template.doorSheetType;
       this.form.shutdownStatusStart = template.shutdownStatusStart || 0;
       this.form.shutdownStatusEnd = template.shutdownStatusEnd;
-      this.form.workStatus = template.workStatus || 0;
+      this.form.workStatus = template.workStatus;
     },
     checkTag(id, type, cb) {
       let deviceId = this.form.id
