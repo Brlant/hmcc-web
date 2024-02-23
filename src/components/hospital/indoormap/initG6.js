@@ -61,8 +61,11 @@ G6.registerNode('position', {
       lightblue: {
         fill: '#add8e6'
       },
-      lightyellow: {
-        fill: '#ffdf25'
+      orange: {
+        fill: '#f59b22'
+      },
+      black: {
+        fill: '#000000'
       }
     }
   },
