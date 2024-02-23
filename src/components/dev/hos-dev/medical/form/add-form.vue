@@ -552,8 +552,16 @@ export default {
     },
     setTempData(templateId) {
       let template = this.tempList.find(i => i.templateId == templateId);
-      this.form = Object.assign({}, this.form, template)
+      // this.form = Object.assign({}, this.form, template)
       // this.form.firstUserTime = template.devStartUsingTime;
+      this.form.supplier = template.supplier;
+      this.form.manufacturer = template.manufacturer;
+      this.form.productionLicenseNumber = template.productionLicenseNumber;
+      this.form.registrationCertificateNumber = template.registrationCertificateNumber;
+      this.form.manufacturerRegistrationNumber = template.manufacturerRegistrationNumber;
+      this.form.shutdownStatusStart = template.shutdownStatusStart || 0;
+      this.form.shutdownStatusEnd = template.shutdownStatusEnd;
+      this.form.workStatus = template.workStatus;
     },
     checkTag(id, type, cb) {
       let deviceId = this.form.id
