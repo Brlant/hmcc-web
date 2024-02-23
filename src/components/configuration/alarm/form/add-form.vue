@@ -391,7 +391,7 @@
       save(formName) {
         this.$refs[formName].validate((valid) => {
           if (valid && this.doing === false) {
-            this.probeList.forEach(i => {
+            this.coolTags.forEach(i => {
               if (i.id === this.form.sensorId) {
                 this.form.sensorName = i.name;
                 this.form.sensorNo = i.no;
