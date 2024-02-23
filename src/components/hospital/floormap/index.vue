@@ -27,7 +27,7 @@
       </div>
 
       <div style="height: calc(100% - 66px)">
-        <IndoorMap ref="indoorMap" :img="img" :data="mapData" :nodeClick="nodeClick" :canvasClick="canvasClick"/>
+        <IndoorMap ref="indoorMap" :img="img" :data="mapData" :nodeClick="nodeClick" :nodeContextmenu="nodeContextmenu" :canvasClick="canvasClick"/>
       </div>
     </el-col>
 
@@ -50,6 +50,9 @@
       </el-form-item>
       <el-form-item label="纵轴坐标：" label-width="82px">
         <el-input v-model.number="form.yPoint" readonly/>
+      </el-form-item>
+      <el-form-item label="定位编码：" label-width="82px">
+        <el-input v-model="form.pointCode" :readonly="form.id && detail" maxlength="10" placeholder="定位编码"/>
       </el-form-item>
       <el-form-item label="标注区域（点位）名称：">
         <el-input v-model="form.pointName" :readonly="form.id && detail" maxlength="10" placeholder="标注区域（点位）名称"/>
@@ -93,6 +96,7 @@
     xPoint: 0,
     yPoint: 0,
     pointType: 0,
+    pointCode: null,
     pointName: null,
     contactPoints: []
   };
@@ -298,6 +302,17 @@
           this.relateNode(node, model);
         } else {
           this.modifyNode(node, model);
+        }
+      },
+      nodeContextmenu(evt) {
+        const item = evt.item;
+        const nodeId = item.get('id');
+        if (nodeId === tempNode) {
+          return item.changeVisibility(false);
+        }
+        const states = item.getStates();
+        if (states.length === 0 && nodeId.startsWith(tempNode)) {
+          this.mapRef.removeItem(item);
         }
       },
       relateNode(node, model) {

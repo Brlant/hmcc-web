@@ -34,7 +34,8 @@
       nodeClick: Function,
       canvasClick: Function,
       nodeMouseenter: Function,
-      nodeMouseleave: Function
+      nodeMouseleave: Function,
+      nodeContextmenu: Function
     },
     data() {
       return {
@@ -99,7 +100,8 @@
           canvasClick: this.canvasClick,
           canvasTouchend: this.canvasTouchend,
           nodeMouseenter: this.nodeMouseenter,
-          nodeMouseleave: this.nodeMouseleave
+          nodeMouseleave: this.nodeMouseleave,
+          nodeContextmenu: this.nodeContextmenu
         });
         this.g6.render(this.dataG6);
       },

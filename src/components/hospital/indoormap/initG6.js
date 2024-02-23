@@ -164,7 +164,7 @@ G6.registerNode('solidpoint', {
 });
 
 export default ({
-  elm, map, width, height, canvasClick, nodeClick, nodeMove, nodeMouseenter, nodeMouseleave
+  elm, map, width, height, canvasClick, nodeClick, nodeMove, nodeContextmenu, nodeMouseenter, nodeMouseleave
 }) => {
 
   let fi = null;
@@ -204,29 +204,9 @@ export default ({
     }
   });
 
-  graph.on('node:contextmenu', evt => {
-    const item = evt.item;
-    const nodeId = item.get('id');
-    if (nodeId === tempNode) {
-      return item.changeVisibility((showTemp = false));
-    }
-    const states = item.getStates();
-    if (states.length === 0 && nodeId.startsWith('temp')) {
-      graph.removeItem(item);
-    }
-  });
+  typeof nodeContextmenu === 'function' && graph.on('node:contextmenu', nodeContextmenu);
 
   graph.on('canvas:mousemove', evt => {
-    if (!showTemp) {
-      return;
-    }
-    nodeTemp?.updatePosition({
-      x: evt.x,
-      y: evt.y
-    });
-  });
-
-  graph.on('node:mousemove', evt => {
     if (!showTemp) {
       return;
     }
