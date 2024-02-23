@@ -35,23 +35,27 @@
       </el-form-item>
       <div class="search-view">
         <div>
-          <span>设备总数：{{ statistics.total }}</span>
+          <span>设备总数：{{ statistics.totalCount }}</span>
         </div>
         <div>
           <el-icon name="location-information" style="color: #95f202"/>
-          <span>开机数：{{ statistics.opened }}</span>
+          <span>开机：{{ statistics.onlineCount }}</span>
         </div>
         <div>
           <el-icon name="location-information" style="color: #aaaaaa"/>
-          <span>关机数：{{ statistics.closed }}</span>
-        </div>
-        <div>
-          <el-icon name="location-information" style="color: #d8001b"/>
-          <span>异常数：{{ statistics.abnormal }}</span>
+          <span>关机：{{ statistics.offlineCount }}</span>
         </div>
         <div>
           <el-icon name="location-information" style="color: #ffdf25"/>
-          <span>故障数：{{ statistics.faultCount}}</span>
+          <span>故障：{{ statistics.faultCount}}</span>
+        </div>
+        <div>
+          <el-icon name="location-information" style="color: #d8001b"/>
+          <span>异常：{{ statistics.alarmCount }}</span>
+        </div>
+        <div>
+          <el-icon name="location-information" style="color: #000000"/>
+          <span>未知：{{ statistics.otherCount}}</span>
         </div>
       </div>
     </el-form>
@@ -98,11 +102,12 @@ export default {
         deviceId: null
       },
       statistics: {
-        total: 0,
-        opened: 0,
-        closed: 0,
-        abnormal: 0,
+        totalCount: 0,
+        onlineCount: 0,
+        offlineCount: 0,
+        alarmCount: 0,
         faultCount: 0,
+        otherCount: 0
       },
 
       img: null,
@@ -133,16 +138,16 @@ export default {
     },
     tipClass() {
       switch (this.form.status) {
-        case 'OFFLINE':
-          return 'indoor-formtips lightgray';
         case 'ONLINE':
           return 'indoor-formtips green';
+        case 'OFFLINE':
+          return 'indoor-formtips lightgray';
+        case 'FAILURE':
+          return 'indoor-formtips orange';
         case 'ALARM':
           return 'indoor-formtips red';
-        case 'FAILURE':
-          return 'indoor-formtips lightyellow';
         default:
-          return 'indoor-formtips blue';
+          return 'indoor-formtips black';
       }
     },
     tipPosition() {
@@ -244,14 +249,16 @@ export default {
     },
     covertState(status) {
       switch (status) {
-        case 'OFFLINE':
-          return 'lightgray'
         case 'ONLINE':
           return 'green'
+        case 'OFFLINE':
+          return 'lightgray'
+        case 'FAILURE':
+          return 'orange'
         case 'ALARM':
           return 'red'
-        case 'FAILURE':
-          return 'lightyellow'
+        default:
+          return 'black';
       }
     },
     reset() {
@@ -283,11 +290,12 @@ export default {
         floorId: node.id,
         deviceId: this.search.deviceId,
       }).then(res => {
-        this.statistics.total = res.data?.totalCount || 0;
-        this.statistics.opened = res.data?.onlineCount || 0;
-        this.statistics.closed = res.data?.offlineCount || 0;
-        this.statistics.abnormal = res.data?.alarmCount || 0;
+        this.statistics.totalCount = res.data?.totalCount || 0;
+        this.statistics.onlineCount = res.data?.onlineCount || 0;
+        this.statistics.offlineCount = res.data?.offlineCount || 0;
+        this.statistics.alarmCount = res.data?.alarmCount || 0;
         this.statistics.faultCount = res.data?.faultCount || 0;
+        this.statistics.otherCount = res.data?.otherCount || 0;
       });
     },
     queryDeviceCountByFloor() {
@@ -295,11 +303,12 @@ export default {
         floorId: this.search.storeyId,
         deviceId: this.search.deviceId,
       }).then(res => {
-        this.statistics.total = res.data?.totalCount || 0;
-        this.statistics.opened = res.data?.onlineCount || 0;
-        this.statistics.closed = res.data?.offlineCount || 0;
-        this.statistics.abnormal = res.data?.alarmCount || 0;
+        this.statistics.totalCount = res.data?.totalCount || 0;
+        this.statistics.onlineCount = res.data?.onlineCount || 0;
+        this.statistics.offlineCount = res.data?.offlineCount || 0;
         this.statistics.faultCount = res.data?.faultCount || 0;
+        this.statistics.alarmCount = res.data?.alarmCount || 0;
+        this.statistics.otherCount = res.data?.otherCount || 0;
       });
     },
     nodeMouseenter(evt) {
@@ -388,11 +397,19 @@ export default {
       }
     }
 
-    &.lightyellow {
-      border: 1px solid #ffdf25;
+    &.orange {
+      border: 1px solid #f59b22;
 
       .el-form-item:first-child {
-        background-color: #ffdf25;
+        background-color: #f59b22;
+      }
+    }
+
+    &.black {
+      border: 1px solid #000000;
+
+      .el-form-item:first-child {
+        background-color: #000000;
       }
     }
 

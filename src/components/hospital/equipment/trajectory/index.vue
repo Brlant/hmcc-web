@@ -82,8 +82,8 @@
       return {
         nodepoints: [],
         search: {
-          startDate: null,
-          endDate: null,
+          startDate: moment().format('yyyy-MM-DD 00:00:00'),
+          endDate: moment().format('yyyy-MM-DD 23:59:59'),
           devType: null,
           deviceId: null,
           storeyId: null
