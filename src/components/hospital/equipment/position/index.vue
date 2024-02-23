@@ -238,7 +238,6 @@ export default {
             data: { ...item }
           });
         });
-        this.mapData.nodes.splice(0, 2);
         if (res.data.length === 1) {
           singleBack && singleBack(res.data[0]);
         }
