@@ -34,7 +34,7 @@
           <el-row :gutter="10" v-show="form.templateType === '1'">
             <el-col :span="8">
               <el-form-item label="是否医用设备">
-                <el-radio-group v-model="form.medicalFlag">
+                <el-radio-group v-model="form.devMedicalFlag">
                   <el-radio :label="item.key" v-for="item in medicalDevType" :key="item.key">{{ item.label }}</el-radio>
                 </el-radio-group>
               </el-form-item>
