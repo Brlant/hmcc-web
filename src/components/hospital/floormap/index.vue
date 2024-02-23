@@ -258,12 +258,12 @@
             if (res.code !== 200) {
               return this.$message.error(res.msg || '服务端异常');
             }
+            this.img = res.data?.mapUrl;
+            this.mapData.nodes = [ ...nodes ];
             if (!res.data) {
               return;
             }
-            this.img = res.data.mapUrl;
             this.mapId = res.data.id;
-            this.mapData.nodes = [ ...nodes ];
             res.data.floorPlatPoint?.forEach(item => {
               this.mapData.nodes.push({
                 id: `${item.id}`,
