@@ -39,9 +39,9 @@
                 </el-radio-group>
               </el-form-item>
             </el-col>
-            <el-col :span="8" v-show="form.templateType === '2'">
+            <el-col :span="8" v-show="form.templateType === '1'">
               <el-form-item label="容积">
-                <oms-input placeholder="请输入容积" v-model="form.volume"/>
+                <oms-input placeholder="请输入容积" v-model="form.devVolume"/>
               </el-form-item>
             </el-col>
             <el-col :span="8">
@@ -60,12 +60,12 @@
             </el-col>
             <el-col :span="8">
               <el-form-item label="品牌">
-                <oms-input placeholder="请输入品牌" v-model="form.brand"/>
+                <oms-input placeholder="请输入品牌" v-model="form.devBrand"/>
               </el-form-item>
             </el-col>
             <el-col :span="8">
               <el-form-item label="型号">
-                <oms-input placeholder="请输入型号" v-model="form.version"/>
+                <oms-input placeholder="请输入型号" v-model="form.devVersion"/>
               </el-form-item>
             </el-col>
           </el-row>
@@ -126,7 +126,7 @@
             </el-col>
             <el-col :span="12">
               <el-form-item label="工作状态" prop="workStatus">
-                <el-input placeholder="请输入数字" type="number" v-model.number="form.workStatus">
+                <el-input placeholder="请输入数字" type="number" v-model.number="form.workStatus" disabled>
                   <template slot="prepend">大于</template>
                   <template slot="append">mA</template>
                 </el-input>
@@ -244,6 +244,9 @@ export default {
         this.$refs['tempForm'] && this.$refs['tempForm'].clearValidate();
       });
     },
+    'form.shutdownStatusEnd':function (val) {
+      this.form.workStatus = val;
+    }
   },
   methods: {
     getDetail(templateId) {

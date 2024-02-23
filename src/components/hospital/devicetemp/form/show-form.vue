@@ -31,13 +31,13 @@
                   <oms-col :isShow="true" :rowSpan="8" :colSpan="8" label="是否医用设备">
                     {{ formatDictLabel(form.medicalFlag, medicalDevType) }}
                   </oms-col>
-                  <oms-col :isShow="true" :rowSpan="8" :colSpan="8" label="容积">{{ form.volume }}</oms-col>
+                  <oms-col :isShow="true" :rowSpan="8" :colSpan="8" label="容积">{{ form.devVolume }}</oms-col>
                   <oms-col :isShow="true" :rowSpan="8" :colSpan="8" label="备注">{{ form.remark }}</oms-col>
                   <oms-col :isShow="true" :rowSpan="8" :colSpan="8" label="门板类型">
                     {{ formatDictLabel(form.doorSheetType, doorDevType) }}
                   </oms-col>
-                  <oms-col :isShow="true" :rowSpan="8" :colSpan="8" label="品牌">{{ form.brand }}</oms-col>
-                  <oms-col :isShow="true" :rowSpan="8" :colSpan="8" label="型号">{{ form.version }}</oms-col>
+                  <oms-col :isShow="true" :rowSpan="8" :colSpan="8" label="品牌">{{ form.devBrand }}</oms-col>
+                  <oms-col :isShow="true" :rowSpan="8" :colSpan="8" label="型号">{{ form.devVersion }}</oms-col>
                 </div>
 
                 <div v-show="form.templateType === '2'">
