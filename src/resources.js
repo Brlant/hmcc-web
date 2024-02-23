@@ -321,6 +321,9 @@ export const medicalApi = {
 
 // 冷链标签api
 export const ColdChainLabelApi = resource('/sensor', http, {
+  queryNoAlarm(data) {
+    return http.post('/sensor/page_no_alarm', data);
+  },
   query(params) {
     return http.post('/sensor/page', params);
   },

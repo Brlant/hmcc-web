@@ -7,10 +7,10 @@
     <template slot="content">
       <el-form :model="form" :rules="rules" label-width="160px" ref="tempForm">
         <el-form-item label="冷链标签" prop="sensorId">
-          <el-select :remote-method="queryProbeList" filterable placeholder="请输入名称搜索冷链标签"
+          <el-select :remote-method="getCoolTags" filterable placeholder="请输入名称搜索冷链标签"
                      remote v-model="form.sensorId" @change="sensorIdChange">
             <el-option :key="item.id" :label="item.name" :value="item.id"
-                       v-for="item in probeList"></el-option>
+                       v-for="item in coolTags"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="告警通知组" prop="alarmNoticeGroupId">
@@ -175,7 +175,7 @@
 <script>
   import methodsMixin from '@/mixins/methodsMixin';
 
-  import {AlarmRule} from '@/resources';
+  import {AlarmRule, ColdChainLabelApi} from '@/resources';
 
   export default {
     mixins: [methodsMixin],
@@ -275,7 +275,8 @@
           ]
         },
         timeList: [1, 2, 3, 5, 10, 30],
-        actionType: '添加'
+        actionType: '添加',
+        coolTags:[]
       };
     },
     props: {
@@ -284,10 +285,10 @@
     },
     watch: {
       index: function (val) {
-        this.probeList = [];
+        this.coolTags = [];
         this.$refs['tempForm'].clearValidate();
         if (this.formItem.id) {
-          this.probeList = [
+          this.coolTags = [
             {name: this.formItem.sensorName, id: this.formItem.sensorId, no: this.formItem.sensorNo}
           ];
           this.notifyList = [
@@ -338,7 +339,7 @@
     methods: {
       queryNotifyListNew(query) {
         if (!this.form.sensorId) return;
-        let item = this.probeList.find(f => f.id === this.form.sensorId);
+        let item = this.coolTags.find(f => f.id === this.form.sensorId);
         let params = {
           orgId: item.orgId,
           keyWord: query
@@ -407,6 +408,7 @@
                     this.$emit('change', res.data);
                   } else {
                     this.doing = false;
+                    this.$notify.error({message: res.msg});
                   }
                 },
                 error: () => {
@@ -432,6 +434,12 @@
             }
           }
         });
+      },
+      getCoolTags(keyWord) {
+        let data = {keyWord}
+        ColdChainLabelApi.queryNoAlarm({keyWord}).then(res => {
+          this.coolTags = res.data.list;
+        })
       }
     }
   };
