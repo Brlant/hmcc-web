@@ -21,7 +21,7 @@ export default {
   methods: {
     queryProbeList(query) {
       let params = typeof query === 'object' ? query : {keyWord: query};
-      return ColdChainLabelApi.query(params).then(res => {
+      ColdChainLabelApi.query(params).then(res => {
         this.probeList = res.data.list;
       });
     },
