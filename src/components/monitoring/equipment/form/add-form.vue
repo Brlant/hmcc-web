@@ -206,7 +206,8 @@ export default {
       let params = {
         keyWord: query,
         orgId: this.form.orgId || this.$store.state.user.userCompanyAddress || '',
-        freezerDevId: this.form.monitorTargetId || ''
+        freezerDevId: this.form.monitorTargetId || '',
+        sensorStatus: 1
       };
 
       this.$http.post('/sensor/without-monitor', params).then(res => {

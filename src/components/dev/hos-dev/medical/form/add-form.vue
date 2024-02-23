@@ -539,6 +539,7 @@ export default {
       let params = {
         tagSnNumber: keyword,
         type: '2',
+        status: '1',
         tagId: this.form.energyTagId || ''
       };
 
