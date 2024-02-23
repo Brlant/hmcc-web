@@ -115,9 +115,11 @@ export default {
     return {
       statusType: JSON.parse(JSON.stringify(utils.orderType)),
       filters: {
-        status: '1',
-        devCode: '',
-        devName: ''
+        no: null,
+        name: null,
+        type: null,
+        status: null,
+        orgId: ''
       },
       dialogComponents: {
         0: addForm,
