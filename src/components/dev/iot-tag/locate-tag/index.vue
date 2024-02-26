@@ -242,7 +242,7 @@ export default {
     /* 删除 */
     remove(row) {
       if (row.bindStatus === "1") {
-        this.$confirm(`则弹窗提示设备被${row.tagName}设备绑定，请解绑后重新操作`, '提示', {
+        this.$confirm(`该标签已绑定设备，无法删除，请解绑后重试`, '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           showCancelButton: true,
