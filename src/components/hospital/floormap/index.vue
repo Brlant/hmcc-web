@@ -365,7 +365,7 @@
           x: Number.MAX_VALUE,
           y: Number.MAX_VALUE
         });
-        this.mapRef.changeVisibility(tempNode, (this.showTemp = true));
+        this.mapRef.changeVisibility(tempNode, (this.showTemp = !this.showTemp));
       },
       uploadError(err) {
         console.error(err);
