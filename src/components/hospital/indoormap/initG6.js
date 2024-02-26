@@ -164,15 +164,13 @@ G6.registerNode('solidpoint', {
 });
 
 export default ({
-  elm, map, width, height, canvasClick, nodeClick, nodeMove, nodeMouseenter, nodeMouseleave
+  elm, map, width, height, canvasClick, canvasMousemove, nodeClick, nodeMove, nodeContextmenu, nodeMouseenter, nodeMouseleave
 }) => {
 
   let fi = null;
   let iw = map.width || width;
   let ih = map.height || height;
   let maporigin = { x: iw / 2, y: ih / 2 }
-  let nodeTemp = null;
-  let showTemp = false;
 
   let modes = ['drag-canvas', {
     type: 'zoom-canvas',
@@ -204,37 +202,9 @@ export default ({
     }
   });
 
-  graph.on('node:contextmenu', evt => {
-    const item = evt.item;
-    const nodeId = item.get('id');
-    if (nodeId === tempNode) {
-      return item.changeVisibility((showTemp = false));
-    }
-    const states = item.getStates();
-    if (states.length === 0 && nodeId.startsWith('temp')) {
-      graph.removeItem(item);
-    }
-  });
+  typeof nodeContextmenu === 'function' && graph.on('node:contextmenu', nodeContextmenu);
 
-  graph.on('canvas:mousemove', evt => {
-    if (!showTemp) {
-      return;
-    }
-    nodeTemp?.updatePosition({
-      x: evt.x,
-      y: evt.y
-    });
-  });
-
-  graph.on('node:mousemove', evt => {
-    if (!showTemp) {
-      return;
-    }
-    nodeTemp?.updatePosition({
-      x: evt.x,
-      y: evt.y
-    });
-  });
+  typeof canvasMousemove === 'function' && graph.on('canvas:mousemove', canvasMousemove);
 
   typeof nodeMove === 'function' && graph.on('node:drag', evt => {
     const item = evt.item;
@@ -264,25 +234,18 @@ export default ({
     maporigin.y = ih / toRatio / 2;
     graph.getNodes().forEach(node => {
       const model = node.getModel();
-      let cfg = {
-        x: model.ox + maporigin.x,
-        y: model.oy + maporigin.y
-      };
+      let cfg = { ...model };
+      cfg.x = model.ox + maporigin.x;
+      cfg.y = model.oy + maporigin.y;
       if (model.type === 'circle') {
-        if (model.label) {
+        if (model.labelCfg) {
           cfg.size = 25 / toRatio;
-          cfg.labelCfg = {
-            style: {
-              fontSize: 15 / toRatio
-            }
-          }
+          cfg.labelCfg.style.fontSize = 15 / toRatio
         } else {
           cfg.size = 3 / toRatio;
         }
       } else {
-        cfg.style = {
-          fontSize: fontSize / toRatio
-        }
+        cfg.style.fontSize = fontSize / toRatio
       }
       node.update(cfg);
     });
@@ -314,14 +277,10 @@ export default ({
         oy: node.y - maporigin.y
       }, node));
     },
-    changeVisibility(nodeId) {
-      nodeTemp = graph.findById(nodeId);
-      nodeTemp?.updatePosition({
-        x: Number.MAX_VALUE,
-        y: Number.MAX_VALUE
-      });
-      nodeTemp?.toFront();
-      nodeTemp?.changeVisibility((showTemp = !showTemp));
+    changeVisibility(nodeId, visible) {
+      let item  = graph.findById(nodeId);
+      item?.changeVisibility(visible);
+      item?.toFront();
     },
     update(itemId, model) {
       graph.update(itemId, model);
@@ -332,6 +291,10 @@ export default ({
       } catch (err) {
         console.error(itemId, err);
       }
+    },
+    updatePosition(itemId, coordinate) {
+      let item = graph.findById(itemId);
+      item.updatePosition(coordinate);
     },
     removeItem(itemId) {
       graph.removeItem(itemId)
@@ -355,48 +318,23 @@ export default ({
       fi = item;
     },
     highlightTrajectory(nodes) {
-      let idx = 0;
       graph.getNodes().forEach(node => {
         let model = node.getModel();
+        let cfg = { ...model };
         let nodeId = node.get('id');
         let curr = nodes.find(item => item.id === nodeId);
         if (curr) {
           if (curr.index > 0) {
-            idx++
-            node.update({
-              label: `${curr.index}`,
-              style: {
-                fill: '#01a7f0',
-                stroke: '#01a7f0'
-              },
-            });
-          } else {
-            node.update({
-              style: {
-                fill: '#01a7f0',
-                stroke: '#01a7f0'
-              },
-            });
+            cfg.label = `${curr.index}`;
           }
+          cfg.style.fill = '#01a7f0';
+          cfg.style.stroke = '#01a7f0';
         } else {
-          if (model.label) {
-            idx++
-            node.update({
-              label: `${idx}`,
-              style: {
-                fill: '#aadef8',
-                stroke: '#aadef8'
-              },
-            });
-          } else {
-            node.update({
-              style: {
-                fill: '#aadef8',
-                stroke: '#aadef8'
-              },
-            });
-          }
+          cfg.label = '';
+          cfg.style.fill = '#aadef8';
+          cfg.style.stroke = '#aadef8';
         }
+        node.update(cfg);
       });
       let prev = null;
       let edges = new Set();
@@ -407,7 +345,6 @@ export default ({
         prev = item;
       });
       graph.getEdges().forEach(edge => {
-        // console.log(edge)
         let model = edge.getModel();
         let cfg = { ...model };
         if (edges.has(`${model.source}-${model.target}`)) {

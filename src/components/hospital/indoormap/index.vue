@@ -33,8 +33,10 @@
       focus: String,
       nodeClick: Function,
       canvasClick: Function,
+      canvasMousemove: Function,
       nodeMouseenter: Function,
-      nodeMouseleave: Function
+      nodeMouseleave: Function,
+      nodeContextmenu: Function
     },
     data() {
       return {
@@ -97,17 +99,15 @@
           height: this.height,
           nodeClick: this.nodeClick,
           canvasClick: this.canvasClick,
-          canvasTouchend: this.canvasTouchend,
+          canvasMousemove: this.canvasMousemove,
           nodeMouseenter: this.nodeMouseenter,
-          nodeMouseleave: this.nodeMouseleave
+          nodeMouseleave: this.nodeMouseleave,
+          nodeContextmenu: this.nodeContextmenu
         });
         this.g6.render(this.dataG6);
       },
-      canvasTouchend(evt) {
-        this.$emit('canvasTouchend', evt)
-      },
-      changeVisibility(nodeId) {
-        this.g6.changeVisibility(nodeId);
+      changeVisibility(nodeId, visible) {
+        this.g6.changeVisibility(nodeId, visible);
       },
       addNode(node) {
         this.g6.addNode(node);
@@ -117,6 +117,9 @@
       },
       updateState(itemId, state) {
         this.g6.updateState(itemId, state);
+      },
+      updatePosition(itemId, coordinate) {
+        this.g6.updatePosition(itemId, coordinate);
       },
       removeItem(itemId) {
         this.g6.removeItem(itemId);

@@ -27,7 +27,8 @@
       </div>
 
       <div style="height: calc(100% - 66px)">
-        <IndoorMap ref="indoorMap" :img="img" :data="mapData" :nodeClick="nodeClick" :canvasClick="canvasClick"/>
+        <IndoorMap ref="indoorMap" :img="img" :data="mapData" :nodeClick="nodeClick" :nodeContextmenu="nodeContextmenu"
+          :canvasClick="canvasClick" :canvasMousemove="canvasMousemove"/>
       </div>
     </el-col>
 
@@ -50,6 +51,9 @@
       </el-form-item>
       <el-form-item label="纵轴坐标：" label-width="82px">
         <el-input v-model.number="form.yPoint" readonly/>
+      </el-form-item>
+      <el-form-item label="定位编码：" label-width="82px">
+        <el-input v-model="form.pointCode" :readonly="form.id && detail" maxlength="10" placeholder="定位编码"/>
       </el-form-item>
       <el-form-item label="标注区域（点位）名称：">
         <el-input v-model="form.pointName" :readonly="form.id && detail" maxlength="10" placeholder="标注区域（点位）名称"/>
@@ -93,6 +97,7 @@
     xPoint: 0,
     yPoint: 0,
     pointType: 0,
+    pointCode: null,
     pointName: null,
     contactPoints: []
   };
@@ -141,6 +146,7 @@
           marginRight: '5px',
           background: `url(${mapIcon}) center/100% 100%`
         },
+        showTemp: false,
         first: true,
         second: true,
         expandedKeys: [],
@@ -300,6 +306,17 @@
           this.modifyNode(node, model);
         }
       },
+      nodeContextmenu(evt) {
+        const item = evt.item;
+        const nodeId = item.get('id');
+        if (nodeId === tempNode) {
+          return item.changeVisibility((this.showTemp = false));
+        }
+        const states = item.getStates();
+        if (states.length === 0 && nodeId.startsWith(tempNode)) {
+          this.mapRef.removeItem(item);
+        }
+      },
       relateNode(node, model) {
         let nodeId = node.get('id');
         if (nodeId?.startsWith(tempNode)
@@ -330,13 +347,25 @@
       canvasClick() {
         this.closeFrom();
       },
+      canvasMousemove(evt) {
+        if (this.showTemp) {
+          this.mapRef.updatePosition(tempNode, {
+            x: evt.x,
+            y: evt.y
+          });
+        }
+      },
       closeFrom() {
         this.form = { ...formModel };
         this.detail = true;
         this.relating = false;
       },
       markPoint() {
-        this.mapRef.changeVisibility(tempNode);
+        this.mapRef.updatePosition(tempNode, {
+          x: Number.MAX_VALUE,
+          y: Number.MAX_VALUE
+        });
+        this.mapRef.changeVisibility(tempNode, (this.showTemp = true));
       },
       uploadError(err) {
         console.error(err);
@@ -362,7 +391,7 @@
         this.relating = !this.relating;
       },
       async savePoint() {
-        let res;
+        let id, res;
         try {
           if (this.form.id) {
             res = await modifyFloorPlatPoint(this.form);
@@ -373,18 +402,28 @@
             return this.$message.error(res.msg || '标点保存失败');
           }
           if (res.data) {
+            id = res.data.id;
             this.mapRef.removeItem(this.nodeId);
-            this.mapRef.addNode({
+            this.mapData.nodes.push({
               id: (this.nodeId = `${res.data.id}`),
-              x: this.mapWidth * res.data.xPoint,
-              y: this.mapHeight * res.data.yPoint,
-              ox: this.mapWidth * res.data.xPoint - this.mapWidth / 2,
-              oy: this.mapHeight * res.data.yPoint - this.mapHeight / 2,
+              x: res.data.xPoint,
+              y: res.data.yPoint,
               type: 'position',
               state: 'blue',
               data: Object.assign(this.form, res.data)
             });
+          } else {
+            id = this.form.id;
           }
+          this.form.contactPoints?.forEach(pointId => {
+            let curr = this.mapData.nodes.find(item => item.id === `${pointId}`);
+            let contact = curr.data?.contactPoints;
+            if (contact) {
+              contact.push(id);
+            } else {
+              curr.data.contactPoints = [id];
+            }
+          });
           this.$message.success('标点保存成功');
         } catch (err) {
           console.error(err);
