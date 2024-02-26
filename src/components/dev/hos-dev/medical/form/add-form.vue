@@ -406,7 +406,33 @@ export default {
         this.getDetail(this.formItem.id)
       } else {
         this.form = {
-          shutdownStatusStart: 0
+          devNo: '',
+          devName: '',
+          devType: '',
+          templateId: '',
+          supplier: '',
+          manufacturer: '',
+          departmentId: '',
+          productTime: '',
+          discardTime: '',
+          firstUserTime: '',
+          manufacturerRegistrationNumber: '',
+          productionLicenseNumber: '',
+          maintenanceCycle: '',
+          registrationCertificateNumber: '',
+          workStatus: '',
+          standardWorkingHours: '',
+          idleStateRangeStart: 0.00,
+          idleStateRangeEnd: '',
+          shutdownStatusStart: 0,
+          shutdownStatusEnd:'',
+          standardVoltageRangeStart: '',
+          standardVoltageRangeEnd: '',
+          standbyStatusRangeStart: '',
+          standbyStatusRangeEnd: '',
+          firstStatusType: '',
+          locationTagId: '',
+          energyTagId: '',
         };
         this.actionType = '添加医疗设备';
       }
@@ -437,7 +463,6 @@ export default {
           this.form.shutdownStatusStart = 0;
         }
 
-        console.log(this.form.shutdownStatusStart)
         this.getTempList();
         this.searchLocationTagSn(this.form.tagSnNumber);
         this.searchEnergyTagSn(this.form.energyTagSnNumber);
@@ -509,7 +534,10 @@ export default {
 
         let has = this.tempList.some(t => t.templateId === this.form.templateId);
         if (!has) {
-          this.tempList.push(this.form)
+          this.tempList.push({
+            templateId: this.form.templateId,
+            templateName: this.form.templateName
+          });
         }
       });
     },
