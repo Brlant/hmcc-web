@@ -387,6 +387,7 @@
             return this.$message.error(r.msg || '地图创建失败');
           }
           this.img = res.url;
+          this.mapId = r.data?.id;
           this.mapData.nodes = [ ...nodes ];
         });
       },
