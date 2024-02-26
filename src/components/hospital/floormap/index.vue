@@ -314,7 +314,7 @@
         }
         const states = item.getStates();
         if (states.length === 0 && nodeId.startsWith(tempNode)) {
-          this.mapRef.removeItem(item);
+          this.mapData.nodes = this.mapData.nodes.filter(item => item.id !== nodeId);
         }
       },
       relateNode(node, model) {
@@ -328,17 +328,20 @@
       modifyNode(node, model) {
         this.nodeId = node.get('id');
         if (this.nodeId === tempNode) {
-          this.mapRef.addNode({
+          let xPoint = (model.x / this.mapWidth).toFixed(4);
+          let yPoint = (model.y / this.mapHeight).toFixed(4);
+          this.mapData.nodes.push({
             id: `${tempNode}_${loadTime - Date.now()}`,
-            x: model.x,
-            y: model.y,
+            x: xPoint,
+            y: yPoint,
             type: 'position',
             data: Object.assign({ ...model.data }, {
-              platId: this.mapId,
-              xPoint: (model.x / this.mapWidth).toFixed(4),
-              yPoint: (model.y / this.mapHeight).toFixed(4)
-            })
+              platId: this.mapId, xPoint, yPoint})
           });
+          let temp = this.mapData.nodes[0];
+          temp.x = model.x;
+          temp.y = model.y;
+          temp.visible = true;
         } else {
           this.form = model.data;
         }
@@ -403,7 +406,8 @@
           }
           if (res.data) {
             id = res.data.id;
-            this.mapRef.removeItem(this.nodeId);
+            this.mapData.nodes = this.mapData.nodes
+              .filter(item => item.id !== this.nodeId);
             this.mapData.nodes.push({
               id: (this.nodeId = `${res.data.id}`),
               x: res.data.xPoint,
@@ -442,7 +446,8 @@
               return this.$message.error(res.msg || '标点删除失败');
             }
             this.closeFrom();
-            this.mapRef.removeItem(this.nodeId);
+            this.mapData.nodes = this.mapData.nodes
+              .filter(item => item.id !== this.nodeId);
             this.$message.success('标点删除成功');
           });
         });
