@@ -246,8 +246,8 @@
         this.mapData.edges = [];
         const nodes = new Set();
         const edges = new Set();
-        let prev;
-        let idx = 1, timeIdx = 1;
+        // let idx = 1,
+        let prev, timeIdx = 1;
 
         this.radios[val]?.locationPointLocusList?.forEach(item => {
           if (item.pointType === 0) {
@@ -301,7 +301,7 @@
                 y: item.nowPointY,
                 type: 'circle',
                 size: 25,
-                label: `${idx++}`,
+                // label: `${idx++}`,
                 style: {
                   fill: '#aadef8',
                   stroke: '#aadef8'
@@ -346,7 +346,7 @@
         let item = null, nodes = [];
         if (length === index + 1) {
           nodes.push(this.nodepoints[index]);
-          for (let i = index - 1; i > 0; i--) {
+          for (let i = index - 1; i > -1; i--) {
             item = this.nodepoints[i];
             if (flag) {
               nodes.splice(0,0, item);

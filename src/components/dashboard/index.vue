@@ -508,7 +508,7 @@ export default {
       return utils.formatMsToTime(recoveryTime - occurrenceTime);
     },
     formatModifyTime(item) {
-      console.log(item,'item')
+      // console.log(item,'item')
       if (item.isIntegralDate) {
         if (item.modifyTime === this.$moment().format('YYYY-MM-DD')) return '今天';
         return item.modifyTime;
