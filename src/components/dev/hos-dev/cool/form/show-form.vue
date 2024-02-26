@@ -24,7 +24,7 @@
                 <oms-col :isShow="true" :rowSpan="8" :colSpan="8" label="设备类型">
                   {{ formatDictLabel(form.type, deviceTypes) }}
                 </oms-col>
-                <oms-col :isShow="true" :rowSpan="8" :colSpan="8" label="设备类型模板">{{ templateName }}</oms-col>
+                <oms-col :isShow="true" :rowSpan="8" :colSpan="8" label="设备类型模板">{{ form.templateName }}</oms-col>
                 <oms-col :isShow="true" :rowSpan="8" :colSpan="8" label="所属科室">{{ form.departmentName }}</oms-col>
                 <oms-col :isShow="true" :rowSpan="8" :colSpan="8" label="所属单位">{{ form.orgName }}</oms-col>
                 <oms-col :isShow="true" :rowSpan="8" :colSpan="8" label="设备启用时间">{{ form.startUsingTime | time }}</oms-col>
