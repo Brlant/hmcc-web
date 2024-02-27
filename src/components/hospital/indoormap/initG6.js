@@ -164,7 +164,7 @@ G6.registerNode('solidpoint', {
 });
 
 export default ({
-  elm, map, width, height, canvasClick, canvasMousemove, nodeClick, nodeMove, nodeContextmenu, nodeMouseenter, nodeMouseleave
+  elm, map, width, height, canvasClick, canvasMousemove, nodeClick, nodeMove, nodeContextmenu, nodeMouseenter, nodeMousemove, nodeMouseleave
 }) => {
 
   let fi = null;
@@ -221,6 +221,8 @@ export default ({
   typeof canvasClick === 'function' && graph.on('canvas:click', canvasClick);
 
   typeof nodeMouseenter === 'function' && graph.on('node:mouseenter', nodeMouseenter);
+
+  typeof nodeMousemove === 'function' && graph.on('node:mousemove', nodeMousemove);
 
   typeof nodeMouseleave === 'function' && graph.on('node:mouseleave', nodeMouseleave);
 
@@ -300,11 +302,11 @@ export default ({
       graph.removeItem(itemId)
     },
     zoomTo(toRatio) {
-      if (toRatio === 1) {
-        graph.fitCenter();
-      }
       graph.zoomTo(toRatio);
       updateNodePosition(toRatio);
+      if (toRatio === 1) {
+        graph.focusItem('Center_Node');
+      }
     },
     focusItem(item) {
       if (!item) {

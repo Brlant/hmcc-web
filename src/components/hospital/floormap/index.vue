@@ -27,7 +27,7 @@
       </div>
 
       <div style="height: calc(100% - 66px)">
-        <IndoorMap ref="indoorMap" :img="img" :data="mapData" :nodeClick="nodeClick" :nodeContextmenu="nodeContextmenu"
+        <IndoorMap ref="indoorMap" :img="img" :data="mapData" :nodeClick="nodeClick" :nodeMousemove="nodeMousemove" :nodeContextmenu="nodeContextmenu"
           :canvasClick="canvasClick" :canvasMousemove="canvasMousemove"/>
       </div>
     </el-col>
@@ -304,6 +304,14 @@
           this.relateNode(node, model);
         } else {
           this.modifyNode(node, model);
+        }
+      },
+      nodeMousemove(evt) {
+        if (this.showTemp) {
+          this.mapRef.updatePosition(tempNode, {
+            x: evt.x,
+            y: evt.y
+          });
         }
       },
       nodeContextmenu(evt) {
