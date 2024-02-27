@@ -78,6 +78,8 @@ export default {
   watch: {
     detailForm: {
       handler(val) {
+        this.doing = false;
+
         if (val.id) {
           this.formData = {...val}
           if (this.formData.productType) {
@@ -239,6 +241,8 @@ export default {
       this.$refs.form.validate((validate) => {
         if (validate) {
           this.submitMsg();
+        }else {
+          this.doing = false;
         }
       })
     },
@@ -256,7 +260,6 @@ export default {
             this.$notify.error(res.msg);
           }
         }).catch(err => {
-          debugger
           this.$notify.error(err.response.data.msg || '提交失败');
         }).finally(() => {
           this.doing = false;
