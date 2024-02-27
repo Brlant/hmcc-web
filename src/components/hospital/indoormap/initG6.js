@@ -305,14 +305,14 @@ export default ({
       graph.zoomTo(toRatio);
       updateNodePosition(toRatio);
       if (toRatio === 1) {
-        graph.focusItem('Center_Node');
+        graph.focusItem('Center_Node', true);
       }
     },
     focusItem(item) {
       if (!item) {
-        return graph.fitCenter();
+        return graph.focusItem('Center_Node', true);
       }
-      graph.focusItem(item);
+      graph.focusItem(item, true);
       graph.setItemState(item,'focus', true);
       if (fi) {
         graph.setItemState(fi, 'focus', false);

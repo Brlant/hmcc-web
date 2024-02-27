@@ -104,8 +104,8 @@
 
   const nodes = [{
     id: tempNode, // String，该节点存在则必须，节点的唯一标识
-    x: 0, // Number，节点位置的 x 值
-    y: 0, // Number，节点位置的 y 值
+    x: Number.MAX_VALUE, // Number，节点位置的 x 值
+    y: Number.MAX_VALUE, // Number，节点位置的 y 值
     visible: false,
     type: 'position',
     state: 'default',
@@ -317,11 +317,17 @@
       nodeContextmenu(evt) {
         const item = evt.item;
         const nodeId = item.get('id');
+        let temp = this.mapData.nodes[0];
         if (nodeId === tempNode) {
-          return item.changeVisibility((this.showTemp = false));
+          return (temp.visible = this.showTemp = false);
         }
         const states = item.getStates();
         if (states.length === 0 && nodeId.startsWith(tempNode)) {
+          if (this.form.id === null) {
+            this.form = { ...formModel };
+          }
+          temp.x = (evt.x / this.mapWidth).toFixed(4);
+          temp.y = (evt.y / this.mapHeight).toFixed(4);
           this.mapData.nodes = this.mapData.nodes.filter(item => item.id !== nodeId);
         }
       },
@@ -347,8 +353,8 @@
               platId: this.mapId, xPoint, yPoint})
           });
           let temp = this.mapData.nodes[0];
-          temp.x = model.x;
-          temp.y = model.y;
+          temp.x = xPoint;
+          temp.y = yPoint;
           temp.visible = true;
         } else {
           this.form = model.data;
@@ -372,11 +378,10 @@
         this.relating = false;
       },
       markPoint() {
-        this.mapRef.updatePosition(tempNode, {
-          x: Number.MAX_VALUE,
-          y: Number.MAX_VALUE
-        });
-        this.mapRef.changeVisibility(tempNode, (this.showTemp = !this.showTemp));
+        let temp = this.mapData.nodes[0];
+        temp.x = Number.MAX_VALUE;
+        temp.y = Number.MAX_VALUE;
+        return (temp.visible = this.showTemp = !this.showTemp);
       },
       uploadError(err) {
         console.error(err);
