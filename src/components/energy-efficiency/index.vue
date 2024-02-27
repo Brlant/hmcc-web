@@ -25,7 +25,7 @@
       </el-row>
     </div>
 
-    <div class="warning-list-part bar-part" style="margin-top: 45px;">
+    <div class="warning-list-part bar-part" style="margin-top: 45px;cursor: pointer" @click="toAnalysis">
       <el-row>
         <el-col :span="6">
           <div style="padding-top: 10px">
@@ -215,6 +215,11 @@ export default {
         query: {
           id: item.deviceId
         }
+      })
+    },
+    toAnalysis(){
+      this.$router.push({
+        path: '/energy-efficiency/analysis'
       })
     }
   }
