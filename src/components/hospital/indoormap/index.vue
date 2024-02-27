@@ -32,9 +32,11 @@
       },
       focus: String,
       nodeClick: Function,
+      nodeMove: Function,
       canvasClick: Function,
       canvasMousemove: Function,
       nodeMouseenter: Function,
+      nodeMousemove: Function,
       nodeMouseleave: Function,
       nodeContextmenu: Function
     },
@@ -61,7 +63,12 @@
         })) || [];
         const edges = this.data?.edges?.map(it => ({ ...it })) || [];
         return {
-          nodes: [ ...nodes],
+          nodes: [ ...nodes, {
+            id: 'Center_Node',
+            x: this.width / 2,
+            y: this.height / 2,
+            visible: false
+          }],
           edges: [ ...edges ]
         };
       }
@@ -98,9 +105,11 @@
           width: this.width,
           height: this.height,
           nodeClick: this.nodeClick,
+          nodeMove: this.nodeMove,
           canvasClick: this.canvasClick,
           canvasMousemove: this.canvasMousemove,
           nodeMouseenter: this.nodeMouseenter,
+          nodeMousemove: this.nodeMousemove,
           nodeMouseleave: this.nodeMouseleave,
           nodeContextmenu: this.nodeContextmenu
         });

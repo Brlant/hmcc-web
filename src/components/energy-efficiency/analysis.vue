@@ -27,6 +27,10 @@ export default {
       handler(router) {
         // console.log(router)
         this.id = router.query.id
+        if (!this.id){
+          // 没有id就是调能耗分析的页面
+          this.key = 'web-energy-analy'
+        }
         this.jumpUrl = ''
         http.get(`/hengshi/getUrlByKeyAndId?key=${this.key}&id=${this.id}`).then(res => {
           this.jumpUrl = res.data
