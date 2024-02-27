@@ -377,6 +377,9 @@ export default {
         ],
         energyTagId: [
           {validator: this.validatorEnergyTagSnNumberId, trigger: 'blur'}
+        ],
+        shutdownStatusEnd: [
+          {validator: this.validatorShutdownStatusEnd, trigger: 'blur'}
         ]
       },
       actionType: '添加冷链设备',
@@ -628,6 +631,23 @@ export default {
       } else {
         callback();
       }
+    },
+    validatorShutdownStatusEnd(rule, value, callback) {
+      let status = this.form.firstStatusType;
+      if (status == '2'){
+        if (!value) {
+          callback(new Error("请填写关机状态的最大值"));
+          return;
+        }
+      }
+
+      if (value && value < 0) {
+          callback(new Error("关机状态的最大值不能小于0"));
+          return;
+        }
+
+      callback();
+
     },
     handleSelect(item) {
       // console.log(`handleSelect`, item);
