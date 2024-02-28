@@ -60,7 +60,7 @@
       </div>
     </el-form>
 
-    <div style="height: calc(100% - 60px); position: relative;">
+    <div ref="indoorContainer" style="height: calc(100% - 60px); position: relative;">
       <IndoorMap ref="indoorMap" :img="img" :data="mapData" :nodeMouseenter="nodeMouseenter" :nodeMouseleave="nodeMouseleave"/>
       <!-- 详情 -->
       <el-form :model="form" :class="tipClass" :style="tipPosition">
@@ -124,6 +124,12 @@ export default {
     };
   },
   computed: {
+    fontX() {
+      return 30 / this.$refs.indoorContainer.offsetWidth;
+    },
+    fontY() {
+      return 36 / this.$refs.indoorContainer.offsetHeight;
+    },
     tipTitle() {
       switch (this.form.status) {
         case 'OFFLINE':
@@ -222,22 +228,58 @@ export default {
         });
       }
     },
-    queryDevicePosition(singleBack){
-      queryDevicePosition({
-        ...this.search
-      }).then(res => {
-        this.mapData.nodes = [];
-        res.data?.forEach(item => {
-          this.img = item.mapUrl;
-          this.mapData.nodes.push({
+    coordCalculate(points) {
+      let len = points.length;
+      let sqr = Math.sqrt(len);
+      let col = Math.ceil(sqr);
+      let row = Math.ceil(sqr);
+      let cx = Math.floor(col / 2);
+      let cy = Math.floor(row / 2);
+      let item, result = [];
+      loop:for (let i = 0; i < row; i++) {
+        for (let j = 0; j < col; j++) {
+          item = points[--len];
+          if (!item) {
+            break loop;
+          }
+          result.push({
             id: `${item.deviceId}`,
-            x: item.xPoint,
-            y: item.yPoint,
+            x: item.xPoint + (j - cx) * this.fontX,
+            y: item.yPoint + (i - cy) * this.fontY,
             type: 'position',
             state: this.covertState(item.status),
             data: { ...item }
           });
-        });
+        }
+      }
+      return result;
+    },
+    convertNodes(points) {
+      if (!Array.isArray(points) || points.length < 1) {
+        return;
+      }
+      let groupTemp = {};
+      points.forEach(item => {
+        this.img = item.mapUrl;
+        let key = `${item.xPoint}-${item.yPoint}`;
+        let group = groupTemp[key];
+        if (group) {
+          group.push(item);
+        } else {
+          groupTemp[key] = [ item ];
+        }
+      });
+
+      this.mapData.nodes = [];
+      Object.keys(groupTemp).forEach(key => {
+        this.mapData.nodes.push(...this.coordCalculate(groupTemp[key]));
+      });
+    },
+    queryDevicePosition(singleBack){
+      queryDevicePosition({
+        ...this.search
+      }).then(res => {
+        this.convertNodes(res.data);
         if (res.data.length === 1) {
           singleBack && singleBack(res.data[0]);
         }
