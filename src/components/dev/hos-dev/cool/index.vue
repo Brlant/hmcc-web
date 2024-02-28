@@ -111,7 +111,7 @@
     </div>
 
     <page-right :css="defaultPageRight" :show="showIndex !== -1" @right-close="resetRightBox">
-      <component :formItem="form" :statusType="statusType" :index="showIndex" :is="currentPart" @change="change"
+      <component :formItem="currentItem" :statusType="statusType" :index="showIndex" :is="currentPart" @change="change"
                  @right-close="resetRightBox"/>
     </page-right>
 
@@ -255,13 +255,15 @@ export default {
       this.queryStatusNumUtil(http, pm, this.statusType, res);
     },
     add() {
-      this.form = {};
+      // this.form = {};
+      this.currentItem = {};
+      this.currentItemId = '';
       this.showPart(0);
     },
     edit(item) {
       this.currentItem = item;
       this.currentItemId = item.id;
-      this.form = item;
+      // this.form = item;
       this.showPart(0);
     },
     showItemDetail(item) {
@@ -269,9 +271,9 @@ export default {
       this.currentItemId = item.id;
       this.showPart(1);
       this.defaultPageRight.width = '1500px';
-      this.$nextTick(() => {
-        this.form = item;
-      });
+      // this.$nextTick(() => {
+      //   this.form = item;
+      // });
     },
     change() {
       this.resetRightBox();
