@@ -357,7 +357,8 @@
           temp.y = yPoint;
           temp.visible = true;
         } else {
-          this.form = model.data;
+          this.form = { ...model.data };
+          this.form.contactPoints = [ ...model.data.contactPoints ];
         }
         node.toFront();
       },
@@ -433,8 +434,11 @@
           } else {
             id = this.form.id;
           }
+          let curr = this.mapData.nodes.find(item => item.id === `${id}`);
+          curr.data = { ...this.form };
+          curr.data.contactPoints = [ ...this.form.contactPoints ];
           this.form.contactPoints?.forEach(pointId => {
-            let curr = this.mapData.nodes.find(item => item.id === `${pointId}`);
+            curr = this.mapData.nodes.find(item => item.id === `${pointId}`);
             let contact = curr.data?.contactPoints;
             if (contact) {
               contact.push(id);
@@ -442,6 +446,7 @@
               curr.data.contactPoints = [id];
             }
           });
+          this.closeFrom();
           this.$message.success('标点保存成功');
         } catch (err) {
           console.error(err);

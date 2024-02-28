@@ -246,7 +246,6 @@
         this.mapData.edges = [];
         const nodes = new Set();
         const edges = new Set();
-        // let idx = 1,
         let prev, timeIdx = 1;
 
         this.radios[val]?.locationPointLocusList?.forEach(item => {
@@ -301,7 +300,6 @@
                 y: item.nowPointY,
                 type: 'circle',
                 size: 25,
-                // label: `${idx++}`,
                 style: {
                   fill: '#aadef8',
                   stroke: '#aadef8'
