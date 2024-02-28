@@ -210,9 +210,7 @@
           this.radios?.forEach(storey => {
             let i = 0, result = [];
             storey.locationPointLocusList.forEach(item => {
-              if (result[i]?.nowPoint === item.nowPoint) {
-                result[i] = item;
-              } else {
+              if (result[i]?.nowPoint !== item.nowPoint) {
                 result[++i] = item;
               }
             });
