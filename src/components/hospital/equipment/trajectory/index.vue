@@ -244,7 +244,7 @@
         this.mapData.edges = [];
         const nodes = new Set();
         const edges = new Set();
-        let prev, timeIdx = 1;
+        let timeIdx = 1;
 
         this.radios[val]?.locationPointLocusList?.forEach(item => {
           if (item.pointType === 0) {
@@ -263,13 +263,13 @@
               timestamp: item.createdTime,
             });
           }
-          if (prev && prev.nowPoint !== item.nowPoint) {
-            let edgeId = `${prev.nowPoint}-${item.nowPoint}`;
+          if (item.nowPoint !== item.belongPoint) {
+            let edgeId = `${item.belongPoint}-${item.nowPoint}`;
             if (!edges.has(edgeId)) {
               edges.add(edgeId);
               if (item.pointType === 0) {
                 this.mapData.edges.push({
-                  source: `${prev.nowPoint}`,
+                  source: `${item.belongPoint}`,
                   target: `${item.nowPoint}`,
                   style: {
                     stroke: '#aadef8',
@@ -278,7 +278,7 @@
                 })
               } else {
                 this.mapData.edges.push({
-                  source: `${prev.nowPoint}`,
+                  source: `${item.belongPoint}`,
                   target: `${item.nowPoint}`,
                   style: {
                     stroke: '#aadef8',
@@ -324,7 +324,6 @@
               });
             }
           }
-          prev = item;
         });
       },
       timelineClick(tlIndex) {
