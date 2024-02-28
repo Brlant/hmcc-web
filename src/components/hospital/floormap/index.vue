@@ -53,10 +53,10 @@
         <el-input v-model.number="form.yPoint" readonly/>
       </el-form-item>
       <el-form-item label="定位编码：" label-width="82px">
-        <el-input v-model="form.pointCode" :readonly="form.id && detail" maxlength="10" placeholder="定位编码"/>
+        <el-input v-model="form.pointCode" :readonly="form.id && detail" maxlength="20" placeholder="定位编码"/>
       </el-form-item>
       <el-form-item label="标注区域（点位）名称：">
-        <el-input v-model="form.pointName" :readonly="form.id && detail" maxlength="10" placeholder="标注区域（点位）名称"/>
+        <el-input v-model="form.pointName" :readonly="form.id && detail" maxlength="20" placeholder="标注区域（点位）名称"/>
       </el-form-item>
       <el-form-item>
         <template v-if="form.id && detail">
