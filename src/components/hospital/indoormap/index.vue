@@ -106,6 +106,7 @@
           height: this.height,
           nodeClick: this.nodeClick,
           nodeMove: this.nodeMove,
+          wheelzoom: this.wheelzoom,
           canvasClick: this.canvasClick,
           canvasMousemove: this.canvasMousemove,
           nodeMouseenter: this.nodeMouseenter,
@@ -152,6 +153,9 @@
           this.g6.zoomTo((this.mapzoom = 1));
         }
       },
+      wheelzoom(mapzoom) {
+        this.mapzoom = mapzoom;
+      }
     }
   }
 </script>

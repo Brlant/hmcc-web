@@ -2,7 +2,6 @@ import G6 from '@antv/g6';
 import { createDom } from "@antv/dom-util";
 
 const fontSize = 30;
-const tempNode = 'temp_node';
 
 class Grid extends G6.Grid {
   constructor(cfg) {
@@ -26,9 +25,9 @@ class Grid extends G6.Grid {
     graphContainer.insertBefore(container, canvas);
   }
 
-  updateGrid(param) {
-    super.updateGrid(param);
-  }
+  // updateGrid(param) {
+  //   super.updateGrid(param);
+  // }
 }
 
 G6.registerNode('position', {
@@ -163,9 +162,23 @@ G6.registerNode('solidpoint', {
   },
 });
 
-export default ({
-  elm, map, width, height, canvasClick, canvasMousemove, nodeClick, nodeMove, nodeContextmenu, nodeMouseenter, nodeMousemove, nodeMouseleave
-}) => {
+export default (
+  {
+    elm,
+    map,
+    width,
+    height,
+    wheelzoom,
+    canvasClick,
+    canvasMousemove,
+    nodeClick,
+    nodeMove,
+    nodeContextmenu,
+    nodeMouseenter,
+    nodeMousemove,
+    nodeMouseleave
+  }
+) => {
 
   let fi = null;
   let iw = map.width || width;
@@ -229,6 +242,7 @@ export default ({
   graph.on('wheelzoom', () => {
     const zoom = graph.getZoom();
     updateNodePosition(zoom);
+    typeof wheelzoom === 'function' && wheelzoom(zoom);
   });
 
   const updateNodePosition = toRatio => {
@@ -338,18 +352,21 @@ export default ({
         }
         node.update(cfg);
       });
+
       let prev = null;
-      let edges = new Set();
+      let edges = {}, targetId;
       nodes.forEach(item => {
         if (prev) {
-          edges.add(`${prev.id}-${item.id}`);
+          let key = `${prev.id}-${item.id}`;
+          edges[key] = item.targetId;
         }
         prev = item;
       });
       graph.getEdges().forEach(edge => {
         let model = edge.getModel();
         let cfg = { ...model };
-        if (edges.has(`${model.source}-${model.target}`)) {
+        targetId = edges[`${model.source}-${model.target}`];
+        if (model.data?.some(id => id === targetId)) {
           edge.toFront();
           cfg.style.stroke = '#01a7f0';
         } else {
