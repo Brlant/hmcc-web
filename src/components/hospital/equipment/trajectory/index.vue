@@ -253,14 +253,14 @@
               index: timeIdx++,
               color: 'lightgray',
               content: item.pointName,
-              timestamp: item.createdTime,
+              timestamp: item.reportTime,
             });
           } else {
             this.nodepoints.push({
               id: `${item.nowPoint}`,
               color: 'lightgray',
               content: item.pointName,
-              timestamp: item.createdTime,
+              timestamp: item.reportTime,
             });
           }
           if (item.nowPoint !== item.belongPoint) {
