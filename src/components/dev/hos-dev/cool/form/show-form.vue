@@ -27,7 +27,7 @@
                 <oms-col :isShow="true" :rowSpan="8" :colSpan="8" label="设备类型模板">{{ form.templateName }}</oms-col>
                 <oms-col :isShow="true" :rowSpan="8" :colSpan="8" label="所属科室">{{ form.departmentName }}</oms-col>
                 <oms-col :isShow="true" :rowSpan="8" :colSpan="8" label="所属单位">{{ form.orgName }}</oms-col>
-                <oms-col :isShow="true" :rowSpan="8" :colSpan="8" label="设备启用时间">{{ form.startUsingTime | time }}</oms-col>
+                <oms-col :isShow="true" :rowSpan="8" :colSpan="8" label="设备启用时间">{{ form.startUsingTime | date }}</oms-col>
                 <oms-col :isShow="true" :rowSpan="8" :colSpan="8" label="状态">{{ formatStatus(form.status, statusType) }}</oms-col>
                 <oms-col :isShow="true" :rowSpan="8" :colSpan="8" label="是否医用设备">
                   {{ formatDictLabel(form.medicalFlag, medicalDevType) }}

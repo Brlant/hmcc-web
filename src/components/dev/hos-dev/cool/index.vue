@@ -57,7 +57,7 @@
             <el-col :span="2" class="R">{{ item.tagSnNumber }}</el-col>
             <el-col :span="2" class="R">{{ item.energyTagSnNumber }}</el-col>
 
-            <el-col :span="2">{{ item.startUsingTime | time }}</el-col>
+            <el-col :span="2">{{ item.startUsingTime | date }}</el-col>
             <el-col :span="2">
               <span v-if="item.deviceStatus === 'ONLINE'" style="color: #95f202">开机</span>
               <span v-else-if="item.deviceStatus === 'OFFLINE'" style="color: #aaaaaa">关机</span>
