@@ -208,12 +208,14 @@
         queryDeviceTrack(this.search).then(res => {
           this.radios = res.data;
           this.radios?.forEach(storey => {
-            let i = 0, result = [];
+            let i = 0, result = [], nodeIds = new Set();
             storey.locationPointLocusList.forEach(item => {
               if (result[i]?.nowPoint !== item.nowPoint) {
                 result[++i] = item;
               }
+              nodeIds.add(item.nowPoint);
             });
+            storey.nodeIds = nodeIds;
             storey.locationPointLocusList = result;
           });
           this.floorInput((this.floor = 0));
@@ -238,93 +240,79 @@
           }
           return (this.img = null);
         }
+
+        let timeIdx = 1;
+        const nodes = {}, edges = {};
+        const nodeIds = storey.nodeIds;
+
         this.img = storey.mapUrl;
         this.nodepoints = [];
-        this.mapData.nodes = [];
-        this.mapData.edges = [];
-        const nodes = new Set();
-        const edges = new Set();
-        let timeIdx = 1;
+        storey.locationPointLocusList?.forEach(item => {
 
-        this.radios[val]?.locationPointLocusList?.forEach(item => {
+          let timeline = {
+            id: `${item.nowPoint}`,
+            color: 'lightgray',
+            content: item.pointName,
+            targetId: item.id,
+            timestamp: item.reportTime,
+          };
           if (item.pointType === 0) {
-            this.nodepoints.push({
-              id: `${item.nowPoint}`,
-              index: timeIdx++,
-              color: 'lightgray',
-              content: item.pointName,
-              timestamp: item.reportTime,
-            });
-          } else {
-            this.nodepoints.push({
-              id: `${item.nowPoint}`,
-              color: 'lightgray',
-              content: item.pointName,
-              timestamp: item.reportTime,
-            });
+            timeline.index = timeIdx++;
           }
-          if (item.nowPoint !== item.belongPoint) {
-            let edgeId = `${item.belongPoint}-${item.nowPoint}`;
-            if (!edges.has(edgeId)) {
-              edges.add(edgeId);
-              if (item.pointType === 0) {
-                this.mapData.edges.push({
-                  source: `${item.belongPoint}`,
-                  target: `${item.nowPoint}`,
-                  style: {
-                    stroke: '#aadef8',
-                    lineWidth: 4
-                  }
-                })
-              } else {
-                this.mapData.edges.push({
-                  source: `${item.belongPoint}`,
-                  target: `${item.nowPoint}`,
-                  style: {
-                    stroke: '#aadef8',
-                    lineWidth: 4,
-                    endArrow: false
-                  }
-                })
-              }
-            }
-          }
-          if (!nodes.has(item.nowPoint)) {
-            nodes.add(item.nowPoint);
-            if (item.pointType === 0) {
-              this.mapData.nodes.push({
-                id: `${item.nowPoint}`,
-                x: item.nowPointX,
-                y: item.nowPointY,
-                type: 'circle',
-                size: 25,
-                style: {
-                  fill: '#aadef8',
-                  stroke: '#aadef8'
-                },
-                labelCfg: {
-                  position: 'center',
-                  style: {
-                    fill: '#ffffff',
-                    fontSize: 15
-                  }
-                }
-              });
+          this.nodepoints.push(timeline);
+
+          if (item.nowPoint !== item.belongPoint
+            && nodeIds.has(item.nowPoint)
+            && nodeIds.has(item.belongPoint)) {
+
+            let edgeKey = `${item.belongPoint}-${item.nowPoint}`;
+            if (edges[edgeKey]) {
+              edges[edgeKey].data.push(item.id);
             } else {
-              this.mapData.nodes.push({
-                id: `${item.nowPoint}`,
-                x: item.nowPointX,
-                y: item.nowPointY,
-                type: 'circle',
-                size: 3,
+              let edge = {
+                source: `${item.belongPoint}`,
+                target: `${item.nowPoint}`,
                 style: {
-                  fill: '#aadef8',
-                  stroke: '#aadef8'
-                }
-              });
+                  stroke: '#aadef8',
+                  lineWidth: 4
+                },
+                data: [ item.id ]
+              };
+              if (item.pointType !== 0) {
+                edge.style.endArrow = false;
+              }
+              edges[edgeKey] = edge;
             }
+          }
+
+          if (!nodes[item.nowPoint]) {
+            let node = {
+              id: `${item.nowPoint}`,
+              x: item.nowPointX,
+              y: item.nowPointY,
+              type: 'circle',
+              size: 3,
+              style: {
+                fill: '#aadef8',
+                stroke: '#aadef8'
+              }
+            };
+
+            if (item.pointType === 0) {
+              node.size = 25;
+              node.labelCfg = {
+                position: 'center',
+                style: {
+                  fill: '#ffffff',
+                  fontSize: 15
+                }
+              };
+            }
+            nodes[item.nowPoint] = node;
           }
         });
+        this.mapData.nodes = Object.values(nodes);
+        this.mapData.edges = Object.values(edges);
       },
       timelineClick(tlIndex) {
         let flag = true, curr, index = 0, cnt = 0;
