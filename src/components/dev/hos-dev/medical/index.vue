@@ -44,13 +44,13 @@
     <div class="order-list" style="margin-top: 20px">
       <el-row class="order-list-header">
         <el-col :span="1">序号</el-col>
-        <el-col :span="2">设备名称</el-col>
+        <el-col :span="3">设备名称</el-col>
         <el-col :span="2">设备编号</el-col>
         <el-col :span="2">所属科室</el-col>
         <el-col :span="2">设备分类</el-col>
         <el-col :span="2">定位标签</el-col>
         <el-col :span="2">能耗标签</el-col>
-        <el-col :span="2">启用时间</el-col>
+        <!--<el-col :span="2">启用时间</el-col>-->
         <el-col :span="2">运行状态</el-col>
         <!--<el-col :span="2">设备状态</el-col>-->
         <el-col :span="4">最后位置</el-col>
@@ -80,14 +80,14 @@
               {{ item.devName }}
             </el-col>
             <el-col :span="2" class="R">{{ item.devNo }}</el-col>
-            <el-col :span="2" class="R">{{ item.departmentName }}</el-col>
+            <el-col :span="3" class="R">{{ item.departmentName }}</el-col>
             <el-col :span="2" class="R">
               {{ formatDictLabel(item.devType, deviceTypes) }}
             </el-col>
             <el-col :span="2" class="R">{{ item.tagSnNumber }}</el-col>
             <el-col :span="2" class="R">{{ item.energyTagSnNumber }}</el-col>
 
-            <el-col :span="2">{{ item.firstUserTime | time }}</el-col>
+            <!--<el-col :span="2">{{ item.firstUserTime | time }}</el-col>-->
             <el-col :span="2">
               <span v-if="item.deviceStatus === 'ONLINE'" style="color: #95f202">开机</span>
               <span v-else-if="item.deviceStatus === 'OFFLINE'" style="color: #aaaaaa">关机</span>

@@ -28,9 +28,9 @@
                 <oms-col :isShow="true" :rowSpan="8" :colSpan="8" label="供应商">{{ form.supplier }}</oms-col>
                 <oms-col :isShow="true" :rowSpan="8" :colSpan="8" label="生产厂商">{{ form.manufacturer }}</oms-col>
                 <oms-col :isShow="true" :rowSpan="8" :colSpan="8" label="所属科室">{{ form.departmentName }}</oms-col>
-                <oms-col :isShow="true" :rowSpan="8" :colSpan="8" label="生产日期">{{ form.productTime }}</oms-col>
-                <oms-col :isShow="true" :rowSpan="8" :colSpan="8" label="报废时间">{{ form.discardTime }}</oms-col>
-                <oms-col :isShow="true" :rowSpan="8" :colSpan="8" label="首次投入使用时间">{{ form.firstUserTime }}</oms-col>
+                <oms-col :isShow="true" :rowSpan="8" :colSpan="8" label="生产日期">{{ form.productTime|date }}</oms-col>
+                <oms-col :isShow="true" :rowSpan="8" :colSpan="8" label="报废时间">{{ form.discardTime|time }}</oms-col>
+                <oms-col :isShow="true" :rowSpan="8" :colSpan="8" label="首次投入使用时间">{{ form.firstUserTime|date }}</oms-col>
                 <oms-col :isShow="true" :rowSpan="8" :colSpan="8" label="厂商备案凭证号">{{
                     form.manufacturerRegistrationNumber
                   }}
