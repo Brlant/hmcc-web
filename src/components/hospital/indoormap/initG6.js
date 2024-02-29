@@ -340,9 +340,7 @@ export default (
         let nodeId = node.get('id');
         let curr = nodes.find(item => item.id === nodeId);
         if (curr) {
-          if (curr.index > 0) {
-            cfg.label = `${curr.index}`;
-          }
+          cfg.label = `${curr.index || ''}`;
           cfg.style.fill = '#01a7f0';
           cfg.style.stroke = '#01a7f0';
         } else {
