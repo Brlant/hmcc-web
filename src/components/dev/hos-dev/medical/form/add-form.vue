@@ -658,6 +658,7 @@ export default {
       medicalApi.unbindDeviceTagRelation(this.form.locationTagId, this.form.id, "2").then(res => {
         this.form.locationTagId = '';
         this.showUnbindLocationTag = false;
+        this.$emit('change');
         this.$message.success('解绑成功')
       })
     },
@@ -665,6 +666,7 @@ export default {
       medicalApi.unbindDeviceTagRelation(this.form.energyTagId, this.form.id, "1").then(res => {
         this.form.energyTagId = '';
         this.showUnbindEnergyTag = false;
+        this.$emit('change');
         this.$message.success('解绑成功')
       })
     },
