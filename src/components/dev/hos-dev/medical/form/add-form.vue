@@ -428,7 +428,7 @@ export default {
           idleStateRangeStart: 0.00,
           idleStateRangeEnd: '',
           shutdownStatusStart: 0,
-          shutdownStatusEnd:'',
+          shutdownStatusEnd: '',
           standardVoltageRangeStart: '',
           standardVoltageRangeEnd: '',
           standbyStatusRangeStart: '',
@@ -635,8 +635,8 @@ export default {
     },
     validatorShutdownStatusEnd(rule, value, callback) {
       let status = this.form.firstStatusType;
-      if (status == '2'){
-        if (!value) {
+      if (status == '2') {
+        if (!value && value != 0) {
           callback(new Error("请填写关机状态的最大值"));
           return;
         }
