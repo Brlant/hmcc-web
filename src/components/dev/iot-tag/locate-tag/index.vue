@@ -153,9 +153,7 @@ export default {
         devNo: "",                 //绑定设备编号
         status: "",                //标签状态 1在线 2不在线 3脱落
         //分页
-        total: 0,
-        pageNo: 1,
-        pageSize: 10,
+        total: 0
       },
       loading: false,
       labelTypeList: [],//标签类型
@@ -273,8 +271,7 @@ export default {
     },
     /* 搜索 */
     search() {
-      this.queryParams.pageNo = 1;
-      this.queryParams.pageSize = 10;
+      this.pager.currentPage = 1;
       this.getLabelQueryList();
     },
     /* 重置 */
@@ -287,12 +284,10 @@ export default {
         status: "",                //标签状态 1在线 2不在线 3脱落
 
         total: 0,
-        pageNo: 1,
-        pageSize: 10,
       }
       this.$refs.queryForm.resetFields()
-      this.queryParams.pageNo = 1;
-      this.queryParams.pageSize = 10;
+
+      this.pager.currentPage = 1;
       this.getLabelQueryList();
     },
     queryList(pageNo) {
@@ -323,7 +318,6 @@ export default {
       }).catch(err => {
 
       })
-
     },
     /* 添加标签 */
     addLabel() {
