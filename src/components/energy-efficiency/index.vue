@@ -204,7 +204,7 @@ export default {
         'ONLINE': 'bg-green',
         'OFFLINE': 'bg-grey',
         'ALARM': 'bg-red',
-        'FAULT': 'bg-yellow',
+        'FAILURE': 'bg-yellow',
         '--': 'bg-other',
       }
       return classes[item.status] || 'bg-green'
