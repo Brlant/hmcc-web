@@ -149,7 +149,7 @@ export default {
     rowListHandler(sensorDataList) {
       let rows = [];
 
-      sensorDataList = sensorDataList.filter(item => item.id);
+      sensorDataList = sensorDataList.filter(item => item.id && item.isOpen);
       if (!sensorDataList) {
         return rows;
       }

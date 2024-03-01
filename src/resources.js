@@ -60,11 +60,7 @@ http.interceptors.response.use(response => {
   let notice = window.localStorage.getItem(noticeTipKey);
   let response = error.response;
 
-  if (notice === '1' && response.status !== 401) {
-    return Promise.reject(error);
-  } else {
-    window.localStorage.setItem(noticeTipKey, '1');
-  }
+  console.log(`接口【${error.url}】异常`, JSON.stringify(error))
   if (!response || response.status === 500) {
     Notification.warning({
       message: '服务器太久没有响应, 请重试',
@@ -72,10 +68,18 @@ http.interceptors.response.use(response => {
         window.localStorage.removeItem(noticeTipKey);
       }
     });
+
     // 添加标志
     WholeErrorSignHandle.add();
     return Promise.reject(error);
   }
+
+  if (notice === '1' && response.status !== 401) {
+    return Promise.reject(error);
+  } else {
+    window.localStorage.setItem(noticeTipKey, '1');
+  }
+
   if (response.status === 401) { //  Unauthorized, redirect to login
     let lastUrl = window.localStorage.getItem('lastUrl');
     if (!lastUrl || lastUrl.indexOf('/base/dict') === -1) {
