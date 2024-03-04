@@ -76,16 +76,24 @@
     watch: {
       img(val) {
         this.g6?.destroy();
-        this.g6 = null;
         if (val) {
           this.initG6();
           this.showEmpty = false;
         } else {
+          this.g6 = null;
           this.showEmpty = true;
         }
       },
       dataG6(data) {
-        this.g6?.render(data);
+        this.g6?.destroy();
+        if (this.img) {
+          this.initG6();
+          this.showEmpty = false;
+        } else {
+          this.g6 = null;
+          this.showEmpty = true;
+        }
+        // this.g6?.render(data);
       },
       focus(focus) {
         this.g6?.focusItem(focus);
@@ -94,6 +102,7 @@
     methods: {
       initG6() {
         let elm = this.$refs.floorMap;
+        this.mapzoom = 1;
         this.width = elm.offsetWidth;
         this.height = elm.offsetHeight;
 
@@ -134,8 +143,8 @@
       removeItem(itemId) {
         this.g6.removeItem(itemId);
       },
-      highlightTrajectory(nodes) {
-        this.g6.highlightTrajectory(nodes);
+      highlightTrajectory(trajectories) {
+        this.g6.highlightTrajectory(trajectories);
       },
       indoorToolbar(event) {
         const className = event.target?.className;
