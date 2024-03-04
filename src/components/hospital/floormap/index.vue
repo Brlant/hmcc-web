@@ -450,6 +450,7 @@
           this.$message.success('标点保存成功');
         } catch (err) {
           console.error(err);
+          this.$message.error(err?.response.data.msg || '标点保存失败');
         }
       },
       delPoint() {
@@ -468,6 +469,9 @@
             this.mapData.nodes = this.mapData.nodes
               .filter(item => item.id !== this.nodeId);
             this.$message.success('标点删除成功');
+          }).catch(err => {
+            console.error(err);
+            this.$message.error(err?.response.data.msg || '标点删除失败');
           });
         });
       }
