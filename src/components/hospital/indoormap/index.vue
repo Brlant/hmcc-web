@@ -190,7 +190,7 @@
           height: 100%;
           background-size: 100% 100%;
           background-repeat: no-repeat;
-          filter: brightness(103.5%) contrast(134%) hue-rotate(180deg) saturate(0%);
+          /*filter: brightness(103.5%) contrast(134%) hue-rotate(180deg) saturate(0%);*/
         }
       }
     }
