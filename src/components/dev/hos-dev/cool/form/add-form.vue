@@ -339,13 +339,8 @@ export default {
         brand: '',
         standardWorkingHours: '',
         workStatus: '',
-        idleStateRangeStart: 0.00,
-        idleStateRangeEnd: '',
-        standardVoltageRangeStart: '',
-        standardVoltageRangeEnd: '',
-        standbyStatusRangeStart: '',
-        standbyStatusRangeEnd: '',
-        firstStatusType: 0,
+        shutdownStatusStart: 0,
+        shutdownStatusEnd: '',
         locationTagId: '',
         energyTagId: '',
       },
@@ -430,7 +425,6 @@ export default {
         this.searchEnergyTagSn(this.form.energyTagSnNumber);
       } else {
         this.form = {
-          shutdownStatusStart: 0,
           no: '',
           name: '',
           type: '',
@@ -447,25 +441,21 @@ export default {
           brand: '',
           standardWorkingHours: '',
           workStatus: '',
-          idleStateRangeStart: 0.00,
-          idleStateRangeEnd: '',
-          standardVoltageRangeStart: '',
-          standardVoltageRangeEnd: '',
-          standbyStatusRangeStart: '',
-          standbyStatusRangeEnd: '',
+          shutdownStatusStart: 0,
+          shutdownStatusEnd: '',
           firstStatusType: 0,
           locationTagId: '',
           energyTagId: '',
         };
         this.actionType = '添加冷链设备';
       }
-      this.$nextTick(() => {
-        this.$refs['tempForm'] && this.$refs['tempForm'].clearValidate();
-      });
+      // this.$nextTick(() => {
+      //   this.$refs['tempForm'] && this.$refs['tempForm'].clearValidate();
+      // });
     },
-    'form.idleStateRangeEnd': function (val) {
-      this.form.standbyStatusRangeStart = this.form.idleStateRangeEnd;
-    },
+    // 'form.idleStateRangeEnd': function (val) {
+    //   this.form.standbyStatusRangeStart = this.form.idleStateRangeEnd;
+    // },
     'form.shutdownStatusEnd': function (val) {
       this.form.workStatus = val;
     },
@@ -634,7 +624,7 @@ export default {
     },
     validatorShutdownStatusEnd(rule, value, callback) {
       let status = this.form.firstStatusType;
-      if (status == '2'){
+      if (status == '2') {
         if (!value && value != 0) {
           callback(new Error("请填写关机状态的最大值"));
           return;
@@ -642,9 +632,9 @@ export default {
       }
 
       if (value && value < 0) {
-          callback(new Error("关机状态的最大值不能小于0"));
-          return;
-        }
+        callback(new Error("关机状态的最大值不能小于0"));
+        return;
+      }
 
       callback();
 
