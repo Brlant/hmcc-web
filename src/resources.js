@@ -45,7 +45,7 @@ http.interceptors.response.use(response => {
           }
         });
         break;
-      case 500:
+      default:
         Notification.error(response.data.msg || '接口请求异常，请稍后再试');
     }
     return Promise.reject({response});
@@ -60,7 +60,7 @@ http.interceptors.response.use(response => {
   let notice = window.localStorage.getItem(noticeTipKey);
   let response = error.response;
 
-  console.log(`接口【${error.url}】异常`, JSON.stringify(error))
+  // console.log(`接口【${error.url}】异常`, JSON.stringify(error))
   if (!response || response.status === 500) {
     Notification.warning({
       message: '服务器太久没有响应, 请重试',
@@ -108,6 +108,18 @@ http.interceptors.response.use(response => {
     // 添加标志
     WholeErrorSignHandle.add();
   }
+
+  if (response.status === 400 || response.status === 428) {
+    Notification.error({
+      message: response.data.msg || '接口异常，请联系管理员',
+      onClose: function () {
+        window.localStorage.removeItem(noticeTipKey);
+      }
+    });
+    // 添加标志
+    WholeErrorSignHandle.add();
+  }
+
   return Promise.reject(error);
 });
 
