@@ -76,11 +76,11 @@
             <el-col :span="1" class="R">
               {{ index + 1 }}
             </el-col>
-            <el-col :span="2" class="R">
+            <el-col :span="3" class="R">
               {{ item.devName }}
             </el-col>
             <el-col :span="2" class="R">{{ item.devNo }}</el-col>
-            <el-col :span="3" class="R">{{ item.departmentName }}</el-col>
+            <el-col :span="2" class="R">{{ item.departmentName }}</el-col>
             <el-col :span="2" class="R">
               {{ formatDictLabel(item.devType, deviceTypes) }}
             </el-col>
