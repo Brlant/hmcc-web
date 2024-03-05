@@ -242,23 +242,27 @@ export default {
           if (!item) {
             break loop;
           }
+          item.xPoint = item.xPoint + (j - cx) * this.fontX;
+          item.yPoint = item.yPoint + (i - cy) * this.fontY
           result.push({
-            id: `${item.deviceId}`,
-            x: item.xPoint + (j - cx) * this.fontX,
-            y: item.yPoint + (i - cy) * this.fontY,
-            type: 'position',
-            state: this.covertState(item.status),
-            data: { ...item }
+            model: {
+              id: `${item.deviceId}`,
+              type: 'position',
+              state: this.covertState(item.status),
+            },
+            record: { ...item }
           });
         }
       }
       return result;
     },
     convertNodes(points) {
-      if (!Array.isArray(points) || points.length < 1) {
+      if (!Array.isArray(points)) {
         return;
       }
       let groupTemp = {};
+      this.img = null;
+      this.mapData.nodes = [];
       points.forEach(item => {
         this.img = item.mapUrl;
         let key = `${item.xPoint}-${item.yPoint}`;
@@ -270,7 +274,6 @@ export default {
         }
       });
 
-      this.mapData.nodes = [];
       Object.keys(groupTemp).forEach(key => {
         this.mapData.nodes.push(...this.coordCalculate(groupTemp[key]));
       });
@@ -357,7 +360,7 @@ export default {
       let item = evt.item;
       let model = item.getModel()
       let bbox = item.get('group').getCanvasBBox();
-      this.form = model.data;
+      this.form = model.record;
       this.tipX = bbox.x + 36;
       this.tipY = bbox.y;
     },

@@ -50,12 +50,12 @@
       <IndoorMap ref="indoorMap" :img="img" :data="mapData"/>
 
       <el-timeline class="node-timeline">
-        <el-timeline-item v-for="(item, index) in timelines"
-          :key="index" :timestamp="item.timestamp" hide-timestamp>
+        <el-timeline-item v-for="item in timelines"
+          :key="item.id" :timestamp="item.timestamp" hide-timestamp>
           <template slot="dot">
             <div :class="['node-timeline-dot', item.color]">{{ item.index }}</div>
           </template>
-          <div style="padding-top: 7px; cursor: pointer;" @click="timelineClick(index)">
+          <div style="padding-top: 7px; cursor: pointer;" @click="timelineClick(item)">
             <div>
               {{ item.content }}
             </div>
@@ -250,10 +250,12 @@
         storey.locationPointLocusList?.forEach(item => {
 
           let timeline = {
-            id: `${item.nowPoint}`,
+            id: item.id,
             color: 'lightgray',
             content: item.pointName,
-            targetId: item.id,
+            startId: item.beforePoint,
+            previouId: item.belongPoint,
+            currentId: item.nowPoint,
             timestamp: item.reportTime,
           };
           if (item.pointType === 0) {
@@ -267,19 +269,21 @@
 
             let edgeKey = `${item.belongPoint}-${item.nowPoint}`;
             if (edges[edgeKey]) {
-              edges[edgeKey].data.push(item.id);
+              edges[edgeKey].record.push(item.id);
             } else {
               let edge = {
-                source: `${item.belongPoint}`,
-                target: `${item.nowPoint}`,
-                style: {
-                  stroke: '#aadef8',
-                  lineWidth: 4
+                model: {
+                  source: `${item.belongPoint}`,
+                  target: `${item.nowPoint}`,
+                  style: {
+                    stroke: '#aadef8',
+                    lineWidth: 4
+                  }
                 },
-                data: [ item.id ]
+                record: [ item.id ]
               };
               if (item.pointType !== 0) {
-                edge.style.endArrow = false;
+                edge.model.style.endArrow = false;
               }
               edges[edgeKey] = edge;
             }
@@ -287,20 +291,24 @@
 
           if (!nodes[item.nowPoint]) {
             let node = {
-              id: `${item.nowPoint}`,
-              x: item.nowPointX,
-              y: item.nowPointY,
-              type: 'circle',
-              size: 3,
-              style: {
-                fill: '#aadef8',
-                stroke: '#aadef8'
+              model: {
+                id: `${item.nowPoint}`,
+                type: 'circle',
+                size: 3,
+                style: {
+                  fill: '#aadef8',
+                  stroke: '#aadef8'
+                }
+              },
+              record: { ...item,
+                xPoint: item.nowPointX,
+                yPoint: item.nowPointY
               }
             };
 
             if (item.pointType === 0) {
-              node.size = 25;
-              node.labelCfg = {
+              node.model.size = 25;
+              node.model.labelCfg = {
                 position: 'center',
                 style: {
                   fill: '#ffffff',
@@ -314,54 +322,46 @@
         this.mapData.nodes = Object.values(nodes);
         this.mapData.edges = Object.values(edges);
       },
-      timelineClick(tlIndex) {
-        let flag = true, curr, index = 0, cnt = 0;
-        let length = this.nodepoints.length;
-        for (; index < length; index++) {
-          curr = this.nodepoints[index];
-          if (!curr.index) {
-            continue;
-          }
-          if (cnt++ === tlIndex) {
-            break;
-          }
-        }
-        let item = null, nodes = [];
-        if (length === index + 1) {
-          nodes.push(this.nodepoints[index]);
-          for (let i = index - 1; i > -1; i--) {
+      timelineClick(timeline) {
+        let flag = false, item, trajectories = [];
+        let len = this.nodepoints.length;
+        let idx = this.nodepoints.findIndex(item => item.id === timeline.id);
+
+        if (len === idx + 1) {
+          for (let i = len - 1; i > -1; i--) {
             item = this.nodepoints[i];
             if (flag) {
-              nodes.splice(0,0, item);
-              if (item.index > 0) {
-                flag = false;
-                item.color = 'blue';
-              }
-            } else {
-              if (item.index > 0) {
+              item.color = 'lightgray';
+              continue;
+            }
+            trajectories.splice(0,0, item);
+            if (i !== idx && item.index > 0) {
+              flag = true;
+              if (item.currentId !== timeline.startId) {
                 item.color = 'lightgray';
+                trajectories = [timeline];
               }
             }
           }
         } else {
-          nodes.push(curr);
-          for (let i = 0; i < length; i++) {
+          for (let i = 0; i < len; i++) {
             item = this.nodepoints[i];
-            if (i > index && flag) {
-              nodes.push(item);
-              if (item.index > 0) {
-                flag = false;
-                item.color = 'blue';
-              }
-            } else {
-              if (item.index > 0) {
+            if (i < idx || flag) {
+              item.color = 'lightgray';
+              continue;
+            }
+            trajectories.push(item);
+            if (i !== idx && item.index > 0) {
+              flag = true;
+              if (item.startId !== timeline.currentId) {
                 item.color = 'lightgray';
+                trajectories = [timeline];
               }
             }
           }
         }
-        curr.color = 'blue';
-        this.mapRef.highlightTrajectory(nodes);
+        trajectories.forEach(t => t.color = 'blue');
+        this.mapRef.highlightTrajectory(trajectories);
       }
     }
   }

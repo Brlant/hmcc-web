@@ -12,18 +12,30 @@
           icon="el-icon-location-information"
           :disabled="!img"
           @click="markPoint">标点</el-button>
-        <oms-el-upload
-          accept="image/*"
-          :action="action"
-          :on-error="uploadError"
-          :on-success="uploadSuccess"
-          :show-file-list="false"
+<!--        <oms-el-upload-->
+<!--          accept="image/*"-->
+<!--          :action="action"-->
+<!--          :on-error="uploadError"-->
+<!--          :on-success="uploadSuccess"-->
+<!--          :show-file-list="false"-->
+<!--          style="float: right;"-->
+<!--        >-->
+<!--          <el-button type="primary" class="el-upload"-->
+<!--            slot="trigger"><i :style="iconStyle"/>上传地图</el-button>-->
+<!--          <div slot="tip">地图上传将替换原有地图，原有标点将失效</div>-->
+<!--        </oms-el-upload>-->
+        <el-upload
           style="float: right;"
+          action="#"
+          ref="upload"
+          accept="image/*"
+          :show-file-list="false"
+          :http-request="uploadSectionFile"
         >
           <el-button type="primary" class="el-upload"
-            slot="trigger"><i :style="iconStyle"/>上传地图</el-button>
+                     slot="trigger"><i :style="iconStyle"/>上传地图</el-button>
           <div slot="tip">地图上传将替换原有地图，原有标点将失效</div>
-        </oms-el-upload>
+        </el-upload>
       </div>
 
       <div style="height: calc(100% - 66px)">
@@ -80,6 +92,7 @@
   import mapIcon from '@/assets/img/map_icon.png';
   import {
     createFloorPlat,
+    uploadFileFloor,
     findFloorPlat,
     queryFloorStructure,
     createFloorPlatPoint,
@@ -103,13 +116,13 @@
   };
 
   const nodes = [{
-    id: tempNode, // String，该节点存在则必须，节点的唯一标识
-    x: Number.MAX_VALUE, // Number，节点位置的 x 值
-    y: Number.MAX_VALUE, // Number，节点位置的 y 值
-    visible: false,
-    type: 'position',
-    state: 'default',
-    data: { ...formModel }
+    model: {
+      id: tempNode, // String，该节点存在则必须，节点的唯一标识
+      visible: false,
+      type: 'position',
+      state: 'default',
+    },
+    record: { ...formModel }
   }];
 
   export default {
@@ -217,6 +230,37 @@
       });
     },
     methods: {
+      //上传地图
+      uploadSectionFile(params){
+        const isLt10M = params.file.size / 1024 / 1024 < 10;
+        if (!isLt10M) {
+          this.$notify.error({
+            duration: 2000,
+            message: '上传附件大小不能超过 10MB!'
+          });
+          return false;
+        }
+        // 如果上传的是图片类型文件，则进行过滤
+        if (params.file.type === 'image/jpg' || params.file.type === 'image/jpeg' || params.file.type === 'image/png') {
+
+        } else {
+          this.$notify.error({
+            duration: 2000,
+            message: '请上传文件格式为JPG/JPEG/PNG的图片!'
+          });
+          return false;
+        }
+
+        const file = params.file;
+        const form = new FormData();
+        form.append("file", file);
+        uploadFileFloor(form).then(res=>{
+          const dataSource = res.data;
+          this.uploadSuccess(dataSource);
+        }).catch(err => {
+
+        })
+      },
       findClass(elm, cls) {
         if (elm.nodeName.toLowerCase() === 'body') {
           return false;
@@ -272,12 +316,12 @@
             this.mapId = res.data.id;
             res.data.floorPlatPoint?.forEach(item => {
               this.mapData.nodes.push({
-                id: `${item.id}`,
-                x: item.xPoint,
-                y: item.yPoint,
-                type: 'position',
-                state: 'blue',
-                data: { ...item }
+                model: {
+                  id: `${item.id}`,
+                  type: 'position',
+                  state: 'blue',
+                },
+                record: { ...item }
               });
             });
           });
@@ -319,16 +363,16 @@
         const nodeId = item.get('id');
         let temp = this.mapData.nodes[0];
         if (nodeId === tempNode) {
-          return (temp.visible = this.showTemp = false);
+          return (temp.model.visible = this.showTemp = false);
         }
         const states = item.getStates();
         if (states.length === 0 && nodeId.startsWith(tempNode)) {
           if (this.form.id === null) {
             this.form = { ...formModel };
           }
-          temp.x = (evt.x / this.mapWidth).toFixed(4);
-          temp.y = (evt.y / this.mapHeight).toFixed(4);
-          this.mapData.nodes = this.mapData.nodes.filter(item => item.id !== nodeId);
+          temp.record.xPoint = (evt.x / this.mapWidth).toFixed(4);
+          temp.record.yPoint = (evt.y / this.mapHeight).toFixed(4);
+          this.mapData.nodes = this.mapData.nodes.filter(item => item.model.id !== nodeId);
         }
       },
       relateNode(node, model) {
@@ -337,7 +381,7 @@
           || this.nodeId === nodeId) {
           return;
         }
-        this.form.contactPoints.push(model.data.id);
+        this.form.contactPoints.push(model.record.id);
       },
       modifyNode(node, model) {
         this.nodeId = node.get('id');
@@ -345,24 +389,24 @@
           let xPoint = (model.x / this.mapWidth).toFixed(4);
           let yPoint = (model.y / this.mapHeight).toFixed(4);
           this.mapData.nodes.push({
-            id: `${tempNode}_${loadTime - Date.now()}`,
-            x: xPoint,
-            y: yPoint,
-            type: 'position',
-            data: Object.assign({ ...model.data }, {
+            model: {
+              id: `${tempNode}_${loadTime - Date.now()}`,
+              type: 'position',
+            },
+            record: Object.assign({ ...model.record }, {
               platId: this.mapId, xPoint, yPoint})
           });
           let temp = this.mapData.nodes[0];
-          temp.x = xPoint;
-          temp.y = yPoint;
-          temp.visible = true;
+          temp.record.xPoint = xPoint;
+          temp.record.yPoint = yPoint;
+          temp.model.visible = true;
         } else {
-          this.form = { ...model.data };
-          this.form.contactPoints = [ ...model.data.contactPoints ];
+          this.form = { ...model.record };
+          this.form.contactPoints = [ ...model.record.contactPoints ];
         }
         node.toFront();
       },
-      canvasClick() {
+      canvasClick(evt) {
         this.closeFrom();
       },
       canvasMousemove(evt) {
@@ -380,9 +424,9 @@
       },
       markPoint() {
         let temp = this.mapData.nodes[0];
-        temp.x = Number.MAX_VALUE;
-        temp.y = Number.MAX_VALUE;
-        return (temp.visible = this.showTemp = !this.showTemp);
+        temp.record.xPoint = Number.MAX_VALUE;
+        temp.record.yPoint = Number.MAX_VALUE;
+        return (temp.model.visible = this.showTemp = !this.showTemp);
       },
       uploadError(err) {
         console.error(err);
@@ -422,35 +466,35 @@
           if (res.data) {
             id = res.data.id;
             this.mapData.nodes = this.mapData.nodes
-              .filter(item => item.id !== this.nodeId);
+              .filter(item => item.model.id !== this.nodeId);
             this.mapData.nodes.push({
-              id: (this.nodeId = `${res.data.id}`),
-              x: res.data.xPoint,
-              y: res.data.yPoint,
-              type: 'position',
-              state: 'blue',
-              data: Object.assign(this.form, res.data)
+              model: {
+                id: (this.nodeId = `${res.data.id}`),
+                type: 'position',
+                state: 'blue',
+              },
+              record: Object.assign(this.form, res.data)
             });
           } else {
             id = this.form.id;
           }
-          let curr = this.mapData.nodes.find(item => item.id === `${id}`);
-          curr.data = { ...this.form };
-          curr.data.contactPoints = [ ...this.form.contactPoints ];
+          let curr = this.mapData.nodes.find(item => item.model.id === `${id}`);
+          curr.record = { ...this.form };
+          curr.record.contactPoints = [ ...this.form.contactPoints ];
           this.form.contactPoints?.forEach(pointId => {
-            curr = this.mapData.nodes.find(item => item.id === `${pointId}`);
-            let contact = curr.data?.contactPoints;
+            curr = this.mapData.nodes.find(item => item.model.id === `${pointId}`);
+            let contact = curr.record?.contactPoints;
             if (contact) {
               contact.push(id);
             } else {
-              curr.data.contactPoints = [id];
+              curr.record.contactPoints = [id];
             }
           });
           this.closeFrom();
           this.$message.success('标点保存成功');
         } catch (err) {
           console.error(err);
-          this.$message.error(err?.response.data.msg || '标点保存失败');
+          this.$message.error(err?.response?.data?.msg || '标点保存失败');
         }
       },
       delPoint() {
@@ -467,7 +511,7 @@
             }
             this.closeFrom();
             this.mapData.nodes = this.mapData.nodes
-              .filter(item => item.id !== this.nodeId);
+              .filter(item => item.model.id !== this.nodeId);
             this.$message.success('标点删除成功');
           }).catch(err => {
             console.error(err);

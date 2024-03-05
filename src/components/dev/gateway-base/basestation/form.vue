@@ -190,8 +190,14 @@
         this.queryFloorStructure();
         if (this.form) {
           Object.assign(this.model, this.form);
-          this.form.floorId && this.floorChange(this.form.floorId, true);
-          this.form.storeyId && this.storeyChange(this.form.storeyId, true);
+          this.model.stationType += '';
+          if(this.form.floorId){
+            this.floorChange(this.form.floorId, true)
+          }
+
+          if(this.form.storeyId){
+            this.storeyChange(this.form.storeyId, true);
+          }
         }
       },
       cloesd() {

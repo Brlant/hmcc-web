@@ -5,7 +5,7 @@
     </div>
 
     <!-- 工具 -->
-    <div v-if="!showEmpty" @click="indoorToolbar"
+    <div v-else @click="indoorToolbar"
       class="indoor-toolbar">
       <el-icon name="zoom-in"/>
       <el-icon name="zoom-out"/>
@@ -15,156 +15,139 @@
 </template>
 
 <script>
-  import initG6 from './initG6'
+  import g6mixins from "./g6mixins";
 
   export default {
     name: 'IndoorMap',
-    props: {
-      img: String,
-      data: {
-        type: Object,
-        default: function() {
-          return {
-            nodes: [],
-            edges: []
-          };
-        }
-      },
-      focus: String,
-      nodeClick: Function,
-      nodeMove: Function,
-      canvasClick: Function,
-      canvasMousemove: Function,
-      nodeMouseenter: Function,
-      nodeMousemove: Function,
-      nodeMouseleave: Function,
-      nodeContextmenu: Function
-    },
+    mixins: [ g6mixins ],
+    // props: {
+    //   img: String,
+    //   data: {
+    //     type: Object,
+    //     default: function() {
+    //       return {
+    //         nodes: [],
+    //         edges: []
+    //       };
+    //     }
+    //   },
+    //   focus: String,
+    //   nodeClick: Function,
+    //   nodeMove: Function,
+    //   canvasClick: Function,
+    //   canvasMousemove: Function,
+    //   nodeMouseenter: Function,
+    //   nodeMousemove: Function,
+    //   nodeMouseleave: Function,
+    //   nodeContextmenu: Function
+    // },
     data() {
       return {
-        g6: null,
-        width: 800,
-        height: 600,
-        ratio: 0.01,
-        mapzoom: 1,
-        showEmpty: true,
-        floorClass: 'floor-empty'
+        // g6: null,
+        // width: 800,
+        // height: 600,
+        // ratio: 0.01,
+        // mapzoom: 1,
+        // showEmpty: true,
+        // floorClass: 'floor-empty'
       };
     },
     computed: {
-      dataG6() {
-        const nodes = this.data?.nodes?.map(it => Object.assign({
-          ...it,
-        }, {
-          x: this.width * it.x,
-          y: this.height * it.y,
-          ox: this.width * it.x - this.width / 2,
-          oy: this.height * it.y - this.height / 2
-        })) || [];
-        const edges = this.data?.edges?.map(it => ({ ...it })) || [];
-        return {
-          nodes: [ ...nodes, {
-            id: 'Center_Node',
-            x: this.width / 2,
-            y: this.height / 2,
-            visible: false
-          }],
-          edges: [ ...edges ]
-        };
-      }
+      // dataG6() {
+      //   const nodes = this.data?.nodes?.map(it => Object.assign({
+      //     ...it,
+      //   }, {
+      //     x: this.width * it.x,
+      //     y: this.height * it.y,
+      //     ox: this.width * it.x - this.width / 2,
+      //     oy: this.height * it.y - this.height / 2
+      //   })) || [];
+      //   const edges = this.data?.edges?.map(it => ({ ...it })) || [];
+      //   return {
+      //     nodes: [ ...nodes, {
+      //       id: 'Center_Node',
+      //       x: this.width / 2,
+      //       y: this.height / 2,
+      //       visible: false
+      //     }],
+      //     edges: [ ...edges ]
+      //   };
+      // }
     },
     watch: {
-      img(val) {
-        this.g6?.destroy();
-        if (val) {
-          this.initG6();
-          this.showEmpty = false;
-        } else {
-          this.g6 = null;
-          this.showEmpty = true;
-        }
-      },
-      dataG6(data) {
-        this.g6?.destroy();
-        if (this.img) {
-          this.initG6();
-          this.showEmpty = false;
-        } else {
-          this.g6 = null;
-          this.showEmpty = true;
-        }
-        // this.g6?.render(data);
-      },
-      focus(focus) {
-        this.g6?.focusItem(focus);
-      }
+      // img(val) {
+      //   this.g6?.destroy();
+      //   if (val) {
+      //     this.initG6();
+      //     this.showEmpty = false;
+      //   } else {
+      //     this.g6 = null;
+      //     this.showEmpty = true;
+      //   }
+      // },
+      // dataG6(data) {
+      //   this.g6?.destroy();
+      //   if (this.img) {
+      //     this.initG6();
+      //     this.showEmpty = false;
+      //   } else {
+      //     this.g6 = null;
+      //     this.showEmpty = true;
+      //   }
+      //   this.g6?.render(data);
+      // },
+      // focus(focus) {
+      //   this.g6?.focusItem(focus);
+      // }
     },
     methods: {
-      initG6() {
-        let elm = this.$refs.floorMap;
-        this.mapzoom = 1;
-        this.width = elm.offsetWidth;
-        this.height = elm.offsetHeight;
-
-        this.g6 = initG6({
-          elm: elm,
-          map: {
-            img: this.img
-          },
-          width: this.width,
-          height: this.height,
-          nodeClick: this.nodeClick,
-          nodeMove: this.nodeMove,
-          wheelzoom: this.wheelzoom,
-          canvasClick: this.canvasClick,
-          canvasMousemove: this.canvasMousemove,
-          nodeMouseenter: this.nodeMouseenter,
-          nodeMousemove: this.nodeMousemove,
-          nodeMouseleave: this.nodeMouseleave,
-          nodeContextmenu: this.nodeContextmenu
-        });
-        this.g6.render(this.dataG6);
-      },
-      changeVisibility(nodeId, visible) {
-        this.g6.changeVisibility(nodeId, visible);
-      },
-      addNode(node) {
-        this.g6.addNode(node);
-      },
-      updateModel(itemId, model) {
-        this.g6.update(itemId, model);
-      },
-      updateState(itemId, state) {
-        this.g6.updateState(itemId, state);
-      },
-      updatePosition(itemId, coordinate) {
-        this.g6.updatePosition(itemId, coordinate);
-      },
-      removeItem(itemId) {
-        this.g6.removeItem(itemId);
-      },
-      highlightTrajectory(trajectories) {
-        this.g6.highlightTrajectory(trajectories);
-      },
-      indoorToolbar(event) {
-        const className = event.target?.className;
-        if (className === 'el-icon-zoom-in') {
-          if (this.mapzoom > 2) {
-            return;
-          }
-          this.g6.zoomTo((this.mapzoom += this.ratio));
-        } else if (className === 'el-icon-zoom-out') {
-          if (this.mapzoom < 0.5) {
-            return;
-          }
-          this.g6.zoomTo((this.mapzoom *= (1 - this.ratio)));
-        } else {
-          this.g6.zoomTo((this.mapzoom = 1));
-        }
-      },
-      wheelzoom(mapzoom) {
-        this.mapzoom = mapzoom;
-      }
+      // initG6() {
+      //   let elm = this.$refs.floorMap;
+      //   this.mapzoom = 1;
+      //   this.width = elm.offsetWidth;
+      //   this.height = elm.offsetHeight;
+      //
+      //   this.g6 = initG6({
+      //     elm: elm,
+      //     map: {
+      //       img: this.img
+      //     },
+      //     width: this.width,
+      //     height: this.height,
+      //     nodeClick: this.nodeClick,
+      //     nodeMove: this.nodeMove,
+      //     wheelzoom: this.wheelzoom,
+      //     canvasClick: this.canvasClick,
+      //     canvasMousemove: this.canvasMousemove,
+      //     nodeMouseenter: this.nodeMouseenter,
+      //     nodeMousemove: this.nodeMousemove,
+      //     nodeMouseleave: this.nodeMouseleave,
+      //     nodeContextmenu: this.nodeContextmenu
+      //   });
+      //   this.g6.render(this.dataG6);
+      // },
+      // highlightTrajectory(trajectories) {
+      //   this.g6.highlightTrajectory(trajectories);
+      // },
+      // indoorToolbar(event) {
+      //   const className = event.target?.className;
+      //   if (className === 'el-icon-zoom-in') {
+      //     if (this.mapzoom > 2) {
+      //       return;
+      //     }
+      //     this.g6.zoomTo((this.mapzoom += this.ratio));
+      //   } else if (className === 'el-icon-zoom-out') {
+      //     if (this.mapzoom < 0.5) {
+      //       return;
+      //     }
+      //     this.g6.zoomTo((this.mapzoom *= (1 - this.ratio)));
+      //   } else {
+      //     this.g6.zoomTo((this.mapzoom = 1));
+      //   }
+      // },
+      // wheelzoom(mapzoom) {
+      //   this.mapzoom = mapzoom;
+      // }
     }
   }
 </script>

@@ -37,29 +37,29 @@ export default [
           }
         ]
       },
-      {
-        id: 'licences-manager',
-        label: '单位证照管理',
-        sort: 1,
-        children: [
-          {
-            id: 'licences-manager-query',
-            label: '查看单位证照'
-          },
-          {
-            id: 'licences-manager-add',
-            label: '添加单位证照'
-          },
-          {
-            id: 'licences-manager-edit',
-            label: '编辑单位证照'
-          },
-          {
-            id: 'licences-manager-delete',
-            label: '删除单位证照'
-          }
-        ]
-      },
+      // {
+      //   id: 'licences-manager',
+      //   label: '单位证照管理',
+      //   sort: 1,
+      //   children: [
+      //     {
+      //       id: 'licences-manager-query',
+      //       label: '查看单位证照'
+      //     },
+      //     {
+      //       id: 'licences-manager-add',
+      //       label: '添加单位证照'
+      //     },
+      //     {
+      //       id: 'licences-manager-edit',
+      //       label: '编辑单位证照'
+      //     },
+      //     {
+      //       id: 'licences-manager-delete',
+      //       label: '删除单位证照'
+      //     }
+      //   ]
+      // },
       // {
       //   id: 'address-manager',
       //   locate-tag: '仓库地址管理',

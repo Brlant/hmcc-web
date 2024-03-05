@@ -151,9 +151,22 @@ $leftWidth: 200px;
                         :rules="[{required: true, message: '请输入单位拼音首字母', trigger: 'blur'}]">
             <oms-input v-model="form.nameAcronymy" placeholder="请输入通用名称拼音首字母" type="text"></oms-input>
           </el-form-item>
+<!--          <el-form-item label="公司图标">-->
+<!--            <oms-upload-picture :photoUrl="form.orgPhoto" @change="changPhoto"></oms-upload-picture>-->
+<!--          </el-form-item>-->
+
+<!--          重构公司图标-->
           <el-form-item label="公司图标">
-            <oms-upload-picture :photoUrl="form.orgPhoto" @change="changPhoto"></oms-upload-picture>
+            <el-upload
+              class="avatar-uploader"
+              action="#"
+              :http-request="uploadSectionFile"
+              :show-file-list="false">
+              <img v-if="form.orgPhoto" :src="form.orgPhoto" class="avatar">
+              <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+            </el-upload>
           </el-form-item>
+
           <el-form-item :label="orgTitle+'系统代码'" prop="manufacturerCode">
             <el-input v-model="form.manufacturerCode" placeholder="请输入系统代码" type="text">
               <span v-if="form.manufacturerCode" slot="suffix">{{ form.manufacturerCode.length }}</span>
@@ -217,6 +230,7 @@ $leftWidth: 200px;
 
 <script>
 import {BaseInfo, plateNumber, User} from '@/resources';
+import {uploadFileFloor} from '@/api/hospital/equipment';
 import utils from '@/tools/utils';
 import omsUploadPicture from '@/components/common/upload/upload.picture.vue';
 import axios from 'axios';
@@ -561,6 +575,39 @@ export default {
         transportTimeLimit: '',
         logisticsDealer: ''
       }, val.extDto || {});
+    },
+    /*重构图片上传*/
+    uploadSectionFile(params){
+      const isLt10M = params.file.size / 1024 / 1024 < 10;
+      if (!isLt10M) {
+        this.$notify.error({
+          duration: 2000,
+          message: '上传附件大小不能超过 10MB!'
+        });
+        return false;
+      }
+      // 如果上传的是图片类型文件，则进行过滤
+      if (params.file.type === 'image/jpg' || params.file.type === 'image/jpeg' || params.file.type === 'image/png') {
+
+      } else {
+        this.$notify.error({
+          duration: 2000,
+          message: '请上传文件格式为JPG/JPEG/PNG的图片!'
+        });
+        return false;
+      }
+
+      const file = params.file;
+      const form = new FormData();
+      form.append("file", file);
+      uploadFileFloor(form).then(res=>{
+        this.photo = res.data
+        this.form.orgPhoto = this.photo.url;
+        this.form.orgPhotoId = this.photo.attachmentId;
+        // console.info('上传信息',res.data)
+      }).catch(err => {
+
+      })
     },
     changPhoto: function (photo) {
       if (photo) {

@@ -82,6 +82,15 @@ export function createFloorPlat(data) {
   })
 }
 
+//上传地图重构
+export function uploadFileFloor(data) {
+  return request({
+    url: '/file/uploadFile',
+    method: 'post',
+    data
+  })
+}
+
 // 楼层地图查询
 export function findFloorPlat(id) {
   return request({
