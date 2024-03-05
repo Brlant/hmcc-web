@@ -99,9 +99,13 @@ export default {
     },
     /* 定位 */
     devicesPosition(row) {
+      // this.$router.push({
+      //   path: 'deviceposition/position',
+      //   params: {...row}
+      // });
       this.$router.push({
-        path: 'deviceposition/position',
-        params: {...row}
+        name: 'DevicePosition',
+        params: { ...row }
       });
     },
     //异常类型
@@ -148,8 +152,17 @@ export default {
     },
     /* 获取异常告警列表 */
     queryList(pageNo) {
-      const http = waringApi.getWarningList;
-      this.queryUtil(http, pageNo);
+      this.pager.currentPage = pageNo;
+      let params = Object.assign({}, {
+        pageNo: this.pager.currentPage,
+        pageSize: this.pager.pageSize
+      }, this.filters);
+      this.loadingData = true;
+      waringApi.getWarningList(params).then(res=>{
+        this.dataList = res.data.list || [];
+        this.pager.count = res.data.total;
+        this.loadingData = false;
+      })
     }
   }
 }
