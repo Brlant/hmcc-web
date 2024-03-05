@@ -29,12 +29,12 @@ export const routes = [
             meta: {moduleId: 'org', title: '基础信息管理', perm: 'org-base-manager-query'},
             children: []
           },
-          {
-            path: '/org/licences',
-            component: () => import('./components/org/licences/list.vue'),
-            meta: {moduleId: 'org', title: '单位证照管理', perm: 'licences-manager-query'},
-            children: []
-          },
+          // {
+          //   path: '/org/licences',
+          //   component: () => import('./components/org/licences/list.vue'),
+          //   meta: {moduleId: 'org', title: '单位证照管理', perm: 'licences-manager-query'},
+          //   children: []
+          // },
           {
             path: '/org/relation',
             component: () => import('./components/org/relation/list.vue'),

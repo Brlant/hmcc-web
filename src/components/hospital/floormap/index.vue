@@ -12,18 +12,30 @@
           icon="el-icon-location-information"
           :disabled="!img"
           @click="markPoint">标点</el-button>
-        <oms-el-upload
-          accept="image/*"
-          :action="action"
-          :on-error="uploadError"
-          :on-success="uploadSuccess"
-          :show-file-list="false"
+<!--        <oms-el-upload-->
+<!--          accept="image/*"-->
+<!--          :action="action"-->
+<!--          :on-error="uploadError"-->
+<!--          :on-success="uploadSuccess"-->
+<!--          :show-file-list="false"-->
+<!--          style="float: right;"-->
+<!--        >-->
+<!--          <el-button type="primary" class="el-upload"-->
+<!--            slot="trigger"><i :style="iconStyle"/>上传地图</el-button>-->
+<!--          <div slot="tip">地图上传将替换原有地图，原有标点将失效</div>-->
+<!--        </oms-el-upload>-->
+        <el-upload
           style="float: right;"
+          action="#"
+          ref="upload"
+          accept="image/*"
+          :show-file-list="false"
+          :http-request="uploadSectionFile"
         >
           <el-button type="primary" class="el-upload"
-            slot="trigger"><i :style="iconStyle"/>上传地图</el-button>
+                     slot="trigger"><i :style="iconStyle"/>上传地图</el-button>
           <div slot="tip">地图上传将替换原有地图，原有标点将失效</div>
-        </oms-el-upload>
+        </el-upload>
       </div>
 
       <div style="height: calc(100% - 66px)">
@@ -80,6 +92,7 @@
   import mapIcon from '@/assets/img/map_icon.png';
   import {
     createFloorPlat,
+    uploadFileFloor,
     findFloorPlat,
     queryFloorStructure,
     createFloorPlatPoint,
@@ -217,6 +230,18 @@
       });
     },
     methods: {
+      //上传地图
+      uploadSectionFile(params){
+        const file = params.file;
+        const form = new FormData();
+        form.append("file", file);
+        uploadFileFloor(form).then(res=>{
+          const dataSource = res.data;
+          this.uploadSuccess(dataSource);
+        }).catch(err => {
+
+        })
+      },
       findClass(elm, cls) {
         if (elm.nodeName.toLowerCase() === 'body') {
           return false;
