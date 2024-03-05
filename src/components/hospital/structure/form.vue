@@ -37,7 +37,7 @@
   const model = {
     id: null,
     type: 1,
-    upFloor: 0,
+    upFloor: '',
     floorName: '',
     sort: '',
     memo: ''
@@ -116,6 +116,9 @@
       async submit() {
         try {
           await this.$refs.form.validate();
+          if (this.model.type === 1){
+            this.model.upFloor = 0;
+          }
           if (this.model.id) {
             await modifyFloorStructure(this.model);
           } else {
