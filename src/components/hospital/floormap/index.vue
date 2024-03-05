@@ -232,6 +232,25 @@
     methods: {
       //上传地图
       uploadSectionFile(params){
+        const isLt10M = params.file.size / 1024 / 1024 < 10;
+        if (!isLt10M) {
+          this.$notify.error({
+            duration: 2000,
+            message: '上传附件大小不能超过 10MB!'
+          });
+          return false;
+        }
+        // 如果上传的是图片类型文件，则进行过滤
+        if (params.file.type === 'image/jpg' || params.file.type === 'image/jpeg' || params.file.type === 'image/png') {
+
+        } else {
+          this.$notify.error({
+            duration: 2000,
+            message: '请上传文件格式为JPG/JPEG/PNG的图片!'
+          });
+          return false;
+        }
+
         const file = params.file;
         const form = new FormData();
         form.append("file", file);
