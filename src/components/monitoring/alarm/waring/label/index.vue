@@ -1,9 +1,11 @@
 <template>
   <div class="order-page">
-    <search-part @search="searchResult" :deviceExceptionList="deviceExceptionList" :deviceTypeList="deviceTypeList"></search-part>
+    <search-part @search="searchResult" :deviceExceptionList="deviceExceptionList"
+                 :deviceTypeList="deviceTypeList"></search-part>
     <div class="order-list" style="margin-top: 20px">
       <!--标签告警列表-->
-      <el-table v-loading="loadingData" :data="dataList" header-row-class-name="order-list-header" header-cell-class-name="order-list-header">
+      <el-table v-loading="loadingData" :data="dataList" header-row-class-name="order-list-header"
+                header-cell-class-name="order-list-header">
         <el-table-column label="序号" align="center" type="index"/>
         <el-table-column label="设备编号" prop="devNo" align="center"></el-table-column>
         <el-table-column label="设备名称" prop="devName" align="center"></el-table-column>
@@ -69,11 +71,11 @@ export default {
       dataList: [],
       // 过滤条件
       filters: {
-        status: "",              //异常状态  1不在线 2异常
-        departmentId: '',          //科室id
-        devType: "",             //设备类型
-        floorId: '',               //楼层id
         selectText: "",         //设备名称/编号/sn号查询
+        floorId: '',               //楼层id
+        devType: "",             //设备类型
+        departmentId: '',          //科室id
+        status: "",              //异常状态  1不在线 2异常
       },
     }
   },
@@ -105,7 +107,7 @@ export default {
       // });
       this.$router.push({
         name: 'DevicePosition',
-        params: { ...row }
+        params: {...row}
       });
     },
     //异常类型
@@ -134,22 +136,6 @@ export default {
 
       })
     },
-
-    reset() {
-      this.queryParams = {
-        status: "",              //异常状态  1不在线 2异常
-        departmentId: '',          //科室id
-        devType: "",             //设备类型
-        floorId: '',               //楼层id
-        selectText: "",         //设备名称/编号/sn号查询
-        //分页
-        total: 0,
-        pageNum: 1,
-        pageSize: 10,
-      }
-      this.$refs.queryForm.resetFields();
-      this.queryList(1);
-    },
     /* 获取异常告警列表 */
     queryList(pageNo) {
       this.pager.currentPage = pageNo;
@@ -158,7 +144,7 @@ export default {
         pageSize: this.pager.pageSize
       }, this.filters);
       this.loadingData = true;
-      waringApi.getWarningList(params).then(res=>{
+      waringApi.getWarningList(params).then(res => {
         this.dataList = res.data.list || [];
         this.pager.count = res.data.total;
         this.loadingData = false;
