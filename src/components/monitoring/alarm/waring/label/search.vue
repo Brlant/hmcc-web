@@ -24,7 +24,6 @@
                 placeholder="楼层"
                 :options="floorList"
                 :props="{ value: 'id', label: 'floorName', children: 'children',emitPath:false,  }"
-                @change="handleChange"
                 clearable filterable>
               </el-cascader>
             </oms-form-row>
@@ -99,11 +98,11 @@
     data: function () {
       return {
         searchCondition: {
-          notifyBegin: '',
-          notifyEnd: '',
-          type: '',
-          way: '',
-          status: ''
+          selectText: '',
+          floorId: '',
+          devType: '',
+          departmentId: '',
+          status: '',
         },
         showSearch: false,
         list: [],
@@ -123,12 +122,11 @@
       },
       reset() {
         this.searchCondition = {
-          notifyBegin: '',
-          notifyEnd: '',
-          devName: '',
-          type: '',
-          way: '',
-          status: ''
+          selectText: '',
+          floorId: '',
+          devType: '',
+          departmentId: '',
+          status: '',
         };
         this.times = [];
         this.$emit('search', this.searchCondition);
@@ -149,9 +147,9 @@
           })
         })
       },
-      handleChange(query) {
-        this.queryParams.floorId = query;
-      },
+      // handleChange(query) {
+      //   this.queryParams.floorId = query;
+      // },
       //楼层
       getQueryFloor() {
         hosDevApi.queryFloor().then(res => {
