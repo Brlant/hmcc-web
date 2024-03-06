@@ -177,6 +177,49 @@ export default [
               }
             ]
           },
+          {
+            id: 'app-dev-manager',
+            label: 'APP设备管理',
+            parentId: 'hospital-dev-manager',
+            sort: '3',
+            children: [
+              {
+                id: 'app-freezer-monitoring-scan',
+                label: '查看冷链监控',
+                parentId: 'app-dev-manager'
+              },
+              {
+                id: 'app-alarm-event-scan',
+                label: '查看告警事件',
+                parentId: 'app-dev-manager'
+              },
+              {
+                id: 'app-dev-patrol-scan',
+                label: '查看设备巡检',
+                parentId: 'app-dev-manager'
+              },
+              {
+                id: 'app-dev-position-scan',
+                label: '查看设备定位',
+                parentId: 'app-dev-manager'
+              },
+              {
+                id: 'app-dev-energy-scan',
+                label: '查看设备能耗',
+                parentId: 'app-dev-manager'
+              },
+              {
+                id: 'app-dev-add',
+                label: '添加设备',
+                parentId: 'app-dev-manager'
+              },
+              {
+                id: 'app-dev-code-scan',
+                label: '设备扫码',
+                parentId: 'app-dev-manager'
+              }
+            ]
+          },
         ]
       },
       {
