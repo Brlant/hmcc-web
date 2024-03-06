@@ -33,7 +33,7 @@
         <el-row>
           <el-col :span="12">
             <oms-form-row :span="4" label="时间间隔">
-              <el-input type="number" v-model.number="searchCondition.statPiece">
+              <el-input v-model.number="searchCondition.statPiece" oninput="value = value.replace(/[^1-9]/g,'')" :min="1" :maxlength="9">
                 <span slot="append">分钟</span>
               </el-input>
             </oms-form-row>
