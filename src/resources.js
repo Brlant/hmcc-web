@@ -149,10 +149,10 @@ export const checkPlan = resource('/patrol-project', http, {
 // 管理评估
 export const managerAssess = {
   query(params) {
-    return http.post('/freezer-managerment-evaluation/page', params);
+    return http.post('/freezer-management-evaluation/page', params);
   },
   export(params) {
-    return http.post('/freezer-managerment-evaluation/export', params);
+    return http.post('/freezer-management-evaluation/export', params);
   }
 };
 
