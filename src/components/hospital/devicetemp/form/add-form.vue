@@ -15,7 +15,7 @@
             </el-col>
             <el-col :span="8">
               <el-form-item label="模板分类" prop="templateType">
-                <el-select placeholder="请选择模板分类" type="input" v-model="form.templateType">
+                <el-select placeholder="请选择模板分类" type="input" v-model="form.templateType" @change="form.devType = ''">
                   <el-option key="0" label="冷链设备" value="1"></el-option>
                   <el-option key="1" label="医疗设备" value="2"></el-option>
                 </el-select>
