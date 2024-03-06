@@ -60,7 +60,7 @@ $labelWidth: 180px;
             <el-form-item label="冷链标签" :prop="`sensorList.${index}.sensorId`">
               <el-select v-model="sensor.sensorId"
                          filterable clearable
-                         placeholder="请输入名称搜索冷链标签" >
+                         placeholder="请输入名称搜索冷链标签">
                 <el-option v-for="(item,i) in probeList" :key="i" :label="item.name" :value="item.id"
                 ></el-option>
               </el-select>
@@ -80,7 +80,7 @@ $labelWidth: 180px;
           <el-col :span="2" style="margin-bottom: 22px;line-height: 40px">
             <des-btn @click="addSensor()" icon="plus"></des-btn>
             <des-btn class="ml-10" @click="delSensor(sensor)" icon="minus"
-                     v-show="sensor.delFlag"></des-btn>
+                     v-show="sensor.delFlag && form.sensorList.length > 1"></des-btn>
           </el-col>
         </el-row>
       </el-form>
@@ -196,7 +196,37 @@ export default {
     },
     monitorTargetIdChange(val) {
       this.form.sensorList = [];
-      this.addSensor();
+      // this.addSensor();
+      this.getAreasByDevId(val);
+    },
+    getAreasByDevId(val) {
+      if (this.formItem.id){
+        // 编辑不需要处理
+        return
+      }
+
+      this.$http.get('monitor-relation/queryPlacementAreaById', {params: {devId: val}}).then(res => {
+        let list  = res.data.areaList  || []
+        if (!list){
+          this.addSensor();
+        }else {
+          this.form.sensorList = list.map(item => {
+            return {
+              monitorTargetId: this.formItem.monitorTargetId,
+              monitorTargetName: this.formItem.monitorTargetName,
+              orgId: this.formItem.orgId,
+              orgName: this.formItem.orgName,
+              sensorId: item.sensorId || '',
+              temperatureType: item.sensorId || '',
+              areaId: item.id || '',
+              areaName: item.areaName || '',
+              isOpen: item.isOpen || 0,
+              // 手动添加的可以删除
+              delFlag: true
+            }
+          })
+        }
+      });
     },
     querySensorList(query) {
       if (this.type === 2 && !this.form.orgId) {
