@@ -341,13 +341,13 @@
         }
         this.closeFrom();
       },
-      nodeClick(evt) {
+      nodeClick(evt, center) {
         const node = evt.item;
         const model = node.getModel();
         if (this.relating) {
           this.relateNode(node, model);
         } else {
-          this.modifyNode(node, model);
+          this.modifyNode(node, model, center);
         }
       },
       nodeMousemove(evt) {
@@ -358,7 +358,7 @@
           });
         }
       },
-      nodeContextmenu(evt) {
+      nodeContextmenu(evt, center) {
         const item = evt.item;
         const nodeId = item.get('id');
         let temp = this.mapData.nodes[0];
@@ -370,8 +370,8 @@
           if (this.form.id === null) {
             this.form = { ...formModel };
           }
-          temp.record.xPoint = (evt.x / this.mapWidth).toFixed(4);
-          temp.record.yPoint = (evt.y / this.mapHeight).toFixed(4);
+          temp.record.xPoint = (0.5 - (center.x - evt.x) / this.mapWidth).toFixed(4);
+          temp.record.yPoint = (0.5 - (center.y - evt.y) / this.mapHeight).toFixed(4);
           this.mapData.nodes = this.mapData.nodes.filter(item => item.model.id !== nodeId);
         }
       },
@@ -383,14 +383,14 @@
         }
         this.form.contactPoints.push(model.record.id);
       },
-      modifyNode(node, model) {
+      modifyNode(node, model, center) {
         this.nodeId = node.get('id');
         if (this.nodeId === tempNode) {
-          let xPoint = (model.x / this.mapWidth).toFixed(4);
-          let yPoint = (model.y / this.mapHeight).toFixed(4);
+          let xPoint = (0.5 - (center.x - model.x) / this.mapWidth).toFixed(4);
+          let yPoint = (0.5 - (center.y - model.y) / this.mapHeight).toFixed(4);
           this.mapData.nodes.push({
             model: {
-              id: `${tempNode}_${loadTime - Date.now()}`,
+              id: `${tempNode}${loadTime - Date.now()}`,
               type: 'position',
             },
             record: Object.assign({ ...model.record }, {
@@ -424,8 +424,8 @@
       },
       markPoint() {
         let temp = this.mapData.nodes[0];
-        temp.record.xPoint = Number.MAX_VALUE;
-        temp.record.yPoint = Number.MAX_VALUE;
+        temp.record.xPoint = 0;
+        temp.record.yPoint = 0;
         return (temp.model.visible = this.showTemp = !this.showTemp);
       },
       uploadError(err) {
