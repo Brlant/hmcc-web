@@ -53,6 +53,12 @@ export default {
         height: this.height
       };
     },
+    cx() {
+      return this.width / 2;
+    },
+    cy() {
+      return this.height / 2;
+    },
     coordWidth() {
       return this.width / this.dragzoom.currZoom;
     },
@@ -97,10 +103,10 @@ export default {
     }
   },
   created() {
-    console.log('created', this);
+    // console.log('created', this);
   },
   mounted() {
-    console.log('mounted');
+    // console.log('mounted');
     this.width = this.$el.offsetWidth;
     this.height = this.$el.offsetHeight;
   },
@@ -149,11 +155,17 @@ export default {
       this.renderData(this.buildData(this.data));
     },
     bindEvent() {
-      typeof this.nodeClick === 'function' && graph.on('node:click', this.nodeClick);
+      typeof this.nodeClick === 'function' && graph.on('node:click', evt => {
+        const center = graph.findById(CENTER).getModel();
+        this.nodeClick(evt, center);
+      });
       typeof this.nodeMousemove === 'function' && graph.on('node:mousemove', this.nodeMousemove);
       typeof this.nodeMouseenter === 'function' && graph.on('node:mouseenter', this.nodeMouseenter);
       typeof this.nodeMouseleave === 'function' && graph.on('node:mouseleave', this.nodeMouseleave);
-      typeof this.nodeContextmenu === 'function' && graph.on('node:contextmenu', this.nodeContextmenu);
+      typeof this.nodeContextmenu === 'function' && graph.on('node:contextmenu', evt => {
+        const center = graph.findById(CENTER).getModel();
+        this.nodeContextmenu(evt, center);
+      });
       typeof this.canvasClick === 'function' && graph.on('canvas:click', this.canvasClick);
       typeof this.canvasMousemove === 'function' && graph.on('canvas:mousemove', this.canvasMousemove);
 
@@ -164,8 +176,6 @@ export default {
       let nodes = [{
         ...this.center
       }], edges = [];
-      let cx = this.width / 2;
-      let cy = this.height / 2;
       if (Array.isArray(data?.nodes)) {
         data.nodes.forEach(node => {
           let clone = this.deepClone(node.model);
@@ -174,8 +184,8 @@ export default {
             clone.record = record;
             clone.x = this.width * record.xPoint;
             clone.y = this.height * record.yPoint;
-            clone.$x = clone.x - cx;
-            clone.$y = clone.y - cy;
+            clone.$x = clone.x - this.cx;
+            clone.$y = clone.y - this.cy;
             clone.$model = node.model;
             nodes.push(clone);
           }
@@ -191,7 +201,7 @@ export default {
       return { nodes, edges }
     },
     renderData(data) {
-      console.log(data);
+      // console.log(data);
       graph?.clear();
       graph?.data(data);
       graph?.render();
@@ -232,17 +242,15 @@ export default {
         graph.hideItem(nodeId);
       }
     },
-    addNode(node) {
-      let cx = this.width / 2;
-      let cy = this.height / 2;
-      graph.addItem('node', Object.assign({
-        ox: node.x - cx,
-        oy: node.y - cy
-      }, node));
-    },
-    updateModel(itemId, model) {
-      graph.update(itemId, model);
-    },
+    // addNode(node) {
+    //   graph.addItem('node', Object.assign({
+    //     $x: node.x - this.cx,
+    //     $y: node.y - this.cy
+    //   }, node));
+    // },
+    // updateModel(itemId, model) {
+    //   graph.update(itemId, model);
+    // },
     updateState(itemId, state) {
       try {
         graph.setItemState(itemId, state, true);
