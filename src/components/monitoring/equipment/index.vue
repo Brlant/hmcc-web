@@ -82,6 +82,7 @@
               </des-btn>
               <des-btn @click="edit(item)" icon="edit" v-has="permPage.edit">编辑</des-btn>
               <des-btn @click="deleteItem(item)" icon="delete" v-has="permPage.delete">删除</des-btn>
+              <span style="margin-left: 10px">设备状态：</span>
             </el-col>
           </el-row>
           <dev-list :dev-item="item"/>

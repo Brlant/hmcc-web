@@ -23,9 +23,12 @@ import 'echarts/lib/component/legend';
 import 'echarts/lib/component/markPoint';
 import 'echarts/lib/component/markLine';
 import 'echarts/lib/component/dataZoom';
+import 'echarts/lib/component/visualMap';
+
 import ECharts from 'vue-echarts/components/ECharts.vue';
 // 引入高德地图vue组件
 import VueAMap, {lazyAMapApiLoaderInstance} from 'vue-amap';
+
 
 // // 初始化视口宽度
 // initViewPort(router);

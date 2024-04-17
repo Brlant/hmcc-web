@@ -902,7 +902,34 @@ export default [
       {
         id: 'query-all-org-regulation',
         label: '查看所有单位'
-      }
+      },
+      //维保类型设置
+      {
+        id: 'system-setting-maintenance-type-manager',
+        label: '维保类型设置',
+        children: [
+          {
+            id: 'system-setting-maintenance-type-query',
+            label: '查看维保类型'
+          },
+          {
+            id: 'system-setting-maintenance-type-add',
+            label: '添加维保类型'
+          },
+          {
+            id: 'system-setting-maintenance-type-edit',
+            label: '编辑维保类型'
+          },
+          {
+            id: 'system-setting-maintenance-type-start',
+            label: '启用维保类型'
+          },
+          {
+            id: 'system-setting-maintenance-type-stop',
+            label: '停用维保类型'
+          }
+        ]
+      },
     ]
   },
 

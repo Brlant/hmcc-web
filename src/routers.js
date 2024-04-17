@@ -355,6 +355,12 @@ export const routes = [
             component: () => import('./components/common/log/list.vue'),
             meta: {moduleId: 'permission', title: '系统日志', perm: 'system-setting-log'}
           },
+          //维保
+          {
+            path: '/maintenance/maintenance',
+            component: () => import('./components/system/maintenance/maintenance.vue'),
+            meta: {moduleId: 'permission', title: '维保类型设置', perm: 'system-setting-maintenance-type-query'}
+          },
 
         ]
       },
