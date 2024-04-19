@@ -83,7 +83,9 @@
       </div>
     </div>
     <page-right :show="showRight" @right-close="resetRightBox">
-      <add-edit :title="formTitle" :action="action" :actionType="showRight" @close="showRight=false"></add-edit>
+      <add-edit :title="formTitle" :action="action"
+                :actionType="showRight" @close="showRight=false"
+                :formData="formData" @handlerRefresh="handlerRefresh"></add-edit>
     </page-right>
   </div>
 </template>
@@ -120,6 +122,10 @@ export default {
     this.getDeviceTemplateType();
   },
   methods: {
+    handlerRefresh(){
+      this.getPageList();
+      this.showRight = false;
+    },
     getDeviceTemplateType() {
       sinopharmDictDataType('hospitalDeviceType').then(res => {
         res.data.forEach(item => {
@@ -135,6 +141,7 @@ export default {
     add() {
       this.action = 'add';
       this.formTitle = '新增';
+      this.formData = {};
       this.showRight = true;
     },
     getPageList(pageNo) {
@@ -146,11 +153,12 @@ export default {
     edit(row) {
       getMaintenanceDetailApi(row.id).then(res=>{
         this.formData = {
+          id:res.data.id,
           templateName:res.data.templateName,
           hospitalDeviceType:res.data.hospitalDeviceType,
           maintenanceInterposeDetailList:res.data.maintenanceInterposeDetailList,
         }
-        console.log(this.formData,'详情信息');
+        // console.log(this.formData,'详情信息');
       }).catch(err=>{})
       this.action = 'edit';
       this.formTitle = '编辑';

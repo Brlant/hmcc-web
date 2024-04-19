@@ -50,7 +50,7 @@
 <script>
 import {Access} from "@/resources";
 import {sinopharmDictDataType} from "@/api/system/dict/data";
-import {postMaintenanceApi} from "@/api/maintenance/maintenance";
+import {postMaintenanceApi,putMaintenanceApi} from "@/api/maintenance/maintenance";
 
 export default {
   props: {
@@ -65,6 +65,25 @@ export default {
     actionType: {
       type: Boolean,
       default: true
+    },
+    formData:{
+      type: Object,
+      default:''
+    }
+  },
+  watch:{
+    formData:{
+      handler(newValue,oldValue){
+        if(newValue.id){
+          this.form = newValue;
+          this.maintenanceInterposeDetailList = newValue.maintenanceInterposeDetailList;
+        }else{
+          this.form = {}
+          this.maintenanceInterposeDetailList = [];
+        }
+      },
+      deep:true,
+      immediate:true,
     }
   },
   data(){
@@ -102,15 +121,51 @@ export default {
       });
     },
     doClose(){
-
+      this.$emit('handlerRefresh');
     },
   //提交事件
     onSubmit() {
+      if (this.doing) return;
+      this.doing = true;
       this.$refs.userForm.validate((valid) => {
-        if (valid) {
+        if (!valid) {
+          this.doing = false;
+          return false;
+        }
+        this.doing = true;
+        if(this.formData.id){
+          this.form.maintenanceInterposeDetailList = this.maintenanceInterposeDetailList
+          putMaintenanceApi(this.form).then(res => {
+            this.doing = false;
+            this.$notify.success({
+              duration: 2000,
+              name: '成功',
+              message: '编辑维保类型成功'
+            });
+            this.$emit('handlerRefresh');
+          }).catch(error=>{
+            this.$notify.error({
+              duration: 2000,
+              message: '编辑维保类型失败'
+            });
+            this.doing = false;
+          });
+        }else{
           this.form.maintenanceInterposeDetailList = this.maintenanceInterposeDetailList
           postMaintenanceApi(this.form).then(res => {
-            console.log(res)
+            this.doing = false;
+            this.$notify.success({
+              duration: 2000,
+              name: '成功',
+              message: '新增维保类型成功'
+            });
+            this.$emit('handlerRefresh');
+          }).catch(error=>{
+            this.$notify.error({
+              duration: 2000,
+              message: '新增维保类型失败'
+            });
+            this.doing = false;
           });
         }
       });

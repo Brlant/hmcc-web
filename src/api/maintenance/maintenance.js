@@ -27,4 +27,12 @@ export const getMaintenanceDetailApi =(id)=>{
   })
 }
 
+export const putMaintenanceApi =(data)=>{
+  return http({
+    url: params_api.getMaintenanceList,
+    method: 'put',
+    data:data
+  })
+}
+
 
