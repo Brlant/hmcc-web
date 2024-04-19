@@ -1,14 +1,14 @@
 <style lang="scss" scoped>
 
-  .el-form .el-select {
-    display: block;
-  }
+.el-form .el-select {
+  display: block;
+}
 
-  .tr-bg {
-    :hover {
-      background: #fff;
-    }
+.tr-bg {
+  :hover {
+    background: #fff;
   }
+}
 
 </style>
 <template>
@@ -60,20 +60,20 @@
             </tr>
             <tr v-else v-for="row in dataRows" :keys="row.id">
               <td>
-                {{row.name}}
+                {{ row.name }}
                 <el-tag type="success" v-show="row.adminFlag">主账号</el-tag>
               </td>
               <td>
                 {{ row.list | formatRole }}
               </td>
               <td>
-                {{row.phone}}
+                {{ row.phone }}
               </td>
               <td>
-                {{row.email || '--'}}
+                {{ row.email || '--' }}
               </td>
               <td>
-                {{row.companyDepartmentName || '--'}}
+                {{ row.companyDepartmentName || '--' }}
               </td>
               <td>
                 <dict :dict-group="'orgUserStatus'" :dict-key="formatStatus(row.status)"></dict>
@@ -112,149 +112,149 @@
 
 </template>
 <script>
-  import {OrgUser, User} from '../../../resources';
-  import editForm from './form/form.vue';
+import {OrgUser, User} from '../../../resources';
+import editForm from './form/form.vue';
 
-  export default {
-    components: {
-      editForm
-    },
-    data: function () {
-      return {
-        showRight: false,
-        showTypeSearch: false,
-        showSearch: false,
-        loadingData: false,
-        dataRows: [],
-        typeList: [],
-        showTypeList: [],
-        typeTxt: '',
-        filters: {
-          keyWord: '',
-          orgId: 0,
-          status: '1'
-        },
-        form: {list: [{roleId: ''}]},
-        formTitle: '新增',
-        oldItem: {},
-        action: 'add',
-        pager: {
-          currentPage: 1,
-          count: 0,
-          pageSize: 20
-        },
-        orgName: '',
-        roleMenu: [],
-        currentItem: {}
-      };
-    },
-    computed: {
-      user() {
-        return this.$store.state.user;
-      }
-    },
-    filters: {
-      formatRole: function (list) {
-        return list.map(m => m.title).join('，');
-      }
-    },
-    mounted() {
-      this.getPageList(1);
-    },
-    watch: {
+export default {
+  components: {
+    editForm
+  },
+  data: function () {
+    return {
+      showRight: false,
+      showTypeSearch: false,
+      showSearch: false,
+      loadingData: false,
+      dataRows: [],
+      typeList: [],
+      showTypeList: [],
+      typeTxt: '',
       filters: {
-        handler: function () {
-          this.getPageList(1);
-        },
-        deep: true
+        keyWord: '',
+        orgId: 0,
+        status: '1'
       },
-      user(val) {
-        if (val.userCompanyAddress) {
-          this.getPageList(1);
-        }
-      }
+      form: {list: [{roleId: ''}]},
+      formTitle: '新增',
+      oldItem: {},
+      action: 'add',
+      pager: {
+        currentPage: 1,
+        count: 0,
+        pageSize: 20
+      },
+      orgName: '',
+      roleMenu: [],
+      currentItem: {}
+    };
+  },
+  computed: {
+    user() {
+      return this.$store.state.user;
+    }
+  },
+  filters: {
+    formatRole: function (list) {
+      return list.map(m => m.title).join('，');
+    }
+  },
+  mounted() {
+    this.getPageList(1);
+  },
+  watch: {
+    filters: {
+      handler: function () {
+        this.getPageList(1);
+      },
+      deep: true
     },
-    methods: {
-      resetRightBox: function () {
-        this.showRight = false;
-      },
-      getPageList: function (pageNo) {
-        let orgId = this.user.userCompanyAddress;
-        if (!orgId) return;
-        this.pager.currentPage = pageNo;
-        let data = Object.assign({}, {
-          pageNo: pageNo,
-          pageSize: this.pager.pageSize,
-          keyWord: this.filters.keyWord,
-          status: this.filters.status,
-          systemObjectId: 'hmcc-system'
-        });
-        this.loadingData = true;
-        OrgUser.queryUsers(orgId, data).then(res => {
-          this.dataRows = res.data.list;
-          this.pager.count = res.data.count;
-          this.loadingData = false;
-        });
-      },
-      add: function () {
-        this.action = 'add';
-        this.formTitle = '新增';
-        this.form = {
-          list: [{roleId: ''}]
-        };
-        this.showRight = true;
-      },
-      edit: function (item) {
-        this.action = 'edit';
-        this.formTitle = '编辑';
-        this.oldItem = item;
-        this.form = JSON.parse(JSON.stringify(item));
-        this.showRight = true;
-      },
-      forbid: function (item) {
-        let itemTemp = JSON.parse(JSON.stringify(item));
-        itemTemp.status = '2';
-        User.stopUser(itemTemp.id).then(() => {
-          this.$notify.success({
-            title: '成功',
-            message: '已经停用用户"' + itemTemp.name + '"'
-          });
-          this.getPageList(1);
-        });
-      },
-      useNormal: function (item) {
-        let itemTemp = JSON.parse(JSON.stringify(item));
-        itemTemp.status = '0';
-        User.enableUser(itemTemp.id).then(() => {
-          this.getPageList(1);
-          this.$notify.success({
-            title: '成功',
-            message: '已成功启用用户"' + item.name + '"'
-          });
-        });
-      },
-      formatStatus: function (value) {
-        if (!value) return '';
-        return value.toString();
-      },
-      itemChange: function (formData) {
-        if (!formData.id) {
-          this.getPageList(1);
-        } else {
-          let index = -1;
-          this.dataRows.forEach((f, key) => {
-            if (f.id === formData.id) {
-              index = key;
-            }
-          });
-          if (index !== -1) {
-            this.dataRows.splice(index, 1, formData);
-          } else {
-            this.getPageList(1);
-          }
-        }
-        this.showRight = false;
+    user(val) {
+      if (val.userCompanyAddress) {
+        this.getPageList(1);
       }
     }
-  };
+  },
+  methods: {
+    resetRightBox: function () {
+      this.showRight = false;
+    },
+    getPageList: function (pageNo) {
+      let orgId = this.user.userCompanyAddress;
+      if (!orgId) return;
+      this.pager.currentPage = pageNo;
+      let data = Object.assign({}, {
+        pageNo: pageNo,
+        pageSize: this.pager.pageSize,
+        keyWord: this.filters.keyWord,
+        status: this.filters.status,
+        systemObjectId: 'hmcc-system'
+      });
+      this.loadingData = true;
+      OrgUser.queryUsers(orgId, data).then(res => {
+        this.dataRows = res.data.list;
+        this.pager.count = res.data.count;
+        this.loadingData = false;
+      });
+    },
+    add: function () {
+      this.action = 'add';
+      this.formTitle = '新增';
+      this.form = {
+        list: [{roleId: ''}]
+      };
+      this.showRight = true;
+    },
+    edit: function (item) {
+      this.action = 'edit';
+      this.formTitle = '编辑';
+      this.oldItem = item;
+      this.form = JSON.parse(JSON.stringify(item));
+      this.showRight = true;
+    },
+    forbid: function (item) {
+      let itemTemp = JSON.parse(JSON.stringify(item));
+      itemTemp.status = '2';
+      User.stopUser(itemTemp.id).then(() => {
+        this.$notify.success({
+          title: '成功',
+          message: '已经停用用户"' + itemTemp.name + '"'
+        });
+        this.getPageList(1);
+      });
+    },
+    useNormal: function (item) {
+      let itemTemp = JSON.parse(JSON.stringify(item));
+      itemTemp.status = '0';
+      User.enableUser(itemTemp.id).then(() => {
+        this.getPageList(1);
+        this.$notify.success({
+          title: '成功',
+          message: '已成功启用用户"' + item.name + '"'
+        });
+      });
+    },
+    formatStatus: function (value) {
+      if (!value) return '';
+      return value.toString();
+    },
+    itemChange: function (formData) {
+      if (!formData.id) {
+        this.getPageList(1);
+      } else {
+        let index = -1;
+        this.dataRows.forEach((f, key) => {
+          if (f.id === formData.id) {
+            index = key;
+          }
+        });
+        if (index !== -1) {
+          this.dataRows.splice(index, 1, formData);
+        } else {
+          this.getPageList(1);
+        }
+      }
+      this.showRight = false;
+    }
+  }
+};
 </script>

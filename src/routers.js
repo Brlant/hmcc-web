@@ -117,6 +117,19 @@ export const routes = [
                 delete: 'patrol-project-delete', devCheck: 'patrol-record-add'
               }
             }
+          },
+          {
+            path: '/dev/equipment',
+            component: () => import('./components/dev/equipment-maintenance/index.vue'),
+            meta: {
+              moduleId: 'dev', title: '设备维保单', perm: 'dev-equipment-manager-scan',
+              permPage: {
+                add: 'dev-equipment-manager-add',
+                edit: 'dev-equipment-manager-edit',
+                delete: 'dev-equipment-manager-delete',
+                devCheck: 'dev-equipment-manager-check'
+              }
+            }
           }
         ]
       },

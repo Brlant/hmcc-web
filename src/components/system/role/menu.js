@@ -424,7 +424,41 @@ export default [
             parentId: 'dev-patrol-manager'
           },
         ]
-      }
+      },
+      //设备维保单
+      {
+        id: 'equipment-maintenance-manager',
+        label: '设备维保单',
+        parentId: 'dev-manager',
+        sort:'5',
+        children: [
+          {
+            id: 'dev-equipment-manager-scan',
+            label: '查看设备维保',
+            parentId: 'equipment-maintenance-manager'
+          },
+          {
+            id: 'dev-equipment-manager-add',
+            label: '新增设备维保',
+            parentId: 'equipment-maintenance-manager'
+          },
+          {
+            id: 'dev-equipment-manager-edit',
+            label: '编辑设备维保',
+            parentId: 'equipment-maintenance-manager'
+          },
+          {
+            id: 'dev-equipment-manager-delete',
+            label: '删除设备维保',
+            parentId: 'equipment-maintenance-manager'
+          },
+          {
+            id: 'dev-equipment-manager-check',
+            label: '检查设备维保记录',
+            parentId: 'equipment-maintenance-manager'
+          },
+        ]
+      },
     ]
   },
   {
