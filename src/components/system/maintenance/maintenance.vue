@@ -58,13 +58,13 @@
                 <a v-has="'system-setting-account-manager-edit'" href="#" @click.stop.prevent="edit(row)"><i
                   class="el-icon-t-edit"></i>编辑</a>
                 <oms-forbid v-has="'system-setting-account-manager-stop'"
-                            :item="row" @forbided="forbid" :tips='"确认停用用户\""+row.name+"\"?"'
-                            v-show="row.status !== '2' ">
+                            :item="row" @forbided="forbid" :tips='"确认停用模板\""+row.templateName+"\"?"'
+                            v-show="row.status === 1 ">
                   <i class="el-icon-t-forbidden"></i>停用
                 </oms-forbid>
                 <oms-forbid v-has="'system-setting-account-manager-start'"
-                            :item="row" @forbided="useNormal" :tips='"确认启用用户\""+row.name+"\"?"'
-                            v-show="row.status=== '2' "><i class="el-icon-t-start" v-show="!row.adminFlag"></i>启用
+                            :item="row" @forbided="useNormal" :tips='"确认启用模板\""+row.templateName+"\"?"'
+                            v-show="row.status === 0 "><i class="el-icon-t-start" ></i>启用
                 </oms-forbid>
               </td>
             </tr>
@@ -92,7 +92,7 @@
 
 <script>
 import addEdit from './form/form.vue'
-import {getMaintenanceApi,getMaintenanceDetailApi} from "@/api/maintenance/maintenance";
+import {getMaintenanceApi,getMaintenanceDetailApi,updateStatusApi} from "@/api/maintenance/maintenance";
 import {User} from "@/resources";
 import {sinopharmDictDataType} from "@/api/system/dict/data";
 
@@ -118,7 +118,7 @@ export default {
     }
   },
   mounted() {
-    this.getPageList(1);
+    this.getPageList();
     this.getDeviceTemplateType();
   },
   methods: {
@@ -144,7 +144,7 @@ export default {
       this.formData = {};
       this.showRight = true;
     },
-    getPageList(pageNo) {
+    getPageList() {
       getMaintenanceApi().then(res => {
         this.dataRows = res.data;
       }).catch(err => {})
@@ -166,11 +166,23 @@ export default {
     },
     //停用
     forbid(item) {
-
+      updateStatusApi({id:item.id,status:0}).then(res=>{
+        this.$notify.success({
+          title: '成功',
+          message: '已经停用模板"' + item.templateName + '"'
+        });
+        this.getPageList();
+      }).catch(error=>{})
     },
     //启用
     useNormal(item) {
-
+      updateStatusApi({id:item.id,status:1}).then(res=>{
+        this.$notify.success({
+          title: '成功',
+          message: '已经启用模板"' + item.templateName + '"'
+        });
+        this.getPageList();
+      }).catch(error=>{})
     },
   }
 }

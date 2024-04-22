@@ -15,6 +15,11 @@ export default {
     5: {'title': '盘苗', status: '6', num: ''},
     6: {'title': '除霜', status: '7', num: ''},
   },
+  equipmentStatus: {
+    0: {'title': '待复核', state: '1', num: ''},
+    1: {'title': '已完成', state: '2', num: ''},
+    2: {'title': '已取消', state: '3', num: ''},
+  },
   wifiType: {
     0: {'title': '全部', status: null, num: ''},
     1: {'title': '使用中', status: '4', num: ''},

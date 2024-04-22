@@ -2,7 +2,8 @@ import {http} from '@/resources'
 
 
 let params_api = {
-  getMaintenanceList:`/maintenanceInterpose`
+  getMaintenanceList:`/maintenanceInterpose`,
+  updateStatus:`/maintenanceInterpose/updateStatus`
 }
 
 export const getMaintenanceApi =()=>{
@@ -31,6 +32,14 @@ export const putMaintenanceApi =(data)=>{
   return http({
     url: params_api.getMaintenanceList,
     method: 'put',
+    data:data
+  })
+}
+
+export const updateStatusApi =(data)=>{
+  return http({
+    url: params_api.updateStatus,
+    method: 'post',
     data:data
   })
 }

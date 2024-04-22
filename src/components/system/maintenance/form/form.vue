@@ -35,6 +35,7 @@
             :props="defaultProps"
             @node-click="handleNodeClick"
             @check-change="handleCheckChange"
+            :default-checked-keys="defaultCheckedKeys"
             node-key="id"
           ></el-tree>
         </div>
@@ -77,6 +78,13 @@ export default {
         if(newValue.id){
           this.form = newValue;
           this.maintenanceInterposeDetailList = newValue.maintenanceInterposeDetailList;
+
+          this.maintenanceInterposeDetailList.forEach(node => {
+            if (node.checkStatus) {
+              this.defaultCheckedKeys.push(node.id);
+            }
+          });
+
         }else{
           this.form = {}
           this.maintenanceInterposeDetailList = [];
@@ -88,10 +96,8 @@ export default {
   },
   data(){
     return{
-      form:{
-        // templateName:'',
-        // hospitalDeviceType:'',
-      },
+
+      form:{},
       rules:{
         templateName:[
           {required: true, message: '请输入模板名称', trigger: 'blur'}
@@ -101,8 +107,9 @@ export default {
         ]
       },
       maintenanceInterposeDetailList: [], // 初始树形数据
+      defaultCheckedKeys:[],
       selectedNode: null,
-      defaultProps: { children: 'twoInterposeDetailList', label: 'maintenanceName' },
+      defaultProps: { children: 'twoInterposeDetailList', label: 'maintenanceName'},
       nextNodeId: 1, // 新增计数器
       doing: false,
       hospitalDeviceTypeList:[]
@@ -133,6 +140,8 @@ export default {
           return false;
         }
         this.doing = true;
+        // this.form.maintenanceInterposeDetailList = this.maintenanceInterposeDetailList
+        // console.log(this.form,'值')
         if(this.formData.id){
           this.form.maintenanceInterposeDetailList = this.maintenanceInterposeDetailList
           putMaintenanceApi(this.form).then(res => {
@@ -179,6 +188,7 @@ export default {
           this.maintenanceInterposeDetailList.push({
             // id: this.getNextId(),
             maintenanceName: value,
+            checkStatus:false,
             twoInterposeDetailList: [],
           });
         }).catch(err=>{});
@@ -189,6 +199,7 @@ export default {
         }).then(({ value }) => {
           this.selectedNode.twoInterposeDetailList.push({
             // id: this.getNextId(),
+            checkStatus:false,
             maintenanceName: value,
           });
         }).catch(err=>{});
@@ -224,16 +235,16 @@ export default {
     },
     handleNodeClick(node,event) {
       this.selectedNode = node;
-      // console.log(this.maintenanceInterposeDetailList,'节点编辑');
-      // console.log(event,'节点编辑');
+
     },
 
-    handleCheckChange(node, checked, indeterminate) {
+    handleCheckChange(data, checked) {
+      data.checkStatus = checked;
 
     },
 
     getNextId() {
-      return this.nextNodeId++;
+      return Date.now();
     },
     getParentNode(node) {
       return this.maintenanceInterposeDetailList.find((parent) => parent.twoInterposeDetailList.includes(node));

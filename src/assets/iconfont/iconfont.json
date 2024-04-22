@@ -1,0 +1,30 @@
+{
+  "id": "",
+  "name": "",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon-",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "2815705",
+      "name": "查看",
+      "font_class": "chakan",
+      "unicode": "e544",
+      "unicode_decimal": 58692
+    },
+    {
+      "icon_id": "12939973",
+      "name": "导出",
+      "font_class": "daochu",
+      "unicode": "e643",
+      "unicode_decimal": 58947
+    },
+    {
+      "icon_id": "39451776",
+      "name": "取消订单",
+      "font_class": "quxiaodingdan",
+      "unicode": "e609",
+      "unicode_decimal": 58889
+    }
+  ]
+}

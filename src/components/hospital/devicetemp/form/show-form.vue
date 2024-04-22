@@ -38,6 +38,8 @@
                   </oms-col>
                   <oms-col :isShow="true" :rowSpan="8" :colSpan="8" label="品牌">{{ form.devBrand }}</oms-col>
                   <oms-col :isShow="true" :rowSpan="8" :colSpan="8" label="型号">{{ form.devVersion }}</oms-col>
+                  <!--                  维保周期-->
+                  <oms-col :isShow="true" :rowSpan="8" :colSpan="8" label="维保周期">{{ form.maintenanceCycle }}天</oms-col>
                 </div>
 
                 <div v-show="form.templateType === '2'">
@@ -54,6 +56,8 @@
                       form.productionLicenseNumber
                     }}
                   </oms-col>
+                  <!--                  维保周期-->
+                  <oms-col :isShow="true" :rowSpan="8" :colSpan="8" label="维保周期">{{ form.maintenanceCycle }}天</oms-col>
                 </div>
 
               </div>

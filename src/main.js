@@ -29,6 +29,10 @@ import ECharts from 'vue-echarts/components/ECharts.vue';
 // 引入高德地图vue组件
 import VueAMap, {lazyAMapApiLoaderInstance} from 'vue-amap';
 
+//引入阿里图标库文件
+import './assets/iconfont/iconfont.css'
+import './assets/iconfont/iconfont.js'
+
 
 // // 初始化视口宽度
 // initViewPort(router);

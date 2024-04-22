@@ -69,6 +69,16 @@
               </el-form-item>
             </el-col>
           </el-row>
+<!--          维保周期-->
+          <el-row :gutter="10" v-show="form.templateType === '1'">
+            <el-col :span="8">
+              <el-form-item label="维保周期">
+                <el-input oninput="value=value.replace(/^0|[^0-9]/g,'')" placeholder="请输入维保周期:大于0,整数" type="number" v-model.number="form.maintenanceCycle">
+                  <template slot="append">天</template>
+                </el-input>
+              </el-form-item>
+            </el-col>
+          </el-row>
 
           <el-row :gutter="10" v-show="form.templateType === '2'">
             <el-col :span="8">
@@ -98,7 +108,16 @@
                 <oms-input placeholder="请输入厂商备案凭证号" v-model="form.productionLicenseNumber"/>
               </el-form-item>
             </el-col>
+            <el-col :span="8">
+              <el-form-item label="维保周期">
+                <el-input oninput="value=value.replace(/^0|[^0-9]/g,'')" placeholder="请输入维保周期:大于0,整数" type="number" v-model.number="form.maintenanceCycle">
+                  <template slot="append">天</template>
+                </el-input>
+              </el-form-item>
+            </el-col>
           </el-row>
+
+
         </div>
         <div>
           <el-divider/>
