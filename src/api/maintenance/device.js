@@ -69,3 +69,29 @@ export const postDeviceMaintenanceApi =(data)=>{
     data:data,
   })
 }
+
+//查看详情
+export const getDeviceMaintenanceDetail =(id)=>{
+  return http({
+    url: '/deviceMaintenance/'+id,
+    method:'get',
+  })
+}
+
+//导出
+export const getExportDeviceMaintenance =(id)=>{
+  return http({
+    url: '/deviceMaintenance/export/'+id,
+    method:'get',
+    responseType: 'blob'
+  })
+}
+
+//更新
+export const putDeviceMaintenanceApi =(data)=>{
+  return http({
+    url: '/deviceMaintenance',
+    method:'put',
+    data:data,
+  })
+}

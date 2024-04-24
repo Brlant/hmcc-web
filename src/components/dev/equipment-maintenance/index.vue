@@ -45,9 +45,9 @@
     <div class="order-list" style="margin-top: 20px">
       <el-row class="order-list-header">
         <el-col :span="1">序号</el-col>
-        <el-col :span="3">设备类型</el-col>
-        <el-col :span="3">设备名称</el-col>
-        <el-col :span="2">维保时间</el-col>
+        <el-col :span="2">设备类型</el-col>
+        <el-col :span="2">设备名称</el-col>
+        <el-col :span="4">维保时间</el-col>
         <el-col :span="3">维保人员</el-col>
         <el-col :span="2">复核人员</el-col>
         <el-col :span="2">单位名称</el-col>
@@ -70,12 +70,12 @@
       <!--      渲染列-->
       <div class="order-list-body flex-list-dom" v-else>
         <div :class="[{'active':currentItemId===item.id}]" class="order-list-item order-list-item-bg"
-             v-for="item in dataList" @click="showItemDetail(item)">
+             v-for="item in dataList" >
           <el-row>
             <el-col :span="1" class="R">{{ item.id }}</el-col>
-            <el-col :span="3" class="R">{{ equipmentHospitalDeviceType[item.hospitalDeviceType] || '暂无信息' }}</el-col>
-            <el-col :span="3" class="R">{{ item.deviceName }}</el-col>
-            <el-col :span="2" class="R">{{ item.maintenanceDate }}</el-col>
+            <el-col :span="2" class="R">{{ equipmentHospitalDeviceType[item.hospitalDeviceType] || '暂无信息' }}</el-col>
+            <el-col :span="2" class="R">{{ item.deviceName }}</el-col>
+            <el-col :span="4" class="R">{{ item.maintenanceDate }}</el-col>
             <el-col :span="3" class="R">{{ item.maintenanceUserName }}</el-col>
             <el-col :span="2" class="R">{{ item.reviewUserName }}</el-col>
             <el-col :span="2" class="R">{{ item.orgName }}</el-col>
@@ -87,13 +87,13 @@
             </el-col>
             <el-col :span="3" class="R">
 <!--              编辑-->
-              <el-button type="primary" icon="el-icon-edit" circle size="mini" v-show="item.status === 1"></el-button>
+              <el-button type="primary" icon="el-icon-edit" circle size="mini" v-show="item.status === 1" @click="editItemDetail(item)"></el-button>
 <!--              查看-->
-              <el-button type="primary" circle size="mini" >
+              <el-button type="primary" circle size="mini" @click="showItemDetail(item)">
                 <span class="iconfont" style="font-size: 14px">&#xe544;</span>
               </el-button>
 <!--              导出-->
-              <el-button type="primary" circle size="mini" v-show="item.status === 2">
+              <el-button type="primary" circle size="mini" v-show="item.status === 2" @click="exportItemDetail(item)">
                 <span class="iconfont" style="font-size: 14px">&#xe643;</span>
               </el-button>
 <!--              取消-->
@@ -116,7 +116,7 @@
     </div>
 
     <page-right :css="defaultPageRight" :show="showIndex !== -1" @right-close="resetRightBox">
-      <component :index="showIndex" :is="currentPart" @right-close="resetRightBox" @refreshEquipment="refreshEquipment"/>
+      <component :formItem="form" :statusData="statusData" :index="showIndex" :is="currentPart" @right-close="resetRightBox" @refreshEquipment="refreshEquipment"/>
     </page-right>
   </div>
 </template>
@@ -124,13 +124,17 @@
 <script>
 import SearchPart from './search';
 import utils from '@/tools/utils';
-import addEdit from "@/components/dev/equipment-maintenance/form/addEdit";
+import addForm from "@/components/dev/equipment-maintenance/form/addForm";
+import showForm from "@/components/dev/equipment-maintenance/form/showForm"
+import editForm from "@/components/dev/equipment-maintenance/form/editForm";
 import CommonMixin from '@/mixins/commonMixin';
 import {
   getDeviceMaintenanceList,
   getDeviceMaintenanceStatus,
   getQueryMaintenanceStatus,
   getCancelMaintenance,
+  getDeviceMaintenanceDetail,
+  getExportDeviceMaintenance,
 } from "@/api/maintenance/device";
 import {deleteBaseStation} from "@/api/hospital/equipment";
 import {sinopharmDictDataType} from "@/api/system/dict/data";
@@ -166,8 +170,12 @@ export default {
       defaultPageRight: {'width': '700px', 'padding': 0},
 
       dialogComponents: {
-        0: addEdit,
+        0: addForm,
+        1: showForm,
+        2: editForm,
       },
+      //状态
+      statusData:null
 
     }
   },
@@ -213,9 +221,44 @@ export default {
 
       });
     },
+    //编辑
+    editItemDetail(item){
+      this.currentItem = item;
+      this.currentItemId = item.id;
+      this.statusData = item.status;
+      this.showPart(2);
+      this.defaultPageRight.width = '700px';
+      getDeviceMaintenanceDetail(this.currentItemId).then(response=>{
+        this.form = response.data;
+      }).catch(error=>{})
+    },
     showItemDetail(item) {
       this.currentItem = item;
       this.currentItemId = item.id;
+      this.statusData = item.status;
+      this.showPart(1);
+      this.defaultPageRight.width = '700px';
+      getDeviceMaintenanceDetail(this.currentItemId).then(response=>{
+        this.form = response.data;
+      }).catch(error=>{})
+    },
+    //导出
+    exportItemDetail(item){
+      this.$confirm('是否导出该设备模型', '', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(res=>{
+        getExportDeviceMaintenance(item.id).then(res => {
+          const baseUrl = window.URL.createObjectURL(new Blob([res.data], { type: res.data.type }))
+          const fileName = `设备维保单_${new Date().getTime()}.xlsx` // 下载文件名称
+          const exportLink = document.createElement('a')
+          exportLink.download = fileName
+          exportLink.style.display = 'none'
+          exportLink.href = baseUrl
+          exportLink.click()
+        })
+      }).catch(err=>{})
     },
     resetRightBox() {
       this.defaultPageRight.width = '700px';
@@ -259,7 +302,7 @@ export default {
       this.filters = Object.assign({}, this.filters, item);
     },
     add() {
-      this.formData = {};
+      this.form = {};
       this.showPart(0);
     },
     showPart(index) {

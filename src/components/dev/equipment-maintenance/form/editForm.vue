@@ -1,14 +1,14 @@
 <template>
   <dialog-template :btnSavePosition="120">
-    <template slot="title">{{ actionType }}</template>
+    <template slot="title">编辑</template>
     <template slot="btnSave">
-      <el-button :disabled="doing" @click="save" plain type="primary">保存</el-button>
-      <el-button>取消</el-button>
+      <el-button @click="submit" plain type="primary">保存</el-button>
+      <el-button @click="cancelSubmit">取消</el-button>
     </template>
     <template slot="content">
       <el-form :model="form" :rules="rules" label-width="120px" ref="tempForm">
         <el-form-item label="设备类型" prop="hospitalDeviceType">
-          <el-select v-model="form.hospitalDeviceType" placeholder="请选择设备类型" @change="handlerDeviceType">
+          <el-select v-model="form.hospitalDeviceType" placeholder="请选择设备类型" disabled>
             <el-option v-for="(item,index) in hospitalDeviceTypeList"
                        :key="item.id"
                        :value="item.key"
@@ -21,6 +21,7 @@
                      :clearable="true"
                      filterable
                      remote
+                     disabled
                      :remote-method="searchDeviceName"
                      @click.native.once="searchDeviceName('')"
                      @change="handlerDeviceName"
@@ -51,11 +52,12 @@
         </el-form-item>
         <!--维保公司-->
         <el-form-item label="维保公司" prop="companyName">
-          <el-input v-model="form.companyName"></el-input>
+          <el-input v-model="form.companyName" readonly :disabled="true"></el-input>
         </el-form-item>
         <!--维保时间-->
         <el-form-item label="维保时间" prop="maintenanceDate">
           <el-date-picker
+            disabled
             value-format="yyyy-MM-dd HH:mm:ss"
             v-model="form.maintenanceDate"
             type="datetime"
@@ -63,13 +65,12 @@
         </el-form-item>
 
         <div v-for="(detail,index) in form.deviceMaintenanceDetails">
-          <div class="vertical" v-if="detail.checkStatus">
+          <div class="vertical">
             <div class="vertical-bar"></div>
             <div>{{ detail.maintenanceName }}</div>
           </div>
           <div v-if="detail.twoListDetailList && detail.twoListDetailList.length > 0">
-            <div v-for="(innerDetail, innerIndex) in detail.twoListDetailList" :key="innerIndex"
-                 v-if="innerDetail.checkStatus">
+            <div v-for="(innerDetail, innerIndex) in detail.twoListDetailList" :key="innerIndex">
               <el-form-item label-width="120px" :label="innerDetail.maintenanceName" required></el-form-item>
               <el-row>
                 <el-col :span="12">
@@ -112,7 +113,6 @@
           </div>
         </div>
 
-        <!--签名-->
         <div style="margin-top: 20px">
           <div class="vertical">
             <div class="vertical-bar"></div>
@@ -125,15 +125,16 @@
               </el-form-item>
             </el-col>
             <el-col :span="10">
-              <el-form-item label="复核人员">
-                <el-input v-model="form.reviewUserName"></el-input>
+              <el-form-item label="复核人员" v-show="statusData === 2">
+                <el-input v-model="form.reviewUserName" disabled></el-input>
               </el-form-item>
             </el-col>
-            <el-col :span="4">
+            <el-col :span="4" v-show="statusData === 2">
               <el-button style="margin-left: 25px;">查看签字</el-button>
             </el-col>
           </el-row>
         </div>
+
 
 
       </el-form>
@@ -144,50 +145,23 @@
 <script>
 import {sinopharmDictDataType} from "@/api/system/dict/data";
 import {
-  getColdList,
-  getMedicalList,
-  getQueryByTypeList,
-  postDeviceMaintenanceApi
+  putDeviceMaintenanceApi
 } from "@/api/maintenance/device";
 import moment from 'moment';
 
 export default {
-  name: "addEdit",
+  name: "editForm",
+  components: {
+
+  },
   props: {
     formItem: Object,
-    index: Number
+    statusData:Number,
   },
   data() {
     return {
-      actionType: '添加',
-      form: {
-        hospitalDeviceType: '',
-        deviceId: '',
-        deviceName: '',
-        orgId: '',
-        orgName: '',
-        departmentId: null,
-        departmentName: '',
-        companyName: '',//维保公司
-        maintenanceDate:moment(new Date()).format('YYYY-MM-DD HH:mm:ss'),//维保时间
-        maintenanceUserName: '',//维保人员
-        reviewUserName: '',//复核人员
-        deviceMaintenanceDetails: [{
-          checkStatus: null,
-          maintenanceName: '',
-          twoListDetailList: [{
-            checkStatus: null,
-            maintenanceName: '',
-            isQualified: 1,
-            handleTime: '',
-            handleManner: '',
-            remark: '',
-          }]
-        }],
-      },
-      currentDate: new Date(),
-      doing: false,
-      rules: {
+      form:{},
+      rules:{
         hospitalDeviceType: [
           {required: true, message: '请选择设备类型', trigger: 'blur'}
         ],
@@ -208,36 +182,52 @@ export default {
         ],
       },
       hospitalDeviceTypeList: [],//设备类型
-      //设备名称判断
-      deviceNameCode: '',
       //设备名称
       deviceNames: [],
-      //维保设备
-      maintenanceInterposeDetailList: [],
     }
   },
-  watch: {},
+  watch: {
+    formItem:{
+      handler(newValue,oldValue){
+        this.form = newValue;
+        if(newValue.hospitalDeviceType){
+          this.fetchDeviceNames(newValue.hospitalDeviceType,newValue.deviceName);
+        }
+      },
+      immediate:true,
+    }
+  },
   created() {
     this.getDeviceTemplateType();
   },
-  methods: {
-    save() {
-      this.$refs.tempForm.validate(valid => {
-        if (valid) {
-          let params = Object.assign({}, this.form)
-          postDeviceMaintenanceApi(params).then(response => {
+  mounted() {
+
+  },
+  methods:{
+    submit(){
+      this.$refs.tempForm.validate(valid=>{
+        if(valid){
+          let params = {
+            ...this.form,
+          }
+          putDeviceMaintenanceApi(params).then(res=>{
             this.$notify.success({
               duration: 2000,
               name: '成功',
-              message: '新增设备维保单成功'
+              message: '编辑设备维保单成功'
             });
             this.$emit('refreshEquipment');
-          }).catch(error => {
-
-          })
+            this.refreshFrom();
+          }).catch(error=>{})
         }
       })
-
+    },
+    cancelSubmit(){
+      this.$emit('refreshEquipment');
+    },
+    refreshFrom(){
+      this.form = {};
+      this.$refs.tempForm.resetFields();
     },
     //设备名称
     handlerDeviceName() {
@@ -254,34 +244,11 @@ export default {
         this.hospitalDeviceTypeList = res.data
       });
     },
-    //设备类型
-    handlerDeviceType(newType) {
-      this.deviceNames = [];
-      this.form.deviceId = '';
-      this.form.orgName = '';
-      this.form.departmentName = '';
-      this.fetchDeviceNames(newType, '');
-      this.queryByTypeList(newType);
-    },
-    queryByTypeList(newType) {
-      getQueryByTypeList(newType).then(res => {
-        this.form.deviceMaintenanceDetails = res.data.maintenanceInterposeDetailList.map(detail => {
-          return {
-            checkStatus: detail.checkStatus,
-            maintenanceName: detail.maintenanceName,
-            twoListDetailList: detail.twoInterposeDetailList.map((innerDetail) => {
-              return {
-                checkStatus: innerDetail.checkStatus,
-                maintenanceName: innerDetail.maintenanceName,
-                isQualified: 1,
-                handleTime: moment(new Date()).format('YYYY-MM-DD HH:mm:ss'),
-                handleManner: '',
-                remark: '',
-              }
-            })
-          }
-        })
-      })
+    //设备名称模糊搜索
+    searchDeviceName(query) {
+      if (query && query.length > 0) {
+        this.fetchDeviceNames(this.form.hospitalDeviceType, query); // 可以在此处添加模糊查询参数，具体取决于接口要求
+      }
     },
     fetchDeviceNames(deviceType, query) {
       let _that = this;
@@ -318,14 +285,7 @@ export default {
         })
       }
     },
-    //设备名称模糊搜索
-    searchDeviceName(query) {
-      if (query && query.length > 0) {
-        this.fetchDeviceNames(this.form.hospitalDeviceType, query); // 可以在此处添加模糊查询参数，具体取决于接口要求
-      }
-    }
-
-  },
+  }
 }
 </script>
 
