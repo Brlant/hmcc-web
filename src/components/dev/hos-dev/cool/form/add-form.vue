@@ -121,7 +121,9 @@
               </el-form-item>
             </el-col>
             <el-col :span="8">
-
+              <el-form-item label="维保周期" prop="maintenanceCycle">
+                <oms-input placeholder="请输入维保周期" v-model="form.maintenanceCycle"/>
+              </el-form-item>
             </el-col>
           </el-row>
         </div>
@@ -337,6 +339,7 @@ export default {
         remark: '',
         doorSheetType: '',
         brand: '',
+        maintenanceCycle: '',
         standardWorkingHours: '',
         workStatus: '',
         shutdownStatusStart: 0,
@@ -439,6 +442,7 @@ export default {
           remark: '',
           doorSheetType: '',
           brand: '',
+          maintenanceCycle: '',
           standardWorkingHours: '',
           workStatus: '',
           shutdownStatusStart: 0,
@@ -582,6 +586,8 @@ export default {
       this.form.shutdownStatusStart = template.shutdownStatusStart || 0;
       this.form.shutdownStatusEnd = template.shutdownStatusEnd;
       this.form.workStatus = template.workStatus;
+      this.form.maintenanceCycle = template.maintenanceCycle;
+
     },
     checkTag(id, type, cb) {
       let deviceId = this.form.id

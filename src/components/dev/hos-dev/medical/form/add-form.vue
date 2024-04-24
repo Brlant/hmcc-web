@@ -593,6 +593,7 @@ export default {
       this.form.shutdownStatusStart = template.shutdownStatusStart || 0;
       this.form.shutdownStatusEnd = template.shutdownStatusEnd;
       this.form.workStatus = template.workStatus;
+      this.form.maintenanceCycle = template.maintenanceCycle;
     },
     checkTag(id, type, cb) {
       let deviceId = this.form.id

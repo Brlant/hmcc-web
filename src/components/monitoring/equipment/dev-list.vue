@@ -16,11 +16,18 @@
       background: #f2f6fc;
       border-radius: 4px;
       padding: 5px;
+      align-items: center; /* 垂直居中 */
+      justify-content: center; /* 水平居中 */
+      place-content: center;
       .left {
-        margin-left: 30px;
-        width:40px; /* 左边固定宽度 */
-        display: grid;
-        place-content: center;
+
+        width:60px; /* 左边固定宽度 */
+        height: 60px;
+        line-height: 60px;
+        text-align: center;
+        background: #F2A3A5;
+        color: #ffffff;
+        border-radius: 50%;
       }
 
       .right {
@@ -51,7 +58,7 @@
     <el-row class="dev-list" v-for="(row,index) in rowList" :key="index" :gutter="10">
       <el-col class="item" :span="12" :key="i+'_'+item.id" v-for="(item,i) in row">
         <div class="content">
-          <div class="left">
+          <div class="left" v-show="item.offline">
             离线
           </div>
           <div class="right">
@@ -187,6 +194,7 @@ export default {
       }
       // console.log(rows,'这一行数据');
       return rows;
+
     },
     temperatureStyle(item) {
       let style = {

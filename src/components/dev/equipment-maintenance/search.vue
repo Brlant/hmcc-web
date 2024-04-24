@@ -15,7 +15,7 @@
       <el-form class="advanced-query-form" ref="formSearch" onsubmit="return false">
         <el-col :span="8">
           <oms-form-row label="设备名称" :span="5">
-            <el-input v-model="searchCondition.deviceName"   clearable placeholder="请输入设备名称"></el-input>
+            <el-input v-model.trim="searchCondition.deviceName"   clearable placeholder="请输入设备名称"></el-input>
           </oms-form-row>
         </el-col>
         <el-col :span="8">
