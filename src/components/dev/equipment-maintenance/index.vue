@@ -73,14 +73,18 @@
              v-for="item in dataList" @click="showItemDetail(item)">
           <el-row>
             <el-col :span="1" class="R">{{ item.id }}</el-col>
-            <el-col :span="3" class="R">{{ item.hospitalDeviceType }}</el-col>
+            <el-col :span="3" class="R">{{ equipmentHospitalDeviceType[item.hospitalDeviceType] || '暂无信息' }}</el-col>
             <el-col :span="3" class="R">{{ item.deviceName }}</el-col>
             <el-col :span="2" class="R">{{ item.maintenanceDate }}</el-col>
             <el-col :span="3" class="R">{{ item.maintenanceUserName }}</el-col>
             <el-col :span="2" class="R">{{ item.reviewUserName }}</el-col>
             <el-col :span="2" class="R">{{ item.orgName }}</el-col>
             <el-col :span="3" class="R">{{ item.companyName }}</el-col>
-            <el-col :span="2" class="R">{{ item.status }}</el-col>
+            <el-col :span="2" class="R">
+              <span v-show="item.status ===1 ">待复核</span>
+              <span v-show="item.status ===2 ">已完成</span>
+              <span v-show="item.status ===3 ">已取消</span>
+            </el-col>
             <el-col :span="3" class="R">
 <!--              编辑-->
               <el-button type="primary" icon="el-icon-edit" circle size="mini" v-show="item.status === 1"></el-button>
@@ -112,7 +116,7 @@
     </div>
 
     <page-right :css="defaultPageRight" :show="showIndex !== -1" @right-close="resetRightBox">
-      <component :index="showIndex" :is="currentPart" @right-close="resetRightBox"/>
+      <component :index="showIndex" :is="currentPart" @right-close="resetRightBox" @refreshEquipment="refreshEquipment"/>
     </page-right>
   </div>
 </template>
@@ -129,6 +133,7 @@ import {
   getCancelMaintenance,
 } from "@/api/maintenance/device";
 import {deleteBaseStation} from "@/api/hospital/equipment";
+import {sinopharmDictDataType} from "@/api/system/dict/data";
 
 export default {
   name: "index",
@@ -156,6 +161,7 @@ export default {
       statusType: utils.equipmentStatus,
       activeStatus: 0,
       dataList: [],
+      equipmentHospitalDeviceType:{},
       formData: {},
       defaultPageRight: {'width': '700px', 'padding': 0},
 
@@ -175,8 +181,20 @@ export default {
   },
   mounted() {
     this.getEquipmentList(1);
+    this.getDeviceTemplateType();
   },
   methods: {
+    refreshEquipment(){
+      this.getEquipmentList(1);
+      this.resetRightBox()
+    },
+    getDeviceTemplateType() {
+      sinopharmDictDataType('hospitalDeviceType').then(res => {
+        res.data.forEach(item => {
+          this.$set(this.equipmentHospitalDeviceType, item.key, item.label);
+        });
+      });
+    },
     //取消
     handleCancel(row){
       this.$confirm('确定取消该行维保单？', '删除', {

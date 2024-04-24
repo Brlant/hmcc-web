@@ -30,6 +30,7 @@
             ref="tree"
             :data="maintenanceInterposeDetailList"
             show-checkbox
+            check-strictly
             default-expand-all
             highlight-current
             :props="defaultProps"
@@ -76,12 +77,22 @@ export default {
     formData:{
       handler(newValue,oldValue){
         if(newValue.id){
+          this.defaultCheckedKeys = [];
           this.form = newValue;
           this.maintenanceInterposeDetailList = newValue.maintenanceInterposeDetailList;
+
 
           this.maintenanceInterposeDetailList.forEach(node => {
             if (node.checkStatus) {
               this.defaultCheckedKeys.push(node.id);
+            }
+            // 如果二级节点twoInterposeDetailList当中的checkStatus为true,也push到 this.defaultCheckedKeys中
+            if (node.twoInterposeDetailList && node.twoInterposeDetailList.length > 0) {
+              node.twoInterposeDetailList.forEach(twoNode => {
+                if (twoNode.checkStatus) {
+                  this.defaultCheckedKeys.push(twoNode.id);
+                }
+              });
             }
           });
 
@@ -188,7 +199,7 @@ export default {
           this.maintenanceInterposeDetailList.push({
             // id: this.getNextId(),
             maintenanceName: value,
-            checkStatus:false,
+            checkStatus:null,
             twoInterposeDetailList: [],
           });
         }).catch(err=>{});
@@ -199,7 +210,7 @@ export default {
         }).then(({ value }) => {
           this.selectedNode.twoInterposeDetailList.push({
             // id: this.getNextId(),
-            checkStatus:false,
+            checkStatus:null,
             maintenanceName: value,
           });
         }).catch(err=>{});
@@ -240,7 +251,7 @@ export default {
 
     handleCheckChange(data, checked) {
       data.checkStatus = checked;
-
+      // console.log(data,checked,'====');
     },
 
     getNextId() {
