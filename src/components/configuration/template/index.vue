@@ -53,15 +53,38 @@
         </div>
       </div>
     </div>
+    <div class="text-center" v-show="(dataRows.length || pager.currentPage !== 1) && !loadingData">
+      <el-pagination :current-page="pager.currentPage" :page-size="pager.pageSize"
+                     :page-sizes="[10,20,50,100]"
+                     :total="pager.count" @current-change="handleCurrentChange"
+                     @size-change="handleSizeChange"
+                     layout="total, sizes, prev, pager, next, jumper">
+      </el-pagination>
+    </div>
+
+    <page-right :css="defaultPageRight" :show="showIndex !== -1" @right-close="resetRightBox">
+      <component :formItem="form" :index="showIndex"  :is="currentPart" @change="change"  @right-close="resetRightBox"/>
+    </page-right>
   </div>
 </template>
 
 <script>
+import CommonMixin from '@/mixins/commonMixin';
+import addEdit from "@/components/configuration/template/form/addEdit";
+import {getMaintenanceApi} from "@/api/maintenance/maintenance";
+import { queryAlarmRuleTemplate } from "@/api/alarm/template";
+
 export default {
+  mixins: [CommonMixin],
   data() {
     return {
+      showRight: false,
       loadingData: false,
       dataRows: [],
+      defaultPageRight: {'width': '700px', 'padding': 0},
+      dialogComponents: {
+        0: addEdit,
+      },
     }
   },
   watch:{
@@ -71,13 +94,34 @@ export default {
 
   },
   mounted() {
-
+    this.getPageList();
   },
   methods:{
-  //  新增
-    add(){
+    //查询列表
+    getPageList() {
 
     },
+   //新增
+    add(){
+      this.form = {};
+      this.showPart(0);
+    },
+    showPart(index) {
+      this.currentPart = this.dialogComponents[index];
+      this.$nextTick(() => {
+        this.showIndex = index;
+      });
+    },
+    //关闭弹框
+    resetRightBox() {
+      this.defaultPageRight.width = '700px';
+      this.showIndex = -1;
+    },
+    //
+    change() {
+      this.resetRightBox();
+      this.getPageList();
+    }
   }
 }
 </script>
