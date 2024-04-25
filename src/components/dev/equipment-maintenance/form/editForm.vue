@@ -2,7 +2,7 @@
   <dialog-template :btnSavePosition="120">
     <template slot="title">编辑</template>
     <template slot="btnSave">
-      <el-button @click="submit" plain type="primary">保存</el-button>
+      <el-button :disabled="doing" @click="submit" plain type="primary">保存</el-button>
       <el-button @click="cancelSubmit">取消</el-button>
     </template>
     <template slot="content">
@@ -181,6 +181,7 @@ export default {
           {required: true, message: '请输入数量', trigger: 'blur'},
         ],
       },
+      doing:false,
       hospitalDeviceTypeList: [],//设备类型
       //设备名称
       deviceNames: [],
@@ -205,21 +206,33 @@ export default {
   },
   methods:{
     submit(){
+      if (this.doing) return;
+      this.doing = true;
       this.$refs.tempForm.validate(valid=>{
-        if(valid){
-          let params = {
-            ...this.form,
-          }
-          putDeviceMaintenanceApi(params).then(res=>{
-            this.$notify.success({
-              duration: 2000,
-              name: '成功',
-              message: '编辑设备维保单成功'
-            });
-            this.$emit('refreshEquipment');
-            this.refreshFrom();
-          }).catch(error=>{})
+        if(!valid){
+          this.doing = false;
+          return false;
         }
+        this.doing = true;
+        let params = {
+          ...this.form,
+        }
+        putDeviceMaintenanceApi(params).then(res=>{
+          this.doing = false;
+          this.$notify.success({
+            duration: 2000,
+            name: '成功',
+            message: '编辑设备维保单成功'
+          });
+          this.$emit('refreshEquipment');
+          this.refreshFrom();
+        }).catch(error=>{
+          this.doing = false;
+          this.$notify.error({
+            duration: 2000,
+            message: '编辑设备维保单失败'
+          });
+        })
       })
     },
     cancelSubmit(){

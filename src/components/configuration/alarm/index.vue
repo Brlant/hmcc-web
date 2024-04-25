@@ -10,9 +10,10 @@
     </search-part>
     <div class="order-list" style="margin-top: 20px">
       <el-row class="order-list-header">
-        <el-col :span="4">冷链标签</el-col>
-        <el-col :span="4">温度告警</el-col>
-        <el-col :span="4">湿度告警</el-col>
+        <el-col :span="3">冷链标签</el-col>
+        <el-col :span="3">所属单位</el-col>
+        <el-col :span="3">温度告警</el-col>
+        <el-col :span="3">湿度告警</el-col>
         <el-col :span="4">电压告警</el-col>
         <el-col :span="4">离线告警</el-col>
         <el-col :span="4">操作</el-col>
@@ -34,15 +35,16 @@
              @click="showItemDetail(item)" class="order-list-item order-list-item-bg"
              v-for="item in dataList">
           <el-row>
-            <el-col :span="4" class="R">{{item.sensorName}}</el-col>
-            <el-col :span="4" class="R">
+            <el-col :span="3" class="R">{{item.sensorName}}</el-col>
+            <el-col :span="3" class="R">{{item.orgName}}</el-col>
+            <el-col :span="3" class="R">
                 <span v-if="item.temperatureAlarmFlag === '1'">
                   高：{{item.temperatureMax}}℃ 低：{{item.temperatureMin}}℃
                 </span>
                 <el-tag type="primary" :type="item.temperatureAlarmFlag === '1' ? 'success' : 'warning'">
                   {{item.temperatureAlarmFlag === '1' ? '开启' : '关闭'}}</el-tag>
             </el-col>
-            <el-col :span="4" class="R">
+            <el-col :span="3" class="R">
               <span v-if="item.humidityAlarmFlag === '1'">
                 高：{{item.humidityMax}}% 低：{{item.humidityMin	}}%
               </span>

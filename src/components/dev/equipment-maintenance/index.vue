@@ -299,6 +299,8 @@ export default {
       return num;
     },
     searchResult(item) {
+      // this.activeStatus = 0;
+      // this.filters.status = 1
       this.filters = Object.assign({}, this.filters, item);
     },
     add() {

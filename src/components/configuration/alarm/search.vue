@@ -13,15 +13,24 @@
     </template>
     <template slot="content">
       <el-form class="advanced-query-form" onsubmit="return false">
-        <el-col :span="8">
-          <oms-form-row label="冷链标签" :span="4">
-            <el-select :remote-method="queryProbeList" filterable placeholder="请输入名称搜索冷链标签" remote
-                       v-model="searchCondition.sensorId">
-              <el-option :key="item.id" :label="item.name" :value="item.id"
-                         v-for="item in probeList"></el-option>
-            </el-select>
-          </oms-form-row>
-        </el-col>
+        <el-row>
+          <el-col :span="8">
+            <oms-form-row label="冷链标签" :span="4">
+              <el-select :remote-method="queryProbeList" filterable placeholder="请输入名称搜索冷链标签" remote
+                         v-model="searchCondition.sensorId">
+                <el-option :key="item.id" :label="item.name" :value="item.id"
+                           v-for="item in probeList"></el-option>
+              </el-select>
+            </oms-form-row>
+          </el-col>
+          <el-col :span="8">
+            <oms-form-row label="所属单位" :span="4">
+              <org-select :list="orgList" :remoteMethod="queryAllOrg"
+                          placeholder="请输入名称搜索单位" v-model="searchCondition.orgId"></org-select>
+            </oms-form-row>
+          </el-col>
+        </el-row>
+
       </el-form>
     </template>
   </search-template>
@@ -34,11 +43,13 @@
     data: function () {
       return {
         searchCondition: {
-          sensorId: ''
+          sensorId: '',
+          orgId:'',//所属单位
         },
         showSearch: false,
         list: [],
-        times: []
+        times: [],
+        orgList: []
       };
     },
     methods: {
@@ -47,7 +58,8 @@
       },
       reset() {
         this.searchCondition = {
-          sensorId: ''
+          sensorId: '',
+          orgId:'',
         };
         this.$emit('search', this.searchCondition);
       },

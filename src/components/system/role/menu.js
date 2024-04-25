@@ -514,6 +514,30 @@ export default [
           }
         ]
       },
+      //告警规则模板
+      {
+        id: 'alarm-template-manager',
+        label: '告警规则模板',
+        parentId: 'hmcc-system',
+        sort: '1',
+        children: [
+          {
+            id: 'alarm-template-scan',
+            label: '查看告警规则模板',
+            parentId: 'hmcc-system'
+          },
+          {
+            id: 'alarm-template-add',
+            label: '新增告警规则模板',
+            parentId: 'hmcc-system'
+          },
+          {
+            id: 'alarm-template-edit',
+            label: '编辑告警规则模板',
+            parentId: 'hmcc-system'
+          },
+        ]
+      },
       {
         id: 'alarm-notice-group-manager',
         label: '告警通知组',

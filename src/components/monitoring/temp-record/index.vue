@@ -195,7 +195,7 @@
         };
         temperatureRecord.query(params).then(res => {
           if (res.code === 200) {
-            console.log(res.data,'日期对比');
+            // console.log(res.data,'日期对比');
             res.data.forEach(i => {
               i.dayOfMonth = this.$moment(i.recordDate).format('D');
               i.recordDate = this.$moment(i.recordDate).format('HH:mm');

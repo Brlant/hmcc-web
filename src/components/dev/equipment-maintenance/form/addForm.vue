@@ -170,7 +170,7 @@ export default {
         departmentId: null,
         departmentName: '',
         companyName: '',//维保公司
-        maintenanceDate:moment(new Date()).format('YYYY-MM-DD HH:mm:ss'),//维保时间
+        maintenanceDate:'',//维保时间 moment(new Date()).format('YYYY-MM-DD HH:mm:ss')
         maintenanceUserName: '',//维保人员
         reviewUserName: '',//复核人员
         deviceMaintenanceDetails: [{
@@ -255,21 +255,31 @@ export default {
   },
   methods: {
     save() {
+      if (this.doing) return;
+      this.doing = true;
       this.$refs.tempForm.validate(valid => {
-        if (valid) {
-          let params = Object.assign({}, this.form)
-          postDeviceMaintenanceApi(params).then(response => {
-            this.$notify.success({
-              duration: 2000,
-              name: '成功',
-              message: '新增设备维保单成功'
-            });
-            this.$emit('refreshEquipment');
-            this.refreshFrom();
-          }).catch(error => {
-
-          })
+        if (!valid) {
+          this.doing = false;
+          return false;
         }
+        this.doing = true;
+        let params = Object.assign({}, this.form)
+        postDeviceMaintenanceApi(params).then(response => {
+          this.doing = false;
+          this.$notify.success({
+            duration: 2000,
+            name: '成功',
+            message: '新增设备维保单成功'
+          });
+          this.$emit('refreshEquipment');
+          this.refreshFrom();
+        }).catch(error => {
+          this.doing = false;
+          this.$notify.error({
+            duration: 2000,
+            message: '新增设备维保单失败'
+          });
+        })
       })
 
     },

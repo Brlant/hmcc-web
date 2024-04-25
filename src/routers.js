@@ -171,6 +171,14 @@ export const routes = [
             }
           },
           {
+            path: '/configuration/alarm/template',
+            component: () => import('./components/configuration/template/index.vue'),
+            meta: {
+              moduleId: 'configuration', title: '告警规则模板', perm: 'alarm-template-scan',
+              permPage: {add: 'alarm-template-add', edit: 'alarm-template-edit'}
+            }
+          },
+          {
             path: '/configuration/notification',
             component: () => import('./components/configuration/notification/index.vue'),
             meta: {

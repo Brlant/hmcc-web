@@ -21,6 +21,9 @@
                        v-for="item in notifyList"></el-option>
           </el-select>
         </el-form-item>
+        <el-form-item label="所属单位" v-show="form.orgId" >
+          {{form.orgName}}
+        </el-form-item>
         <div class="border-left-color" style="margin-left: 20px">温度告警 </div>
         <el-form-item label="温度告警开关">
           <el-switch @change="temperatureAlarmFlagChange" v-model="form.temperatureAlarmFlag" active-value="1" inactive-value="0"></el-switch>
@@ -209,8 +212,12 @@
           voltageLevelThreeAlarmDelayTime: '',
           offLineLevelOneAlarmDelayTime: '',
           offLineLevelTwoAlarmDelayTime: '',
-          offLineLevelThreeAlarmDelayTime: ''
+          offLineLevelThreeAlarmDelayTime: '',
+          //所属单位
+          orgId:'',
+          orgName:'',
         },
+
         doing: false,
         rules: {
           sensorId: [
@@ -327,7 +334,9 @@
             voltageLevelThreeAlarmDelayTime: '',
             offLineLevelOneAlarmDelayTime: '',
             offLineLevelTwoAlarmDelayTime: '',
-            offLineLevelThreeAlarmDelayTime: ''
+            offLineLevelThreeAlarmDelayTime: '',
+            orgId: '',
+            orgName: ''
           };
           this.$nextTick(() => {
             this.$refs.tempForm && this.$refs.tempForm.clearValidate();
@@ -349,6 +358,10 @@
       sensorIdChange(val) {
         this.notifyList = [];
         this.form.alarmNoticeGroupId = '';
+        let coolTagsList = this.coolTags.filter(f => f.id === val);
+        this.form.orgId = coolTagsList[0].orgId;
+        this.form.orgName = coolTagsList[0].orgName;
+
       },
       temperatureAlarmFlagChange() {
         this.form.temperatureMin = '';
