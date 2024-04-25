@@ -545,6 +545,7 @@ export default {
       });
     },
     devTypeChangeHandler(val) {
+      debugger
       this.form.templateId = '';
       if (val) {
         this.getTempList();
