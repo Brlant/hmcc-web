@@ -17,3 +17,21 @@ export const queryAlarmRuleTemplate = (data) => {
     data: data
   })
 }
+
+//编辑告警规则模板
+export const editAlarmRuleTemplate = (data) => {
+  return http({
+    url: '/alarm-rule-template/edit',
+    method: 'post',
+    data: data
+  })
+}
+
+//停用启用接口
+export const stopOrStartAlarmRuleTemplate = (data) => {
+  return http({
+    url: '/alarm-rule-template/enable',
+    method: 'post',
+    data: data
+  })
+}

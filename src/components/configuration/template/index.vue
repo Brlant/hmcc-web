@@ -46,14 +46,56 @@
               </td>
             </tr>
             <tr v-else v-for="row in dataRows" :keys="row.id">
-
+              <td>
+                {{ row.alarmTemplateName  }}
+              </td>
+              <td>
+                <span v-if="row.temperatureAlarmFlag === '1'">
+                  高：{{ row.temperatureMax }}℃ 低：{{ row.temperatureMin }}℃
+                </span>
+                <el-tag type="primary" :type="row.temperatureAlarmFlag === '1' ? 'success' : 'warning'">
+                  {{ row.temperatureAlarmFlag === '1' ? '开启' : '关闭' }}
+                </el-tag>
+              </td>
+              <td>
+                <span v-if="row.humidityAlarmFlag === '1'">
+                  高：{{ row.humidityMax }}% 低：{{ row.humidityMin }}%
+                </span>
+                <el-tag type="primary" :type="row.humidityAlarmFlag ==='1' ? 'success' : 'warning'">
+                  {{ row.humidityAlarmFlag === '1' ? '开启' : '关闭' }}
+                </el-tag>
+              </td>
+              <td>
+                <span v-if="row.voltageAlarmFlag === '1'"> 高：{{ row.voltageMax }}% 低：{{ row.voltageMin }}%</span>
+                <el-tag type="primary" :type="row.voltageAlarmFlag === '1' ? 'success' : 'warning'">
+                  {{ row.voltageAlarmFlag === '1' ? '开启' : '关闭' }}
+                </el-tag>
+              </td>
+              <td>
+                <el-tag type="primary" :type="row.offLineFlag === '1' ? 'success' : 'warning'">
+                  {{ row.offLineFlag === '1' ? '开启' : '关闭' }}
+                </el-tag>
+              </td>
+              <td class="list-op">
+                <a v-has="'alarm-template-edit'" href="#" @click.stop.prevent="edit(row)"><i
+                  class="el-icon-t-edit"></i>编辑</a>
+                <oms-forbid v-has="'alarm-template-stop'"
+                            :item="row" @forbided="forbid" :tips='"确认停用模板\""+row.alarmTemplateName+"\"?"'
+                            v-show="row.isEnable === 1 ">
+                  <i class="el-icon-t-forbidden"></i>停用
+                </oms-forbid>
+                <oms-forbid v-has="'alarm-template-start'"
+                            :item="row" @forbided="useNormal" :tips='"确认启用模板\""+row.alarmTemplateName+"\"?"'
+                            v-show="row.isEnable === 0 "><i class="el-icon-t-start" ></i>启用
+                </oms-forbid>
+              </td>
             </tr>
             </tbody>
           </table>
         </div>
       </div>
     </div>
-    <div class="text-center" v-show="(dataRows.length || pager.currentPage !== 1) && !loadingData">
+    <div class="text-center"> <!--v-show="(dataRows.length || pager.currentPage !== 1) && !loadingData"-->
       <el-pagination :current-page="pager.currentPage" :page-size="pager.pageSize"
                      :page-sizes="[10,20,50,100]"
                      :total="pager.count" @current-change="handleCurrentChange"
@@ -63,7 +105,7 @@
     </div>
 
     <page-right :css="defaultPageRight" :show="showIndex !== -1" @right-close="resetRightBox">
-      <component :formItem="form" :index="showIndex"  :is="currentPart" @change="change"  @right-close="resetRightBox"/>
+      <component :formItem="form" :index="showIndex" :is="currentPart" @change="change" @right-close="resetRightBox"/>
     </page-right>
   </div>
 </template>
@@ -71,8 +113,8 @@
 <script>
 import CommonMixin from '@/mixins/commonMixin';
 import addEdit from "@/components/configuration/template/form/addEdit";
-import {getMaintenanceApi} from "@/api/maintenance/maintenance";
-import { queryAlarmRuleTemplate } from "@/api/alarm/template";
+import {getMaintenanceApi, updateStatusApi} from "@/api/maintenance/maintenance";
+import {queryAlarmRuleTemplate,stopOrStartAlarmRuleTemplate} from "@/api/alarm/template";
 
 export default {
   mixins: [CommonMixin],
@@ -87,24 +129,58 @@ export default {
       },
     }
   },
-  watch:{
-
-  },
+  watch: {},
   created() {
 
   },
   mounted() {
-    this.getPageList();
+    this.getPageList(1);
   },
-  methods:{
+  methods: {
     //查询列表
     getPageList() {
+      let params = Object.assign({}, {
+        pageNo: this.pager.currentPage,
+        pageSize: this.pager.pageSize,
+      });
+      queryAlarmRuleTemplate(params).then(response => {
+        this.dataRows = response.data.list;
+        this.pager.count = response.data.count;
+      }).catch(error => {
 
+      })
     },
-   //新增
-    add(){
+    //新增
+    add() {
       this.form = {};
       this.showPart(0);
+    },
+    edit(row){
+      this.currentItem = row;
+      this.currentItemId = row.id;
+      this.form = row;
+      this.showPart(0);
+    },
+    //停用
+    forbid(item) {
+      // stopOrStartAlarmRuleTemplate
+      stopOrStartAlarmRuleTemplate({alarmTemplateId:item.alarmTemplateId,isEnable:0}).then(res=>{
+        this.$notify.success({
+          title: '成功',
+          message: '已经停用模板"' + item.alarmTemplateName + '"'
+        });
+        this.getPageList();
+      }).catch(error=>{})
+    },
+    //启用
+    useNormal(item) {
+      stopOrStartAlarmRuleTemplate({alarmTemplateId:item.alarmTemplateId,isEnable:1}).then(res=>{
+        this.$notify.success({
+          title: '成功',
+          message: '已经停用模板"' + item.alarmTemplateName + '"'
+        });
+        this.getPageList();
+      }).catch(error=>{})
     },
     showPart(index) {
       this.currentPart = this.dialogComponents[index];

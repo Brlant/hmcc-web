@@ -175,7 +175,7 @@ export const routes = [
             component: () => import('./components/configuration/template/index.vue'),
             meta: {
               moduleId: 'configuration', title: '告警规则模板', perm: 'alarm-template-scan',
-              permPage: {add: 'alarm-template-add', edit: 'alarm-template-edit'}
+              permPage: {add: 'alarm-template-add', edit: 'alarm-template-edit',start: 'alarm-template-start', stop: 'alarm-template-stop'}
             }
           },
           {

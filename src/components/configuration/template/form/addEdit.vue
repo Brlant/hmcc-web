@@ -12,13 +12,13 @@
         </el-form-item>
         <!--        模板名称结束-->
 
-        <el-form-item label="冷链标签" prop="sensorId">
-          <el-select :remote-method="getCoolTags" filterable placeholder="请输入名称搜索冷链标签"
-                     remote v-model="form.sensorId" @change="sensorIdChange">
-            <el-option :key="item.id" :label="item.name" :value="item.id"
-                       v-for="item in coolTags"></el-option>
-          </el-select>
-        </el-form-item>
+<!--        <el-form-item label="冷链标签" prop="sensorId">-->
+<!--          <el-select :remote-method="getCoolTags" filterable placeholder="请输入名称搜索冷链标签"-->
+<!--                     remote v-model="form.sensorId" @change="sensorIdChange">-->
+<!--            <el-option :key="item.id" :label="item.name" :value="item.id"-->
+<!--                       v-for="item in coolTags"></el-option>-->
+<!--          </el-select>-->
+<!--        </el-form-item>-->
 
 <!--        <el-form-item label="告警通知组" prop="alarmNoticeGroupId">-->
 <!--          <el-select remote :remote-method="queryNotifyListNew" v-model="form.alarmNoticeGroupId" filterable-->
@@ -187,7 +187,7 @@
 import methodsMixin from '@/mixins/methodsMixin';
 
 import {AlarmRule, ColdChainLabelApi} from '@/resources';
-import { addAlarmRuleTemplate } from "@/api/alarm/template";
+import { addAlarmRuleTemplate,editAlarmRuleTemplate } from "@/api/alarm/template";
 
 export default {
   mixins: [methodsMixin],
@@ -197,7 +197,7 @@ export default {
       form: {
         // alarmNoticeGroupId: '',
         alarmTemplateName:'',
-        sensorId: '',
+        // sensorId: '',
         temperatureMax: '',
         temperatureMin: '',
         humidityMin: '',
@@ -233,9 +233,9 @@ export default {
         alarmTemplateName: [
           {required: true, message: '请输入告警模板名称', trigger: 'blur'}
         ],
-        sensorId: [
-          {required: true, message: '请选择冷链标签', trigger: 'change'}
-        ],
+        // sensorId: [
+        //   {required: true, message: '请选择冷链标签', trigger: 'change'}
+        // ],
         temperatureMax: [
           {required: true, message: '请输入温度最高值', trigger: 'blur'}
         ],
@@ -296,7 +296,7 @@ export default {
       },
       timeList: [1, 2, 3, 5, 10, 30],
       actionType: '添加',
-      coolTags:[]
+      // coolTags:[]
     };
   },
   props: {
@@ -305,12 +305,12 @@ export default {
   },
   watch: {
     index: function (val) {
-      this.coolTags = [];
+      // this.coolTags = [];
       this.$refs['tempForm'].clearValidate();
-      if (this.formItem.id) {
-        this.coolTags = [
-          {name: this.formItem.sensorName, id: this.formItem.sensorId, no: this.formItem.sensorNo}
-        ];
+      if (this.formItem.alarmTemplateId) {
+        // this.coolTags = [
+        //   {name: this.formItem.sensorName, id: this.formItem.sensorId, no: this.formItem.sensorNo}
+        // ];
         // this.notifyList = [
         //   {
         //     id: this.formItem.alarmNoticeGroupId,
@@ -323,7 +323,7 @@ export default {
         this.form = {
           // alarmNoticeGroupId: '',
           alarmTemplateName:'',
-          sensorId: '',
+          // sensorId: '',
           temperatureMax: '',
           temperatureMin: '',
           humidityMin: '',
@@ -360,23 +360,23 @@ export default {
     }
   },
   methods: {
-    queryNotifyListNew(query) {
-      if (!this.form.sensorId) return;
-      let item = this.coolTags.find(f => f.id === this.form.sensorId);
-      let params = {
-        orgId: item.orgId,
-        keyWord: query
-      };
-      this.queryNotifyList(params);
-    },
-    sensorIdChange(val) {
-      // this.notifyList = [];
-      // this.form.alarmNoticeGroupId = '';
-      let coolTagsList = this.coolTags.filter(f => f.id === val);
-      this.form.orgId = coolTagsList[0].orgId;
-      this.form.orgName = coolTagsList[0].orgName;
-
-    },
+    // queryNotifyListNew(query) {
+    //   if (!this.form.sensorId) return;
+    //   let item = this.coolTags.find(f => f.id === this.form.sensorId);
+    //   let params = {
+    //     orgId: item.orgId,
+    //     keyWord: query
+    //   };
+    //   this.queryNotifyList(params);
+    // },
+    // sensorIdChange(val) {
+    //   // this.notifyList = [];
+    //   // this.form.alarmNoticeGroupId = '';
+    //   let coolTagsList = this.coolTags.filter(f => f.id === val);
+    //   this.form.orgId = coolTagsList[0].orgId;
+    //   this.form.orgName = coolTagsList[0].orgName;
+    //
+    // },
     temperatureAlarmFlagChange() {
       this.form.temperatureMin = '';
       this.form.temperatureMax = '';
@@ -418,13 +418,13 @@ export default {
     save(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid && this.doing === false) {
-          this.coolTags.forEach(i => {
-            if (i.id === this.form.sensorId) {
-              this.form.sensorName = i.name;
-              this.form.sensorNo = i.no;
-            }
-          });
-          if (!this.form.id) {
+          // this.coolTags.forEach(i => {
+          //   if (i.id === this.form.sensorId) {
+          //     this.form.sensorName = i.name;
+          //     this.form.sensorNo = i.no;
+          //   }
+          // });
+          if (!this.form.alarmTemplateId) {
             this.doing = true;
             addAlarmRuleTemplate(this.form).then(response=>{
               this.$notify.success({
@@ -443,17 +443,31 @@ export default {
             })
 
           } else {
-
+            editAlarmRuleTemplate(this.form).then(response=>{
+              this.$notify.success({
+                duration: 2000,
+                name: '成功',
+                message: '编辑告警规则模板成功'
+              });
+              this.$emit('change');
+              this.doing = false;
+            }).catch(error=>{
+              this.$notify.error({
+                duration: 2000,
+                message: '编辑告警规则模板失败'
+              });
+              this.doing = false;
+            })
           }
         }
       });
     },
-    getCoolTags(keyWord) {
-      let data = {keyWord}
-      ColdChainLabelApi.queryNoAlarm({keyWord}).then(res => {
-        this.coolTags = res.data.list;
-      })
-    }
+    // getCoolTags(keyWord) {
+    //   let data = {keyWord}
+    //   ColdChainLabelApi.queryNoAlarm({keyWord}).then(res => {
+    //     this.coolTags = res.data.list;
+    //   })
+    // }
   }
 };
 </script>

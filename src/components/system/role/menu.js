@@ -536,6 +536,16 @@ export default [
             label: '编辑告警规则模板',
             parentId: 'hmcc-system'
           },
+          {
+            id: 'alarm-template-stop',
+            label: '停用告警规则模板',
+            parentId: 'hmcc-system'
+          },
+          {
+            id: 'alarm-template-start',
+            label: '启用告警规则模板',
+            parentId: 'hmcc-system'
+          },
         ]
       },
       {
